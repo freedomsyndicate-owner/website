@@ -9,38 +9,28 @@
             font-family: 'Segoe UI', Roboto, sans-serif; 
             background-color: #020617; 
             color: #FFFFFF; 
-            margin: 0; 
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* ANIMASI MUNCUL PERLAHAN */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ANIMASI MELAYANG HALUS */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
 
         .main-wrapper {
             max-width: 450px;
             padding: 50px 25px;
             text-align: center;
-            position: relative;
-        }
-
-        /* EFEK CAHAYA DI BELAKANG (ANIMASI) */
-        .bg-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(2, 6, 23, 0) 70%);
-            z-index: -1;
-            animation: breathe 5s infinite ease-in-out;
-        }
-
-        @keyframes breathe {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            animation: fadeIn 1.5s ease-out;
         }
 
         h1 {
@@ -52,7 +42,8 @@
             background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
+            display: inline-block;
+            animation: float 4s infinite ease-in-out;
         }
 
         .intro-box {
@@ -63,14 +54,6 @@
             margin-bottom: 45px;
             backdrop-filter: blur(12px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: 0.4s;
-        }
-
-        .description {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: #cbd5e1;
-            margin: 0;
         }
 
         .description b { color: #38bdf8; font-weight: 700; }
@@ -97,67 +80,44 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 0.8rem;
-            letter-spacing: 1px;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255, 255, 255, 0.05);
             background: rgba(30, 41, 59, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* EFEK HOVER BERCALAYA */
         .social-btn:hover {
-            transform: translateY(-5px);
-            background: rgba(56, 189, 248, 0.1);
+            transform: scale(1.05) translateY(-5px);
             border-color: #38bdf8;
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
-        .btn-tg { color: #38bdf8; }
-        .btn-dc { color: #818cf8; } 
-        .btn-wa { color: #4ade80; } 
-        .btn-tt { color: #FFFFFF; } 
-        .btn-ig { color: #f472b6; }
-        .btn-fb { color: #1877F2; }
+        .btn-tg { color: #38bdf8; } .btn-dc { color: #818cf8; } 
+        .btn-wa { color: #4ade80; } .btn-tt { color: #FFFFFF; } 
+        .btn-ig { color: #f472b6; } .btn-fb { color: #1877F2; }
 
-        footer {
-            margin-top: 60px;
-            font-size: 0.7rem;
-            color: #475569;
-            letter-spacing: 5px;
-            font-weight: 700;
-        }
+        footer { margin-top: 60px; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
     </style>
 </head>
 <body>
-
-<div class="main-wrapper">
-    <div class="bg-glow"></div>
-
-    <h1>FREEDOM SYNDICATE</h1>
-
-    <div class="intro-box">
-        <p class="description">
-            <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b> bagi mereka yang menghargai kebebasan mutlak. Kita berdiri untuk satu janji: Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
-        </p>
+    <div class="main-wrapper">
+        <h1>FREEDOM SYNDICATE</h1>
+        <div class="intro-box">
+            <p class="description">
+                <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
+            </p>
+        </div>
+        <div class="join-header">Exclusive Entrance</div>
+        <div class="social-grid">
+            <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn btn-tg">TELEGRAM</a>
+            <a href="https://discord.gg/sRjgehqgU" class="social-btn btn-dc">DISCORD</a>
+            <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn btn-wa">WHATSAPP</a>
+            <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
+            <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
+            <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
+        </div>
+        <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
-
-    <div class="join-header">Exclusive Entrance</div>
-    
-    <div class="social-grid">
-        <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn btn-tg">TELEGRAM</a>
-        <a href="https://discord.gg/sRjgehqgU" class="social-btn btn-dc">DISCORD</a>
-        <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn btn-wa">WHATSAPP</a>
-        <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
-        <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
-        <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
-    </div>
-
-    <footer>
-        Beyond The Limits &bull; 2026
-    </footer>
-</div>
-
 </body>
-</html>
+    </html>
+    
