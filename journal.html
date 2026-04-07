@@ -13,11 +13,10 @@
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* AUTH SCREEN UPDATE */
+        /* AUTH SCREEN */
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.1); }
         
-        /* ANIMASI TEXT LOGIN */
         @keyframes textGlow {
             0%, 100% { text-shadow: 0 0 10px var(--blue); transform: translateY(0); }
             50% { text-shadow: 0 0 25px var(--blue), 0 0 40px var(--blue); transform: translateY(-5px); }
@@ -156,6 +155,7 @@
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
+        // KONEKSI DATABASE - FIX SINGAPORE SERVER
         const firebaseConfig = { 
             apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", 
             authDomain: "freedomsyndicatecloud.firebaseapp.com", 
@@ -174,7 +174,8 @@
             document.getElementById('tv_v60').innerHTML = '';
             new TradingView.widget({ "autosize": true, "symbol": p, "interval": "15", "theme": "dark", "style": "1", "hide_side_toolbar": false, "container_id": "tv_v60" });
         }
-        
+
+        // SISTEM LOGIN OTOMATIS
         auth.onAuthStateChanged(user => { 
             if (user) { 
                 curUser = user; 
@@ -191,22 +192,13 @@
             const e = document.getElementById('auth-email').value; 
             const p = document.getElementById('auth-pass').value; 
             const btn = document.querySelector('.btn-auth');
-
-            if(!e || !p) return alert("Email & Password tidak boleh kosong, bos!");
-
-            btn.innerText = "PROCESSING...";
-            
-            auth.signInWithEmailAndPassword(e, p).catch((error) => {
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                    // Jika user belum ada, daftarkan baru
-                    return auth.createUserWithEmailAndPassword(e, p).catch((regErr) => {
-                        alert("Pendaftaran Gagal: " + regErr.message);
-                        btn.innerText = "LOGIN / DAFTAR";
-                    });
-                } else {
-                    alert("Error: " + error.message);
-                    btn.innerText = "LOGIN / DAFTAR";
-                }
+            if(!e || !p) return alert("Email & Password tidak boleh kosong!");
+            btn.innerText = "AUTHENTICATING...";
+            auth.signInWithEmailAndPassword(e, p).catch((err) => {
+                return auth.createUserWithEmailAndPassword(e, p);
+            }).catch(e => { 
+                alert("Error: " + e.message); 
+                btn.innerText = "LOGIN / DAFTAR"; 
             });
         }
 
@@ -215,20 +207,22 @@
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
         
         function procImg(input, id) { 
-            const file = input.files[0]; 
-            if(!file) return; 
-            const r = new FileReader(); 
-            r.readAsDataURL(file); 
+            const file = input.files[0]; if(!file) return; 
+            const r = new FileReader(); r.readAsDataURL(file); 
             r.onload = e => { 
-                const img = new Image(); 
-                img.src = e.target.result; 
+                const img = new Image(); img.src = e.target.result; 
                 img.onload = () => { 
-                    const cvs = document.createElement('canvas'); 
-                    const sc = Math.min(500 / img.width, 1); 
-                    cvs.width = img.width * sc; 
-                    cvs.height = img.height * sc; 
-                    cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); 
-                    const b64 = cvs.toDataURL('image/jpeg', 0.4); 
-                    document.getElementById(id).src = b64; 
-                    document.getElementById(id).style.display = 'block'; 
-                    if(id === 'pb') bB = b64; el
+                    const cvs = document.createElement('canvas'); const sc = Math.min(500 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; 
+                    cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.4); 
+                    document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; 
+                    if(id === 'pb') bB = b64; else bA = b64; 
+                }; 
+            }; 
+        }
+        
+        function save() { 
+            if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
+            const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true; 
+            const t = { 
+                date: document.getElementById('date').value, pair: document.getElementById('pair').value, session: sSession, 
+                models: Array.from(document.qu
