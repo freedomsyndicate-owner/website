@@ -14,35 +14,40 @@
             min-height: 100vh; overflow-x: hidden;
         }
 
-        /* ANIMASI MUNCUL PERLAHAN */
+        /* ANIMASI MUNCUL PERLAHAN SAAT DIBUKA */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* ANIMASI MELAYANG HALUS */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ANIMASI GLOWING UNTUK TOMBOL JOURNAL */
+        @keyframes journalGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.6); border-color: #38bdf8; }
         }
 
         .main-wrapper {
             max-width: 450px;
             padding: 50px 25px;
             text-align: center;
-            animation: fadeIn 1.5s ease-out;
+            animation: fadeIn 1.2s ease-out;
         }
 
         h1 {
             font-size: 2.4rem;
             font-weight: 900;
-            margin: 0 0 35px 0;
+            margin: 0 0 30px 0;
             letter-spacing: 3px;
             text-transform: uppercase;
             background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: inline-block;
             animation: float 4s infinite ease-in-out;
         }
 
@@ -58,13 +63,41 @@
 
         .description b { color: #38bdf8; font-weight: 700; }
 
-        .join-header {
-            font-size: 0.7rem;
+        /* STYLE TOMBOL JOURNAL PESANAN BOS */
+        .journal-btn {
+            display: block;
+            text-decoration: none;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 45px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: journalGlow 3s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        .journal-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            transform: scale(1.03);
+        }
+
+        .journal-title {
+            display: block;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }
+
+        .journal-sub {
+            display: block;
+            font-weight: 300;
+            font-size: 0.8rem;
+            letter-spacing: 8px;
+            color: #38bdf8;
             text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #64748b;
-            margin-bottom: 25px;
-            font-weight: 800;
         }
 
         .social-grid {
@@ -83,18 +116,20 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255, 255, 255, 0.05);
             background: rgba(30, 41, 59, 0.5);
-            display: flex; align-items: center; justify-content: center;
         }
 
         .social-btn:hover {
-            transform: scale(1.05) translateY(-5px);
+            transform: scale(1.05);
             border-color: #38bdf8;
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
-        .btn-tg { color: #38bdf8; } .btn-dc { color: #818cf8; } 
-        .btn-wa { color: #4ade80; } .btn-tt { color: #FFFFFF; } 
-        .btn-ig { color: #f472b6; } .btn-fb { color: #1877F2; }
+        .btn-tg { color: #38bdf8; }
+        .btn-dc { color: #818cf8; } 
+        .btn-wa { color: #4ade80; } 
+        .btn-tt { color: #FFFFFF; } 
+        .btn-ig { color: #f472b6; }
+        .btn-fb { color: #1877F2; }
 
         footer { margin-top: 60px; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
     </style>
@@ -107,7 +142,12 @@
                 <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
             </p>
         </div>
-        <div class="join-header">Exclusive Entrance</div>
+
+        <a href="https://freedomsyndicate-owner.github.io/website/journal.html" class="journal-btn">
+            <span class="journal-title">FREEDOM SYNDICATE</span>
+            <span class="journal-sub">Journal</span>
+        </a>
+
         <div class="social-grid">
             <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn btn-tg">TELEGRAM</a>
             <a href="https://discord.gg/sRjgehqgU" class="social-btn btn-dc">DISCORD</a>
@@ -119,5 +159,4 @@
         <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 </body>
-    </html>
-    
+</html>
