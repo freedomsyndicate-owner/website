@@ -44,6 +44,8 @@
         .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
         .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
+        .chip.active[data-res="TP"] { border-color: var(--green); color: var(--green); }
+        .chip.active[data-res="SL"] { border-color: var(--red); color: var(--red); }
         
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff !important; cursor: pointer; }
@@ -261,7 +263,7 @@
             trades.reverse().forEach(t => {
                 totalP += t.pnl; if(t.res === 'TP') win++;
                 const card = document.createElement('div'); card.className = 'history-card';
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:9px; color:#aaa; margin-top:5px;">Session: ${t.session} | Models: ${t.models.join(', ')}</div><div style="font-size:11px; margin-top:5px;">P&L: <span style="color:${t.pnl >= 0 ? 'var(--green)' : 'var(--red)'}">$${t.pnl.toFixed(2)}</span></div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
                 h.appendChild(card);
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
