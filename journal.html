@@ -138,8 +138,8 @@
             <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
             <div class="photo-grid">
-                <div class="upload-box"><span>📸 Before</span><input type="file" id="file-pb" onchange="procImg(this, 'pb')"><img id="pb" style="display:none"></div>
-                <div class="upload-box"><span>📸 After</span><input type="file" id="file-pa" onchange="procImg(this, 'pa')"><img id="pa" style="display:none"></div>
+                <div class="upload-box"><span>📸 Before</span><input type="file" onchange="procImg(this, 'pb')"><img id="pb" style="display:none"></div>
+                <div class="upload-box"><span>📸 After</span><input type="file" onchange="procImg(this, 'pa')"><img id="pa" style="display:none"></div>
             </div>
             <button class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
         </div><div id="hist"></div></div></div>
@@ -249,7 +249,6 @@
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
                 btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; alert("BERHASIL DISIMPAN!"); 
                 bB = ''; bA = ''; document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
-                document.getElementById('file-pb').value = ''; document.getElementById('file-pa').value = '';
             }).catch(e => {
                 alert("Gagal: " + e.message); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
             });
