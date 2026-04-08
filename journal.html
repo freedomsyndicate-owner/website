@@ -45,10 +45,10 @@
         .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         
-        /* ENTRY MODEL FIX */
+        /* ENTRY MODEL FIXED CSS - BALIK NORMAL */
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff !important; cursor: pointer; }
-        .check-item input { accent-color: var(--blue); }
+        .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); cursor: pointer; margin: 0; }
         
         .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 10px; }
         .upload-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
@@ -112,12 +112,24 @@
                 </select>
             </div>
             <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
-            <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
-                <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
-            </div></div>
+            
+            <div class="form-item" style="border:none;"><label>🎯 Entry Model</label>
+                <div class="entry-model-grid">
+                    <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label>
+                    <label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                </div>
+            </div>
+
             <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
             <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
             <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
@@ -167,25 +179,11 @@
         const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', bB = '', bA = '', harvestChart = null;
 
-        // FUNGSI CHART PERBAIKAN TOTAL
         function updateChart() {
-            const pairInput = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD';
-            // Bersihkan kontainer sebelum load ulang
+            const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD';
             document.getElementById('tv_v60').innerHTML = '';
-            
             new TradingView.widget({
-                "autosize": true,
-                "symbol": pairInput,
-                "interval": "15",
-                "timezone": "Asia/Jakarta",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true,
-                "container_id": "tv_v60"
+                "autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "locale": "en", "hide_side_toolbar": false, "container_id": "tv_v60"
             });
         }
 
@@ -194,8 +192,7 @@
                 curUser = user; 
                 document.getElementById('auth-screen').style.display = 'none'; 
                 document.getElementById('display-user').innerText = "SYSTEM ACTIVE: " + user.email;
-                loadData(); 
-                updateChart(); // Load chart saat login sukses
+                loadData(); updateChart(); 
             } else { 
                 document.getElementById('auth-screen').style.display = 'flex'; 
             } 
@@ -218,8 +215,7 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
             document.getElementById(id).classList.add('active'); 
             el.classList.add('active'); 
-            // Refresh chart jika tab chart dibuka
-            if(id === 'chart-tab') { updateChart(); }
+            if(id === 'chart-tab') updateChart();
         }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
         
