@@ -218,7 +218,6 @@
         }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
         
-        // FIX FUNGSI GAMBAR (DILENGKAPI)
         function procImg(input, id) { 
             const file = input.files[0]; if(!file) return; 
             const r = new FileReader(); r.readAsDataURL(file); 
@@ -235,7 +234,6 @@
             }; 
         }
         
-        // FIX FUNGSI SAVE (DILENGKAPI TOTAL)
         function save() { 
             if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true; 
@@ -249,6 +247,7 @@
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
                 btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; alert("BERHASIL DISIMPAN!"); 
                 bB = ''; bA = ''; document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
+                document.getElementById('file-pb').value = ''; document.getElementById('file-pa').value = '';
             }).catch(e => {
                 alert("Gagal: " + e.message); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
             });
@@ -266,6 +265,7 @@
                 h.appendChild(card);
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-pnl').style.color = totalP >= 0 ? 'var(--green)' : 'var(--red)';
             document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             updateCalendar(trades); updateEquity(trades);
         }
@@ -277,7 +277,7 @@
             for(let i=14; i>=0; i--) {
                 const d = new Date(); d.setDate(today.getDate() - i); const ds = d.toISOString().split('T')[0]; const pnl = days[ds] || 0;
                 const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
-                div.innerHTML = `<span>${d.getDate()}</span><b style="font-size:6px">${pnl !== 0 ? pnl.toFixed(0) : ''}</b>`;
+                div.innerHTML = `<span>${d.getDate()}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`;
                 cal.appendChild(div);
             }
         }
