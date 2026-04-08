@@ -13,7 +13,6 @@
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* AUTH SCREEN */
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.1); }
         
@@ -191,7 +190,7 @@
             const p = document.getElementById('auth-pass').value; 
             const btn = document.querySelector('.btn-auth');
             if(!e || !p) return alert("Email & Password tidak boleh kosong!");
-            btn.innerText = "AUTHENTICATING...";
+            btn.innerText = "SABAR BOS...";
             auth.signInWithEmailAndPassword(e, p).catch((err) => {
                 return auth.createUserWithEmailAndPassword(e, p);
             }).catch(e => { 
