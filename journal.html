@@ -44,15 +44,17 @@
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); font-weight: bold; cursor: pointer; }
-        .daily-info { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 10px; margin: 10px 0; font-size: 10px; text-align: center; display: flex; justify-content: space-around; font-family: 'Orbitron'; }
-        #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 10px; }
-        #modal-zoom img { max-width: 100%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
+        #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 20px; }
+        #modal-zoom img { max-width: 95%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
         .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
+        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
+        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
+        .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
@@ -100,9 +102,7 @@
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
                     <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
                         <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="IFVG"> IFVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
                     </div></div>
                     <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
                     <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
@@ -115,14 +115,17 @@
                     <button type="button" class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
             </form>
-            <div class="daily-info" id="daily-stat">HARI INI: 💰 TP 0 | 💀 SL 0</div>
             <div id="hist"></div>
         </div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
         </div></div>
-        <div id="broker-tab" class="tab-content"><div class="inner-padding"><div class="broker-card"><h3>EXNESS</h3><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR EXNESS</button></div></div></div>
+        <div id="broker-tab" class="tab-content"><div class="inner-padding">
+            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR EXNESS</button></div>
+            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR HEADWAY</button></div>
+        </div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px;">Dukung Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
     </div>
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
@@ -148,13 +151,13 @@
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
             const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => {
-                alert("BERHASIL!");
-                btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
+                alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
                 document.getElementById('tradingForm').reset();
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                 document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
+                document.getElementById('pb').src = ''; document.getElementById('pa').src = '';
                 bB = ''; bA = ''; sRes = ''; sSession = '';
-            }).catch(e => { alert(e.message); btn.disabled = false; });
+            });
         }
         function handleAuth() { const e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value; if(!e||!p) return alert("Isi data!"); auth.signInWithEmailAndPassword(e, p).catch(() => auth.createUserWithEmailAndPassword(e, p)); }
         function logout() { auth.signOut(); }
@@ -164,19 +167,16 @@
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD'; document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60"}); }
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
+
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, dTP = 0, dSL = 0;
-            const now = new Date();
-            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
             sorted.slice().reverse().forEach(t => { 
                 totalP += t.pnl; if(t.res === 'TP') win++; 
-                if(t.date === todayStr) { if(t.res === 'TP') dTP++; if(t.res === 'SL') dSL++; }
                 const card = document.createElement('div'); card.className = 'history-card'; 
                 card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card); 
             });
-            document.getElementById('daily-stat').innerHTML = `HARI INI: 💰 TP ${dTP} | 💀 SL ${dSL}`;
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             updateCalendar(trades);
         }
