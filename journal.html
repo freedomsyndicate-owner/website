@@ -38,20 +38,20 @@
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); }
         .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 10px; overflow: hidden; }
-        .upload-box img { width: 100%; height: auto; max-height: 120px; object-fit: contain; display: none; }
+        .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); font-weight: bold; cursor: pointer; }
-        #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 15px; }
-        #modal-zoom img { max-width: 100%; max-height: 90vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
+        #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 10px; }
+        #modal-zoom img { max-width: 100%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
-        .btn-reg { background: var(--blue); color: black; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
+        .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
@@ -108,7 +108,8 @@
                         <label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
                     </div></div>
-                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Analisa..."></textarea></div>
+                    <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
+                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00" step="any"></div></div>
                     <div class="photo-grid">
@@ -125,10 +126,10 @@
             <div id="cal" class="calendar-grid"></div>
         </div></div>
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEP MIN $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR</button></div>
-            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEP MIN $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR</button></div>
+            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR</button></div>
+            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR</button></div>
         </div></div>
-        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px; margin-bottom:15px;">Support Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px; margin-bottom: 15px;">Dukung Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
     </div>
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
@@ -142,24 +143,12 @@
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id === 'chart-tab') updateChart(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
-        function procImg(input, id) {
-            const file = input.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) { const b64 = e.target.result; document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; };
-            reader.readAsDataURL(file);
-        }
+        function procImg(input, id) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { const b64 = e.target.result; document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; reader.readAsDataURL(file); }
         function save() {
             if(!sRes || !curUser) return alert("Pilih Result!");
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
-            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => {
-                alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
-                document.getElementById('tradingForm').reset();
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
-                document.getElementById('pb').src = ''; document.getElementById('pa').src = '';
-                bB = ''; bA = ''; sRes = ''; sSession = '';
-            });
+            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none'; bB = ''; bA = ''; sRes = ''; sSession = ''; });
         }
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); render(d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []); }); }
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
