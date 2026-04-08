@@ -32,6 +32,8 @@
         .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
         .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
+        .chip.active[data-res="TP"] { border-color: var(--green); color: var(--green); }
+        .chip.active[data-res="SL"] { border-color: var(--red); color: var(--red); }
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); }
@@ -51,8 +53,6 @@
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
         .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
-        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
-        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
     </style>
 </head>
 <body>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
                     <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
-                        <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="IFVG"> IFVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
@@ -122,11 +122,7 @@
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
         </div></div>
-        <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR EXNESS</button></div>
-            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR HEADWAY</button></div>
-        </div></div>
-        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px;">Dukung Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
+        <div id="broker-tab" class="tab-content"><div class="inner-padding"><div class="broker-card"><h3>EXNESS</h3><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR EXNESS</button></div></div></div>
     </div>
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
@@ -170,11 +166,12 @@
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, dTP = 0, dSL = 0;
-            const today = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
             sorted.slice().reverse().forEach(t => { 
                 totalP += t.pnl; if(t.res === 'TP') win++; 
-                if(t.date === today) { if(t.res === 'TP') dTP++; if(t.res === 'SL') dSL++; }
+                if(t.date === todayStr) { if(t.res === 'TP') dTP++; if(t.res === 'SL') dSL++; }
                 const card = document.createElement('div'); card.className = 'history-card'; 
                 card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card); 
