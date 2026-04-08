@@ -226,4 +226,67 @@
                 const img = new Image(); img.src = e.target.result; 
                 img.onload = () => { 
                     const cvs = document.createElement('canvas'); const sc = Math.min(500 / img.width, 1); 
-                    cvs.width = img.
+                    cvs.width = img.width * sc; cvs.height = img.height * sc; 
+                    cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); 
+                    const b64 = cvs.toDataURL('image/jpeg', 0.4); 
+                    document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; 
+                    if(id === 'pb') bB = b64; else bA = b64; 
+                }; 
+            }; 
+        }
+        
+        // FIX FUNGSI SAVE (DILENGKAPI TOTAL)
+        function save() { 
+            if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
+            const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true; 
+            const t = { 
+                date: document.getElementById('date').value, 
+                time: document.getElementById('time').value,
+                pair: document.getElementById('pair').value, session: sSession, 
+                models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, 
+                reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA 
+            }; 
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
+                btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; alert("BERHASIL DISIMPAN!"); 
+                bB = ''; bA = ''; document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
+            }).catch(e => {
+                alert("Gagal: " + e.message); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false;
+            });
+        }
+
+        function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); render(d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []); }); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+
+        function render(trades) {
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
+            trades.reverse().forEach(t => {
+                totalP += t.pnl; if(t.res === 'TP') win++;
+                const card = document.createElement('div'); card.className = 'history-card';
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                h.appendChild(card);
+            });
+            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
+            updateCalendar(trades); updateEquity(trades);
+        }
+
+        function updateCalendar(trades) {
+            const cal = document.getElementById('cal'); cal.innerHTML = ''; const days = {};
+            trades.forEach(t => { if(!days[t.date]) days[t.date] = 0; days[t.date] += t.pnl; });
+            const today = new Date();
+            for(let i=14; i>=0; i--) {
+                const d = new Date(); d.setDate(today.getDate() - i); const ds = d.toISOString().split('T')[0]; const pnl = days[ds] || 0;
+                const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${d.getDate()}</span><b style="font-size:6px">${pnl !== 0 ? pnl.toFixed(0) : ''}</b>`;
+                cal.appendChild(div);
+            }
+        }
+
+        function updateEquity(trades) {
+            const ctx = document.getElementById('harvestChart').getContext('2d'); if(harvestChart) harvestChart.destroy();
+            let sum = 0; const data = trades.slice().reverse().map(t => { sum += t.pnl; return sum; });
+            harvestChart = new Chart(ctx, { type: 'line', data: { labels: data.map((_,i) => i+1), datasets: [{ data: data, borderColor: '#38bdf8', tension: 0.4, fill: true, backgroundColor: 'rgba(56,189,248,0.1)' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#1f2937' }, ticks: { color: '#444', font: { size: 8 } } } } } });
+        }
+    </script>
+</body>
+</html>
