@@ -49,6 +49,11 @@
         .cal-day.profit { border-color: var(--green); color: var(--green); background: rgba(74, 222, 128, 0.05); }
         .cal-day.loss { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.05); }
         .daily-info { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 10px; margin-bottom: 15px; font-size: 10px; text-align: center; display: flex; justify-content: space-around; font-family: 'Orbitron'; }
+        
+        /* NEW ZOOM MODAL */
+        #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 20px; }
+        #modal-zoom img { max-width: 95%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
+
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
         .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
@@ -57,6 +62,7 @@
     </style>
 </head>
 <body>
+    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src=""></div>
     <div id="auth-screen">
         <div class="auth-card">
             <h1 class="auth-logo-main">FREEDOM SYNDICATE</h1>
@@ -86,7 +92,7 @@
             <div id="tv_v60" style="height:calc(100% - 45px); width:100%;"></div>
         </div>
         <div id="journal-tab" class="tab-content active"><div class="inner-padding">
-            <form id="journalForm" onsubmit="event.preventDefault(); save();">
+            <form id="jform" onsubmit="event.preventDefault(); save();">
                 <div class="notion-form">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date" required></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time" required></div></div>
                     <div class="form-item"><label>💰 Pair Selection</label>
@@ -101,8 +107,7 @@
                     <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
                         <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
                     </div></div>
                     <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
                     <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
@@ -133,18 +138,15 @@
         const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', bB = '', bA = '';
 
-        function nativeZoom(src) { if(!src) return; const win = window.open(""); win.document.write(`<img src="${src}" style="width:100%; height:auto;" onclick="window.close()">`); }
+        function openZoom(src) { document.getElementById('zoom-target').src = src; document.getElementById('modal-zoom').style.display = 'flex'; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.readAsDataURL(f); r.onload = e => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const sc = Math.min(800 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.6); document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; }; }
-        
         function save() {
             if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE)!");
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
             const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
-                alert("BERHASIL!"); 
-                btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; 
-                // RESET FORM PAKSA
-                document.getElementById('journalForm').reset();
+                alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; 
+                document.getElementById('jform').reset();
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                 document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none';
                 bB = ''; bA = ''; sRes = ''; sSession = '';
@@ -158,7 +160,6 @@
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD'; document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60"}); }
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
-
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, dTP = 0, dSL = 0;
             const today = new Date().toISOString().split('T')[0];
@@ -167,7 +168,7 @@
                 totalP += t.pnl; if(t.res === 'TP') win++; 
                 if(t.date === today) { if(t.res === 'TP') dTP++; if(t.res === 'SL') dSL++; }
                 const card = document.createElement('div'); card.className = 'history-card'; 
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="nativeZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="nativeZoom('${t.aft}')">` : ''}</div>`; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card); 
             });
             document.getElementById('daily-stat').innerHTML = `HARI INI: 💰 TP ${dTP} | 💀 SL ${dSL}`;
@@ -180,8 +181,8 @@
             const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
             const lastDay = new Date(year, month + 1, 0).getDate();
             for (let i = 1; i <= lastDay; i++) {
-                const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const pnl = daysData[ds] || 0;
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const pnl = daysData[dateStr] || 0;
                 const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`;
                 cal.appendChild(div);
