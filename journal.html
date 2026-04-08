@@ -90,7 +90,7 @@
             <div class="form-item"><label>💰 Pair Selection</label>
                 <select id="pair">
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option></optgroup>
                     <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option></optgroup>
                     <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
                 </select>
@@ -169,4 +169,51 @@
                 document.querySelectorAll('.model-check').forEach(cb => cb.checked = false);
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                 sRes = ''; sSession = ''; bB = ''; bA = '';
-                document.getElementById('pb').style.display='none'; document.getElementById('pa').sty
+                document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none';
+                document.getElementById('file-pb').value = ''; document.getElementById('file-pa').value = '';
+            }).catch(e => { alert(e.message); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; });
+        }
+        
+        function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); render(d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []); }); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        
+        function render(trades) {
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
+            const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
+            sorted.slice().reverse().forEach(t => {
+                totalP += t.pnl; if(t.res === 'TP') win++;
+                const card = document.createElement('div'); card.className = 'history-card';
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                h.appendChild(card);
+            });
+            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
+            updateCalendar(trades); updateEquity(trades);
+        }
+
+        function updateCalendar(trades) {
+            const cal = document.getElementById('cal'); if(!cal) return; cal.innerHTML = ''; 
+            const days = {};
+            trades.forEach(t => { if(!days[t.date]) days[t.date] = 0; days[t.date] += t.pnl; });
+            const today = new Date();
+            for(let i=13; i>=0; i--) {
+                const d = new Date(); d.setDate(today.getDate() - i); 
+                const ds = d.toISOString().split('T')[0];
+                const pnl = days[ds] || 0;
+                const div = document.createElement('div');
+                div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${d.getDate()}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`;
+                cal.appendChild(div);
+            }
+        }
+
+        function updateEquity(trades) {
+            const chartEl = document.getElementById('harvestChart'); if(!chartEl) return;
+            const ctx = chartEl.getContext('2d'); if(harvestChart) harvestChart.destroy();
+            let sum = 0; const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
+            const data = sorted.map(t => { sum += t.pnl; return sum; });
+            harvestChart = new Chart(ctx, { type: 'line', data: { labels: data.map((_,i) => i+1), datasets: [{ data: data, borderColor: '#38bdf8', tension: 0.4, fill: true, backgroundColor: 'rgba(56,189,248,0.1)' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#1f2937' }, ticks: { color: '#444', font: { size: 8 } } } } } });
+        }
+    </script>
+</body>
+</html>
