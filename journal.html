@@ -45,7 +45,7 @@
         .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         
-        /* ENTRY MODEL FIXED CSS - BALIK NORMAL */
+        /* ENTRY MODEL FIXED CSS - TEKS PUTIH */
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff !important; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); cursor: pointer; margin: 0; }
@@ -107,8 +107,10 @@
             <div class="form-item"><label>💰 Pair Selection</label>
                 <select id="pair">
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option></optgroup>
-                    <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option><option value="NZDUSD">NZDUSD</option></optgroup>
+                    <optgroup label="FOREX MINOR"><option value="EURGBP">EURGBP</option><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="AUDJPY">AUDJPY</option></optgroup>
+                    <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
+                    <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option></optgroup>
                 </select>
             </div>
             <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
@@ -237,7 +239,9 @@
             if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true; 
             const t = { 
-                date: document.getElementById('date').value, pair: document.getElementById('pair').value, session: sSession, 
+                date: document.getElementById('date').value, 
+                time: document.getElementById('time').value,
+                pair: document.getElementById('pair').value, session: sSession, 
                 models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, 
                 reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA 
             }; 
@@ -254,7 +258,7 @@
             trades.reverse().forEach(t => {
                 totalP += t.pnl; if(t.res === 'TP') win++;
                 const card = document.createElement('div'); card.className = 'history-card';
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
                 h.appendChild(card);
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
