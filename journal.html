@@ -45,7 +45,6 @@
         .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         
-        /* ENTRY MODEL FIXED CSS - TEKS PUTIH */
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff !important; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); cursor: pointer; margin: 0; }
@@ -235,19 +234,47 @@
             }; 
         }
         
+        // FUNGSI SAVING DIPERBAIKI TOTAL
         function save() { 
-            if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
-            const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true; 
+            if(!sRes) return alert("Pilih Result (TP/SL/BE) dulu bos!"); 
+            if(!curUser) return alert("Belum login bos!");
+            
+            const btn = document.getElementById('saveBtn'); 
+            btn.innerText = "🚀 SAVING..."; 
+            btn.disabled = true; 
+            
             const t = { 
                 date: document.getElementById('date').value, 
                 time: document.getElementById('time').value,
-                pair: document.getElementById('pair').value, session: sSession, 
-                models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, 
-                reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA 
+                pair: document.getElementById('pair').value, 
+                session: sSession, 
+                models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), 
+                emotion: document.getElementById('emotion').value, 
+                reason: document.getElementById('reason').value, 
+                rr: document.getElementById('rr').value, 
+                pnl: parseFloat(document.getElementById('pnl').value) || 0, 
+                res: sRes, 
+                bef: bB, 
+                aft: bA 
             }; 
-            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
-                btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; alert("BERHASIL DISIMPAN!"); 
-            }); 
+            
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t)
+                .then(() => { 
+                    btn.innerText = "🚀 SAVE TRANSACTION"; 
+                    btn.disabled = false; 
+                    alert("DATA JURNAL BERHASIL DISIMPAN!"); 
+                    // Reset Gambar
+                    bB = ''; bA = '';
+                    document.getElementById('pb').style.display = 'none';
+                    document.getElementById('pa').style.display = 'none';
+                    document.getElementById('file-pb').value = '';
+                    document.getElementById('file-pa').value = '';
+                })
+                .catch((error) => {
+                    alert("Gagal simpan bos: " + error.message);
+                    btn.innerText = "🚀 SAVE TRANSACTION";
+                    btn.disabled = false;
+                });
         }
 
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); render(d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []); }); }
