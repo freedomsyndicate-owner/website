@@ -37,8 +37,8 @@
         .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue); }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 10px; }
-        .upload-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 10px; }
+        .upload-box img { width: 100%; height: auto; max-height: 150px; object-fit: contain; position: relative; z-index: 5; margin-top: 5px; }
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
@@ -49,16 +49,10 @@
         .cal-day.profit { border-color: var(--green); color: var(--green); background: rgba(74, 222, 128, 0.05); }
         .cal-day.loss { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.05); }
         .daily-info { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 10px; margin-bottom: 15px; font-size: 10px; text-align: center; display: flex; justify-content: space-around; font-family: 'Orbitron'; }
-        
-        /* NEW ZOOM MODAL */
         #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 20px; }
         #modal-zoom img { max-width: 95%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
-
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
         .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
-        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
-        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
-        .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
@@ -92,9 +86,9 @@
             <div id="tv_v60" style="height:calc(100% - 45px); width:100%;"></div>
         </div>
         <div id="journal-tab" class="tab-content active"><div class="inner-padding">
-            <form id="jform" onsubmit="event.preventDefault(); save();">
+            <form id="jform">
                 <div class="notion-form">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date" required></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time" required></div></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
@@ -107,7 +101,8 @@
                     <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
                         <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
                         <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
                     </div></div>
                     <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
                     <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
@@ -117,7 +112,7 @@
                         <div class="upload-box"><span>📸 Before</span><input type="file" id="f-pb" onchange="procImg(this, 'pb')"><img id="pb" style="display:none"></div>
                         <div class="upload-box"><span>📸 After</span><input type="file" id="f-pa" onchange="procImg(this, 'pa')"><img id="pa" style="display:none"></div>
                     </div>
-                    <button type="submit" class="btn-save" id="saveBtn">🚀 SAVE TRANSACTION</button>
+                    <button type="button" class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
             </form>
             <div class="daily-info" id="daily-stat">HARI INI: 💰 TP 0 | 💀 SL 0</div><div id="hist"></div></div></div>
@@ -129,7 +124,7 @@
             <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR EXNESS</button></div>
             <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR HEADWAY</button></div>
         </div></div>
-        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px;">Dukung keberlangsungan Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px;">Dukung Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
     </div>
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
@@ -139,9 +134,26 @@
         let curUser = null, sRes = '', sSession = '', bB = '', bA = '';
 
         function openZoom(src) { document.getElementById('zoom-target').src = src; document.getElementById('modal-zoom').style.display = 'flex'; }
-        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.readAsDataURL(f); r.onload = e => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const sc = Math.min(800 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.6); document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; }; }
+        
+        function procImg(i, id) { 
+            const f = i.files[0]; if(!f) return; 
+            const r = new FileReader(); r.readAsDataURL(f); 
+            r.onload = e => { 
+                const img = new Image(); img.src = e.target.result; 
+                img.onload = () => { 
+                    const cvs = document.createElement('canvas'); const ctx = cvs.getContext('2d');
+                    const max = 1200; let w = img.width, h = img.height;
+                    if(w > h) { if(w > max){ h *= max/w; w = max; } } else { if(h > max){ w *= max/h; h = max; } }
+                    cvs.width = w; cvs.height = h; ctx.drawImage(img, 0, 0, w, h);
+                    const base64 = cvs.toDataURL('image/jpeg', 0.8);
+                    document.getElementById(id).src = base64; document.getElementById(id).style.display = 'block'; 
+                    if(id === 'pb') bB = base64; else bA = base64; 
+                }; 
+            }; 
+        }
+
         function save() {
-            if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE)!");
+            if(!sRes || !curUser) return alert("Pilih Result!");
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
             const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { 
@@ -150,8 +162,9 @@
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                 document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none';
                 bB = ''; bA = ''; sRes = ''; sSession = '';
-            });
+            }).catch(e => { alert(e.message); btn.disabled = false; });
         }
+
         function handleAuth() { const e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value; if(!e||!p) return alert("Isi data!"); auth.signInWithEmailAndPassword(e, p).catch(() => auth.createUserWithEmailAndPassword(e, p)); }
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id === 'chart-tab') updateChart(); }
@@ -160,6 +173,7 @@
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD'; document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60"}); }
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
+
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, dTP = 0, dSL = 0;
             const today = new Date().toISOString().split('T')[0];
@@ -181,8 +195,8 @@
             const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
             const lastDay = new Date(year, month + 1, 0).getDate();
             for (let i = 1; i <= lastDay; i++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const pnl = daysData[dateStr] || 0;
+                const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const pnl = daysData[ds] || 0;
                 const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`;
                 cal.appendChild(div);
