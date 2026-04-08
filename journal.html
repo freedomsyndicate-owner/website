@@ -42,7 +42,7 @@
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; }
+        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: zoom-in; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); font-weight: bold; cursor: pointer; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
@@ -53,9 +53,14 @@
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
+
+        /* IMAGE ZOOM MODAL */
+        #img-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; cursor: zoom-out; }
+        #modal-img { max-width: 95%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 20px var(--blue); transition: transform 0.3s; }
     </style>
 </head>
 <body>
+    <div id="img-modal" onclick="this.style.display='none'"><img id="modal-img" src=""></div>
     <div id="auth-screen">
         <div class="auth-card">
             <h1 class="auth-logo-main">FREEDOM SYNDICATE</h1>
@@ -98,8 +103,7 @@
             <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
                 <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
                 <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
             </div></div>
             <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
             <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
@@ -141,7 +145,8 @@
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id === 'chart-tab') updateChart(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
-        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.readAsDataURL(f); r.onload = e => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const sc = Math.min(500 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.4); document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; }; }
+        function zoom(src) { document.getElementById('modal-img').src = src; document.getElementById('img-modal').style.display = 'flex'; }
+        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.readAsDataURL(f); r.onload = e => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const sc = Math.min(800 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.6); document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; }; }
         function save() {
             if(!sRes || !curUser) return alert("Pilih Result!");
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
@@ -153,7 +158,7 @@
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
-            sorted.slice().reverse().forEach(t => { totalP += t.pnl; if(t.res === 'TP') win++; const card = document.createElement('div'); card.className = 'history-card'; card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`; h.appendChild(card); });
+            sorted.slice().reverse().forEach(t => { totalP += t.pnl; if(t.res === 'TP') win++; const card = document.createElement('div'); card.className = 'history-card'; card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="zoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="zoom('${t.aft}')">` : ''}</div>`; h.appendChild(card); });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             updateCalendar(trades);
         }
