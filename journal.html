@@ -48,15 +48,19 @@
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); background: rgba(74, 222, 128, 0.05); }
         .cal-day.loss { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.05); }
+        
+        /* NEW: INFO HARI INI */
+        .daily-info { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 10px; margin-bottom: 15px; font-size: 10px; text-align: center; display: flex; justify-content: space-around; font-family: 'Orbitron'; }
+
+        /* IMAGE ZOOM MODAL FIX */
+        #img-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; cursor: zoom-out; }
+        #modal-img { max-width: 95%; max-height: 90%; border-radius: 10px; border: 2px solid var(--blue); object-fit: contain; }
+
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; text-decoration: none; display: block; color: white; }
-        .btn-reg { background: var(--blue); color: black; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
+        .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
-
-        /* IMAGE ZOOM MODAL */
-        #img-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; cursor: zoom-out; }
-        #modal-img { max-width: 95%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 20px var(--blue); transition: transform 0.3s; }
     </style>
 </head>
 <body>
@@ -103,18 +107,19 @@
             <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
                 <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
                 <label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label><label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label>
-                <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                <label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label><label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label>
+                <label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
             </div></div>
             <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
             <div class="form-item"><label>📝 Reason Entry</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
             <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00" step="any"></div></div>
             <div class="photo-grid">
-                <div class="upload-box"><span>📸 Before</span><input type="file" id="file-pb" onchange="procImg(this, 'pb')"><img id="pb" style="display:none"></div>
-                <div class="upload-box"><span>📸 After</span><input type="file" id="file-pa" onchange="procImg(this, 'pa')"><img id="pa" style="display:none"></div>
+                <div class="upload-box"><span>📸 Before</span><input type="file" onchange="procImg(this, 'pb')"><img id="pb" style="display:none"></div>
+                <div class="upload-box"><span>📸 After</span><input type="file" onchange="procImg(this, 'pa')"><img id="pa" style="display:none"></div>
             </div>
             <button class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
-        </div><div id="hist"></div></div></div>
+        </div><div class="daily-info" id="daily-stat">HARI INI: 💰 TP 0 | 💀 SL 0</div><div id="hist"></div></div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
@@ -145,34 +150,40 @@
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id === 'chart-tab') updateChart(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
-        function zoom(src) { document.getElementById('modal-img').src = src; document.getElementById('img-modal').style.display = 'flex'; }
+        function zoom(src) { if(!src) return; document.getElementById('modal-img').src = src; document.getElementById('img-modal').style.display = 'flex'; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.readAsDataURL(f); r.onload = e => { const img = new Image(); img.src = e.target.result; img.onload = () => { const cvs = document.createElement('canvas'); const sc = Math.min(800 / img.width, 1); cvs.width = img.width * sc; cvs.height = img.height * sc; cvs.getContext('2d').drawImage(img, 0, 0, cvs.width, cvs.height); const b64 = cvs.toDataURL('image/jpeg', 0.6); document.getElementById(id).src = b64; document.getElementById(id).style.display = 'block'; if(id === 'pb') bB = b64; else bA = b64; }; }; }
         function save() {
             if(!sRes || !curUser) return alert("Pilih Result!");
             const btn = document.getElementById('saveBtn'); btn.innerText = "🚀 SAVING..."; btn.disabled = true;
             const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, models: Array.from(document.querySelectorAll('.model-check:checked')).map(cb => cb.value), emotion: document.getElementById('emotion').value, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; document.getElementById('pnl').value = '0.00'; document.getElementById('reason').value = ''; document.querySelectorAll('.model-check').forEach(cb => cb.checked = false); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); sRes = ''; sSession = ''; bB = ''; bA = ''; document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none'; document.getElementById('file-pb').value = ''; document.getElementById('file-pa').value = ''; });
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); btn.innerText = "🚀 SAVE TRANSACTION"; btn.disabled = false; document.getElementById('pnl').value = '0.00'; document.getElementById('reason').value = ''; document.querySelectorAll('.model-check').forEach(cb => cb.checked = false); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); sRes = ''; sSession = ''; bB = ''; bA = ''; document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none'; });
         }
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); render(d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []); }); }
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, dTP = 0, dSL = 0;
+            const today = new Date().toISOString().split('T')[0];
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
-            sorted.slice().reverse().forEach(t => { totalP += t.pnl; if(t.res === 'TP') win++; const card = document.createElement('div'); card.className = 'history-card'; card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="zoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="zoom('${t.aft}')">` : ''}</div>`; h.appendChild(card); });
+            sorted.slice().reverse().forEach(t => { 
+                totalP += t.pnl; if(t.res === 'TP') win++; 
+                if(t.date === today) { if(t.res === 'TP') dTP++; if(t.res === 'SL') dSL++; }
+                const card = document.createElement('div'); card.className = 'history-card'; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="zoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="zoom('${t.aft}')">` : ''}</div>`; 
+                h.appendChild(card); 
+            });
+            document.getElementById('daily-stat').innerHTML = `HARI INI: 💰 TP ${dTP} | 💀 SL ${dSL}`;
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             updateCalendar(trades);
         }
         function updateCalendar(trades) {
             const cal = document.getElementById('cal'); if(!cal) return; cal.innerHTML = '';
-            const daysData = {};
-            trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
+            const daysData = {}; trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
             const now = new Date(); const year = now.getFullYear(); const month = now.getMonth();
             const lastDay = new Date(year, month + 1, 0).getDate();
             for (let i = 1; i <= lastDay; i++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 const pnl = daysData[dateStr] || 0;
-                const div = document.createElement('div');
-                div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`;
                 cal.appendChild(div);
             }
