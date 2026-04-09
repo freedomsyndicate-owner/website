@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V63 FULL</title>
+    <title>FS | Freedom Syndicate V64 OFFICIAL</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -17,7 +17,7 @@
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 5px 10px; background: var(--bg); z-index: 100; text-align: center; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
-        .nav-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 15px; }
+        .nav-tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 15px; }
         .tab-btn { cursor: pointer; background: var(--card); border: 1px solid #1f2937; padding: 10px 2px; border-radius: 10px; font-size: 6px; font-weight: bold; color: #9ca3af; text-transform: uppercase; text-align: center; }
         .tab-btn.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
@@ -40,7 +40,6 @@
         .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; transition: 0.3s; }
-        .streak-glow { box-shadow: 0 0 15px rgba(74, 222, 128, 0.3); border-color: var(--green); }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; font-weight: bold; }
@@ -61,6 +60,9 @@
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
         .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .mon-select { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 9px; padding: 8px; border-radius: 8px; outline: none; width: 100%; }
+        .announce-card { background: var(--card); border: 1px solid var(--blue); border-radius: 20px; padding: 25px; line-height: 1.6; position: relative; overflow: hidden; }
+        .announce-card::before { content: '⚠️'; position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.1; }
+        .announce-link { display: inline-block; background: var(--blue); color: black; padding: 10px 20px; border-radius: 10px; font-weight: bold; text-decoration: none; margin-top: 15px; font-size: 11px; font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
@@ -75,7 +77,8 @@
         <h1 class="logo">FREEDOM SYNDICATE</h1>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
         <nav class="nav-tabs">
-            <div class="tab-btn active" onclick="openTab('journal-tab', this)">📓 Journal</div>
+            <div class="tab-btn active" onclick="openTab('announce-tab', this)">📢 News</div>
+            <div class="tab-btn" onclick="openTab('journal-tab', this)">📓 Journal</div>
             <div class="tab-btn" onclick="openTab('monitor-tab', this)">🖥️ Monitor</div>
             <div class="tab-btn" onclick="openTab('broker-tab', this)">🏦 Broker</div>
             <div class="tab-btn" onclick="openTab('donasi-tab', this)">☕ Donasi</div>
@@ -83,7 +86,22 @@
         </nav>
     </div>
     <div class="content-container">
-        <div id="journal-tab" class="tab-content active"><div class="inner-padding">
+        <div id="announce-tab" class="tab-content active"><div class="inner-padding">
+            <div class="announce-card">
+                <h3 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">ANNOUNCEMENT</h3>
+                <p style="font-size:11px; color:#ccc;">Perlu kalian ingat,<br>Website ini pembaruan server setiap hari <b>Sabtu</b>.</p>
+                <p style="font-size:11px; color:#ccc;">Jadi disarankan untuk pengguna, setiap hari Sabtu hapus history google anda, dan tutup tab Journal ini.</p>
+                <p style="font-size:11px; color:#ccc;">Terus jika mau login tinggal klik link di bawah ini:</p>
+                <a href="https://linktr.ee/freedomsyndicate" target="_blank" class="announce-link">LOGIN FREEDOM SYNDICATE</a>
+                <p style="font-size:11px; color:#ccc; margin-top:20px;">Atau klik link di bio komunitas kami di semua platform, sekian terima kasih.</p>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+                <div style="text-align:right;">
+                    <b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b><br>
+                    <small style="font-size:9px; color:#777; letter-spacing:2px;">OWNER</small>
+                </div>
+            </div>
+        </div></div>
+        <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div id="psy-box" class="psych-alert"><b style="color:var(--red); font-size: 10px;">⚠️ PSYCHOLOGY WARNING!</b><br><small style="font-size: 8px; color:white;">Doms, kamu sedang SL streak. Stop trading!</small></div>
             <form id="tradingForm">
                 <div class="notion-form">
@@ -123,7 +141,7 @@
             <div class="equity-container"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
-            <button class="btn-export" onclick="exportCSV()" style="background:#1f2937; color:white; border:none; padding:10px; border-radius:10px; font-size:9px; width:100%; margin-top:10px;">📥 EXPORT CSV</button>
+            <button onclick="exportCSV()" style="background:#1f2937; color:white; border:none; padding:10px; border-radius:10px; font-size:9px; width:100%; margin-top:10px; cursor:pointer;">📥 EXPORT CSV</button>
         </div></div>
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR</button></div>
@@ -155,8 +173,8 @@
         }
 
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); allTrades = d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []; render(); }); }
-        function del(id) { if(confirm("Yakin hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        function share(id) { const t = allTrades.find(x => x.id === id); const msg = `FREEDOM SYNDICATE\nPair: ${t.pair}\nResult: ${t.res}\nReason: ${t.reason}`; navigator.clipboard.writeText(msg).then(() => alert("Disalin!")); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        function share(id) { const t = allTrades.find(x => x.id === id); const msg = `FS SETUP\nPair: ${t.pair}\nResult: ${t.res}\nReason: ${t.reason}`; navigator.clipboard.writeText(msg).then(() => alert("Disalin!")); }
 
         function render() {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, count = 0;
@@ -178,13 +196,12 @@
                 if((fP === 'ALL' || t.pair === fP) && (fM === 'ALL' || tm === fM)) { totalP += t.pnl; if(t.res === 'TP') win++; count++; }
             });
 
-            const wr = count > 0 ? Math.round((win/count)*100) : 0;
-            document.getElementById('rank-name').innerText = wr > 80 ? "LEGEND" : wr > 60 ? "MASTER" : "NOVICE";
+            document.getElementById('rank-name').innerText = (count > 0 && (win/count) > 0.8) ? "LEGEND" : "PRO";
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
-            document.getElementById('st-wr').innerText = `${wr}%`;
+            document.getElementById('st-wr').innerText = `${count > 0 ? Math.round((win/count)*100) : 0}%`;
 
             sorted.forEach(t => {
-                const card = document.createElement('div'); card.className = `history-card ${t.res === 'TP' && streak > 2 ? 'streak-glow' : ''}`;
+                const card = document.createElement('div'); card.className = `history-card`;
                 card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">×</div><div class="btn-share" onclick="share('${t.id}')">🔗</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} | ${t.pair} <span class="badge badge-session">${t.session}</span></div><div style="font-size:9px; color:#777; margin-bottom:8px;"><b>Mood:</b> ${t.emotion} | <b>Note:</b> ${t.reason}</div><div class="tracker-display">${t.bef ? `<img class="tracker-img" src="${t.bef}" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img class="tracker-img" src="${t.aft}" onclick="openZoom('${t.aft}')">` : ''}</div><div style="display:flex; justify-content:space-between; margin-top:8px; font-size:10px;"><span style="color:${t.res === 'TP' ? 'var(--green)' : 'var(--red)'}">${t.res}: $${t.pnl}</span><span>RR ${t.rr}</span></div>`;
                 h.appendChild(card);
             });
@@ -194,20 +211,18 @@
         function updateChart(l, d) {
             const ctx = document.getElementById('equityChart').getContext('2d');
             if(eqChart) eqChart.destroy();
-            eqChart = new Chart(ctx, { type: 'line', data: { labels: l, datasets: [{ data: d, borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56,189,248,0.1)', tension: 0.3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } } });
+            eqChart = new Chart(ctx, { type: 'line', data: { labels: l, datasets: [{ data: d, borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56, 189, 248, 0.1)', tension: 0.3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } } });
         }
 
         function renderCal() {
             const cal = document.getElementById('cal'); cal.innerHTML = ''; const g = {}; allTrades.forEach(t => { g[t.date] = (g[t.date] || 0) + t.pnl; });
-            const now = new Date(); const y = now.getFullYear(); const m = now.getMonth();
+            const now = new Date(); const y = 2026, m = 3; // April
             for(let i = 1; i <= 30; i++) {
                 const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 const p = g[ds] || 0; const el = document.createElement('div'); el.className = `cal-day ${p > 0 ? 'profit' : p < 0 ? 'loss' : ''}`;
                 el.innerHTML = `<span style="opacity:0.3">${i}</span><b>${p !== 0 ? p.toFixed(0) : ''}</b>`; cal.appendChild(el);
             }
         }
-
-        function exportCSV() { let c = "Date,Pair,Result,P&L\n"; allTrades.forEach(t => { c += `${t.date},${t.pair},${t.res},${t.pnl}\n`; }); const b = new Blob([c], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = "FS_Journal.csv"; a.click(); }
         function initDate() { const n = new Date(); document.getElementById('date').value = n.toISOString().split('T')[0]; document.getElementById('time').value = n.toTimeString().slice(0,5); }
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display='flex'; }
         window.onload = initDate;
