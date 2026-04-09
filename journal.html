@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V63 LEGENDARY</title>
+    <title>FS | Freedom Syndicate V63 FULL</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -17,7 +17,7 @@
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 5px 10px; background: var(--bg); z-index: 100; text-align: center; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
-        .nav-tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 15px; }
+        .nav-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 15px; }
         .tab-btn { cursor: pointer; background: var(--card); border: 1px solid #1f2937; padding: 10px 2px; border-radius: 10px; font-size: 6px; font-weight: bold; color: #9ca3af; text-transform: uppercase; text-align: center; }
         .tab-btn.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
@@ -51,11 +51,16 @@
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
-        .psych-alert { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red); padding: 10px; border-radius: 12px; margin-bottom: 15px; display: none; text-align: center; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        .psych-alert { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red); padding: 10px; border-radius: 12px; margin-bottom: 15px; display: none; text-align: center; }
         .equity-container { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 10px; margin-bottom: 15px; height: 180px; }
         .rank-badge { background: linear-gradient(90deg, #1f2937, #111827); border: 1px solid var(--blue); padding: 10px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
-        .streak-text { font-size: 9px; color: #aaa; margin-top: 5px; }
+        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
+        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
+        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
+        .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
+        .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .mon-select { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 9px; padding: 8px; border-radius: 8px; outline: none; width: 100%; }
     </style>
 </head>
 <body>
@@ -63,7 +68,6 @@
     <div id="auth-screen">
         <div class="auth-card">
             <h1 style="font-family:'Orbitron'; color:white; font-size:1.1rem;">FREEDOM SYNDICATE</h1>
-            <p style="font-size:8px; color:#555; margin-bottom:20px;">V63 CLOUD TERMINAL</p>
             <button class="btn-google" onclick="loginWithGoogle()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE</button>
         </div>
     </div>
@@ -71,7 +75,6 @@
         <h1 class="logo">FREEDOM SYNDICATE</h1>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
         <nav class="nav-tabs">
-            <div class="tab-btn" onclick="openTab('chart-tab', this)">📈 Chart</div>
             <div class="tab-btn active" onclick="openTab('journal-tab', this)">📓 Journal</div>
             <div class="tab-btn" onclick="openTab('monitor-tab', this)">🖥️ Monitor</div>
             <div class="tab-btn" onclick="openTab('broker-tab', this)">🏦 Broker</div>
@@ -80,15 +83,8 @@
         </nav>
     </div>
     <div class="content-container">
-        <div id="chart-tab" class="tab-content">
-            <div style="background:#0d1117;padding:10px;display:flex;gap:10px;border-bottom:1px solid #1f2937;">
-                <input type="text" id="chart-pair" style="background:#0a0e14;border:1px solid #1f2937;color:var(--blue);padding:5px;border-radius:5px;width:100px;font-size:10px;" value="XAUUSD">
-                <button onclick="updateChart()" style="background:var(--blue);border:none;padding:5px 10px;border-radius:5px;font-size:10px;font-weight:bold;">SWITCH</button>
-            </div>
-            <div id="tv_v60" style="height:calc(100% - 45px); width:100%;"></div>
-        </div>
         <div id="journal-tab" class="tab-content active"><div class="inner-padding">
-            <div id="psy-box" class="psych-alert"><b style="color:var(--red); font-size: 10px;">⚠️ PSYCHOLOGY WARNING!</b><br><small style="font-size: 8px; color:white;">Doms, kamu sedang SL streak. Stop trading, tenangkan diri!</small></div>
+            <div id="psy-box" class="psych-alert"><b style="color:var(--red); font-size: 10px;">⚠️ PSYCHOLOGY WARNING!</b><br><small style="font-size: 8px; color:white;">Doms, kamu sedang SL streak. Stop trading!</small></div>
             <form id="tradingForm">
                 <div class="notion-form">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
@@ -102,51 +98,47 @@
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
                     <div class="form-item" style="border:none;"><label>🎯 Entry Model</label><div class="entry-model-grid">
-                        <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label>
-                        <label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="model-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="model-check" value="IFVG"> IFVG</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="model-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="model-check" value="PSP"> PSP</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="model-check" value="SBR"> SBR</label>
+                        <label class="check-item"><input type="checkbox" class="model-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="model-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="model-check" value="MSS"> MSS</label><label class="check-item"><input type="checkbox" class="model-check" value="LIQ"> LIQ</label>
                     </div></div>
                     <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
                     <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00" step="any"></div></div>
-                    <div class="form-item" style="border:none; margin-top:10px;"><label>🛡️ DISCIPLINE CHECKLIST</label>
-                        <label class="check-item" style="margin-bottom:5px;"><input type="checkbox" class="rule-check"> Rules Terpenuhi</label>
-                        <label class="check-item"><input type="checkbox" class="rule-check"> Tidak Balas Dendam</label>
-                    </div>
-                    <div class="photo-grid">
-                        <div class="upload-box"><span>📸 Before</span><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
-                        <div class="upload-box"><span>📸 After</span><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
-                    </div>
+                    <div class="form-item" style="border:none;"><label>🛡️ DISCIPLINE CHECKLIST</label><label class="check-item"><input type="checkbox" class="rule-check"> Rules Terpenuhi</label></div>
+                    <div class="photo-grid"><div class="upload-box"><span>📸 Before</span><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div><div class="upload-box"><span>📸 After</span><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div></div>
                     <button type="button" class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
             </form>
             <div id="hist"></div>
         </div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
-            <div class="rank-badge">
-                <small style="font-size:8px; color:var(--blue)">TRADER RANK</small>
-                <div id="rank-name" style="font-weight:900; font-family:'Orbitron'; font-size:14px; margin:5px 0;">NOVICE TRADER</div>
-                <div id="streak-info" class="streak-text">Streak: 0 Wins</div>
-            </div>
+            <div class="rank-badge"><small style="font-size:8px; color:var(--blue)">TRADER RANK</small><div id="rank-name" style="font-weight:900; font-family:'Orbitron'; font-size:14px; margin:5px 0;">NOVICE</div><div id="streak-info" style="font-size:9px; color:#aaa;">Streak: 0</div></div>
             <div class="mon-filters">
-                <select id="mon-pair" class="mon-select" onchange="render()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option></select>
-                <select id="mon-month" class="mon-select" onchange="render()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="04">APR</option></select>
+                <select id="mon-pair" class="mon-select" onchange="render()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option></select>
+                <select id="mon-month" class="mon-select" onchange="render()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04">APR</option><option value="05">MEI</option><option value="06">JUN</option><option value="07">JUL</option><option value="08">AGU</option><option value="09">SEP</option><option value="10">OKT</option><option value="11">NOV</option><option value="12">DES</option></select>
             </div>
             <div class="equity-container"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
-            <button class="btn-export" onclick="exportCSV()">📥 EXPORT TO CSV (EXCEL)</button>
+            <button class="btn-export" onclick="exportCSV()" style="background:#1f2937; color:white; border:none; padding:10px; border-radius:10px; font-size:9px; width:100%; margin-top:10px;">📥 EXPORT CSV</button>
         </div></div>
+        <div id="broker-tab" class="tab-content"><div class="inner-padding">
+            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR</button></div>
+            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777;">DEPOSIT MINIMAL $1</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR</button></div>
+        </div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px; margin-bottom: 15px;">Dukung Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" onclick="alert('Terima kasih!')">🚀 DUKUNG!</button></div></div></div>
     </div>
-    <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
-        let curUser = null, sRes = '', sSession = '', bB = '', bA = '', allTrades = [], equityChart = null;
+        let curUser = null, sRes = '', sSession = '', bB = '', bA = '', allTrades = [], eqChart = null;
 
         function loginWithGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-        auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
+        auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); } else { document.getElementById('auth-screen').style.display='flex'; }});
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t === 'res') sRes = v; if(t === 'session') sSession = v; }
@@ -163,95 +155,61 @@
         }
 
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { const d = snap.val(); allTrades = d ? Object.entries(d).map(([id, val]) => ({...val, id})) : []; render(); }); }
-        function del(id) { if(confirm("Doms, yakin mau hapus data ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD'; document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60"}); }
-        function openZoom(src) { document.getElementById('zoom-target').src = src; document.getElementById('modal-zoom').style.display = 'flex'; }
-
-        function share(id) {
-            const t = allTrades.find(x => x.id === id);
-            const msg = `FREEDOM SYNDICATE SETUP\nPair: ${t.pair}\nResult: ${t.res}\nReason: ${t.reason}`;
-            navigator.clipboard.writeText(msg).then(() => alert("Analisa disalin!"));
-        }
+        function del(id) { if(confirm("Yakin hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        function share(id) { const t = allTrades.find(x => x.id === id); const msg = `FREEDOM SYNDICATE\nPair: ${t.pair}\nResult: ${t.res}\nReason: ${t.reason}`; navigator.clipboard.writeText(msg).then(() => alert("Disalin!")); }
 
         function render() {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, count = 0;
-            const fPair = document.getElementById('mon-pair').value;
-            const fMonth = document.getElementById('mon-month').value;
+            const fP = document.getElementById('mon-pair').value; const fM = document.getElementById('mon-month').value;
+            const sorted = allTrades.sort((a,b) => new Date(b.date+'T'+(b.time||'00:00')) - new Date(a.date+'T'+(a.time||'00:00')));
             
-            const sorted = allTrades.sort((a,b) => new Date(b.date + 'T' + (b.time || '00:00')) - new Date(a.date + 'T' + (a.time || '00:00')));
-            
-            // Streak & Rank Logic
-            let streak = 0, currentStreakType = '';
-            const chronSort = [...allTrades].sort((a,b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
-            chronSort.forEach(t => { if(t.res === currentStreakType) streak++; else { streak = 1; currentStreakType = t.res; }});
-            document.getElementById('streak-info').innerText = `Streak: ${streak} ${currentStreakType}`;
+            let streak = 0, stType = '';
+            const chron = [...allTrades].sort((a,b) => new Date(a.date+'T'+(a.time||'00:00')) - new Date(b.date+'T'+(b.time||'00:00')));
+            chron.forEach(t => { if(t.res === stType) streak++; else { streak = 1; stType = t.res; }});
+            document.getElementById('streak-info').innerText = `Streak: ${streak} ${stType}`;
 
-            const slCount = sorted.slice(0, 5).filter(x => x.res === 'SL').length;
-            document.getElementById('psy-box').style.display = (slCount >= 3) ? 'block' : 'none';
+            const slC = sorted.slice(0, 5).filter(x => x.res === 'SL').length;
+            document.getElementById('psy-box').style.display = (slC >= 3) ? 'block' : 'none';
 
-            let equityData = [0], eqLabels = ["Start"], runningSum = 0;
-
-            chronSort.forEach(t => {
-                runningSum += t.pnl;
-                equityData.push(runningSum);
-                eqLabels.push(t.date.split('-')[2]);
-                const tMonth = t.date.split('-')[1];
-                if((fPair === 'ALL' || t.pair === fPair) && (fMonth === 'ALL' || tMonth === fMonth)) {
-                    totalP += (t.pnl || 0);
-                    if(t.res === 'TP') win++;
-                    count++;
-                }
+            let eqD = [0], eqL = ["0"], runP = 0;
+            chron.forEach(t => {
+                runP += t.pnl; eqD.push(runP); eqL.push(t.date.split('-')[2]);
+                const tm = t.date.split('-')[1];
+                if((fP === 'ALL' || t.pair === fP) && (fM === 'ALL' || tm === fM)) { totalP += t.pnl; if(t.res === 'TP') win++; count++; }
             });
 
             const wr = count > 0 ? Math.round((win/count)*100) : 0;
-            const rank = wr > 80 ? "FREEDOM LEGEND" : wr > 60 ? "MASTER TRADER" : wr > 40 ? "PRO TRADER" : "NOVICE TRADER";
-            document.getElementById('rank-name').innerText = rank;
-            document.getElementById('rank-name').style.color = wr > 60 ? 'var(--green)' : 'var(--blue)';
-
-            sorted.forEach(t => {
-                const card = document.createElement('div');
-                card.className = `history-card ${t.res === 'TP' && streak > 2 ? 'streak-glow' : ''}`;
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">×</div><div class="btn-share" onclick="share('${t.id}')">🔗</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} | ${t.pair} <span class="badge badge-session">${t.session || ''}</span></div><div style="font-size:9px; color:#777; margin-bottom:8px;"><b>Mood:</b> ${t.emotion} | <b>Note:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img class="tracker-img" src="${t.bef}" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img class="tracker-img" src="${t.aft}" onclick="openZoom('${t.aft}')">` : ''}</div><div style="display:flex; justify-content:space-between; margin-top:8px; font-size:10px;"><span style="color:${t.res === 'TP' ? 'var(--green)' : t.res === 'SL' ? 'var(--red)' : 'var(--be)'}">${t.res}: $${t.pnl}</span><span>RR ${t.rr}</span></div>`;
-                h.appendChild(card);
-            });
-
+            document.getElementById('rank-name').innerText = wr > 80 ? "LEGEND" : wr > 60 ? "MASTER" : "NOVICE";
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
             document.getElementById('st-wr').innerText = `${wr}%`;
-            updateEquityChart(eqLabels, equityData);
-            renderCal();
+
+            sorted.forEach(t => {
+                const card = document.createElement('div'); card.className = `history-card ${t.res === 'TP' && streak > 2 ? 'streak-glow' : ''}`;
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">×</div><div class="btn-share" onclick="share('${t.id}')">🔗</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} | ${t.pair} <span class="badge badge-session">${t.session}</span></div><div style="font-size:9px; color:#777; margin-bottom:8px;"><b>Mood:</b> ${t.emotion} | <b>Note:</b> ${t.reason}</div><div class="tracker-display">${t.bef ? `<img class="tracker-img" src="${t.bef}" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img class="tracker-img" src="${t.aft}" onclick="openZoom('${t.aft}')">` : ''}</div><div style="display:flex; justify-content:space-between; margin-top:8px; font-size:10px;"><span style="color:${t.res === 'TP' ? 'var(--green)' : 'var(--red)'}">${t.res}: $${t.pnl}</span><span>RR ${t.rr}</span></div>`;
+                h.appendChild(card);
+            });
+            updateChart(eqL, eqD); renderCal();
         }
 
-        function updateEquityChart(labels, data) {
+        function updateChart(l, d) {
             const ctx = document.getElementById('equityChart').getContext('2d');
-            if(equityChart) equityChart.destroy();
-            equityChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: labels, datasets: [{ data: data, borderColor: '#38bdf8', borderWidth: 2, tension: 0.3, fill: true, backgroundColor: 'rgba(56, 189, 248, 0.1)', pointRadius: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
-            });
+            if(eqChart) eqChart.destroy();
+            eqChart = new Chart(ctx, { type: 'line', data: { labels: l, datasets: [{ data: d, borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56,189,248,0.1)', tension: 0.3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } } });
         }
 
         function renderCal() {
-            const cal = document.getElementById('cal'); cal.innerHTML = '';
-            const g = {}; allTrades.forEach(t => { g[t.date] = (g[t.date] || 0) + t.pnl; });
-            const now = new Date(); 
+            const cal = document.getElementById('cal'); cal.innerHTML = ''; const g = {}; allTrades.forEach(t => { g[t.date] = (g[t.date] || 0) + t.pnl; });
+            const now = new Date(); const y = now.getFullYear(); const m = now.getMonth();
             for(let i = 1; i <= 30; i++) {
-                const ds = `2026-04-${String(i).padStart(2, '0')}`;
-                const p = g[ds] || 0;
-                const el = document.createElement('div');
-                el.className = `cal-day ${p > 0 ? 'profit' : p < 0 ? 'loss' : ''}`;
-                el.innerHTML = `<span style="opacity:0.3">${i}</span><b>${p !== 0 ? p.toFixed(0) : ''}</b>`;
-                cal.appendChild(el);
+                const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const p = g[ds] || 0; const el = document.createElement('div'); el.className = `cal-day ${p > 0 ? 'profit' : p < 0 ? 'loss' : ''}`;
+                el.innerHTML = `<span style="opacity:0.3">${i}</span><b>${p !== 0 ? p.toFixed(0) : ''}</b>`; cal.appendChild(el);
             }
         }
 
-        function exportCSV() {
-            let csv = "Date,Time,Pair,Session,Model,Emotion,Result,P&L,RR,Reason\n";
-            allTrades.forEach(t => { csv += `${t.date},${t.time},${t.pair},${t.session},"${t.models ? t.models.join('|') : '-'}",${t.emotion},${t.res},${t.pnl},${t.rr},"${t.reason}"\n`; });
-            const b = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = window.URL.createObjectURL(b); a.download = `FS_Journal.csv`; a.click();
-        }
-
+        function exportCSV() { let c = "Date,Pair,Result,P&L\n"; allTrades.forEach(t => { c += `${t.date},${t.pair},${t.res},${t.pnl}\n`; }); const b = new Blob([c], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = "FS_Journal.csv"; a.click(); }
         function initDate() { const n = new Date(); document.getElementById('date').value = n.toISOString().split('T')[0]; document.getElementById('time').value = n.toTimeString().slice(0,5); }
+        function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display='flex'; }
         window.onload = initDate;
     </script>
 </body>
