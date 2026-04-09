@@ -42,7 +42,7 @@
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
-        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; font-weight: bold; }
         #modal-zoom { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; align-items: center; justify-content: center; padding: 10px; }
         #modal-zoom img { max-width: 100%; max-height: 85vh; border: 2px solid var(--blue); border-radius: 10px; object-fit: contain; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
@@ -57,7 +57,7 @@
         .psych-alert { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--red); padding: 10px; border-radius: 12px; margin-bottom: 15px; display: none; text-align: center; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         .equity-container { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 10px; margin-bottom: 15px; height: 180px; }
-        .btn-share { position: absolute; top: 12px; right: 35px; color: var(--blue); cursor: pointer; font-size: 12px; }
+        .btn-share { position: absolute; top: 12px; right: 35px; color: var(--blue); cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -166,8 +166,8 @@
 
         function share(id) {
             const t = allTrades.find(x => x.id === id);
-            const msg = `FREEDOM SYNDICATE SETUP\nPair: ${t.pair}\nResult: ${t.res}\nModel: ${t.models.join(', ')}\nNote: ${t.reason}`;
-            navigator.clipboard.writeText(msg).then(() => alert("Analisa disalin ke clipboard! Siap kirim ke komunitas."));
+            const msg = `FREEDOM SYNDICATE SETUP\n\nPair: ${t.pair}\nSession: ${t.session}\nResult: ${t.res}\nModels: ${t.models ? t.models.join(', ') : '-'}\nNote: ${t.reason || '-'}`;
+            navigator.clipboard.writeText(msg).then(() => alert("Analisa disalin! Siap dipaste ke grup."));
         }
 
         function render() {
@@ -204,6 +204,7 @@
             });
 
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-pnl').style.color = totalP >= 0 ? 'var(--green)' : 'var(--red)';
             document.getElementById('st-wr').innerText = `${count > 0 ? Math.round((win/count)*100) : 0}%`;
             updateEquityChart(eqLabels, equityData);
             renderCal();
