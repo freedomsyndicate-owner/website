@@ -48,11 +48,6 @@
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
-        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white; }
-        .btn-reg { background: var(--blue); color: black; border: none; padding: 8px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
-        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
-        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
-        .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
         .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .mon-select { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 9px; padding: 8px; border-radius: 8px; outline: none; width: 100%; }
         .btn-export { background: #1f2937; color: white; border: 1px solid #333; padding: 10px; border-radius: 10px; font-size: 9px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
@@ -123,7 +118,7 @@
         </div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div class="mon-filters">
-                <select id="mon-pair" class="mon-select" onchange="render()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></select>
+                <select id="mon-pair" class="mon-select" onchange="render()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option></select>
                 <select id="mon-month" class="mon-select" onchange="render()"><option value="ALL">ALL TIME</option><option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04">APRIL</option><option value="05">MEI</option><option value="06">JUNI</option><option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option><option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option></select>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
@@ -173,7 +168,13 @@
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, count = 0;
             const fPair = document.getElementById('mon-pair').value;
             const fMonth = document.getElementById('mon-month').value;
-            const sorted = allTrades.sort((a,b) => new Date(b.date+' '+b.time) - new Date(a.date+' '+a.time));
+            
+            // Perbaikan Logika Sortir: Tanggal terbaru di atas
+            const sorted = allTrades.sort((a,b) => {
+                let da = new Date(a.date + 'T' + (a.time || '00:00'));
+                let db = new Date(b.date + 'T' + (b.time || '00:00'));
+                return db - da;
+            });
             
             sorted.forEach(t => {
                 const tMonth = t.date.split('-')[1];
@@ -188,14 +189,13 @@
 
                 const card = document.createElement('div');
                 card.className = 'history-card';
-                const mText = t.models ? t.models.join(', ') : '-';
                 card.innerHTML = `
                     <div class="btn-del" onclick="del('${t.id}')">×</div>
                     <div style="font-size:10px; color:var(--blue); font-weight:bold; margin-bottom:5px;">
                         ${t.date} | ${t.pair} <span class="badge badge-session">${t.session || ''}</span>
                     </div>
                     <div style="font-size:9px; color:#777; margin-bottom:8px;">
-                        <b>Mood:</b> ${t.emotion} | <b>Model:</b> ${mText}<br>
+                        <b>Mood:</b> ${t.emotion} | <b>Model:</b> ${t.models ? t.models.join(', ') : '-'} <br>
                         <b>Note:</b> <span style="color:#bbb;">${t.reason || '-'}</span>
                     </div>
                     <div class="tracker-display">
