@@ -55,6 +55,7 @@
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 30px; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
+        .filter-mon { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 5px; border-radius: 5px; width: 100%; margin-bottom: 10px; outline: none; }
     </style>
 </head>
 <body>
@@ -122,6 +123,11 @@
             <div id="hist"></div>
         </div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
+            <select id="mon-filter" class="filter-mon" onchange="loadData()">
+                <option value="ALL">SHOW ALL PAIRS</option>
+                <option value="XAUUSD">XAUUSD ONLY</option>
+                <option value="BTCUSD">BTCUSD ONLY</option>
+            </select>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
         </div></div>
@@ -155,7 +161,6 @@
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); 
                 document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none'; 
                 bB = ''; bA = ''; sRes = ''; sSession = '';
-                // Reset waktu ke sekarang lagi setelah save
                 const n = new Date();
                 document.getElementById('date').value = n.toISOString().split('T')[0];
                 document.getElementById('time').value = n.toTimeString().slice(0,5);
@@ -168,22 +173,24 @@
         function openZoom(src) { document.getElementById('zoom-target').src = src; document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0;
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, count = 0;
+            const filterPair = document.getElementById('mon-filter').value;
             const sorted = trades.sort((a,b) => new Date(b.date+' '+b.time) - new Date(a.date+' '+a.time));
             
             sorted.forEach(t => {
-                totalP += (t.pnl || 0);
-                if(t.res === 'TP') win++;
+                const passFilter = (filterPair === 'ALL' || t.pair === filterPair);
+                if(passFilter) {
+                    totalP += (t.pnl || 0);
+                    if(t.res === 'TP') win++;
+                    count++;
+                }
                 
                 const card = document.createElement('div');
                 card.className = 'history-card';
                 const mText = t.models ? t.models.join(', ') : '-';
-                
                 card.innerHTML = `
                     <div class="btn-del" onclick="del('${t.id}')">×</div>
-                    <div style="font-size:10px; color:var(--blue); font-weight:bold; margin-bottom:5px;">
-                        ${t.date} ${t.time} | ${t.pair} (${t.res})
-                    </div>
+                    <div style="font-size:10px; color:var(--blue); font-weight:bold; margin-bottom:5px;">${t.date} ${t.time} | ${t.pair} (${t.res})</div>
                     <div style="font-size:9px; color:#777; margin-bottom:8px; line-height:1.4;">
                         <b>Mood:</b> ${t.emotion || '-'} | <b>Model:</b> ${mText}<br>
                         <b>Note:</b> <span style="color:#bbb;">${t.reason || '-'}</span>
@@ -199,11 +206,9 @@
                 h.appendChild(card);
             });
 
-            const wr = trades.length > 0 ? Math.round((win / trades.length) * 100) : 0;
-            const stPnl = document.getElementById('st-pnl');
-            stPnl.innerText = `$ ${totalP.toFixed(2)}`;
-            stPnl.style.color = totalP >= 0 ? 'var(--green)' : 'var(--red)';
-            document.getElementById('st-wr').innerText = `${wr}%`;
+            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-pnl').style.color = totalP >= 0 ? 'var(--green)' : 'var(--red)';
+            document.getElementById('st-wr').innerText = `${count > 0 ? Math.round((win/count)*100) : 0}%`;
             renderCal(trades);
         }
 
