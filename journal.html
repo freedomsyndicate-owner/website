@@ -169,7 +169,6 @@
             const fPair = document.getElementById('mon-pair').value;
             const fMonth = document.getElementById('mon-month').value;
             
-            // Perbaikan Logika Sortir: Tanggal terbaru di atas
             const sorted = allTrades.sort((a,b) => {
                 let da = new Date(a.date + 'T' + (a.time || '00:00'));
                 let db = new Date(b.date + 'T' + (b.time || '00:00'));
@@ -218,13 +217,20 @@
         function renderCal(trades) {
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             const g = {}; trades.forEach(t => { g[t.date] = (g[t.date] || 0) + t.pnl; });
-            for(let i=29; i>=0; i--) {
-                const d = new Date(); d.setDate(d.getDate() - i);
-                const ds = d.toISOString().split('T')[0];
-                const p = g[ds] || 0;
+            
+            // Logika baru: Render Kalender April 2026 (Urut 1-30)
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth(); // 0 = Jan, 3 = April
+            
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            for(let i = 1; i <= daysInMonth; i++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const p = g[dateString] || 0;
                 const el = document.createElement('div');
                 el.className = `cal-day ${p > 0 ? 'profit' : p < 0 ? 'loss' : ''}`;
-                el.innerHTML = `<span style="opacity:0.3">${d.getDate()}</span><b>${p !== 0 ? p.toFixed(0) : ''}</b>`;
+                el.innerHTML = `<span style="opacity:0.3">${i}</span><b>${p !== 0 ? p.toFixed(0) : ''}</b>`;
                 cal.appendChild(el);
             }
         }
