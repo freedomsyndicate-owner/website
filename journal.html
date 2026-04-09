@@ -54,7 +54,7 @@
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px 0; border: 5px solid white; display: block; margin-left: auto; margin-right: auto; }
         .support-btn { background: #ffdd00; color: black; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; }
         .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .mon-select { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 9px; padding: 8px; border-radius: 8px; outline: none; }
+        .mon-select { background: #0a0e14; border: 1px solid #1f2937; color: var(--blue); font-size: 9px; padding: 8px; border-radius: 8px; outline: none; width: 100%; }
         .btn-export { background: #1f2937; color: white; border: 1px solid #333; padding: 10px; border-radius: 10px; font-size: 9px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
         .badge { font-size: 7px; padding: 2px 5px; border-radius: 4px; font-weight: bold; text-transform: uppercase; margin-left: 5px; }
         .badge-session { background: rgba(56, 189, 248, 0.2); color: var(--blue); }
@@ -123,8 +123,8 @@
         </div></div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div class="mon-filters">
-                <select id="mon-pair" class="mon-select" onchange="loadData()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="BTCUSD">BTCUSD</option></select>
-                <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="04">APRIL</option><option value="05">MEI</option></select>
+                <select id="mon-pair" class="mon-select" onchange="render()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></select>
+                <select id="mon-month" class="mon-select" onchange="render()"><option value="ALL">ALL TIME</option><option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04">APRIL</option><option value="05">MEI</option><option value="06">JUNI</option><option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option><option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option></select>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
@@ -160,7 +160,7 @@
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); 
                 document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none'; 
                 bB = ''; bA = ''; sRes = ''; sSession = '';
-                const n = new Date(); document.getElementById('date').value = n.toISOString().split('T')[0]; document.getElementById('time').value = n.toTimeString().slice(0,5);
+                initDate();
             });
         }
 
@@ -173,7 +173,6 @@
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, count = 0;
             const fPair = document.getElementById('mon-pair').value;
             const fMonth = document.getElementById('mon-month').value;
-            
             const sorted = allTrades.sort((a,b) => new Date(b.date+' '+b.time) - new Date(a.date+' '+a.time));
             
             sorted.forEach(t => {
@@ -187,25 +186,21 @@
                     count++;
                 }
 
-                // Render kartu history tetap muncul semua atau sesuai filter
                 const card = document.createElement('div');
                 card.className = 'history-card';
                 const mText = t.models ? t.models.join(', ') : '-';
-                // Indikator Disiplin Sederhana
-                const rrStatus = (t.res === 'TP' && t.pnl <= 0) ? '<span class="badge" style="background:orange">BAD EXECUTION</span>' : '';
-
                 card.innerHTML = `
                     <div class="btn-del" onclick="del('${t.id}')">×</div>
                     <div style="font-size:10px; color:var(--blue); font-weight:bold; margin-bottom:5px;">
-                        ${t.date} | ${t.pair} <span class="badge badge-session">${t.session || ''}</span> ${rrStatus}
+                        ${t.date} | ${t.pair} <span class="badge badge-session">${t.session || ''}</span>
                     </div>
                     <div style="font-size:9px; color:#777; margin-bottom:8px;">
                         <b>Mood:</b> ${t.emotion} | <b>Model:</b> ${mText}<br>
                         <b>Note:</b> <span style="color:#bbb;">${t.reason || '-'}</span>
                     </div>
                     <div class="tracker-display">
-                        ${t.bef ? `<img class="tracker-img" src="${t.bef}" onclick="openZoom('${t.bef}')">` : '<div class="tracker-img">No Before</div>'}
-                        ${t.aft ? `<img class="tracker-img" src="${t.aft}" onclick="openZoom('${t.aft}')">` : '<div class="tracker-img">No After</div>'}
+                        ${t.bef ? `<img class="tracker-img" src="${t.bef}" onclick="openZoom('${t.bef}')">` : '<div class="tracker-img" style="display:flex;align-items:center;justify-content:center;font-size:8px;">No Before</div>'}
+                        ${t.aft ? `<img class="tracker-img" src="${t.aft}" onclick="openZoom('${t.aft}')">` : '<div class="tracker-img" style="display:flex;align-items:center;justify-content:center;font-size:8px;">No After</div>'}
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:10px;">
                         <span style="color:${t.res === 'TP' ? 'var(--green)' : t.res === 'SL' ? 'var(--red)' : 'var(--be)'}">${t.res}: $${t.pnl}</span>
@@ -237,7 +232,7 @@
         function exportCSV() {
             let csv = "Date,Time,Pair,Session,Model,Emotion,Result,P&L,RR,Reason\n";
             allTrades.forEach(t => {
-                csv += `${t.date},${t.time},${t.pair},${t.session},"${t.models.join('|')}",${t.emotion},${t.res},${t.pnl},${t.rr},"${t.reason}"\n`;
+                csv += `${t.date},${t.time},${t.pair},${t.session},"${t.models ? t.models.join('|') : '-'}",${t.emotion},${t.res},${t.pnl},${t.rr},"${t.reason}"\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
@@ -247,11 +242,13 @@
             a.click();
         }
 
-        window.onload = () => {
+        function initDate() {
             const n = new Date();
             document.getElementById('date').value = n.toISOString().split('T')[0];
             document.getElementById('time').value = n.toTimeString().slice(0,5);
-        };
+        }
+
+        window.onload = () => { initDate(); };
     </script>
 </body>
 </html>
