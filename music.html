@@ -10,114 +10,69 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        .header { padding: 30px 20px; background: linear-gradient(to bottom, #1e3a8a55, var(--bg)); }
-        .search-box { width: 100%; background: var(--card); border: 1px solid #27272a; border-radius: 12px; padding: 15px; color: white; outline: none; }
+        .header { padding: 30px 20px; background: linear-gradient(to bottom, #1e3a8a66, var(--bg)); text-align: center; }
+        .header h1 { font-size: 22px; letter-spacing: 2px; margin-bottom: 20px; color: var(--blue); font-weight: 800; }
+        
+        .search-box { width: 100%; background: var(--card); border: 1px solid #27272a; border-radius: 12px; padding: 15px; color: white; outline: none; text-align: center; }
 
-        .main { flex: 1; overflow-y: auto; padding: 0 20px 180px; }
-        .track { display: flex; align-items: center; background: var(--card); padding: 12px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; }
-        .track img { width: 50px; height: 50px; border-radius: 6px; margin-right: 15px; }
-        .track-info { flex: 1; overflow: hidden; }
-        .track-name { display: block; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .track-artist { font-size: 12px; color: #888; }
+        .main-content { flex: 1; overflow-y: auto; padding: 20px; text-align: center; }
+        
+        /* Widget Box */
+        .player-container {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid var(--blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            margin-top: 20px;
+        }
 
-        .player { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(15px); padding: 20px; border-top: 1px solid #27272a; }
-        .progress-bar { width: 100%; height: 5px; background: #333; border-radius: 5px; margin-bottom: 15px; position: relative; cursor: pointer; }
-        .fill { height: 100%; background: var(--blue); width: 0%; border-radius: 5px; box-shadow: 0 0 10px var(--blue); }
-        .controls { display: flex; justify-content: center; align-items: center; gap: 40px; }
-        .play-btn { background: white; color: black; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; }
+        #sc-player {
+            width: 100%;
+            height: 450px;
+            border-radius: 15px;
+            border: none;
+        }
+
+        .instructions { margin-top: 20px; font-size: 13px; color: #666; line-height: 1.6; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 style="margin-bottom:15px; font-size:22px; letter-spacing:1px;">FREEDOM SYNDICATE</h1>
-        <input type="text" id="search" class="search-box" placeholder="Cari Lagu Full Durasi...">
+        <h1>FREEDOM SYNDICATE</h1>
+        <input type="text" id="search-input" class="search-box" placeholder="Ketik Artis (Contoh: Hindia)...">
     </div>
 
-    <div class="main" id="list">
-        <p style="text-align:center; color:#444; margin-top:50px;">Gunakan pencarian untuk memulai</p>
-    </div>
-
-    <div class="player">
-        <div style="display:flex; align-items:center; margin-bottom:15px;">
-            <img id="p-img" src="" style="width:45px; border-radius:5px; margin-right:12px; display:none;">
-            <div style="flex:1; overflow:hidden;">
-                <p id="p-title" style="font-size:14px; font-weight:bold;">Pilih Lagu</p>
-                <p id="p-artist" style="font-size:11px; color:gray;">Full Song Engine</p>
-            </div>
+    <div class="main-content">
+        <div class="player-container">
+            <iframe id="sc-player" 
+                    scrolling="no" 
+                    frameborder="no" 
+                    allow="autoplay" 
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/911291884&color=%233b82f6&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+            </iframe>
         </div>
-        <div class="progress-bar" id="prog-wrap"><div class="fill" id="fill"></div></div>
-        <div class="controls">
-            <i class="fas fa-backward-step" style="color:#555"></i>
-            <div class="play-btn" id="play"><i class="fas fa-play" id="icon"></i></div>
-            <i class="fas fa-forward-step" style="color:#555"></i>
+
+        <div class="instructions">
+            <p><strong>Tips Instan:</strong> Klik ikon cari di dalam player atau ketik di kolom atas lalu tekan <b>Enter</b> untuk mencari semua lagu favoritmu secara Full Durasi.</p>
         </div>
     </div>
-
-    <audio id="audio-engine"></audio>
 
     <script>
-        const audio = document.getElementById('audio-engine');
-        const listDiv = document.getElementById('list');
-        const searchInput = document.getElementById('search');
-        const playBtn = document.getElementById('play');
-        const icon = document.getElementById('icon');
+        const searchInput = document.getElementById('search-input');
+        const player = document.getElementById('sc-player');
 
-        async function searchSongs(q) {
-            if (q.length < 3) return;
-            try {
-                // Menggunakan API Saavn yang menyediakan lagu full durasi (320kbps)
-                const res = await fetch(`https://saavn.me/search/songs?query=${encodeURIComponent(q)}`);
-                const data = await res.json();
+        // Fungsi mencari musik secara otomatis
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const query = encodeURIComponent(searchInput.value);
+                // Mengarahkan widget untuk mencari lagu yang diinginkan
+                player.src = `https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/search/sounds?q=${query}&color=%233b82f6&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`;
                 
-                listDiv.innerHTML = "";
-                data.data.results.forEach(s => {
-                    const item = document.createElement('div');
-                    item.className = 'track';
-                    item.innerHTML = `
-                        <img src="${s.image[1].link}">
-                        <div class="track-info">
-                            <span class="track-name">${s.name}</span>
-                            <span class="track-artist">${s.primaryArtists}</span>
-                        </div>
-                    `;
-                    item.onclick = () => {
-                        document.getElementById('p-title').innerText = s.name;
-                        document.getElementById('p-artist').innerText = s.primaryArtists;
-                        document.getElementById('p-img').src = s.image[0].link;
-                        document.getElementById('p-img').style.display = "block";
-                        
-                        // AMBIL LINK DOWNLOAD FULL 320kbps
-                        audio.src = s.downloadUrl[4].link;
-                        audio.play().then(() => {
-                            icon.className = "fas fa-pause";
-                        }).catch(() => {
-                            icon.className = "fas fa-play";
-                            alert("Sentuh layar sekali lagi untuk memutar!");
-                        });
-                    };
-                    listDiv.appendChild(item);
-                });
-            } catch (e) { console.log(e); }
-        }
-
-        searchInput.oninput = (e) => {
-            clearTimeout(window.t);
-            window.t = setTimeout(() => searchSongs(e.target.value), 800);
-        };
-
-        playBtn.onclick = () => {
-            if (audio.paused) { audio.play(); icon.className = "fas fa-pause"; }
-            else { audio.pause(); icon.className = "fas fa-play"; }
-        };
-
-        audio.ontimeupdate = () => {
-            document.getElementById('fill').style.width = (audio.currentTime / audio.duration) * 100 + "%";
-        };
-
-        document.getElementById('prog-wrap').onclick = (e) => {
-            audio.currentTime = (e.offsetX / e.target.clientWidth) * audio.duration;
-        };
+                alert("Mencari lagu: " + searchInput.value + "\nSilakan tunggu dan klik lagu yang muncul di bawah.");
+            }
+        });
     </script>
 </body>
 </html>
