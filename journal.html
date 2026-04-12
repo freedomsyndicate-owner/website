@@ -50,10 +50,10 @@
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; width: 100%; appearance: auto; }
+        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; width: 100%; }
         .announce-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; border-left: 5px solid var(--red); }
         .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; }
-        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 20px auto; display: block; border: 5px solid white; }
+        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; }
     </style>
 </head>
 <body>
@@ -84,12 +84,18 @@
                 <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Penting untuk seluruh pengguna Freedom Syndicate!</p>
                 <p style="font-size:11px; color:#ccc;">Setiap hari <b>Sabtu</b>, website dan server melakukan pembaruan berkala. Agar Anda dapat melihat fitur terbaru, <b>WAJIB</b> bagi Anda untuk menghapus history Google di pengaturan browser dan menutup tab Journal ini secara total.</p>
                 <div style="text-align:right; margin-top:30px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
-                    <b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b><br><small style="font-size:9px; color:#777; letter-spacing:2px; font-weight:bold;">OWNER</small>
+                    <b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b><br><small style="font-size:9px; color:#777; font-weight:bold;">OWNER</small>
                 </div>
             </div>
         </div></div>
 
-        <div id="chart-tab" class="tab-content"><div id="tv_v60" style="height:100%"></div></div>
+        <div id="chart-tab" class="tab-content">
+            <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937; position:sticky; top:0; z-index:10;">
+                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px; font-weight:bold;" value="XAUUSD" placeholder="Ketik Pair...">
+                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px 15px; border-radius:8px; font-size:11px; font-weight:bold; color:black; cursor:pointer; font-family:'Orbitron';">SWITCH</button>
+            </div>
+            <div id="tv_v60" style="height:calc(100% - 50px); width:100%;"></div>
+        </div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <form id="tradingForm">
@@ -100,8 +106,7 @@
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                             <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
                             <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
-                            <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
-                            <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
@@ -127,7 +132,7 @@
                         <label class="check-item"><input type="radio" name="entry_style" value="Confirmasi"> Confirmasi</label>
                     </div></div>
                     <div class="form-item"><label>😊 Emotion</label><select id="emotion"><option value="Calm">😊 Calm</option><option value="Greedy">🤑 Greedy</option><option value="FOMO">😨 FOMO</option></select></div>
-                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Catatan analisa..."></textarea></div>
+                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
                     <div class="photo-grid">
@@ -166,7 +171,10 @@
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:20px;"><h3>HEADWAY</h3><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR HEADWAY</button></div>
         </div></div>
 
-        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box"><p style="font-size:12px;">Support Freedom Syndicate Cloud!</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" style="background:var(--be); color:black; border:none; padding:12px; width:100%; border-radius:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:15px;">🚀 DUKUNG!</button></div></div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box">
+            <p style="font-size:12px;">Support Freedom Syndicate Cloud!</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="support-btn" style="background:var(--be); color:black; border:none; padding:12px; width:100%; border-radius:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:15px;">🚀 DUKUNG!</button>
+        </div></div></div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
@@ -179,43 +187,35 @@
         document.getElementById('googleBtn').addEventListener('click', () => { const provider = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(provider).catch(e => alert(e.message)); });
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
         function logout() { auth.signOut(); }
-        function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') updateChart(); if(id==='monitor-tab') loadData(); }
+        function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') setTimeout(updateChart, 100); if(id==='monitor-tab') loadData(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
         
         function save() {
             if(!sRes || !curUser) return alert("Pilih Result!");
             const style = document.querySelector('input[name="entry_style"]:checked');
-            const t = { 
-                date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, 
-                poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: style ? style.value : '', 
-                reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA 
-            };
+            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: style ? style.value : '', reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none'; bB = ''; bA = ''; sRes = ''; sSession = ''; });
         }
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { render(snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []); }); }
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        function updateChart() { const p = (document.getElementById('chart-pair') ? document.getElementById('chart-pair').value.toUpperCase() : 'XAUUSD'); document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60"}); }
-        function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
+        
+        function updateChart() { 
+            const p = document.getElementById('chart-pair').value.toUpperCase() || 'XAUUSD'; 
+            document.getElementById('tv_v60').innerHTML = ''; 
+            new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "timezone": "Asia/Jakarta", "theme": "dark", "style": "1", "container_id": "tv_v60", "hide_side_toolbar": false, "allow_symbol_change": true, "save_image": false}); 
+        }
 
+        function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], labels = ['Start'];
             const fP = document.getElementById('mon-pair').value, fM = document.getElementById('mon-month').value;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
-            sorted.forEach(t => { 
-                const tM = t.date.split('-')[1]; 
-                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); }
-            });
+            sorted.forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); } });
             sorted.slice().reverse().forEach(t => { 
-                const tM = t.date.split('-')[1]; 
-                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) {
+                const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) {
                     const card = document.createElement('div'); card.className = 'history-card'; 
-                    card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div>
-                    <div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div>
-                    <div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div>
-                    <div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div>
-                    <div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div>
-                    <div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
+                    card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                     h.appendChild(card);
                 }
             });
