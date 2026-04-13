@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V68 SECURITY ENHANCED</title>
+    <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
+    
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
                 return false;
             }
-        }
+        };
     </script>
-    <style>
-        /* MENCEGAH SELEKSI TEKS */
-        * { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-        input, textarea { -webkit-user-select: text; user-select: text; }
-    </style>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -26,6 +23,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
+        
+        /* PROTEKSI SELEKSI TEKS */
+        * { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
@@ -40,6 +42,7 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
         
+        /* LOT CALCULATOR */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -47,6 +50,7 @@
         .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
         .lot-res-item b { font-family: 'Orbitron'; font-size: 12px; color: var(--be); }
 
+        /* JOURNAL & POI */
         .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
         .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
@@ -57,32 +61,37 @@
         .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
         .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; }
-        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 5px; }
+
+        /* BEFORE AFTER FIX (SEJAJAR LURUS) */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 100px; padding: 12px; position: relative; text-align: left; }
+        .upload-box label { font-size: 8px; color: var(--blue); font-weight: 900; letter-spacing: 1px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .upload-box input { width: 100%; font-size: 8px; color: #555; background: transparent; }
+        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 6px; }
+        
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
 
+        /* HISTORY DETAIL */
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; }
         .h-detail { font-size: 8px; color: #fff; line-height: 1.6; }
-        .h-detail b { color: var(--be); }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
 
+        /* MONITOR, COMMUNITY, DONASI */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
-        .premium-tracker { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
-        .p-card b { font-size: 24px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 15px var(--blue); }
         .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
         #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
         .msg-bubble { max-width: 85%; padding: 10px 15px; border-radius: 18px; font-size: 11px; background: #1f2937; align-self: flex-start; }
         .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
-        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+        .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
         .donation-box { background: var(--card); padding: 30px 20px; border-radius: 25px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.3); }
     </style>
 </head>
@@ -164,9 +173,18 @@
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
+                    
                     <div class="photo-grid">
-                        <div class="upload-box"><label>📸 BEFORE</label><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
-                        <div class="upload-box"><label>📸 AFTER</label><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
+                        <div class="upload-box">
+                            <label>📸 BEFORE</label>
+                            <input type="file" onchange="procImg(this, 'pb')">
+                            <img id="pb">
+                        </div>
+                        <div class="upload-box">
+                            <label>📸 AFTER</label>
+                            <input type="file" onchange="procImg(this, 'pa')">
+                            <img id="pa">
+                        </div>
                     </div>
                     <button type="button" class="btn-save" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
@@ -214,7 +232,7 @@
             <div class="broker-card">
                 <h3 style="font-family:'Orbitron'; color:white; margin:0;">HEADWAY BROKER</h3>
                 <p style="font-size:10px; color:#ccc; margin-top:5px;">Deposit mulai $1. Leverage 1:Unlimited.</p>
-                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
             </div>
         </div></div>
 
@@ -266,16 +284,26 @@
             sorted.forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); } });
             sorted.slice().reverse().forEach(t => { 
                 const card = document.createElement('div'); card.className = 'history-card'; 
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}<br><b>Margin:</b> $${t.margin || 0} | <b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}<br><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card);
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div>
+                <div class="h-header">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div>
+                <div class="h-detail">
+                    <b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}<br>
+                    <b>Margin:</b> $${t.margin || 0} | <b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}<br>
+                    <b>Reason:</b> <i>${t.reason || '-'}</i>
+                </div>
+                <div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
+                h.appendChild(card);
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
             myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } });
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             const daysData = {}; trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
-            for (let i = 1; i <= 31; i++) { const ds = `2026-04-${String(i).padStart(2,'0')}`, pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`; div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div); }
+            for (let i = 1; i <= 31; i++) { 
+                const ds = `2026-04-${String(i).padStart(2,'0')}`, pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
+            }
         }
-        function extractToPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("FS REPORT", 14, 20); const rows = allTrades.map(t => [t.date, t.pair, t.res, t.pnl]); doc.autoTable({ head: [['Date', 'Pair', 'Res', 'P&L']], body: rows, startY: 30 }); doc.save("FS_Report.pdf"); }
     </script>
 </body>
 </html>
