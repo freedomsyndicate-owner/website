@@ -27,23 +27,25 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
         
-        /* PREMIUM TRACKER */
-        .premium-tracker { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px); }
-        .p-card small { font-size: 8px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
-        .p-card b { font-size: 24px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 15px var(--blue); }
-        .online-dot { height: 8px; width: 8px; background: var(--green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 10px var(--green); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+        /* LOT CALCULATOR CSS */
+        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 15px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(234, 179, 8, 0.1); }
+        .lot-calc-header { font-family: 'Orbitron'; font-size: 9px; color: var(--be); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .lot-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 4px; }
+        .lot-input-item input { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 6px; padding: 8px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
+        .lot-result { background: rgba(234, 179, 8, 0.1); border-radius: 10px; padding: 10px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .lot-result span { font-size: 10px; color: #fff; }
+        .lot-result b { font-family: 'Orbitron'; font-size: 14px; color: var(--be); }
 
-        /* PREMIUM CHAT UI */
+        /* COMMUNITY & CHAT UI */
+        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
+        .p-card b { font-size: 24px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 15px var(--blue); }
         .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
         #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
         .msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; position: relative; font-size: 12px; color: #e5e7eb; background: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; }
         .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; color: white; }
-        .msg-info { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .msg-info b { font-size: 9px; color: var(--blue); }
-        .msg-bubble.mine .msg-info b { color: #bae6fd; }
 
+        /* KODINGAN UTAMA */
         .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
         .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
@@ -58,19 +60,9 @@
         .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
-        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
-        .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
-        .cal-day.profit { border-color: var(--green); color: var(--green); }
-        .cal-day.loss { border-color: var(--red); color: var(--red); }
-        .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; width: 100%; appearance: auto; }
-        .btn-pdf { width: 100%; background: var(--be); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; margin-top: 10px; }
-        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
-        .btn-reg { background: var(--blue); color: black; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
-        .donation-box { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 25px; text-align: center; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; }
     </style>
 </head>
@@ -116,16 +108,29 @@
         </div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
+            <div class="lot-calc-box">
+                <div class="lot-calc-header">⚖️ PRECISION LOT CALCULATOR</div>
+                <div class="lot-grid">
+                    <div class="lot-input-item"><label>Balance ($)</label><input type="number" id="calc-bal" placeholder="1000" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
+                </div>
+                <div class="lot-result">
+                    <span>Recommended Size:</span>
+                    <b id="res-lot">0.00 Lot</b>
+                </div>
+                <div style="font-size:7px; color:#777; margin-top:8px; text-align:right;">Risk Amount: <span id="res-usd" style="color:var(--red);">$ 0.00</span></div>
+            </div>
+
             <form id="tradingForm">
                 <div class="notion-form">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
-                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
-                            <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
-                            <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option></optgroup>
+                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
@@ -157,10 +162,8 @@
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
-                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
-                    <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
-                    <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04">APR</option><option value="05">MEI</option><option value="06">JUN</option><option value="07">JUL</option><option value="08">AGU</option><option value="09">SEP</option><option value="10">OKT</option><option value="11">NOV</option><option value="12">DES</option></select>
             </div>
@@ -173,10 +176,9 @@
         <div id="community-tab" class="tab-content"><div class="inner-padding">
             <div class="premium-tracker">
                 <div class="p-card"><small>Registered Traders</small><b id="total-users">0</b></div>
-                <div class="p-card"><small><span class="online-dot"></span>Live Online</small><b id="online-users">0</b></div>
+                <div class="p-card"><small><span class="online-dot" style="height:8px;width:8px;background:var(--green);border-radius:50%;display:inline-block;margin-right:6px;box-shadow:0 0 10px var(--green);animation:pulse 1.5s infinite;"></span>Live Online</small><b id="online-users">0</b></div>
             </div>
             <div class="chat-premium">
-                <div class="chat-header">🌐 <span>GLOBAL FREEDOM DISCUSSION</span></div>
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
                     <input type="text" id="chat-input" placeholder="Tulis pesan..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; font-size:13px; outline:none;">
@@ -186,8 +188,8 @@
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker paling stabil dengan Instant Withdrawal. Deposit minimal mulai dari $1. Sangat direkomendasikan!</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR SEKARANG</button></div>
-            <div class="broker-card"><h3>HEADWAY BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker handal dengan eksekusi cepat. Deposit minimal mulai dari $1. Dapatkan leverage hingga 1:Unlimited.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR SEKARANG</button></div>
+            <div class="broker-card"><h3>EXNESS BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker paling stabil dengan Instant Withdrawal. Deposit minimal mulai dari $1.</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR SEKARANG</button></div>
+            <div class="broker-card"><h3>HEADWAY BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker handal dengan eksekusi cepat. Deposit minimal mulai dari $1.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR SEKARANG</button></div>
         </div></div>
 
         <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box">
@@ -208,13 +210,40 @@
         
         function setupTracker() {
             const presenceRef = rtdb.ref('presence/' + curUser.uid);
-            rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { presenceRef.set({ name: curUser.email.split('@')[0], status: "online" }); presenceRef.onDisconnect().remove(); }});
+            rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { presenceRef.set({ email: curUser.email, status: "online" }); presenceRef.onDisconnect().remove(); }});
             rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); });
             rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); });
         }
 
+        // FUNGSI LOT CALCULATOR
+        function calcLot() {
+            const bal = parseFloat(document.getElementById('calc-bal').value) || 0;
+            const risk = parseFloat(document.getElementById('calc-risk').value) || 0;
+            const sl = parseFloat(document.getElementById('calc-sl').value) || 0;
+            if(bal > 0 && risk > 0 && sl > 0) {
+                const riskUsd = bal * (risk / 100);
+                const lot = riskUsd / (sl * 10); // Standard Lot 1 pip = $10 on 1.0 lot
+                document.getElementById('res-lot').innerText = lot.toFixed(2) + " Lot";
+                document.getElementById('res-usd').innerText = "$ " + riskUsd.toFixed(2);
+            } else {
+                document.getElementById('res-lot').innerText = "0.00 Lot";
+                document.getElementById('res-usd').innerText = "$ 0.00";
+            }
+        }
+
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
-        function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isMine = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isMine ? 'mine' : ''}`; div.innerHTML = `<div class="msg-info"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
+        function loadChat() {
+            rtdb.ref('chat').limitToLast(50).on('value', snap => {
+                const box = document.getElementById('chat-messages'); box.innerHTML = '';
+                snap.forEach(child => {
+                    const d = child.val(); const isMine = d.uid === curUser.uid;
+                    const div = document.createElement('div'); div.className = `msg-bubble ${isMine ? 'mine' : ''}`;
+                    div.innerHTML = `<div class="msg-info"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div);
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
         function logout() { auth.signOut(); }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') updateChart(); if(id==='monitor-tab' || id==='community-tab') loadData(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; }
@@ -237,19 +266,10 @@
             sorted.slice().reverse().forEach(t => { 
                 const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) {
                     const card = document.createElement('div'); card.className = 'history-card'; 
-                    card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
-                    h.appendChild(card);
+                    card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card);
                 }
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
-            const cal = document.getElementById('cal'); cal.innerHTML = '';
-            const daysData = {}; trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
-            const now = new Date(); const m = now.getMonth(); const last = new Date(now.getFullYear(), m + 1, 0).getDate();
-            for (let i = 1; i <= last; i++) {
-                const ds = `${now.getFullYear()}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-                const pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
-                div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
-            }
             const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
             myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56, 189, 248, 0.1)' }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
