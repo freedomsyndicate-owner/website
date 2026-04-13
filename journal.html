@@ -27,42 +27,45 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
         
-        /* LOT CALCULATOR CSS */
-        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 15px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(234, 179, 8, 0.1); }
-        .lot-calc-header { font-family: 'Orbitron'; font-size: 9px; color: var(--be); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        /* LOT CALCULATOR */
+        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 15px; margin-bottom: 25px; }
+        .lot-calc-header { font-family: 'Orbitron'; font-size: 9px; color: var(--be); margin-bottom: 10px; }
         .lot-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 4px; }
         .lot-input-item input { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 6px; padding: 8px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
         .lot-result { background: rgba(234, 179, 8, 0.1); border-radius: 10px; padding: 10px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .lot-result span { font-size: 10px; color: #fff; }
         .lot-result b { font-family: 'Orbitron'; font-size: 14px; color: var(--be); }
 
-        /* COMMUNITY & CHAT UI */
-        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
+        /* COMMUNITY PREMIUM UI */
+        .premium-tracker { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px); }
         .p-card b { font-size: 24px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 15px var(--blue); }
         .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
         #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
-        .msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; position: relative; font-size: 12px; color: #e5e7eb; background: #1f2937; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; color: white; }
+        .msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 12px; background: #1f2937; align-self: flex-start; }
+        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
 
-        /* KODINGAN UTAMA */
         .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
         .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
-        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; padding: 5px 0; font-family: 'Poppins'; }
-        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
-        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
+        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; }
+        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; font-family: 'Poppins'; }
+        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
-        .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-        .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff; cursor: pointer; }
+        .entry-model-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #ffffff; }
         .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 10px; overflow: hidden; }
-        .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
-        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 10px; }
+        .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; }
+        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
-        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; border: 1px solid #333; object-fit: cover; cursor: pointer; }
+        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
+        .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; width: 100%; appearance: auto; }
+        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .btn-reg { background: var(--blue); color: black; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 10px; margin-top: 12px; font-family: 'Orbitron'; cursor: pointer; }
         .qris-img { width: 100%; max-width: 280px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; }
     </style>
 </head>
@@ -115,22 +118,18 @@
                     <div class="lot-input-item"><label>Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
                     <div class="lot-input-item"><label>SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
                 </div>
-                <div class="lot-result">
-                    <span>Recommended Size:</span>
-                    <b id="res-lot">0.00 Lot</b>
-                </div>
-                <div style="font-size:7px; color:#777; margin-top:8px; text-align:right;">Risk Amount: <span id="res-usd" style="color:var(--red);">$ 0.00</span></div>
+                <div class="lot-result"><span>Recommended:</span><b id="res-lot">0.00 Lot</b></div>
             </div>
-
             <form id="tradingForm">
                 <div class="notion-form">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option></optgroup>
-                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
+                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                            <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
+                            <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
@@ -147,10 +146,7 @@
                     <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
-                    <div class="photo-grid">
-                        <div class="upload-box"><span>📸 Before</span><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
-                        <div class="upload-box"><span>📸 After</span><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
-                    </div>
+                    <div class="photo-grid"><div class="upload-box">📸 Before<input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div><div class="upload-box">📸 After<input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div></div>
                     <button type="button" class="btn-save" id="saveBtn" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
             </form>
@@ -162,15 +158,17 @@
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                    <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option></optgroup>
+                    <optgroup label="INDICES"><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04">APR</option><option value="05">MEI</option><option value="06">JUN</option><option value="07">JUL</option><option value="08">AGU</option><option value="09">SEP</option><option value="10">OKT</option><option value="11">NOV</option><option value="12">DES</option></select>
             </div>
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:180px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
-            <button class="btn-pdf" onclick="extractToPDF()">📥 DOWNLOAD PDF REPORT</button>
+            <button class="btn-pdf" onclick="extractToPDF()" style="background:var(--be); color:black; border:none; padding:12px; width:100%; border-radius:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">📥 DOWNLOAD PDF REPORT</button>
         </div></div>
 
         <div id="community-tab" class="tab-content"><div class="inner-padding">
@@ -181,20 +179,20 @@
             <div class="chat-premium">
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
-                    <input type="text" id="chat-input" placeholder="Tulis pesan..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; font-size:13px; outline:none;">
+                    <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
                     <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:12px; padding:0 20px; font-weight:900; font-family:'Orbitron'; cursor:pointer;">SEND</button>
                 </div>
             </div>
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker paling stabil dengan Instant Withdrawal. Deposit minimal mulai dari $1.</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR SEKARANG</button></div>
-            <div class="broker-card"><h3>HEADWAY BROKER</h3><p style="font-size:10px; color:#777; margin-top:5px;">Broker handal dengan eksekusi cepat. Deposit minimal mulai dari $1.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR SEKARANG</button></div>
+            <div class="broker-card"><h3>EXNESS BROKER</h3><p style="font-size:10px; color:#777;">Broker stabil dengan Instant Withdrawal. Deposit mulai $1.</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR SEKARANG</button></div>
+            <div class="broker-card"><h3>HEADWAY BROKER</h3><p style="font-size:10px; color:#777;">Eksekusi cepat. Deposit mulai $1. Leverage 1:Unlimited.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR SEKARANG</button></div>
         </div></div>
 
         <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box">
             <p style="font-size:12px;">Support Freedom Syndicate Cloud!</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="btn-save" style="margin-top:10px;" onclick="alert('Terima kasih dukungannya!')">DUKUNG!</button>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"><button class="btn-save" style="margin-top:10px;" onclick="alert('Thanks!')">DUKUNG!</button>
         </div></div></div>
     </div>
 
@@ -207,53 +205,14 @@
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); } else { document.getElementById('auth-screen').style.display='flex'; }});
-        
-        function setupTracker() {
-            const presenceRef = rtdb.ref('presence/' + curUser.uid);
-            rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { presenceRef.set({ email: curUser.email, status: "online" }); presenceRef.onDisconnect().remove(); }});
-            rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); });
-            rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); });
-        }
-
-        // FUNGSI LOT CALCULATOR
-        function calcLot() {
-            const bal = parseFloat(document.getElementById('calc-bal').value) || 0;
-            const risk = parseFloat(document.getElementById('calc-risk').value) || 0;
-            const sl = parseFloat(document.getElementById('calc-sl').value) || 0;
-            if(bal > 0 && risk > 0 && sl > 0) {
-                const riskUsd = bal * (risk / 100);
-                const lot = riskUsd / (sl * 10); // Standard Lot 1 pip = $10 on 1.0 lot
-                document.getElementById('res-lot').innerText = lot.toFixed(2) + " Lot";
-                document.getElementById('res-usd').innerText = "$ " + riskUsd.toFixed(2);
-            } else {
-                document.getElementById('res-lot').innerText = "0.00 Lot";
-                document.getElementById('res-usd').innerText = "$ 0.00";
-            }
-        }
-
+        function setupTracker() { const pRef = rtdb.ref('presence/' + curUser.uid); rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); }}); rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); }
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
-        function loadChat() {
-            rtdb.ref('chat').limitToLast(50).on('value', snap => {
-                const box = document.getElementById('chat-messages'); box.innerHTML = '';
-                snap.forEach(child => {
-                    const d = child.val(); const isMine = d.uid === curUser.uid;
-                    const div = document.createElement('div'); div.className = `msg-bubble ${isMine ? 'mine' : ''}`;
-                    div.innerHTML = `<div class="msg-info"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div);
-                });
-                box.scrollTop = box.scrollHeight;
-            });
-        }
-
-        function logout() { auth.signOut(); }
+        function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isM = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isM ? 'mine' : ''}`; div.innerHTML = `<div style="font-size:8px; color:var(--blue); margin-bottom:2px;"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
+        function calcLot() { const b = parseFloat(document.getElementById('calc-bal').value) || 0; const r = parseFloat(document.getElementById('calc-risk').value) || 0; const s = parseFloat(document.getElementById('calc-sl').value) || 0; if(b>0 && r>0 && s>0) { const l = (b*(r/100))/(s*10); document.getElementById('res-lot').innerText = l.toFixed(2) + " Lot"; } else { document.getElementById('res-lot').innerText = "0.00 Lot"; } }
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') updateChart(); if(id==='monitor-tab' || id==='community-tab') loadData(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
-        function save() {
-            if(!sRes || !curUser) return alert("Pilih Result!");
-            const style = document.querySelector('input[name="entry_style"]:checked');
-            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: style ? style.value : '', reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); location.reload(); });
-        }
+        function save() { if(!sRes || !curUser) return alert("Pilih Result!"); const style = document.querySelector('input[name="entry_style"]:checked'); const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: style ? style.value : '', reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA }; rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("BERHASIL!"); location.reload(); }); }
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase(); document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "theme": "dark", "container_id": "tv_v60"}); }
@@ -263,16 +222,16 @@
             const fP = document.getElementById('mon-pair').value, fM = document.getElementById('mon-month').value;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
             sorted.forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); } });
-            sorted.slice().reverse().forEach(t => { 
-                const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) {
-                    const card = document.createElement('div'); card.className = 'history-card'; 
-                    card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card);
-                }
-            });
+            sorted.slice().reverse().forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { const card = document.createElement('div'); card.className = 'history-card'; card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic; margin-top:3px;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card); } });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
+            const cal = document.getElementById('cal'); cal.innerHTML = '';
+            const daysData = {}; trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
+            const now = new Date(); const m = now.getMonth(); const last = new Date(now.getFullYear(), m + 1, 0).getDate();
+            for (let i = 1; i <= last; i++) { const ds = `${now.getFullYear()}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`; const pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`; div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div); }
             const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
             myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#38bdf8', fill: true, backgroundColor: 'rgba(56, 189, 248, 0.1)' }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
+        function logout() { auth.signOut(); }
         function extractToPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("FREEDOM SYNDICATE REPORT", 14, 20); const rows = allTrades.map(t => [t.date, t.pair, t.res, t.pnl]); doc.autoTable({ head: [['Date', 'Pair', 'Result', 'P&L']], body: rows, startY: 30 }); doc.save("FS_Report.pdf"); }
     </script>
 </body>
