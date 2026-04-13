@@ -26,16 +26,12 @@
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
-        
-        /* LOT CALCULATOR */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
         .lot-input-item input, .lot-input-item select { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 8px; padding: 10px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
         .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
         .lot-res-item b { font-family: 'Orbitron'; font-size: 14px; color: var(--be); }
-
-        /* JOURNAL FORM & POI */
         .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
         .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
@@ -46,16 +42,10 @@
         .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
         .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
-
-        /* UPLOAD BOX FIX (LURUS SEJAJAR) */
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; width: 100%; box-sizing: border-box; }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px; text-align: center; }
-        .upload-box label { font-size: 8px; color: #777; margin-bottom: 5px; display: block; }
-        .upload-box input { font-size: 6px; width: 100%; }
-        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 5px; border-radius: 4px; }
-        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 25px; }
-
-        /* HISTORY DETAIL */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 5px; }
+        .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
+        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
         .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; }
         .h-detail { font-size: 8px; color: #fff; line-height: 1.6; }
@@ -63,8 +53,6 @@
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
         .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
-
-        /* MONITOR & BROKER/DONASI */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
@@ -145,11 +133,12 @@
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                             <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
                             <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
-                    <div class="form-item" style="border:none;"><label>🎯 POI (KOMPLIT)</label><div class="check-grid">
+                    <div class="form-item" style="border:none;"><label>🎯 POI (LENGKAP)</label><div class="check-grid">
                         <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
@@ -160,18 +149,9 @@
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
-                    
                     <div class="photo-grid">
-                        <div class="upload-box">
-                            <label>📸 BEFORE</label>
-                            <input type="file" onchange="procImg(this, 'pb')">
-                            <img id="pb">
-                        </div>
-                        <div class="upload-box">
-                            <label>📸 AFTER</label>
-                            <input type="file" onchange="procImg(this, 'pa')">
-                            <img id="pa">
-                        </div>
+                        <div class="upload-box"><label>📸 BEFORE</label><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
+                        <div class="upload-box"><label>📸 AFTER</label><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
                     </div>
                     <button type="button" class="btn-save" onclick="save()">🚀 SAVE TRANSACTION</button>
                 </div>
@@ -183,9 +163,10 @@
             <div class="mon-filters">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
-                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option></optgroup>
-                    <optgroup label="FOREX"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option></optgroup>
-                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="US30">US30</option></optgroup>
+                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04">APR</option><option value="05">MEI</option><option value="06">JUN</option><option value="07">JUL</option><option value="08">AGU</option><option value="09">SEP</option><option value="10">OKT</option><option value="11">NOV</option><option value="12">DES</option></select>
             </div>
@@ -213,12 +194,12 @@
             <div class="broker-card">
                 <h3 style="font-family:'Orbitron'; color:white; margin:0;">EXNESS BROKER</h3>
                 <p style="font-size:10px; color:#ccc; margin-top:5px;">Broker paling stabil dengan Instant Withdrawal. Deposit minimal mulai dari $1. Sangat direkomendasikan!</p>
-                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
+                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:white; border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
             </div>
             <div class="broker-card">
                 <h3 style="font-family:'Orbitron'; color:white; margin:0;">HEADWAY BROKER</h3>
                 <p style="font-size:10px; color:#ccc; margin-top:5px;">Broker handal dengan eksekusi cepat. Deposit minimal mulai dari $1. Leverage hingga 1:Unlimited.</p>
-                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold; margin-top:10px; cursor:pointer;">DAFTAR SEKARANG</button>
             </div>
         </div></div>
 
