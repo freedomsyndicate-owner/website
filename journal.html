@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V68 PREMIUM CLEAN</title>
+    <title>FS | Freedom Syndicate V68 PREMIUM FINAL</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -27,43 +27,44 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
         
-        /* LOT CALCULATOR PREMIUM */
-        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(234, 179, 8, 0.1); }
+        /* LOT CALCULATOR */
+        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
         .lot-input-item input, .lot-input-item select { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 8px; padding: 10px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
         .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
         .lot-res-item b { font-family: 'Orbitron'; font-size: 14px; color: var(--be); }
 
-        /* CALENDAR */
+        /* JOURNAL FORM & POI */
+        .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
+        .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; font-family: 'Poppins'; padding: 5px 0; }
+        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
+        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
+        .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
+        .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
+        .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 5px; }
+        .upload-box img { width: 100%; height: auto; max-height: 100px; object-fit: contain; display: none; margin-top: 5px; }
+        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
+
+        /* HISTORY DETAIL */
+        .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
+        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
+        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
+
+        /* MONITOR & BROKER/DONASI */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
         .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
         .cal-day.profit { border-color: var(--green); color: var(--green); }
         .cal-day.loss { border-color: var(--red); color: var(--red); }
-
-        /* JOURNAL & HISTORY */
-        .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
-        .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; }
-        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; }
-        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
-        .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
-        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; }
-        .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
-        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; }
-        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
-        .mon-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; }
-        .btn-pdf { width: 100%; background: var(--be); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; font-family: 'Orbitron'; font-size: 10px; margin-top: 10px; }
-
-        /* COMMUNITY PREMIUM */
-        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
-        .p-card b { font-size: 24px; font-family: 'Orbitron'; color: #fff; text-shadow: 0 0 15px var(--blue); }
-        .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
-        #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
-        .msg-bubble { max-width: 85%; padding: 10px 15px; border-radius: 18px; font-size: 11px; background: #1f2937; align-self: flex-start; }
-        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
+        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
+        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; }
     </style>
 </head>
 <body>
@@ -93,13 +94,14 @@
                 <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
                 <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Penting untuk seluruh pengguna Freedom Syndicate!</p>
                 <p style="font-size:11px; color:#ccc;">Setiap hari <b>Sabtu</b>, website dan server melakukan pembaruan berkala. Agar Anda dapat melihat fitur terbaru, <b>WAJIB</b> bagi Anda untuk menghapus history Google di pengaturan browser.</p>
+                <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
             </div>
         </div></div>
 
         <div id="chart-tab" class="tab-content">
             <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937;">
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
-                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black;">SWITCH</button>
+                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
             <div id="tv_v60" style="height:calc(100% - 50px); width:100%;"></div>
         </div>
@@ -111,8 +113,7 @@
                     <div class="lot-input-item"><label>Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
                     <div class="lot-input-item"><label>SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
                 </div>
-                <div class="lot-input-item" style="margin-bottom:12px;">
-                    <label>Leverage Account (1:X)</label>
+                <div class="lot-input-item" style="margin-bottom:12px;"><label>Leverage Account (1:X)</label>
                     <select id="calc-lev" onchange="calcLot()">
                         <option value="1">1:1</option><option value="100">1:100</option><option value="500" selected>1:500</option><option value="1000">1:1000</option><option value="2000">1:2000</option><option value="3000">1:3000</option><option value="999999">1:Unlimited</option>
                     </select>
@@ -128,17 +129,23 @@
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option></optgroup>
+                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option></optgroup>
+                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
-                    <div class="form-item" style="border:none;"><label>🎯 POI</label><div class="check-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+                    <div class="form-item" style="border:none;"><label>🎯 POI (LENGKAP)</label><div class="check-grid">
                         <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="poi-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label><label class="check-item"><input type="checkbox" class="poi-check" value="SUP"> SUP</label><label class="check-item"><input type="checkbox" class="poi-check" value="RES"> RES</label>
                     </div></div>
-                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Analyse..."></textarea></div>
+                    <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="entry-model-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                        <label class="check-item"><input type="radio" name="entry_style" value="Agresif"> Agresif</label><label class="check-item"><input type="radio" name="entry_style" value="Confirmasi"> Confirmasi</label>
+                    </div></div>
+                    <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa di sini..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
                     <div class="photo-grid"><div class="upload-box">📸 Before<input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div><div class="upload-box">📸 After<input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div></div>
@@ -154,14 +161,14 @@
                     <option value="ALL">ALL PAIRS</option>
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                     <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04">APR</option><option value="05">MEI</option><option value="06">JUN</option><option value="07">JUL</option><option value="08">AGU</option><option value="09">SEP</option><option value="10">OKT</option><option value="11">NOV</option><option value="12">DES</option></select>
             </div>
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
-            <button class="btn-pdf" onclick="extractToPDF()">📥 DOWNLOAD PDF REPORT</button>
+            <button class="btn-save" onclick="extractToPDF()" style="background:var(--be); color:black; margin-top:15px;">📥 DOWNLOAD PDF REPORT</button>
         </div></div>
 
         <div id="community-tab" class="tab-content"><div class="inner-padding">
@@ -172,18 +179,22 @@
             <div class="chat-premium">
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
-                    <input type="text" id="chat-input" placeholder="Analyse..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
+                    <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
                     <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:12px; padding:0 20px; font-weight:900; font-family:'Orbitron'; cursor:pointer;">SEND</button>
                 </div>
             </div>
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#777; margin-top:5px;">Instant Withdrawal. Min $1.</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR</button></div>
-            <div class="broker-card"><h3>HEADWAY</h3><p style="font-size:10px; color:#777; margin-top:5px;">Leverage 1:Unlimited. Min $1.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR</button></div>
+            <div class="broker-card"><h3>EXNESS BROKER</h3><p style="font-size:10px; color:#777;">Min. Deposit $1. Instant Withdrawal.</p><button class="btn-reg" onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')">DAFTAR SEKARANG</button></div>
+            <div class="broker-card"><h3>HEADWAY BROKER</h3><p style="font-size:10px; color:#777;">Min. Deposit $1. Leverage 1:Unlimited.</p><button class="btn-reg" onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')">DAFTAR SEKARANG</button></div>
         </div></div>
 
-        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box" style="text-align:center;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS"></div></div></div>
+        <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box" style="background:var(--card); padding:25px; border-radius:20px; text-align:center; border:1px solid #1f2937;">
+            <p style="font-size:11px; color:#ccc;">Support Freedom Syndicate Cloud!</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS">
+            <button class="btn-save" style="margin-top:10px; background:var(--be);" onclick="alert('Terima kasih!')">DONASI KOPI ☕</button>
+        </div></div></div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
@@ -208,10 +219,12 @@
         function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') updateChart(); if(id==='monitor-tab' || id==='community-tab') loadData(); }
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
+        
         function save() { 
             if(!sRes || !curUser) return alert("Select Result!");
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
-            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
+            const style = document.querySelector('input[name="entry_style"]:checked');
+            const t = { date: document.getElementById('date').value, time: document.getElementById('time').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: style ? style.value : '', reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("SAVED!"); location.reload(); });
         }
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
@@ -220,38 +233,25 @@
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], marginData = [0], labels = ['Start'];
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], labels = ['Start'];
             const fP = document.getElementById('mon-pair').value, fM = document.getElementById('mon-month').value;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
-            sorted.forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); marginData.push(t.margin || 0); labels.push(t.date); } });
-            sorted.slice().reverse().forEach(t => { const card = document.createElement('div'); card.className = 'history-card'; card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:var(--be);"><b>Margin:</b> $${t.margin || 0} | <b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card); });
-            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
-            
-            // GRAPH UPDATE (SESUAI SCREENSHOT BOS - NO GRID)
-            const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { 
-                type: 'line', 
-                data: { 
-                    labels: labels, 
-                    datasets: [
-                        { label: 'Equity (Red)', data: eqData, borderColor: '#ef4444', borderWidth: 2, fill: false, tension: 0.3, yAxisID: 'y' },
-                        { label: 'Margin (Blue)', data: marginData, borderColor: '#38bdf8', borderWidth: 1, borderDash: [5,5], fill: false, yAxisID: 'y1' }
-                    ]
-                }, 
-                options: { 
-                    responsive: true, maintainAspectRatio: false,
-                    scales: { 
-                        y: { type: 'linear', display: true, position: 'right', grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } }, // Grid Hilang
-                        y1: { type: 'linear', display: true, position: 'left', grid: { display: false }, ticks: { color: '#38bdf8', font: {size: 8} } }, // Grid Hilang
-                        x: { grid: { display: false }, ticks: { display: false } } // Grid Hilang
-                    },
-                    plugins: { legend: { display: false } }
-                } 
+            sorted.forEach(t => { const tM = t.date.split('-')[1]; if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); } });
+            sorted.slice().reverse().forEach(t => { 
+                const card = document.createElement('div'); card.className = 'history-card'; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px; color:var(--blue); font-weight:bold;">${t.date} ${t.time || ''} | ${t.pair} (${t.res})</div><div style="font-size:8px; color:#fff; margin-top:5px;"><b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}</div><div style="font-size:8px; color:var(--be);"><b>Margin:</b> $${t.margin || 0} | <b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}</div><div style="font-size:8px; color:#ccc; font-style:italic;"><b>Reason:</b> ${t.reason || '-'}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; h.appendChild(card);
             });
+            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
+            const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } });
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             const daysData = {}; trades.forEach(t => { if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; });
-            for (let i = 1; i <= 31; i++) { const ds = `2026-04-${String(i).padStart(2,'0')}`, pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`; div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div); }
+            for (let i = 1; i <= 31; i++) { 
+                const ds = `2026-04-${String(i).padStart(2,'0')}`, pnl = daysData[ds] || 0, div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
+            }
         }
+        function logout() { auth.signOut(); }
         function extractToPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("FS REPORT", 14, 20); const rows = allTrades.map(t => [t.date, t.pair, t.res, t.pnl]); doc.autoTable({ head: [['Date', 'Pair', 'Res', 'P&L']], body: rows, startY: 30 }); doc.save("FS_Report.pdf"); }
     </script>
 </body>
