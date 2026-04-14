@@ -1,70 +1,89 @@
 import requests
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from deep_translator import GoogleTranslator
 
-# --- CONFIGURATION (SYNDICATE OMNISCIENCE V10 FINAL) ---
+# --- CONFIGURATION (SYNDICATE ETERNAL SYSTEM) ---
 TOKEN_TG = "8196511062:AAGyfWcRUk9uw_lc_aQgUW6vLyyRmgF1hcE"
 CHAT_ID_TG = "-1003660980986"
 TOPIC_ID_TG = 18
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1489314765074595840/BRby0L3L4cfUUGyDpihSBjRlHPpNutFiZWF5mFYU6CpCkjoEA9Hw1A2W0c6LEUgO30i7"
 
-reported_ids = []
+reported_alerts = set()
 translator = GoogleTranslator(source='auto', target='id')
 
 def send_alert(judul, isi, icon="🚨"):
-    msg = f"{icon} **{judul}** {icon}\n\n{isi}\n\n#FreedomSyndicate #DomsV10 #GlobalIntel"
+    msg = f"{icon} **{judul}** {icon}\n\n{isi}\n\n#FreedomSyndicate #EternalV10 #Doms"
     try:
+        # Telegram Post
         requests.post(f"https://api.telegram.org/bot{TOKEN_TG}/sendMessage", 
-                      json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_TG, "text": msg, "parse_mode": "Markdown"}, timeout=15)
-        requests.post(DISCORD_WEBHOOK, json={"content": msg, "username": "DOMS OMNISCIENCE FINAL"}, timeout=15)
+                      json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_TG, "text": msg, "parse_mode": "Markdown"}, timeout=10)
+        # Discord Post
+        requests.post(DISCORD_WEBHOOK, json={"content": msg}, timeout=10)
     except: pass
 
 def check_economic_calendar():
-    global reported_ids
+    """RADAR SEMUA NEWS: HIJAU, KUNING, MERAH (ALARM H-5 & H-1)"""
     url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
     try:
-        events = requests.get(url, timeout=15).json()
-        # FIX WARNING DISINI:
+        events = requests.get(url, timeout=10).json()
         now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
         
         for event in events:
-            if event['country'] in ['USD', 'EUR', 'GBP', 'JPY', 'AUD']:
-                e_time = datetime.strptime(event['date'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=None)
-                diff = (e_time - now_utc).total_seconds() / 60
-                id_cal = f"CAL_{event['title']}_{event['date']}"
+            e_time = datetime.strptime(event['date'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=None)
+            diff = (e_time - now_utc).total_seconds() / 60
+            
+            # TRIGGER ALARM OTOMATIS
+            if (1 <= diff <= 1.5) or (5 <= diff <= 5.5):
+                alert_id = f"ALARM_{event['title']}_{event['date']}_{int(diff)}"
                 
-                if 0 < diff <= 45 and id_cal not in reported_ids:
-                    impact_label = "🔴 HIGH" if event['impact'] == 'High' else "🟡 MED" if event['impact'] == 'Medium' else "🟢 LOW"
-                    txt = (f"📅 **ECONOMIC RADAR**\n"
+                if alert_id not in reported_alerts:
+                    impact = event['impact'].upper()
+                    icon = "🔴" if "HIGH" in impact else "🟡" if "MEDIUM" in impact else "🟢"
+                    wib = (e_time + timedelta(hours=7)).strftime('%H:%M')
+                    
+                    txt = (f"{icon} **NEWS ALARM: {int(diff)} MENIT LAGI!**\n"
                            f"━━━━━━━━━━━━━━━━━━━━\n"
-                           f"🔥 **Event:** {event['title']}\n"
-                           f"📊 **Impact:** {impact_label}\n"
-                           f"🕒 **In:** {int(diff)} Menit Lagi\n"
-                           f"━━━━━━━━━━━━━━━━━━━━")
-                    send_alert("ECONOMIC RADAR", txt, "📢")
-                    reported_ids.append(id_cal)
+                           f"🔥 **DATA:** {event['title']}\n"
+                           f"🏛️ **CURR:** {event['country']} | **IMPACT:** {impact}\n"
+                           f"🕒 **WAKTU WIB:** {wib}\n"
+                           f"━━━━━━━━━━━━━━━━━━━━\n"
+                           f"⚠️ *SYNDICATE READY!*")
+                    
+                    send_alert("OMNISCIENCE RADAR", txt, "📢")
+                    reported_alerts.add(alert_id)
     except: pass
 
 def check_global_intel():
-    global reported_ids
-    url = "https://cryptopanic.com/api/v1/posts/?kind=news&filter=hot"
+    """RADAR SEMUA ISU DUNIA: GEOPOLITIK, MAKRO, BREAKING NEWS"""
+    url = "https://cryptopanic.com/api/v1/posts/?kind=news"
     try:
-        res = requests.get(url, timeout=15).json()
-        for post in res['results'][:7]:
-            title_en = post['title']
-            if any(key in title_en.lower() for key in ['trump', 'war', 'iran', 'israel', 'oil', 'gold', 'fed', 'missile']):
-                if title_en not in reported_ids:
-                    try: title_id = translator.translate(title_en)
-                    except: title_id = title_en
-                    pesan = f"🌍 **GLOBAL NEWS**\n\n🇮🇩 **INDO:** {title_id}\n\n🇺🇸 **ORIG:** {title_en}"
+        res = requests.get(url, timeout=10).json()
+        for post in res['results'][:15]:
+            if post['id'] not in reported_alerts:
+                title_en = post['title']
+                # Keywords Berita Berpengaruh Market
+                keys = ['trump', 'war', 'iran', 'israel', 'oil', 'fed', 'fomc', 'cpi', 'ppi', 'missile', 'nuclear', 'powell', 'rate', 'gold', 'xau', 'russia', 'china', 'inflation', 'attack']
+                
+                if any(k in title_en.lower() for k in keys):
+                    try: indo = translator.translate(title_en)
+                    except: indo = title_en
+                    
+                    pesan = (f"🌍 **BREAKING GLOBAL NEWS**\n\n"
+                             f"🇮🇩 **INDO:** {indo}\n\n"
+                             f"🇺🇸 **ORIG:** {title_en}\n\n"
+                             f"🔗 [DETAIL BERITA]({post['url']})")
+                    
                     send_alert("MARKET BREAKER", pesan, "💥")
-                    reported_ids.append(title_en)
+                    reported_alerts.add(post['id'])
     except: pass
 
 if __name__ == "__main__":
+    send_alert("SYSTEM ONLINE", "DOMS OMNISCIENCE V10 ULTRA AKTIF!\n\nPatroli 24/7 Selamanya Tanpa Henti.\nSemua news kalender & Geopolitik masuk radar!", "⚔️")
+    
     while True:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Doms Patroli...")
         check_economic_calendar()
         check_global_intel()
-        time.sleep(120)
+        # Auto-Clean memory biar gak berat
+        if len(reported_alerts) > 1500: reported_alerts.clear()
+        time.sleep(30)
