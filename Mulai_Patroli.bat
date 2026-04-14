@@ -1,46 +1,38 @@
 @echo off
-:: SET BACKGROUND HITAM (0) TEKS PUTIH (7)
+:: Background Hitam, Teks Putih
 color 07
 title FREEDOM SYNDICATE - PONOROGO ENGINE
 cls
 
 echo.
-:: BAGIAN INI WARNA BIRU (Pake teknik PowerShell biar teks tertentu aja yang biru)
-powershell -Command "Write-Host '  _______  _______  _______  _______  ______   _______ ' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' (  ____ \(  ____ \(  ____ \(  ____ \(  __  \ (  ___  )' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' | (    \/| (    \/| (    \/| (    \/| (  \  )| (   ) |' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' | (__    | (__    | (__    | (__    | |   ) || |   | |' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' |  __)   |  __)   |  __)   |  __)   | |   | || |   | |' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' | (      | (      | (      | (      | |   ) || |   | |' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' | )      | )      | )      | )      | (__/  )| (___) |' -ForegroundColor Cyan"
-powershell -Command "Write-Host ' |/       |/       |/       |/       |______/ (_______)' -ForegroundColor Cyan"
-
-echo.
+:: Pake warna Biru Terang (9) cuma buat header
+color 09
 echo  ============================================================
-echo      [ SYSTEM POWERED BY FREEDOM SYNDICATE V10 ]
+echo     F R E E D O M    S Y N D I C A T E    V 1 0
 echo  ============================================================
+color 07
 echo.
 echo   [+] STATUS   : SYSTEM ONLINE
 echo   [+] LEADER   : DOMS (THE GODFATHER)
 echo   [+] LOCATION : PONOROGO, INDONESIA
 echo.
 echo  ------------------------------------------------------------
-echo   [!] MENGAKTIFKAN DUAL-RADAR (PREDATOR + OMNISCIENCE)...
+echo   [!] BOOTING DUAL-RADAR (PREDATOR + OMNISCIENCE)...
 echo  ------------------------------------------------------------
 echo.
 
-:: EKSEKUSI BOT (Pastikan di folder C:\DOMS_SYSTEM)
+:: Paksa masuk folder biar gak salah jalan
 cd /d "C:\DOMS_SYSTEM"
 
-echo  [!] Booting Predator Engine...
+:: Buka jendela bot
 start "DOMS_PREDATOR" py bot_predator.py
-
-echo  [!] Booting Fundamental Intel...
+timeout /t 2 >nul
 start "DOMS_INTEL" py bot_fundametal.py
 
+echo   [OK] DUA JENDELA BOT SUDAH TERBUKA!
+echo   [OK] SILAHKAN CEK TELEGRAM / DISCORD LU.
 echo.
 echo  ============================================================
-echo   SUCCESS! Bot sudah jalan di jendela terpisah.
-echo   Happy Hunting, Leader!
+echo   JANGAN TUTUP JENDELA INI UNTUK JAGA STABILITAS.
 echo  ============================================================
 pause
