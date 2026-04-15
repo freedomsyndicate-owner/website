@@ -6,6 +6,7 @@
     <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
     
     <script>
+        // PENGAMAN HTML ANTI BAJAK
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
@@ -26,7 +27,7 @@
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         
         * { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-        input, textarea { -webkit-user-select: text; user-select: text; }
+        input, textarea, select { -webkit-user-select: text; user-select: text; }
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -44,11 +45,9 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
 
-        /* CUSTOM NOTIF TOAST */
-        #fs-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--blue); color: black; padding: 12px 25px; border-radius: 50px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; z-index: 10000; display: none; box-shadow: 0 0 20px var(--blue); animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 80px; opacity: 1; } }
+        #fs-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--blue); color: black; padding: 12px 25px; border-radius: 50px; font-family: 'Orbitron'; font-size: 10px; font-weight: 900; z-index: 10000; display: none; box-shadow: 0 0 20px var(--blue); }
 
-        /* LOT CALCULATOR */
+        /* LOT CALCULATOR DESIGN */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -56,18 +55,19 @@
         .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
         .lot-res-item b { font-family: 'Orbitron'; font-size: 14px; color: var(--be); }
 
-        /* FORM & HISTORY */
+        /* FORM JOURNAL */
         .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
         .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
-        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; font-family: 'Poppins'; padding: 5px 0; }
+        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; }
+        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; appearance: auto; }
         .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
-        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
+        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; }
         .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
         .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
         .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
-        
+
+        /* BEFORE AFTER FIX (LURUS) */
         .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 100px; padding: 12px; position: relative; text-align: left; }
         .upload-box label { font-size: 8px; color: var(--blue); font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
@@ -76,21 +76,18 @@
         
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
 
+        /* HISTORY CARDS & DELETE BUTTON */
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
-        .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; }
+        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 18px; font-weight: bold; z-index: 10; }
+        .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; width: 85%; }
         .h-detail { font-size: 8px; color: #fff; line-height: 1.6; }
+        .h-detail b { color: var(--be); }
         .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
-        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
 
-        /* MONITOR & DONASI */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
-        .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
-        .cal-day.profit { border-color: var(--green); color: var(--green); }
-        .cal-day.loss { border-color: var(--red); color: var(--red); }
         .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
-        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
         .donation-box { background: var(--card); padding: 30px 20px; border-radius: 25px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 15px auto; display: block; border: 5px solid white; }
     </style>
 </head>
 <body>
@@ -122,14 +119,12 @@
         <div id="announce-tab" class="tab-content active"><div class="inner-padding">
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:25px; border-left:5px solid var(--red);">
                 <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
-                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
+                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala.</p>
                 <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
             </div>
         </div></div>
 
-        <div id="chart-tab" class="tab-content">
-            <div id="tv_v60" style="height:100%; width:100%;"></div>
-        </div>
+        <div id="chart-tab" class="tab-content"><div id="tv_v60" style="height:100%; width:100%;"></div></div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div class="lot-calc-box">
@@ -153,9 +148,7 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
-                            <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
-                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
+                            <option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
@@ -170,6 +163,7 @@
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Analyse..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
+                    
                     <div class="photo-grid">
                         <div class="upload-box"><label>📸 BEFORE</label><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
                         <div class="upload-box"><label>📸 AFTER</label><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
@@ -181,22 +175,18 @@
         </div></div>
 
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
-            <div class="mon-filters">
-                <select id="mon-pair" class="mon-select" onchange="loadData()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option></select>
-                <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="04">APR</option></select>
-            </div>
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
         </div></div>
-
+        
         <div id="donasi-tab" class="tab-content"><div class="inner-padding"><div class="donation-box">
-            <p style="font-size:12px; color:#ccc; margin-bottom:15px;">Support Freedom Syndicate Cloud!</p>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS">
-            <button class="btn-save" style="margin-top:15px; background:var(--be); color:black;" onclick="showNotif('TERIMA KASIH DUKUNGANNYA!')">DUKUNG! ☕</button>
+            <p style="font-size:12px; color:#ccc;">Support Freedom Syndicate!</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img">
+            <button class="btn-save" style="background:var(--be);" onclick="showNotif('TERIMA KASIH!')">DUKUNG! ☕</button>
         </div></div></div>
     </div>
 
+    <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
@@ -206,6 +196,9 @@
         auth.onAuthStateChanged(u => { if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); } else { document.getElementById('auth-screen').style.display='flex'; }});
 
         function showNotif(msg) { const t = document.getElementById('fs-toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 3000); }
+        function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); }
+        function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
+        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
 
         function calcLot() {
             const b = parseFloat(document.getElementById('calc-bal').value) || 0, r = parseFloat(document.getElementById('calc-risk').value) || 0, s = parseFloat(document.getElementById('calc-sl').value) || 0, lev = parseFloat(document.getElementById('calc-lev').value) || 1;
@@ -217,36 +210,40 @@
             if(!sRes || !curUser) return showNotif("SELECT RESULT!");
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
             const t = { date: document.getElementById('date').value, time: new Date().toLocaleTimeString(), pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
-            
-            // SAVE TANPA RELOAD
             rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => {
                 showNotif("TRANSACTION SAVED!");
                 document.getElementById('tradingForm').reset();
-                document.getElementById('pb').style.display = 'none';
-                document.getElementById('pa').style.display = 'none';
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.poi-check').forEach(p => p.checked = false);
+                document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
                 bB = ''; bA = '';
-            }).catch(err => showNotif("ERROR SAVING!"));
+            });
         }
 
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
-        function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); }
-        function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
-        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function updateChart() { new TradingView.widget({"autosize": true, "symbol": "XAUUSD", "interval": "15", "theme": "dark", "container_id": "tv_v60"}); }
+
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], labels = ['Start'];
+            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, eqData = [0], labels = ['Start'];
             trades.slice().reverse().forEach(t => { 
-                totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date);
+                totalP += t.pnl; eqData.push(totalP); labels.push(t.date);
                 const card = document.createElement('div'); card.className = 'history-card'; 
-                card.innerHTML = `<div class="h-header">${t.date} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Margin:</b> $${t.margin} | <b>POI:</b> ${t.poi.join(', ')}<br><b>Reason:</b> ${t.reason}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div>
+                <div class="h-header">${t.date} ${t.time} | ${t.pair} (${t.res})</div>
+                <div class="h-detail">
+                    <b>Session:</b> ${t.session || '-'} | <b>Model:</b> ${t.entry_style || '-'}<br>
+                    <b>Margin:</b> $${t.margin || 0} | <b>POI:</b> ${t.poi ? t.poi.join(', ') : '-'}<br>
+                    <b>Reason:</b> ${t.reason || '-'}
+                </div>
+                <div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card);
             });
-            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
             const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
             myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false }]}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { grid: { display: false } } } } });
         }
+        function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
     </script>
-    <script src="https://s3.tradingview.com/tv.js"></script>
-    <script>function updateChart() { new TradingView.widget({"autosize": true, "symbol": "XAUUSD", "interval": "15", "theme": "dark", "container_id": "tv_v60"}); }</script>
 </body>
 </html>
