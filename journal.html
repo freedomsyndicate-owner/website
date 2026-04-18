@@ -6,7 +6,6 @@
     <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
     
     <script>
-        // === SUPER SECURITY: ANTI-COPY & ANTI-VIEW SOURCE ===
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
@@ -16,7 +15,6 @@
         document.addEventListener('selectstart', function(e) { e.preventDefault(); });
         document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
-        // CLEAN POPUP
         window.alert = function(message) {
             const iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.setAttribute('src', 'data:text/plain,');
             document.documentElement.appendChild(iframe); iframe.contentWindow.alert(message); document.documentElement.removeChild(iframe);
@@ -44,16 +42,14 @@
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* SIDEBAR NAVIGATION */
         #sidebar { position: fixed; left: -280px; top: 0; bottom: 0; width: 280px; background: #0a0e14; z-index: 2000; transition: 0.3s; border-right: 1px solid #1f2937; padding: 20px; display: flex; flex-direction: column; }
         #sidebar.open { left: 0; }
         .side-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1999; display: none; backdrop-filter: blur(4px); }
         .side-overlay.show { display: block; }
-        .side-link { padding: 15px; color: #9ca3af; font-weight: bold; border-radius: 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 13px; transition: 0.2s; border: 1px solid transparent; }
-        .side-link:hover, .side-link.active { background: rgba(56, 189, 248, 0.1); color: white; border-color: rgba(56, 189, 248, 0.2); border-left: 4px solid var(--blue); }
+        .side-link { padding: 15px; color: #9ca3af; font-weight: bold; border-radius: 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 13px; transition: 0.2s; }
+        .side-link:hover, .side-link.active { background: rgba(56, 189, 248, 0.1); color: white; border-left: 4px solid var(--blue); }
         .side-link.logout { color: var(--red); margin-top: auto; border-top: 1px solid #1f2937; padding-top: 20px; }
 
-        /* HEADER */
         .fixed-top { flex-shrink: 0; padding: 15px; background: var(--bg); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1f2937; z-index: 100; }
         .menu-toggle { font-size: 24px; cursor: pointer; color: var(--blue); }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 1px; text-shadow: 0 0 10px var(--blue); margin: 0; }
@@ -63,7 +59,6 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 120px; }
 
-        /* BIAS CARDS */
         .bias-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
         .bias-card { background: var(--card); border-radius: 16px; border: 1px solid #1f2937; padding: 15px; }
         .bias-header { font-size: 9px; color: #555; text-transform: uppercase; margin-bottom: 10px; font-weight: 900; letter-spacing: 1px; }
@@ -75,7 +70,6 @@
         .mini-stat { background: #050a14; padding: 10px; border-radius: 10px; border: 1px solid #1f2937; text-align: center; }
         .mini-stat span { font-size: 8px; color: #555; display: block; }
 
-        /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -119,6 +113,7 @@
         .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
         .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 20px; margin-bottom: 15px; }
         .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
+        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -135,7 +130,6 @@
     </div>
     <div class="side-overlay" onclick="toggleMenu()"></div>
 
-    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
     <div id="auth-screen">
         <div class="auth-card">
             <h1 style="font-family:'Orbitron'; color:white; font-size:1.1rem;">FREEDOM SYNDICATE</h1>
@@ -178,10 +172,6 @@
                         <div class="mini-stat"><span>GBP</span><b style="color:var(--be)">NEUTRAL</b></div>
                     </div>
                 </div>
-                <div class="bias-card">
-                    <div class="bias-header">Technical Bias</div>
-                    <div class="sentiment-box"><b style="font-size:12px;">MOMENTUM M15</b> <span class="tag tag-neutral">NORMAL</span></div>
-                </div>
             </div>
         </div></div>
 
@@ -192,13 +182,8 @@
                     <div class="lot-input-item"><label>Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
                     <div class="lot-input-item"><label>SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
                 </div>
-                <div class="lot-input-item" style="margin-bottom:12px;"><label>Leverage Account</label>
-                    <select id="calc-lev" onchange="calcLot()">
-                        <option value="1">1:1</option><option value="100">1:100</option><option value="500" selected>1:500</option><option value="1000">1:1000</option><option value="2000">1:2000</option><option value="999999">1:Unlimited</option>
-                    </select>
-                </div>
                 <div class="lot-result-block">
-                    <div class="lot-res-item"><small>Rec. Lot</small><b id="res-lot">0.00 Lot</b></div>
+                    <div class="lot-res-item"><small>Rec. Lot</small><b id="res-lot">0.00</b></div>
                     <div class="lot-res-item"><small>Margin Used</small><b id="res-margin">$ 0.00</b></div>
                 </div>
             </div>
@@ -208,17 +193,21 @@
                     <div class="form-item"><label>💰 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option></optgroup>
-                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option></optgroup>
+                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                         </select>
                     </div>
                     <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div></div></div>
-                    <div class="form-item" style="border:none;"><label>🎯 POI</label><div class="check-grid">
-                        <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                    <div class="form-item" style="border:none;"><label>🎯 POI (LENGKAP)</label><div class="check-grid">
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="poi-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label><label class="check-item"><input type="checkbox" class="poi-check" value="SUP"> SUP</label><label class="check-item"><input type="checkbox" class="poi-check" value="RES"> RES</label>
                     </div></div>
                     <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid" style="grid-template-columns:1fr 1fr;"><div class="chip" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div></div></div>
-                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Analisa..."></textarea></div>
+                    <div class="form-item"><label>📝 Reason</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
                     <div class="photo-grid">
@@ -233,9 +222,16 @@
 
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <select id="mon-pair" class="mon-select" onchange="loadData()"><option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option></select>
+                <select id="mon-pair" class="mon-select" onchange="loadData()">
+                    <option value="ALL">ALL PAIRS</option>
+                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()">
-                    <option value="ALL">ALL TIME</option><option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option><option value="04" selected>APR</option><option value="05">MEI</option>
+                    <option value="ALL">ALL TIME</option>
+                    <option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04">APRIL</option><option value="05">MEI</option><option value="06">JUNI</option><option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option><option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option>
                 </select>
             </div>
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
@@ -251,7 +247,7 @@
             <div class="chat-premium">
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; background:#0d1117;">
-                    <input type="text" id="chat-input" placeholder="Type message..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:none; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
+                    <input type="text" id="chat-input" placeholder="Type a message..." style="background:#050a14; border:none; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
                     <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:12px; padding:0 20px; font-weight:900;">SEND</button>
                 </div>
             </div>
@@ -259,9 +255,14 @@
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card">
-                <h3 style="font-family:'Orbitron';">EXNESS</h3>
+                <h3>EXNESS</h3>
                 <p style="font-size:10px; color:#aaa;">Instant Withdrawal. <b>Deposit mulai $1.</b></p>
                 <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold;">DAFTAR</button>
+            </div>
+            <div class="broker-card">
+                <h3>HEADWAY</h3>
+                <p style="font-size:10px; color:#aaa;">Leverage Unlimited. <b>Deposit mulai $1.</b></p>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db')" style="background:white; color:black; border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold;">DAFTAR</button>
             </div>
         </div></div>
 
@@ -285,7 +286,7 @@
         }
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p); }
-        function logout() { if(confirm("Keluar?")) auth.signOut().then(() => location.reload()); }
+        function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }); } }
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); } 
@@ -293,6 +294,7 @@
         });
 
         function setupTracker() {
+            if(!curUser) return;
             const pRef = rtdb.ref('presence/' + curUser.uid);
             rtdb.ref('.info/connected').on('value', snap => { if(snap.val()) { pRef.set({email: curUser.email, status: "online"}); pRef.onDisconnect().remove(); } });
             rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); });
@@ -303,9 +305,14 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.side-link').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-            toggleMenu();
+            if(el) el.classList.add('active');
+            if(document.getElementById('sidebar').classList.contains('open')) toggleMenu();
             if(id === 'chart-tab') updateChart();
+        }
+
+        function updateChart() {
+            const p = document.getElementById('chart-pair').value.toUpperCase();
+            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&theme=dark&locale=id"></iframe>`;
         }
 
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
@@ -313,27 +320,23 @@
 
         function save() {
             if(!sRes || !curUser) return alert("Select Result!");
-            const t = { date: document.getElementById('date').value, pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: document.getElementById('res-margin').innerText, bef: bB, aft: bA };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("SAVED!"); loadData(); });
+            const t = { date: document.getElementById('date').value, time: new Date().toLocaleTimeString(), pair: document.getElementById('pair').value, session: sSession, poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle, reason: document.getElementById('reason').value, rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: document.getElementById('res-margin').innerText, bef: bB, aft: bA };
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("SAVED!"); loadData(); resetForm(); });
         }
+
+        function resetForm() { document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none'; bB=''; bA=''; }
 
         function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
         function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        
-        function updateChart() {
-            const p = document.getElementById('chart-pair').value.toUpperCase();
-            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&theme=dark"></iframe>`;
-        }
-
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
         function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(c => { const d = c.val(); const div = document.createElement('div'); div.className = `msg-bubble ${d.uid === curUser.uid ? 'mine' : ''}`; div.innerHTML = `<b>${d.name}</b><br>${d.msg}`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
-        function calcLot() { const b = parseFloat(document.getElementById('calc-bal').value), r = parseFloat(document.getElementById('calc-risk').value), s = parseFloat(document.getElementById('calc-sl').value), lev = parseFloat(document.getElementById('calc-lev').value); if(b && r && s) { const l = (b*(r/100))/(s*10); document.getElementById('res-lot').innerText = l.toFixed(2); document.getElementById('res-margin').innerText = "$ " + (l*100000/lev).toFixed(2); } }
+        function calcLot() { const b = parseFloat(document.getElementById('calc-bal').value), r = parseFloat(document.getElementById('calc-risk').value), s = parseFloat(document.getElementById('calc-sl').value), lev = parseFloat(document.getElementById('calc-lev').value) || 500; if(b && r && s) { const l = (b*(r/100))/(s*10); document.getElementById('res-lot').innerText = l.toFixed(2); document.getElementById('res-margin').innerText = "$ " + (l*100000/lev).toFixed(2); } }
 
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], labels = ['Start'];
             const fM = document.getElementById('mon-month').value;
-            const sorted = trades.sort((a,b) => new Date(a.date) - new Date(b.date));
             const daysData = {};
+            const sorted = trades.sort((a,b) => new Date(a.date) - new Date(b.date));
             sorted.forEach(t => { 
                 if(fM === 'ALL' || t.date.split('-')[1] === fM) {
                     totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date);
@@ -342,7 +345,7 @@
             });
             sorted.reverse().forEach(t => {
                 const card = document.createElement('div'); card.className = 'history-card';
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Model:</b> ${t.entry_style || '-'}<br><b>Reason:</b> ${t.reason}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.pair} (${t.res})</div><div class="h-detail"><b>POI:</b> ${t.poi?t.poi.join(', '):'-'}<br><b>Reason:</b> ${t.reason}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
                 h.appendChild(card);
             });
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
