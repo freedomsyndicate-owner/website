@@ -7,20 +7,17 @@
     
     <script>
         // === SISTEM PENGAMANAN TINGKAT TINGGI ===
-        document.addEventListener('contextmenu', event => event.preventDefault()); // Blokir Klik Kanan
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
-            // Blokir F12, Ctrl+Shift+I/J/C, Ctrl+U (View Source), Ctrl+S (Save), Ctrl+A (Select All)
             if(e.keyCode == 123 || 
               (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
               (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
                 return false;
             }
         };
-        // Anti Drag & Seleksi Teks
         document.addEventListener('selectstart', function(e) { e.preventDefault(); });
         document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
-        // CLEAN POPUP (Hapus nama domain GitHub)
         window.alert = function(message) {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -63,13 +60,20 @@
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
         .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
 
+        /* ANIMASI DOMS */
+        .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
+        @keyframes glowText {
+            from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
+            to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
+        }
+
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
-        .fixed-top { flex-shrink: 0; padding: 15px 10px 15px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
+        .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
-        .nav-tabs { display: none; } /* Hidden, switched to Sidebar */
+        .nav-tabs { display: none; }
 
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
@@ -152,6 +156,7 @@
 
     <div class="fixed-top">
         <h1 class="logo">FREEDOM SYNDICATE</h1>
+        <div class="anim-journal">( JOURNAL )</div>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
     </div>
 
@@ -175,24 +180,24 @@
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div class="lot-calc-box">
                 <div class="lot-input-grid">
-                    <div class="lot-input-item"><label>Balance ($)</label><input type="number" id="calc-bal" placeholder="1000" oninput="calcLot()"></div>
-                    <div class="lot-input-item"><label>Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
-                    <div class="lot-input-item"><label>SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>💰 Balance ($)</label><input type="number" id="calc-bal" placeholder="1000" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>⚠️ Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>📉 SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
                 </div>
-                <div class="lot-input-item" style="margin-bottom:12px;"><label>Leverage Account (1:X)</label>
+                <div class="lot-input-item" style="margin-bottom:12px;"><label>⚙️ Leverage (1:X)</label>
                     <select id="calc-lev" onchange="calcLot()">
                         <option value="1">1:1</option><option value="100">1:100</option><option value="500" selected>1:500</option><option value="1000">1:1000</option><option value="2000">1:2000</option><option value="3000">1:3000</option><option value="999999">1:Unlimited</option>
                     </select>
                 </div>
                 <div class="lot-result-block">
-                    <div class="lot-res-item"><small>Rec. Lot Size</small><b id="res-lot">0.00 Lot</b></div>
-                    <div class="lot-res-item"><small>Min. Margin Used</small><b id="res-margin">$ 0.00</b></div>
+                    <div class="lot-res-item"><small>🎯 Rec. Lot Size</small><b id="res-lot">0.00 Lot</b></div>
+                    <div class="lot-res-item"><small>💵 Min. Margin</small><b id="res-margin">$ 0.00</b></div>
                 </div>
             </div>
             <form id="tradingForm" onsubmit="return false;">
                 <div class="notion-form">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
-                    <div class="form-item"><label>💰 Pair Selection</label>
+                    <div class="form-item"><label>🪙 Pair Selection</label>
                         <select id="pair">
                             <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                             <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
@@ -259,32 +264,18 @@
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card">
                 <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
-                
                 <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
                     <h3 style="margin:0; color:white;">EXNESS</h3>
                     <div style="margin: 10px 0;">
                         <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
                     </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
-                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
-                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
-                        <li>Regulasi Internasional ketat & terpercaya.</li>
-                    </ul>
                     <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
                 </div>
-
-                <div style="padding-bottom:10px;">
+                <div>
                     <h3 style="margin:0; color:white;">HEADWAY</h3>
                     <div style="margin: 10px 0;">
                         <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
                     </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Leverage Unlimited (Tanpa Batas).</li>
-                        <li>Bonus deposit melimpah untuk modal kecil.</li>
-                        <li>Eksekusi order sangat cepat & stabil.</li>
-                        <li>Support bank lokal Indonesia.</li>
-                    </ul>
                     <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
                 </div>
             </div>
@@ -305,7 +296,6 @@
         const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
 
-        // SIDEBAR NAVIGATION LOGIC
         let sidebarOpen = false;
         function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
@@ -373,7 +363,7 @@
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
         
         function save() { 
-            if(!sRes || !curUser) return alert("Pilih Result (TP/SL/BE)!");
+            if(!sRes || !curUser) return alert("❌ Pilih Result (TP/SL/BE) Dulu Doms!");
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
             const dataToSave = { 
                 date: document.getElementById('date').value || new Date().toISOString().split('T')[0], 
@@ -387,7 +377,10 @@
                 pnl: parseFloat(document.getElementById('pnl').value) || 0, 
                 res: sRes, margin: mUsed, bef: bB, aft: bA 
             };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { alert("TRANSAKSI BERHASIL DISIMPAN!"); resetForm(); loadData(); }).catch(e => alert("Gagal Simpan: " + e.message));
+            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { 
+                alert("🚀 BERHASIL! Transaksi Disimpan ke Cloud Doms."); 
+                resetForm(); loadData(); 
+            }).catch(e => alert("Gagal Simpan: " + e.message));
         }
 
         function resetForm() {
