@@ -12,6 +12,15 @@
                 return false;
             }
         };
+        // PERBAIKAN 1: Menghapus nama domain GitHub di popup alert
+        window.alert = function(message) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            iframe.contentWindow.alert(message);
+            document.documentElement.removeChild(iframe);
+        };
     </script>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -33,9 +42,13 @@
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 5px 10px; background: var(--bg); z-index: 100; text-align: center; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
-        .nav-tabs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 15px; }
-        .tab-btn { cursor: pointer; background: var(--card); border: 1px solid #1f2937; padding: 8px 1px; border-radius: 8px; font-size: 5.5px; font-weight: bold; color: #9ca3af; text-transform: uppercase; text-align: center; }
+        
+        /* Navigasi Grid disesuaikan untuk 8 Tombol (Termasuk Logout) */
+        .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 15px; padding: 0 5px; }
+        .tab-btn { cursor: pointer; background: var(--card); border: 1px solid #1f2937; padding: 10px 2px; border-radius: 8px; font-size: 7px; font-weight: bold; color: #9ca3af; text-transform: uppercase; text-align: center; }
         .tab-btn.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
+        .tab-btn.logout { border-color: var(--red); color: var(--red); }
+
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
@@ -110,6 +123,7 @@
             <div class="tab-btn" onclick="openTab('community-tab', this)">👥 Community</div>
             <div class="tab-btn" onclick="openTab('broker-tab', this)">🏦 Broker</div>
             <div class="tab-btn" onclick="openTab('donasi-tab', this)">☕ Donasi</div>
+            <div class="tab-btn logout" onclick="logout()">🚪 Logout</div>
         </nav>
     </div>
     <div class="content-container">
@@ -253,6 +267,15 @@
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         
+        // PERBAIKAN 3: Fungsi Logout
+        function logout() {
+            if(confirm("Yakin ingin keluar?")) {
+                auth.signOut().then(() => {
+                    location.reload();
+                });
+            }
+        }
+
         auth.onAuthStateChanged(u => { 
             if(u){ 
                 curUser = u; 
@@ -265,6 +288,7 @@
         });
 
         function setupTracker() { 
+            if(!curUser) return;
             const pRef = rtdb.ref('presence/' + curUser.uid); 
             rtdb.ref('.info/connected').on('value', snap => { 
                 if (snap.val() === true) { 
@@ -293,7 +317,17 @@
             else { document.getElementById('res-lot').innerText = "0.00 Lot"; document.getElementById('res-margin').innerText = "$ 0.00"; }
         }
 
-        function openTab(id, el) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(id==='chart-tab') updateChart(); if(id==='monitor-tab' || id==='community-tab') loadData(); }
+        // PERBAIKAN 2: Pastikan tab navigasi tidak hilang
+        function openTab(id, el) { 
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active'); 
+            if(el) el.classList.add('active'); 
+            if(id==='chart-tab') updateChart(); 
+            if(id==='monitor-tab' || id==='community-tab') loadData(); 
+        }
+
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
         
@@ -322,6 +356,7 @@
                 alert("TRANSAKSI BERHASIL DISIMPAN!");
                 resetForm();
                 loadData();
+                // PERBAIKAN 2: Tetap di tab journal setelah save, jangan reload halaman penuh
             }).catch(e => alert("Gagal Simpan: " + e.message));
         }
 
