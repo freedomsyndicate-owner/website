@@ -6,12 +6,20 @@
     <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
     
     <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        // PENGAMANAN TINGKAT TINGGI
+        document.addEventListener('contextmenu', event => event.preventDefault()); // Matikan Klik Kanan
+        
         document.onkeydown = function(e) {
-            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+            // Blokir F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (View Source), Ctrl+S, Ctrl+C (Copy)
+            if(e.keyCode == 123 || 
+              (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
+              (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
                 return false;
             }
         };
+
+        // Anti Drag/Seleksi Teks
+        document.onselectstart = function() { return false; };
 
         // PERBAIKAN POPUP: Menghapus nama domain di Alert & Confirm
         window.alert = function(message) {
@@ -40,6 +48,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
@@ -191,7 +201,7 @@
                     </div></div>
                     <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid" style="grid-template-columns:1fr 1fr;"><div class="chip" data-type="style" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" data-type="style" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div></div></div>
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
-                    <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
+                    <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-type="res" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
                     
                     <div class="photo-grid">
@@ -268,7 +278,6 @@
         </div></div>
     </div>
 
-    <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
@@ -277,7 +286,6 @@
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         
-        // PERBAIKAN: Fungsi Logout
         function logout() {
             if(confirm("Yakin ingin keluar?")) {
                 auth.signOut().then(() => {
@@ -386,7 +394,32 @@
         }
 
         function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase(); document.getElementById('tv_v60').innerHTML = ''; new TradingView.widget({"autosize": true, "symbol": p, "interval": "15", "theme": "dark", "container_id": "tv_v60"}); }
+        
+        // PERBAIKAN: Fungsi Update Chart agar stabil di semua jaringan
+        function updateChart() { 
+            const p = document.getElementById('chart-pair').value.toUpperCase(); 
+            const container = document.getElementById('tv_v60');
+            container.innerHTML = ''; 
+            
+            if (typeof TradingView !== 'undefined') {
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": p,
+                    "interval": "15",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "id",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tv_v60"
+                });
+            } else {
+                container.innerHTML = '<p style="text-align:center; padding-top:50px;">Library TradingView gagal dimuat. Coba refresh atau periksa koneksi.</p>';
+            }
+        }
+
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render(trades) {
