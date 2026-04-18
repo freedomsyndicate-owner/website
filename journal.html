@@ -167,7 +167,7 @@
                     </div></div>
                     <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid" style="grid-template-columns:1fr 1fr;"><div class="chip" data-type="style" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" data-type="style" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div></div></div>
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
-                    <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-type="res" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
+                    <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
                     
                     <div class="photo-grid">
@@ -183,9 +183,22 @@
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div class="mon-filters" style="display:flex; gap:10px; margin-bottom:15px;">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
-                    <option value="ALL">ALL PAIRS</option><option value="XAUUSD">XAUUSD</option>
+                    <option value="ALL">ALL PAIRS</option>
+                    <option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option>
+                    <option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option>
+                    <option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option>
+                    <option value="ETHUSD">ETHUSD</option><option value="US30">US30</option>
+                    <option value="NAS100">NAS100</option>
                 </select>
-                <select id="mon-month" class="mon-select" onchange="loadData()"><option value="ALL">ALL TIME</option><option value="04">APR</option></select>
+                <select id="mon-month" class="mon-select" onchange="loadData()">
+                    <option value="ALL">ALL TIME</option>
+                    <option value="01">JANUARI</option><option value="02">FEBRUARI</option>
+                    <option value="03">MARET</option><option value="04">APRIL</option>
+                    <option value="05">MEI</option><option value="06">JUNI</option>
+                    <option value="07">JULI</option><option value="08">AGUSTUS</option>
+                    <option value="09">SEPTEMBER</option><option value="10">OKTOBER</option>
+                    <option value="11">NOVEMBER</option><option value="12">DESEMBER</option>
+                </select>
             </div>
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
@@ -207,12 +220,12 @@
                 <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
                 <div style="border-bottom: 1px solid #333; padding-bottom:15px; margin-bottom:15px;">
                     <h3 style="margin:0;">EXNESS</h3>
-                    <p style="font-size:10px; color:#aaa;">Broker No.1 dengan Instant Withdrawal & Spread Rendah.</p>
+                    <p style="font-size:10px; color:#aaa;">Broker No.1 dengan Instant Withdrawal & Spread Rendah. <b>Deposit mulai $1.</b></p>
                     <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">DAFTAR EXNESS</button>
                 </div>
                 <div>
                     <h3 style="margin:0;">HEADWAY</h3>
-                    <p style="font-size:10px; color:#aaa;">Leverage Unlimited & Deposit Terjangkau.</p>
+                    <p style="font-size:10px; color:#aaa;">Leverage Unlimited & <b>Deposit mulai $1.</b></p>
                     <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">DAFTAR HEADWAY</button>
                 </div>
             </div>
@@ -267,7 +280,6 @@
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
             const tradesRef = rtdb.ref('users/' + curUser.uid + '/trades');
             
-            // TANGKAP DATA SEBELUM RESET
             const dataToSave = { 
                 date: document.getElementById('date').value || new Date().toISOString().split('T')[0], 
                 time: document.getElementById('time').value || new Date().toLocaleTimeString(), 
@@ -313,14 +325,25 @@
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render(trades) {
-            const h = document.getElementById('hist'); h.innerHTML = ''; let totalP = 0, win = 0, eqData = [0], labels = ['Start'];
-            const fP = document.getElementById('mon-pair').value, fM = document.getElementById('mon-month').value;
+            const h = document.getElementById('hist'); h.innerHTML = ''; 
+            let totalP = 0, win = 0, filteredCount = 0, eqData = [0], labels = ['Start'];
+            const fP = document.getElementById('mon-pair').value;
+            const fM = document.getElementById('mon-month').value;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
+            
+            const daysData = {};
             
             sorted.forEach(t => { 
                 const tM = t.date ? t.date.split('-')[1] : ''; 
                 if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { 
-                    totalP += t.pnl; if(t.res === 'TP') win++; eqData.push(totalP); labels.push(t.date); 
+                    totalP += t.pnl; 
+                    if(t.res === 'TP') win++; 
+                    filteredCount++;
+                    eqData.push(totalP); 
+                    labels.push(t.date); 
+                    
+                    if(!daysData[t.date]) daysData[t.date] = 0;
+                    daysData[t.date] += t.pnl;
                 } 
             });
             
@@ -343,9 +366,32 @@
             });
             
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; 
-            document.getElementById('st-wr').innerText = trades.length ? Math.round((win / trades.length) * 100) + "%" : "0%";
-            const ctx = document.getElementById('equityChart').getContext('2d'); if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } });
+            document.getElementById('st-wr').innerText = filteredCount > 0 ? Math.round((win / filteredCount) * 100) + "%" : "0%";
+            
+            const ctx = document.getElementById('equityChart').getContext('2d'); 
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, { 
+                type: 'line', 
+                data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, 
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } 
+            });
+
+            // PERBAIKAN KALENDER: Otomatis deteksi jumlah hari dalam sebulan
+            const cal = document.getElementById('cal'); 
+            cal.innerHTML = '';
+            
+            let year = 2026;
+            let monthIndex = fM === 'ALL' ? new Date().getMonth() : parseInt(fM) - 1;
+            let daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+
+            for (let i = 1; i <= daysInMonth; i++) { 
+                const dateStr = `${year}-${String(monthIndex + 1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                const pnl = daysData[dateStr] || 0;
+                const div = document.createElement('div');
+                div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; 
+                cal.appendChild(div);
+            }
         }
     </script>
 </body>
