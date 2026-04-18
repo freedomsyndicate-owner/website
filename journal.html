@@ -144,6 +144,16 @@
         .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
         
         #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
+
+        /* ECONOMIC CALENDAR STYLE */
+        .econ-card { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; padding: 15px; margin-bottom: 10px; position: relative; overflow: hidden; }
+        .econ-card::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px; }
+        .econ-high::before { background: var(--red); }
+        .econ-mid::before { background: var(--be); }
+        .econ-title { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .econ-meta { font-size: 9px; color: #8b949e; display: flex; justify-content: space-between; }
+        .econ-res { font-size: 10px; font-family: 'Orbitron'; margin-top: 8px; }
+        .rss-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; border: 1px solid #1f2937; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -237,8 +247,41 @@
                         </div>
                     </div>
                 </div>
+
+                <div style="padding: 15px;">
+                    <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--be); margin-bottom:15px;">KALENDER EKONOMI (DAMPAK TINGGI)</h4>
+                    
+                    <div class="econ-card econ-high">
+                        <div class="econ-title">Retail Sales MoM (Penjualan Ritel)</div>
+                        <div class="econ-meta"><span>🇺🇸 US • HIGH IMPACT</span><span>Aktual: 0.6%</span></div>
+                        <div class="econ-res" style="color:var(--green);">BULLISH FOR USD</div>
+                    </div>
+
+                    <div class="econ-card econ-high">
+                        <div class="econ-title">Unemployment Rate (Tingkat Pengangguran)</div>
+                        <div class="econ-meta"><span>🇺🇸 US • HIGH IMPACT</span><span>Aktual: 4.3%</span></div>
+                        <div class="econ-res" style="color:var(--red);">BEARISH FOR USD</div>
+                    </div>
+
+                    <div class="econ-card econ-mid">
+                        <div class="econ-title">FOMC Minutes (Notulen Rapat Fed)</div>
+                        <div class="econ-meta"><span>🇺🇸 US • MEDIUM IMPACT</span><span>Menunggu Rilis...</span></div>
+                    </div>
+
+                    <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--blue); margin-top:25px; margin-bottom:15px;">BERITA TERKINI (RSS FEED)</h4>
+                    
+                    <div class="rss-item">
+                        <div style="font-size:11px; color:var(--blue); font-weight:600;">Harga minyak melonjak seiring ketegangan di Selat Hormuz.</div>
+                        <div style="font-size:8px; color:#555; margin-top:4px;">Sabtu, 18 Apr 2026 06:06 WIB</div>
+                    </div>
+
+                    <div class="rss-item">
+                        <div style="font-size:11px; color:var(--blue); font-weight:600;">Suku bunga KPR AS menunjukkan tanda penurunan tajam.</div>
+                        <div style="font-size:8px; color:#555; margin-top:4px;">Jumat, 17 Apr 2026 23:33 WIB</div>
+                    </div>
+                </div>
             </div>
-            </div>
+        </div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div class="lot-calc-box">
