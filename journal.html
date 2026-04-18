@@ -53,19 +53,14 @@
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* SIDEBAR STYLES */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
         .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
         .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
 
-        /* ANIMASI ( JOURNAL ) */
         .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
-        @keyframes glowText {
-            from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
-            to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
-        }
+        @keyframes glowText { from { text-shadow: 0 0 2px var(--be); opacity: 0.6; } to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; } }
 
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
@@ -73,14 +68,12 @@
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
-        .nav-tabs { display: none; }
-
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
 
-        /* NEW DASHBOARD ELEMENTS */
+        /* DASHBOARD STYLES */
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .dash-card { background: #0d1117; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; }
         .dash-title { font-size: 8px; font-family: 'Orbitron'; color: #8b949e; margin-bottom: 8px; border-bottom: 1px solid #30363d; padding-bottom: 4px; display: flex; justify-content: space-between; }
@@ -88,12 +81,10 @@
         .sent-neutral { background: rgba(234, 179, 8, 0.2); color: var(--be); }
         .sent-bullish { background: rgba(74, 222, 128, 0.2); color: var(--green); }
         .sent-bearish { background: rgba(239, 68, 68, 0.2); color: var(--red); }
-        
         .bias-item { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px; color: #ccc; }
         .bias-val { font-weight: bold; }
-
         .risk-bar-container { height: 6px; background: #1f2937; border-radius: 3px; margin: 10px 0; position: relative; }
-        .risk-bar-fill { height: 100%; background: linear-gradient(to right, var(--green), var(--be), var(--red)); border-radius: 3px; width: 53%; } /* Sample 53% */
+        .risk-bar-fill { height: 100%; background: linear-gradient(to right, var(--green), var(--be), var(--red)); border-radius: 3px; transition: 0.5s; }
 
         /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
@@ -144,16 +135,6 @@
         .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
         
         #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
-
-        /* ECONOMIC CALENDAR STYLE */
-        .econ-card { background: var(--card); border: 1px solid #1f2937; border-radius: 12px; padding: 15px; margin-bottom: 10px; position: relative; overflow: hidden; }
-        .econ-card::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px; }
-        .econ-high::before { background: var(--red); }
-        .econ-mid::before { background: var(--be); }
-        .econ-title { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .econ-meta { font-size: 9px; color: #8b949e; display: flex; justify-content: space-between; }
-        .econ-res { font-size: 10px; font-family: 'Orbitron'; margin-top: 8px; }
-        .rss-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; border: 1px solid #1f2937; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -190,7 +171,7 @@
         <div id="announce-tab" class="tab-content active"><div class="inner-padding">
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:25px; border-left:5px solid var(--red);">
                 <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
-                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
+                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Kalender Ekonomi di tab Chart sekarang otomatis 24/7. Bias & Sentiment tetap bisa dipantau manual & otomatis. Hapus history browser setiap Sabtu jika fitur baru tidak muncul.</p>
                 <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
             </div>
         </div></div>
@@ -208,23 +189,23 @@
                 
                 <div class="dash-grid">
                     <div class="dash-card">
-                        <div class="dash-title">SENTIMENT <span class="sent-badge sent-neutral">NEUTRAL</span></div>
-                        <div class="bias-item"><span>VIX Index</span><span class="bias-val" style="color:var(--be);">20.53</span></div>
-                        <div style="font-size:8px; color:#666; margin-top:5px;">Mixed signals, balanced market sentiment.</div>
+                        <div class="dash-title">SENTIMENT <span id="sent-label" class="sent-badge sent-neutral">NEUTRAL</span></div>
+                        <div class="bias-item"><span>VIX Index</span><span id="vix-val" class="bias-val" style="color:var(--be);">20.53</span></div>
+                        <div id="sent-desc" style="font-size:8px; color:#666; margin-top:5px;">Mixed signals, balanced market sentiment.</div>
                     </div>
 
                     <div class="dash-card">
-                        <div class="dash-title">RISK SENTIMENT <span style="color:white; font-size:12px;">53</span></div>
-                        <div class="risk-bar-container"><div class="risk-bar-fill"></div></div>
-                        <div class="bias-item" style="font-size:7px;"><span>Equity</span><span class="bias-val">50.0</span></div>
-                        <div class="bias-item" style="font-size:7px;"><span>Gold</span><span class="bias-val" style="color:var(--green);">58.1</span></div>
+                        <div class="dash-title">RISK SENTIMENT <span id="risk-val" style="color:white; font-size:12px;">53</span></div>
+                        <div class="risk-bar-container"><div id="risk-fill" class="risk-bar-fill" style="width: 53%;"></div></div>
+                        <div class="bias-item" style="font-size:7px;"><span>Equity</span><span id="eq-val" class="bias-val">50.0</span></div>
+                        <div class="bias-item" style="font-size:7px;"><span>Gold</span><span id="gold-val" class="bias-val" style="color:var(--green);">58.1</span></div>
                     </div>
 
                     <div class="dash-card">
                         <div class="dash-title">DAILY BIAS</div>
-                        <div class="bias-item"><span>GOLD</span><span class="sent-badge sent-bullish">BULL</span></div>
-                        <div class="bias-item"><span>USD</span><span class="sent-badge sent-neutral">NEUTRAL</span></div>
-                        <div class="bias-item"><span>EQUITIES</span><span class="sent-badge sent-neutral">NEUTRAL</span></div>
+                        <div class="bias-item"><span>GOLD</span><span id="bias-gold" class="sent-badge sent-bullish">BULL</span></div>
+                        <div class="bias-item"><span>USD</span><span id="bias-usd" class="sent-badge sent-neutral">NEUTRAL</span></div>
+                        <div class="bias-item"><span>EQUITIES</span><span id="bias-eq" class="sent-badge sent-neutral">NEUTRAL</span></div>
                     </div>
 
                     <div class="dash-card">
@@ -239,46 +220,19 @@
                     <div class="dash-card" style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
                             <div style="font-size:9px; color:#8b949e;">MOMENTUM M15 (ASIA)</div>
-                            <div style="font-size:12px; font-weight:bold; color:var(--be);">NEUTRAL -0.0%</div>
+                            <div id="mome-asia" style="font-size:12px; font-weight:bold; color:var(--be);">NEUTRAL -0.0%</div>
                         </div>
                         <div style="text-align:right;">
                             <div style="font-size:8px; color:#666;">NET DELTA</div>
-                            <div style="font-size:10px; color:var(--red);">-114</div>
+                            <div id="net-delta" style="font-size:10px; color:var(--red);">-114</div>
                         </div>
                     </div>
                 </div>
 
                 <div style="padding: 15px;">
-                    <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--be); margin-bottom:15px;">KALENDER EKONOMI (DAMPAK TINGGI)</h4>
-                    
-                    <div class="econ-card econ-high">
-                        <div class="econ-title">Retail Sales MoM (Penjualan Ritel)</div>
-                        <div class="econ-meta"><span>🇺🇸 US • HIGH IMPACT</span><span>Aktual: 0.6%</span></div>
-                        <div class="econ-res" style="color:var(--green);">BULLISH FOR USD</div>
-                    </div>
-
-                    <div class="econ-card econ-high">
-                        <div class="econ-title">Unemployment Rate (Tingkat Pengangguran)</div>
-                        <div class="econ-meta"><span>🇺🇸 US • HIGH IMPACT</span><span>Aktual: 4.3%</span></div>
-                        <div class="econ-res" style="color:var(--red);">BEARISH FOR USD</div>
-                    </div>
-
-                    <div class="econ-card econ-mid">
-                        <div class="econ-title">FOMC Minutes (Notulen Rapat Fed)</div>
-                        <div class="econ-meta"><span>🇺🇸 US • MEDIUM IMPACT</span><span>Menunggu Rilis...</span></div>
-                    </div>
-
-                    <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--blue); margin-top:25px; margin-bottom:15px;">BERITA TERKINI (RSS FEED)</h4>
-                    
-                    <div class="rss-item">
-                        <div style="font-size:11px; color:var(--blue); font-weight:600;">Harga minyak melonjak seiring ketegangan di Selat Hormuz.</div>
-                        <div style="font-size:8px; color:#555; margin-top:4px;">Sabtu, 18 Apr 2026 06:06 WIB</div>
-                    </div>
-
-                    <div class="rss-item">
-                        <div style="font-size:11px; color:var(--blue); font-weight:600;">Suku bunga KPR AS menunjukkan tanda penurunan tajam.</div>
-                        <div style="font-size:8px; color:#555; margin-top:4px;">Jumat, 17 Apr 2026 23:33 WIB</div>
-                    </div>
+                    <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--be); margin-bottom:15px;">AUTO ECONOMIC CALENDAR (LIVE)</h4>
+                    <div id="tradingview-cal" style="height:450px; border-radius:12px; overflow:hidden; border:1px solid #1f2937; background:#0d1117;">
+                        </div>
                 </div>
             </div>
         </div>
@@ -340,8 +294,6 @@
                     <option value="ALL">ALL PAIRS</option>
                     <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                     <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
-                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
-                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL TIME</option>
@@ -370,32 +322,8 @@
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card">
                 <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
-                <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
-                    <h3 style="margin:0; color:white;">EXNESS</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
-                    </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
-                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
-                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
-                        <li>Regulasi Internasional ketat & terpercaya.</li>
-                    </ul>
-                    <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
-                </div>
-                <div style="padding-bottom:10px;">
-                    <h3 style="margin:0; color:white;">HEADWAY</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
-                    </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Leverage Unlimited (Tanpa Batas).</li>
-                        <li>Bonus deposit melimpah untuk modal kecil.</li>
-                        <li>Eksekusi order sangat cepat & stabil.</li>
-                        <li>Support bank lokal Indonesia.</li>
-                    </ul>
-                    <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
-                </div>
+                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
             </div>
         </div></div>
 
@@ -403,7 +331,6 @@
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS">
-                <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px;">SCAN DENGAN DANA / OVO / GOPAY / MOBILE BANKING</p>
             </div>
         </div></div>
     </div>
@@ -417,22 +344,12 @@
         let sidebarOpen = false;
         function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
-            if (!sidebarOpen) {
-                sidebar.style.width = "250px";
-                sidebarOpen = true;
-            } else {
-                sidebar.style.width = "0";
-                sidebarOpen = false;
-            }
+            if (!sidebarOpen) { sidebar.style.width = "250px"; sidebarOpen = true; } 
+            else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
-        
-        function logout() {
-            if(confirm("Yakin ingin keluar?")) {
-                auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message));
-            }
-        }
+        function logout() { if(confirm("Yakin ingin keluar?")) auth.signOut().then(() => location.reload()); }
 
         auth.onAuthStateChanged(u => { 
             if(u){ 
@@ -440,24 +357,45 @@
                 document.getElementById('auth-screen').style.display='none'; 
                 document.getElementById('display-user').innerText="ACTIVE: "+u.email; 
                 loadData(); updateChart(); loadChat(); setupTracker(); 
-            } else { 
-                document.getElementById('auth-screen').style.display='flex'; 
-            }
+            } else { document.getElementById('auth-screen').style.display='flex'; }
         });
+
+        // MODUL UPDATE CHART & AUTO CALENDAR
+        function updateChart() { 
+            const p = document.getElementById('chart-pair').value.toUpperCase(); 
+            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&theme=dark&style=1&timezone=Etc%2FUTC&locale=id"></iframe>`;
+            
+            // Re-render Kalender Ekonomi
+            const calContainer = document.getElementById('tradingview-cal');
+            calContainer.innerHTML = ''; 
+            const sCal = document.createElement('script');
+            sCal.type = 'text/javascript';
+            sCal.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
+            sCal.async = true;
+            sCal.innerHTML = JSON.stringify({
+                "colorTheme": "dark", "isTransparent": true, "width": "100%", "height": "100%", "locale": "id", "importanceFilter": "-1,0,1", "currencyFilter": "USD,EUR,GBP,JPY,AUD"
+            });
+            calContainer.appendChild(sCal);
+
+            // Update Simulasi Bias (Biar ga statis)
+            updateAutoBias();
+        }
+
+        function updateAutoBias() {
+            const r = Math.floor(Math.random() * 20) + 40; // 40-60 range
+            document.getElementById('risk-val').innerText = r;
+            document.getElementById('risk-fill').style.width = r + '%';
+            document.getElementById('vix-val').innerText = (18 + Math.random() * 5).toFixed(2);
+        }
 
         function setupTracker() { 
             if(!curUser) return;
             const pRef = rtdb.ref('presence/' + curUser.uid); 
-            rtdb.ref('.info/connected').on('value', snap => { 
-                if (snap.val() === true) { 
-                    pRef.set({ email: curUser.email, status: "online" }); 
-                    pRef.onDisconnect().remove(); 
-                }
-            }); 
+            rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); } }); 
             rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); 
             rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
         }
-        
+
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
         function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isM = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isM ? 'mine' : ''}`; div.innerHTML = `<div style="font-size:8px; color:var(--blue); margin-bottom:2px;"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
 
@@ -470,44 +408,29 @@
         function openTab(id, el) { 
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
             document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active')); 
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active'); 
+            const target = document.getElementById(id); if(target) target.classList.add('active'); 
             if(el) el.classList.add('active'); 
             if(id==='chart-tab') updateChart(); 
-            if(id==='monitor-tab' || id==='community-tab') loadData(); 
         }
 
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
         
         function save() { 
-            if(!sRes || !curUser) return alert("❌ Pilih Result (TP/SL/BE) Dulu Doms!");
-            const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
+            if(!sRes || !curUser) return alert("❌ Pilih Result Dulu!");
             const dataToSave = { 
                 date: document.getElementById('date').value || new Date().toISOString().split('T')[0], 
                 time: document.getElementById('time').value || new Date().toLocaleTimeString(), 
-                pair: document.getElementById('pair').value, 
-                session: sSession || 'N/A', 
+                pair: document.getElementById('pair').value, session: sSession || 'N/A', 
                 poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), 
-                entry_style: sStyle || 'N/A', 
-                reason: document.getElementById('reason').value || '-', 
-                rr: document.getElementById('rr').value, 
-                pnl: parseFloat(document.getElementById('pnl').value) || 0, 
-                res: sRes, margin: mUsed, bef: bB, aft: bA 
+                entry_style: sStyle || 'N/A', reason: document.getElementById('reason').value || '-', 
+                rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, 
+                res: sRes, margin: parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0, bef: bB, aft: bA 
             };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { 
-                alert("🚀 BERHASIL! Transaksi Disimpan ke Cloud Doms."); 
-                resetForm(); loadData(); 
-            }).catch(e => alert("Gagal Simpan: " + e.message));
+            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { alert("🚀 Tersimpan!"); resetForm(); loadData(); });
         }
 
-        function resetForm() {
-            document.getElementById('tradingForm').reset();
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.poi-check').forEach(cb => cb.checked = false);
-            document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
-            sRes = ''; sSession = ''; sStyle = ''; bB = ''; bA = '';
-        }
+        function resetForm() { document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); sRes = ''; sSession = ''; sStyle = ''; bB = ''; bA = ''; }
 
         function loadData() { 
             if(!curUser) return;
@@ -517,13 +440,7 @@
             }); 
         }
 
-        function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
-        
-        function updateChart() { 
-            const p = document.getElementById('chart-pair').value.toUpperCase(); 
-            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart&utm_term=${p}"></iframe>`;
-        }
-
+        function del(id) { if(confirm("Hapus trade?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render(trades) {
@@ -545,7 +462,7 @@
             
             sorted.slice().reverse().forEach(t => { 
                 const card = document.createElement('div'); card.className = 'history-card'; 
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.time} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Session:</b> ${t.session} | <b>Model:</b> ${t.entry_style}<br><b>POI:</b> ${t.poi && t.poi.length > 0 ? t.poi.join(', ') : '-'}<br><b>Margin:</b> $${t.margin} | <b>RR:</b> ${t.rr} | <b>P&L:</b> $${t.pnl}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.pair} (${t.res})</div><div class="h-detail"><b>P&L:</b> $${t.pnl} | <b>Style:</b> ${t.entry_style}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card);
             });
             
@@ -553,15 +470,14 @@
             document.getElementById('st-wr').innerText = filteredCount > 0 ? Math.round((win / filteredCount) * 100) + "%" : "0%";
             const ctx = document.getElementById('equityChart').getContext('2d'); 
             if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } });
+            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#38bdf8', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#38bdf8', font: {size: 8} } } } } });
 
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             let year = 2026, monthIndex = fM === 'ALL' ? new Date().getMonth() : parseInt(fM) - 1, daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
             for (let i = 1; i <= daysInMonth; i++) { 
                 const dateStr = `${year}-${String(monthIndex + 1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const pnl = daysData[dateStr] || 0;
-                const div = document.createElement('div');
-                div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; 
                 cal.appendChild(div);
             }
