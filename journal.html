@@ -13,7 +13,7 @@
             }
         };
 
-        // CLEAN POPUP (Menghilangkan nama domain)
+        // PERBAIKAN POPUP: Menghapus nama domain di Alert & Confirm
         window.alert = function(message) {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -277,11 +277,12 @@
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         
+        // PERBAIKAN: Fungsi Logout
         function logout() {
             if(confirm("Yakin ingin keluar?")) {
                 auth.signOut().then(() => {
                     location.reload();
-                });
+                }).catch(e => alert("Logout Gagal: " + e.message));
             }
         }
 
