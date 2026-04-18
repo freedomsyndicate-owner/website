@@ -53,14 +53,12 @@
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* SIDEBAR STYLES */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
         .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
         .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
 
-        /* ANIMASI ( JOURNAL ) */
         .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
         @keyframes glowText {
             from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
@@ -80,7 +78,6 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
 
-        /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -179,18 +176,13 @@
             <div id="tv_v60" style="height:100%; width:100%; min-height: 550px;"></div>
         </div>
 
-        <div id="economic-tab" class="tab-content" style="height: 100%; overflow-y: auto;">
-            <div class="inner-padding" style="height: 100vh; padding-bottom: 200px;">
-                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; overflow:hidden; height: 100%; min-height: 500px; position: relative;">
-                    <iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&category=_main,central_banks,inflation,employment,economic_activity,confidence,housing,bonds&importance=2,3&features=datepicker,timezone&countries=5,25,32,6,37,7,22,39,35,43,10,11,42,12,4,17,36,110,14&calType=day&timeZone=62&lang=65" 
-                        width="100%" 
-                        height="100%" 
-                        frameborder="0" 
-                        allowtransparency="true" 
-                        marginwidth="0" 
-                        marginheight="0"
-                        style="border:none; position:absolute; top:0; left:0; width:100%; height:100%;">
-                    </iframe>
+        <div id="economic-tab" class="tab-content" style="background:#050a14;">
+            <div class="inner-padding" style="height: calc(100vh - 120px); padding: 10px;">
+                <div style="width:100%; height:100%; border:1px solid #1f2937; border-radius:15px; overflow:hidden;">
+                    <iframe src="https://www.tradays.com/en/economic-calendar/widget?mode=2&amp;utm_source=tradays.com" 
+                        style="width: 100%; height: 100%; border: none;" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allow="autoplay; encrypted-media"></iframe>
                 </div>
             </div>
         </div>
