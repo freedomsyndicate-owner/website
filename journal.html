@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
+    <title>FS | Freedom Syndicate Cloud PREMIUM SECURE</title>
     
     <script>
-        // === SISTEM PENGAMANAN TINGKAT TINGGI ===
+        // === SUPER SECURITY: ANTI-COPY & ANTI-VIEW SOURCE ===
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
@@ -16,6 +16,7 @@
         document.addEventListener('selectstart', e => e.preventDefault());
         document.addEventListener('dragstart', e => e.preventDefault());
 
+        // CLEAN POPUP
         window.alert = function(message) {
             const iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.setAttribute('src', 'data:text/plain,');
             document.documentElement.appendChild(iframe); iframe.contentWindow.alert(message); document.documentElement.removeChild(iframe);
@@ -31,6 +32,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://s3.tradingview.com/tv.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
@@ -39,11 +41,12 @@
         input, textarea, select { -webkit-user-select: text; user-select: text; }
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-        
+        /* LOGIN SCREEN FULL */
         #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a1428, #050a14); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 30px; border: 1px solid #1f2937; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        .auth-card { background: var(--card); padding: 50px 30px; border-radius: 30px; border: 1px solid #1f2937; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
         .btn-google { width: 100%; background: white; color: #111; border: none; padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 30px; font-family: 'Orbitron'; font-size: 11px; }
 
+        /* SIDEBAR NAVIGATION */
         #sidebar { position: fixed; left: -300px; top: 0; bottom: 0; width: 300px; background: #0a0e14; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid #1f2937; padding: 25px; display: flex; flex-direction: column; }
         #sidebar.open { left: 0; }
         .side-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1999; display: none; backdrop-filter: blur(5px); }
@@ -52,74 +55,39 @@
         .side-link:hover, .side-link.active { background: rgba(56, 189, 248, 0.15); color: white; border-color: rgba(56, 189, 248, 0.2); border-left: 5px solid var(--blue); }
         .side-link.logout { color: var(--red); margin-top: auto; border-top: 1px solid #1f2937; padding-top: 25px; }
 
+        /* HEADER */
         .fixed-top { flex-shrink: 0; padding: 15px 20px; background: var(--bg); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1f2937; z-index: 100; }
         .menu-toggle { font-size: 28px; cursor: pointer; color: var(--blue); }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 15px var(--blue); margin: 0; flex-grow: 1; text-align: center; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 2px; text-shadow: 0 0 15px var(--blue); margin: 0; flex-grow: 1; text-align: center; }
 
         .content-container { flex-grow: 1; overflow-y: auto; position: relative; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .inner-padding { padding: 20px; padding-bottom: 150px; }
-        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 24px; padding: 25px; margin-bottom: 30px; border-left: 6px solid var(--be); }
-        .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .lot-input-item label { font-size: 8px; color: #888; display: block; margin-bottom: 6px; font-weight: 900; }
-        .lot-input-item input { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 10px; padding: 12px; width: 100%; font-size: 12px; }
-        .lot-result-block { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; margin-top: 20px; padding: 15px; background: rgba(234, 179, 8, 0.05); border-radius: 15px; border: 1px dashed rgba(234,179,8,0.3); }
-
-        .notion-form { background: var(--card); border-radius: 28px; padding: 25px; border: 1px solid #1f2937; margin-bottom: 30px; }
-        .form-item { margin-bottom: 22px; }
-        .form-item label { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
-        
-        .chip-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .chip { text-align: center; padding: 15px 5px; border-radius: 14px; background: #111827; border: 1px solid #1f2937; font-size: 10px; font-weight: bold; cursor: pointer; color: #555; transition: 0.3s; }
-        .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 15px rgba(56, 189, 248, 0.1); }
-        
-        .poi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px; background: #050a14; border-radius: 20px; border: 1px solid #1f2937; }
-        .check-item { display: flex; align-items: center; gap: 10px; font-size: 11px; color: #fff; cursor: pointer; }
-        .check-item input { width: 20px; height: 20px; accent-color: var(--blue); }
-
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
-        .upload-box { background: #0a0e14; border: 2px dashed #1f2937; border-radius: 22px; padding: 20px; text-align: center; min-height: 160px; position: relative; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .upload-box input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-        .upload-box img { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; margin-top: 15px; display: none; border: 1px solid #333; }
-
-        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 22px; border-radius: 18px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 15px; box-shadow: 0 15px 30px rgba(56, 189, 248, 0.2); font-size: 14px; }
-        
-        .history-card { background: #0a0e14; border-radius: 24px; padding: 25px; margin-bottom: 25px; border: 1px solid #1f2937; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .h-header { font-size: 12px; font-weight: bold; border-bottom: 1px solid #1f2937; padding-bottom: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .h-details { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11px; color: #9ca3af; background: #050a14; padding: 18px; border-radius: 20px; border: 1px solid #1f2937; }
-        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 18px; object-fit: cover; border: 2px solid #1f2937; }
-
-        .mon-select { background: #0d1117; border: 1px solid #1f2937; color: white; padding: 14px; border-radius: 15px; flex-grow: 1; font-size: 12px; font-weight: 900; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 30px; }
-        .cal-day { aspect-ratio: 1/1.2; background: #0a0e14; border-radius: 12px; font-size: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; transition: 0.3s; }
-        
-        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
-        #zoom-target { width: 100%; max-width: 1000px; border-radius: 20px; }
     </style>
 </head>
 <body>
     <div id="auth-screen">
         <div class="auth-card">
-            <h1 style="font-family:'Orbitron'; color:white; font-size:2rem; margin:0; letter-spacing: 4px; text-shadow: 0 0 20px var(--blue);">FREEDOM SYNDICATE</h1>
-            <p style="font-size:10px; color:#555; margin-top:15px; letter-spacing: 5px; font-weight: 900; text-transform: uppercase;">Premium Cloud Journal</p>
+            <h1 style="font-family:'Orbitron'; color:white; font-size:1.8rem; margin:0; letter-spacing: 4px; text-shadow: 0 0 20px var(--blue);">FREEDOM SYNDICATE</h1>
+            <p style="font-size:10px; color:#555; margin-top:15px; letter-spacing: 5px; font-weight: 900;">Premium Cloud Journal</p>
             <button class="btn-google" onclick="login()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="22"> LOGIN WITH GOOGLE</button>
         </div>
     </div>
 
     <div id="sidebar">
         <div style="text-align:center; padding: 40px 0; border-bottom: 1px solid #1f2937; margin-bottom: 30px;">
-            <h2 style="font-family:'Orbitron'; color:var(--blue); font-size: 1.4rem; margin:0; letter-spacing: 2px;">FS CLOUD</h2>
-            <div id="display-user" style="font-size: 10px; color: #444; margin-top: 15px; font-weight: 600; word-break: break-all;"></div>
+            <h2 style="font-family:'Orbitron'; color:var(--blue); font-size: 1.3rem; margin:0;">FS MENU</h2>
+            <div id="display-user" style="font-size: 9px; color: #444; margin-top: 15px; font-weight: 600; word-break: break-all;"></div>
         </div>
-        <div class="side-link" onclick="openTab('announce-tab', this)">📢 NEWS</div>
+        <div class="side-link active" onclick="openTab('announce-tab', this)">📢 NEWS</div>
         <div class="side-link" onclick="openTab('chart-tab', this)">📈 CHART & BIAS</div>
-        <div class="side-link active" onclick="openTab('journal-tab', this)">📓 TRADING JOURNAL</div>
+        <div class="side-link" onclick="openTab('journal-tab', this)">📓 TRADING JOURNAL</div>
         <div class="side-link" onclick="openTab('monitor-tab', this)">🖥️ PERFORMANCE</div>
         <div class="side-link" onclick="openTab('community-tab', this)">👥 COMMUNITY</div>
-        <div class="side-link" onclick="openTab('broker-tab', this)">🏦 RECOMMENDED BROKER</div>
-        <div class="side-link logout" onclick="logout()">🚪 LOGOUT ACCOUNT</div>
+        <div class="side-link" onclick="openTab('broker-tab', this)">🏦 BROKER</div>
+        <div class="side-link" onclick="openTab('donasi-tab', this)">☕ DONATION</div>
+        <div class="side-link logout" onclick="logout()">🚪 LOGOUT</div>
     </div>
     <div class="side-overlay" onclick="toggleMenu()"></div>
 
@@ -129,101 +97,82 @@
         <div style="width:40px;"></div>
     </div>
     <div class="content-container">
-        <div id="announce-tab" class="tab-content"><div class="inner-padding">
+        <div id="announce-tab" class="tab-content active"><div class="inner-padding">
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:40px; border-left:8px solid var(--red);">
-                <h3 style="font-family:'Orbitron'; color:var(--red); margin:0; font-size: 1.4rem;">⚠️ SERVER UPDATE INFO</h3>
-                <p style="font-size:14px; line-height:2; margin-top:25px; color:#bbb;">Setiap hari Sabtu, sistem melakukan pembaruan berkala. Hapus history browser jika fitur tidak muncul.</p>
+                <h3 style="font-family:'Orbitron'; color:var(--red); margin:0; font-size: 1.3rem;">⚠️ SERVER UPDATE INFO</h3>
+                <p style="font-size:12px; line-height:2; margin-top:25px; color:#bbb;">Setiap hari Sabtu, sistem melakukan pembaruan berkala. Hapus history browser jika fitur terbaru tidak muncul.</p>
             </div>
         </div></div>
 
         <div id="chart-tab" class="tab-content"><div class="inner-padding">
-            <div style="background:#0d1117; padding:15px; display:flex; gap:15px; border-radius:20px; border:1px solid #1f2937;">
-                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:15px; border-radius:12px; flex-grow:1; font-size:14px; font-weight: 900;" value="XAUUSD">
-                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:10px 30px; border-radius:12px; font-weight:900; color:black;">SWITCH</button>
+            <div style="background:#0d1117; padding:15px; display:flex; gap:12px; border-radius:18px; border:1px solid #1f2937;">
+                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:12px; border-radius:12px; flex-grow:1; font-size:13px; font-weight: 900;" value="XAUUSD">
+                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:10px 25px; border-radius:12px; font-weight:900; color:black; font-family:'Orbitron'; font-size:10px;">SWITCH</button>
             </div>
-            <div id="tv_v60" style="height:500px; width:100%; margin-top:25px; border-radius:30px; overflow:hidden; border:1px solid #1f2937;"></div>
-            <div class="bias-grid">
-                <div class="bias-card">
-                    <div class="bias-header">Fundamental Bias</div>
-                    <div class="sentiment-box"><b style="font-size:16px;">GLOBAL SENTIMENT</b> <span class="tag tag-neutral">NEUTRAL</span></div>
-                    <p style="font-size:11px; color:#666; margin-top:15px;">Mixed signals detected. Monitor High Impact News.</p>
-                </div>
+            <div id="tv_v60" style="height:450px; width:100%; margin-top:25px; border-radius:25px; overflow:hidden; border:1px solid #1f2937;"></div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:20px; margin-top:25px;">
+                <h4 style="margin:0; font-family:'Orbitron'; font-size:11px; color:var(--blue);">GLOBAL SENTIMENT</h4>
+                <div style="display:flex; justify-content:space-between; margin-top:15px;"><span>MARKET STATUS</span><span style="color:var(--be); font-weight:900;">NEUTRAL</span></div>
             </div>
         </div></div>
-        <div id="journal-tab" class="tab-content active"><div class="inner-padding">
-            <div class="lot-calc-box">
-                <div class="lot-input-grid">
-                    <div class="lot-input-item"><label>BALANCE $</label><input type="number" id="calc-bal" oninput="calcLot()"></div>
-                    <div class="lot-input-item"><label>RISK %</label><input type="number" id="calc-risk" oninput="calcLot()"></div>
-                    <div class="lot-input-item"><label>SL PIPS</label><input type="number" id="calc-sl" oninput="calcLot()"></div>
+        <div id="journal-tab" class="tab-content"><div class="inner-padding">
+            <div style="background:linear-gradient(145deg, #0d1117, #161b22); border:1px solid var(--be); border-radius:24px; padding:22px; margin-bottom:30px; border-left:6px solid var(--be);">
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+                    <div style="font-size:8px;">BAL $<br><input type="number" id="calc-bal" oninput="calcLot()" style="width:100%; background:#050a14; border:1px solid #333; color:white; border-radius:8px; padding:10px;"></div>
+                    <div style="font-size:8px;">RISK %<br><input type="number" id="calc-risk" oninput="calcLot()" style="width:100%; background:#050a14; border:1px solid #333; color:white; border-radius:8px; padding:10px;"></div>
+                    <div style="font-size:8px;">SL PIP<br><input type="number" id="calc-sl" oninput="calcLot()" style="width:100%; background:#050a14; border:1px solid #333; color:white; border-radius:8px; padding:10px;"></div>
                 </div>
-                <div class="lot-result-block">
-                    <div><small>Rec. Lot</small><br><b id="res-lot" style="color:var(--be); font-size: 1.4rem;">0.00</b></div>
-                    <div><small>Risk $</small><br><b id="res-margin" style="color:var(--blue); font-size: 1.4rem;">0.00</b></div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center; margin-top:15px; padding:12px; background:rgba(234,179,8,0.05); border-radius:12px; border:1px dashed rgba(234,179,8,0.3);">
+                    <div><small>Rec. Lot</small><br><b id="res-lot" style="color:var(--be); font-size:1.2rem;">0.00</b></div>
+                    <div><small>Margin $</small><br><b id="res-margin" style="color:var(--blue); font-size:1.2rem;">0.00</b></div>
                 </div>
             </div>
 
-            <form id="tradingForm" class="notion-form" onsubmit="return false;">
-                <div class="form-item"><label>📅 Date Entry</label><input type="date" id="date" style="background:#050a14; color:white; padding:15px; width:100%; border-radius:15px; border:1px solid #1f2937;"></div>
-                
-                <div class="form-item"><label>💰 Pair Selection</label>
-                    <select id="pair" style="background:#050a14; border:1px solid #1f2937; color:white; padding:15px; width:100%; border-radius:15px; font-weight: 900;">
-                        <optgroup label="METAL"><option value="XAUUSD">XAUUSD (GOLD)</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                        <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                        <optgroup label="INDICES"><option value="NAS100">NAS100</option><option value="US30">US30</option><option value="GER40">GER40</option></optgroup>
-                        <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option></optgroup>
+            <form id="tradingForm" style="background:var(--card); border-radius:28px; padding:25px; border:1px solid #1f2937;" onsubmit="return false;">
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">📅 DATE ENTRY</label><input type="date" id="date" style="background:#050a14; border:1px solid #1f2937; color:white; padding:15px; width:100%; border-radius:15px;"></div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">💰 PAIR SELECTION</label>
+                    <select id="pair" style="background:#050a14; border:1px solid #1f2937; color:white; padding:15px; width:100%; border-radius:15px; font-weight:bold;">
+                        <option value="XAUUSD">XAUUSD (GOLD)</option><option value="XAGUSD">XAGUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="NAS100">NAS100</option>
                     </select>
                 </div>
-
-                <div class="form-item"><label>🕒 Session</label><div class="chip-grid">
-                    <div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div>
-                    <div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div>
-                    <div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div>
-                    <div class="chip" onclick="setV('session', 'NY', this)">NY</div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">🕒 SESSION</label><div class="chip-grid">
+                    <div class="chip" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" onclick="setV('session', 'NY', this)">NY</div>
+                </div></div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">⚡ ENTRY MODEL</label><div class="chip-grid">
+                    <div class="chip" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" onclick="setV('style', 'CONFIRM', this)">CONFIRM</div><div class="chip" onclick="setV('style', 'RE-ENTRY', this)">RE-ENTRY</div>
                 </div></div>
 
-                <div class="form-item"><label>⚡ Entry Model</label><div class="chip-grid">
-                    <div class="chip" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div>
-                    <div class="chip" onclick="setV('style', 'CONFIRM', this)">CONFIRM</div>
-                    <div class="chip" onclick="setV('style', 'RE-ENTRY', this)">RE-ENTRY</div>
-                </div></div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">🎯 POI ICT (LENGKAP)</label>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; padding:18px; background:#050a14; border-radius:20px; border:1px solid #1f2937;">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="QM"> QM</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="FVG"> FVG</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="OB"> OB</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="CISD"> CISD</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="SMT"> SMT</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="RBS"> RBS</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="TS"> TS</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="SUP"> SUP</label>
+                        <label style="display:flex; align-items:center; gap:8px; font-size:10px;"><input type="checkbox" class="poi-check" value="RES"> RES</label>
+                    </div>
+                </div>
 
-                <div class="form-item"><label>🧠 Emotion</label><div class="chip-grid">
-                    <div class="chip" onclick="setV('emo', 'CALM', this)">CALM</div>
-                    <div class="chip" onclick="setV('emo', 'FOMO', this)">FOMO</div>
-                    <div class="chip" onclick="setV('emo', 'GREEDY', this)">GREEDY</div>
-                    <div class="chip" onclick="setV('emo', 'REVENGE', this)">REVENGE</div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">🧠 EMOTION</label><div class="chip-grid">
+                    <div class="chip" onclick="setV('emo', 'CALM', this)">CALM</div><div class="chip" onclick="setV('emo', 'FOMO', this)">FOMO</div><div class="chip" onclick="setV('emo', 'GREEDY', this)">GREEDY</div><div class="chip" onclick="setV('emo', 'REVENGE', this)">REVENGE</div>
                 </div></div>
-
-                <div class="form-item"><label>🎯 POI ICT (LENGKAP)</label><div class="check-grid">
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="RBS"> RBS</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="TS"> TS</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="SUP"> SUP</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="RES"> RES</label>
-                </div></div>
-
-                <div class="form-item"><label>📝 Reason & Analyse</label><textarea id="reason" placeholder="Analyse lu di sini babi..." style="height:120px; background:#050a14; border:1px solid #1f2937; color:white; width:100%; border-radius:18px; padding:20px;"></textarea></div>
-                
-                <div class="form-item"><label>📊 Result</label><div class="chip-grid">
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">📝 REASON & NOTES</label><textarea id="reason" placeholder="Ketik analisa lu di sini babi..." style="height:120px; background:#050a14; border:1px solid #1f2937; color:white; width:100%; border-radius:18px; padding:20px;"></textarea></div>
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">📊 RESULT</label><div class="chip-grid">
                     <div class="chip" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div>
                 </div></div>
-
-                <div class="form-item"><label>💵 P&L $</label><input type="number" id="pnl" placeholder="0.00" style="background:#050a14; border:1px solid #1f2937; color:white; padding:18px; width:100%; border-radius:15px; font-weight: 900; color: var(--blue);"></div>
-                
+                <div style="margin-bottom:20px;"><label style="font-size:9px; color:#aaa; font-weight:900;">💵 P&L Result ($)</label><input type="number" id="pnl" placeholder="0.00" style="background:#050a14; border:1px solid #1f2937; color:white; padding:18px; width:100%; border-radius:15px; font-weight:900; color:var(--blue);"></div>
                 <div class="photo-grid">
-                    <div class="upload-box"><label>📸 BEFORE</label><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
-                    <div class="upload-box"><label>📸 AFTER</label><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
+                    <div class="upload-box" style="display:flex; flex-direction:column; align-items:center; justify-content:center;"><label style="font-size:9px; color:var(--blue); font-weight:900;">📸 BEFORE IMAGE</label><input type="file" onchange="procImg(this, 'pb')" style="position:absolute; inset:0; opacity:0;"><img id="pb" style="width:100%; height:100px; object-fit:cover; border-radius:12px; margin-top:15px; display:none;"></div>
+                    <div class="upload-box" style="display:flex; flex-direction:column; align-items:center; justify-content:center;"><label style="font-size:9px; color:var(--blue); font-weight:900;">📸 AFTER IMAGE</label><input type="file" onchange="procImg(this, 'pa')" style="position:absolute; inset:0; opacity:0;"><img id="pa" style="width:100%; height:100px; object-fit:cover; border-radius:12px; margin-top:15px; display:none;"></div>
                 </div>
                 <button type="button" class="btn-save" onclick="save()">🚀 SAVE TRANSACTION</button>
             </form>
@@ -233,62 +182,56 @@
             <div style="display:flex; gap:12px; margin-bottom:25px;">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
-                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
-                    <optgroup label="FOREX"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
-                    <optgroup label="INDICES"><option value="NAS100">NAS100</option><option value="US30">US30</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
-                    <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option></optgroup>
+                    <option value="XAUUSD">XAUUSD</option><option value="BTCUSD">BTCUSD</option><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="NAS100">NAS100</option>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL TIME</option>
-                    <option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option>
-                    <option value="04" selected>APRIL</option><option value="05">MEI</option><option value="06">JUNI</option>
-                    <option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option>
-                    <option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option>
+                    <option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04" selected>APRIL</option><option value="05">MEI</option>
                 </select>
             </div>
-            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:20px; height:300px; margin-bottom:25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);"><canvas id="equityChart"></canvas></div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:20px; height:280px; margin-bottom:25px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <div class="bias-card" style="text-align:center; margin:0; border-color:var(--blue);">Total P&L<br><b id="st-pnl" style="color:var(--blue); font-size:1.6rem;">$ 0.00</b></div>
-                <div class="bias-card" style="text-align:center; margin:0; border-color:var(--green);">Win Rate<br><b id="st-wr" style="color:var(--green); font-size:1.6rem;">0%</b></div>
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:20px; text-align:center;">Total P&L<br><b id="st-pnl" style="color:var(--blue); font-size:1.5rem;">$ 0.00</b></div>
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:20px; text-align:center;">Win Rate<br><b id="st-wr" style="color:var(--green); font-size:1.5rem;">0%</b></div>
             </div>
             <div id="cal" class="calendar-grid"></div>
         </div></div>
         <div id="community-tab" class="tab-content"><div class="inner-padding">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
-                <div class="bias-card" style="padding:15px; margin:0; text-align:center;"><small>Registered</small><br><b id="total-users">0</b></div>
-                <div class="bias-card" style="padding:15px; margin:0; text-align:center;"><small>Online</small><br><b id="online-users" style="color:var(--green);">0</b></div>
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:15px; text-align:center;"><small>Registered</small><br><b id="total-users">0</b></div>
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:15px; text-align:center;"><small>Online</small><br><b id="online-users" style="color:var(--green);">0</b></div>
             </div>
-            <div class="chat-premium">
-                <div id="chat-messages"></div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; height:450px; display:flex; flex-direction:column; overflow:hidden;">
+                <div id="chat-messages" style="flex-grow:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:15px;"></div>
                 <div style="display:flex; padding:15px; gap:10px; background:#0d1117; border-top:1px solid #1f2937;">
                     <input type="text" id="chat-input" placeholder="Tulis pesan bos..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:none; color:white; border-radius:15px; padding:15px; flex-grow:1;">
-                    <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:15px; padding:0 25px; font-weight:900; font-family:'Orbitron';">SEND</button>
+                    <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:15px; padding:0 25px; font-weight:900;">SEND</button>
                 </div>
             </div>
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="bias-card" style="text-align:left; margin-bottom:20px; border-left:5px solid var(--blue);">
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:25px; margin-bottom:20px; border-left:5px solid var(--blue);">
                 <h3 style="font-family:'Orbitron'; margin:0; color:var(--be);">EXNESS</h3>
-                <p style="font-size:11px; color:#aaa; margin-top:10px;">Broker No.1 Dunia. Instant Withdrawal & Spread Terkecil. <b>Deposit $1.</b></p>
-                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4')" style="width:100%; background:var(--blue); border:none; padding:18px; border-radius:12px; font-weight:bold; margin-top:15px; cursor:pointer;">DAFTAR SEKARANG</button>
+                <p style="font-size:11px; color:#aaa; margin-top:10px;">Broker No.1 Dunia. Instant Withdrawal & Low Spread. <b>Deposit mulai $1.</b></p>
+                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4')" style="width:100%; background:var(--blue); border:none; padding:18px; border-radius:12px; font-weight:bold; margin-top:15px;">DAFTAR EXNESS</button>
             </div>
-            <div class="bias-card" style="text-align:left; border-left:5px solid white;">
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:25px; margin-bottom:20px; border-left:5px solid white;">
                 <h3 style="font-family:'Orbitron'; margin:0; color:var(--blue);">HEADWAY</h3>
                 <p style="font-size:11px; color:#aaa; margin-top:10px;">Unlimited Leverage & Bonus Deposit 100%. <b>Deposit mulai $1.</b></p>
-                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db')" style="width:100%; background:white; color:black; border:none; padding:18px; border-radius:12px; font-weight:bold; margin-top:15px; cursor:pointer;">DAFTAR SEKARANG</button>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db')" style="width:100%; background:white; color:black; border:none; padding:18px; border-radius:12px; font-weight:bold; margin-top:15px;">DAFTAR HEADWAY</button>
             </div>
         </div></div>
 
         <div id="donasi-tab" class="tab-content" style="text-align:center;"><div class="inner-padding">
-            <div class="bias-card">
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:25px; padding:25px;">
                 <h2 style="font-family:'Orbitron'; font-size:1rem; margin-bottom:25px;">DONATION SUPPORT</h2>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" style="width:100%; max-width:280px; border:4px solid white; border-radius:20px;">
-                <p style="font-size:10px; color:var(--be); margin-top:20px; font-weight:bold;">SCAN DENGAN DANA / OVO / GOPAY / BANK</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" style="width:100%; max-width:280px; border:4px solid white; border-radius:20px;" alt="QRIS">
+                <p style="font-size:10px; color:var(--be); margin-top:20px; font-weight:bold;">SCAN DENGAN DANA / OVO / GOPAY / MOBILE BANKING</p>
             </div>
         </div></div>
     </div>
-    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target"></div>
+    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" style="width:100%; max-width:1000px; border-radius:20px;"></div>
     <script>
         const config = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(config); const auth = firebase.auth(), rtdb = firebase.database(); 
@@ -318,7 +261,6 @@
 
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes=v; if(t==='session') sSession=v; if(t==='style') sStyle=v; if(t==='emo') sEmo=v; }
         function procImg(i, id) { const f=i.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ const b=e.target.result; const img = document.getElementById(id); img.src=b; img.style.display='block'; if(id==='pb') bB=b; else bA=b; }; r.readAsDataURL(f); }
-
         function save() {
             if(!sRes || !curU) return alert("Pilih Result Trade!");
             const pois = Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value);
@@ -330,30 +272,34 @@
                 res: sRes, bef: bB, aft: bA, ts: firebase.database.ServerValue.TIMESTAMP 
             };
             rtdb.ref('users/' + curU.uid + '/trades').push(data).then(() => { 
-                alert("TRANSAKSI BERHASIL!"); loadData(); document.getElementById('tradingForm').reset(); 
+                alert("TRANSAKSI BERHASIL DISIMPAN!"); loadData(); document.getElementById('tradingForm').reset(); 
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                 document.querySelectorAll('.poi-check').forEach(cb => cb.checked = false);
-                bB=''; bA=''; document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none';
+                bB=''; bA=''; sRes=''; sSession=''; sStyle=''; sEmo='';
+                document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none';
             });
         }
+
         function updateChart() { const p = document.getElementById('chart-pair').value.toUpperCase(); document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&theme=dark&locale=id"></iframe>`; }
         function loadData() { if(!curU) return; rtdb.ref('users/' + curU.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, v]) => ({...v, id})) : []; render(allTrades); }); }
-        function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curU.uid + '/trades/' + id).remove(); }
+        function del(id) { if(confirm("Hapus trade?")) rtdb.ref('users/' + curU.uid + '/trades/' + id).remove(); }
         function sendMsg() { const i = document.getElementById('chat-input'); if(i.value.trim()) { rtdb.ref('chat').push({uid: curU.uid, name: curU.email.split('@')[0], msg: i.value, ts: firebase.database.ServerValue.TIMESTAMP}); i.value = ''; } }
         function loadChat() { rtdb.ref('chat').limitToLast(25).on('value', s => { const b = document.getElementById('chat-messages'); b.innerHTML = ''; s.forEach(c => { const d = c.val(); const v = document.createElement('div'); v.className = `msg-bubble ${d.uid === curU.uid ? 'mine' : ''}`; v.innerHTML = `<b style="font-size:10px; color:var(--blue)">${d.name}</b><br>${d.msg}`; b.appendChild(v); }); b.scrollTop = b.scrollHeight; }); }
         function calcLot() { const b = parseFloat(document.getElementById('calc-bal').value), r = parseFloat(document.getElementById('calc-risk').value), s = parseFloat(document.getElementById('calc-sl').value); if(b && r && s) { const l = (b*(r/100))/(s*10); document.getElementById('res-lot').innerText = l.toFixed(2); document.getElementById('res-margin').innerText = (b*(r/100)).toFixed(2); } }
-
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = '<h3 style="font-family:Orbitron; margin: 30px 0 15px 0; border-left: 5px solid var(--blue); padding-left: 10px;">HISTORY</h3>';
             let totalP = 0, win = 0, filtered = 0, eqData = [0], labels = ['0'];
             const fM = document.getElementById('mon-month').value, fP = document.getElementById('mon-pair').value, daysData = {};
-            trades.sort((a,b) => (a.ts || 0) - (b.ts || 0)).forEach(t => { 
+            
+            const sorted = trades.sort((a,b) => (a.ts || 0) - (b.ts || 0));
+            sorted.forEach(t => { 
                 const tM = t.date ? t.date.split('-')[1] : '';
                 if((fM === 'ALL' || tM === fM) && (fP === 'ALL' || t.pair === fP)) {
                     totalP += t.pnl; if(t.res === 'TP') win++; filtered++; eqData.push(totalP); labels.push(t.date.split('-')[2] || '0');
                     if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl;
                 }
             });
+
             [...trades].reverse().forEach(t => {
                 const card = document.createElement('div'); card.className = 'history-card';
                 const rC = t.res === 'TP' ? 'var(--green)' : t.res === 'SL' ? 'var(--red)' : 'var(--be)';
@@ -361,14 +307,16 @@
                 <div class="h-header"><span>${t.date} | ${t.pair}</span><span style="color:${rC}">${t.res} ($${t.pnl})</span></div>
                 <div class="h-details"><div>🕒 SES: ${t.session}</div><div>⚡ MOD: ${t.entry_style}</div><div>🧠 EMO: ${t.emotion}</div><div>🎯 POI: ${t.poi}</div></div>
                 <div style="font-size:10px; margin-top:15px; color:#fff; line-height:1.4;">${t.reason}</div>
-                <div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="document.getElementById('zoom-target').src=this.src; document.getElementById('modal-zoom').style.display='flex'">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="document.getElementById('zoom-target').src=this.src; document.getElementById('modal-zoom').style.display='flex'">` : ''}</div>`;
+                <div class="tracker-display">${t.bef ? `<img src="${t.bef}" style="width:100%; aspect-ratio:16/9; border-radius:12px; object-fit:cover; border:2px solid #333;" onclick="document.getElementById('zoom-target').src=this.src; document.getElementById('modal-zoom').style.display='flex'">` : ''}${t.aft ? `<img src="${t.aft}" style="width:100%; aspect-ratio:16/9; border-radius:12px; object-fit:cover; border:2px solid #333;" onclick="document.getElementById('zoom-target').src=this.src; document.getElementById('modal-zoom').style.display='flex'">` : ''}</div>`;
                 h.appendChild(card);
             });
+
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
             document.getElementById('st-wr').innerText = filtered ? Math.round((win/filtered)*100)+"%" : "0%";
             if(myChart) myChart.destroy();
             const ctx = document.getElementById('equityChart').getContext('2d');
             myChart = new Chart(ctx, { type:'line', data:{labels, datasets:[{data:eqData, borderColor:'#ef4444', tension:0.4, fill:true, backgroundColor:'rgba(239, 68, 68, 0.05)'}]}, options:{maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{display:false},y:{grid:{color:'#1f2937'},ticks:{color:'#555',font:{size:8}}}}}});
+            
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             let monthIdx = fM === 'ALL' ? new Date().getMonth() : parseInt(fM)-1;
             for(let i=1; i<=new Date(2026, monthIdx+1, 0).getDate(); i++) {
