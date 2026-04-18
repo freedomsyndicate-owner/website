@@ -60,7 +60,7 @@
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
         .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
 
-        /* ANIMASI DOMS */
+        /* ANIMASI ( JOURNAL ) */
         .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
         @keyframes glowText {
             from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
@@ -79,7 +79,23 @@
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
+
+        /* NEW DASHBOARD ELEMENTS */
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .dash-card { background: #0d1117; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; }
+        .dash-title { font-size: 8px; font-family: 'Orbitron'; color: #8b949e; margin-bottom: 8px; border-bottom: 1px solid #30363d; padding-bottom: 4px; display: flex; justify-content: space-between; }
+        .sent-badge { padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: bold; }
+        .sent-neutral { background: rgba(234, 179, 8, 0.2); color: var(--be); }
+        .sent-bullish { background: rgba(74, 222, 128, 0.2); color: var(--green); }
+        .sent-bearish { background: rgba(239, 68, 68, 0.2); color: var(--red); }
         
+        .bias-item { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px; color: #ccc; }
+        .bias-val { font-weight: bold; }
+
+        .risk-bar-container { height: 6px; background: #1f2937; border-radius: 3px; margin: 10px 0; position: relative; }
+        .risk-bar-fill { height: 100%; background: linear-gradient(to right, var(--green), var(--be), var(--red)); border-radius: 3px; width: 53%; } /* Sample 53% */
+
+        /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -169,13 +185,60 @@
             </div>
         </div></div>
 
-        <div id="chart-tab" class="tab-content">
+        <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
             <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937;">
-                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
+                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
                 <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
-            <div id="tv_v60" style="height:calc(100% - 50px); width:100%;"></div>
-        </div>
+            
+            <div id="tv_v60" style="height:450px; width:100%; border-bottom:1px solid #1f2937;"></div>
+
+            <div style="padding:10px; font-family:'Poppins';">
+                <h4 style="font-family:'Orbitron'; font-size:10px; color:var(--blue); margin-bottom:10px; padding-left:15px;">FUNDAMENTAL BIAS & SENTIMENT</h4>
+                
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <div class="dash-title">SENTIMENT <span class="sent-badge sent-neutral">NEUTRAL</span></div>
+                        <div class="bias-item"><span>VIX Index</span><span class="bias-val" style="color:var(--be);">20.53</span></div>
+                        <div style="font-size:8px; color:#666; margin-top:5px;">Mixed signals, balanced market sentiment.</div>
+                    </div>
+
+                    <div class="dash-card">
+                        <div class="dash-title">RISK SENTIMENT <span style="color:white; font-size:12px;">53</span></div>
+                        <div class="risk-bar-container"><div class="risk-bar-fill"></div></div>
+                        <div class="bias-item" style="font-size:7px;"><span>Equity</span><span class="bias-val">50.0</span></div>
+                        <div class="bias-item" style="font-size:7px;"><span>Gold</span><span class="bias-val" style="color:var(--green);">58.1</span></div>
+                    </div>
+
+                    <div class="dash-card">
+                        <div class="dash-title">DAILY BIAS</div>
+                        <div class="bias-item"><span>GOLD</span><span class="sent-badge sent-bullish">BULL</span></div>
+                        <div class="bias-item"><span>USD</span><span class="sent-badge sent-neutral">NEUTRAL</span></div>
+                        <div class="bias-item"><span>EQUITIES</span><span class="sent-badge sent-neutral">NEUTRAL</span></div>
+                    </div>
+
+                    <div class="dash-card">
+                        <div class="dash-title">VOLUME PROFILE (H4)</div>
+                        <div class="bias-item"><span>Daily POC</span><span class="bias-val" style="color:var(--blue);">4723.5</span></div>
+                        <div class="bias-item"><span>Fixed Range</span><span class="bias-val">4833.0</span></div>
+                        <div style="text-align:center; margin-top:5px;"><span class="sent-badge sent-bullish" style="font-size:7px;">BULLISH INSIDE VA</span></div>
+                    </div>
+                </div>
+                
+                <div style="padding:15px; padding-top:0;">
+                    <div class="dash-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:9px; color:#8b949e;">MOMENTUM M15 (ASIA)</div>
+                            <div style="font-size:12px; font-weight:bold; color:var(--be);">NEUTRAL -0.0%</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:8px; color:#666;">NET DELTA</div>
+                            <div style="font-size:10px; color:var(--red);">-114</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div class="lot-calc-box">
@@ -269,13 +332,25 @@
                     <div style="margin: 10px 0;">
                         <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
                     </div>
+                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
+                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
+                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
+                        <li>Regulasi Internasional ketat & terpercaya.</li>
+                    </ul>
                     <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
                 </div>
-                <div>
+                <div style="padding-bottom:10px;">
                     <h3 style="margin:0; color:white;">HEADWAY</h3>
                     <div style="margin: 10px 0;">
                         <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
                     </div>
+                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                        <li>Leverage Unlimited (Tanpa Batas).</li>
+                        <li>Bonus deposit melimpah untuk modal kecil.</li>
+                        <li>Eksekusi order sangat cepat & stabil.</li>
+                        <li>Support bank lokal Indonesia.</li>
+                    </ul>
                     <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
                 </div>
             </div>
