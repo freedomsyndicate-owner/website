@@ -7,17 +7,20 @@
     
     <script>
         // === SISTEM PENGAMANAN TINGKAT TINGGI ===
-        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        document.addEventListener('contextmenu', event => event.preventDefault()); // Blokir Klik Kanan
         document.onkeydown = function(e) {
+            // Blokir F12, Ctrl+Shift+I/J/C, Ctrl+U (View Source), Ctrl+S (Save), Ctrl+A (Select All)
             if(e.keyCode == 123 || 
               (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
               (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
                 return false;
             }
         };
+        // Anti Drag & Seleksi Teks
         document.addEventListener('selectstart', function(e) { e.preventDefault(); });
         document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
+        // CLEAN POPUP (Hapus nama domain GitHub)
         window.alert = function(message) {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -25,6 +28,15 @@
             document.documentElement.appendChild(iframe);
             iframe.contentWindow.alert(message);
             document.documentElement.removeChild(iframe);
+        };
+        window.confirm = function(message) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            const result = iframe.contentWindow.confirm(message);
+            document.documentElement.removeChild(iframe);
+            return result;
         };
     </script>
     
@@ -43,8 +55,8 @@
         input, textarea { -webkit-user-select: text; user-select: text; }
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-        
-        /* SIDEBAR SYSTEM */
+
+        /* SIDEBAR STYLES */
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
         .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
@@ -54,19 +66,16 @@
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
-        
         .fixed-top { flex-shrink: 0; padding: 15px 10px 15px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
-        /* Nav Tabs Hidden (Switch to Sidebar) */
-        .nav-tabs { display: none; }
+        .nav-tabs { display: none; } /* Hidden, switched to Sidebar */
 
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
         
-        /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -119,7 +128,7 @@
 </head>
 <body>
     <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
-    
+
     <div class="menu-toggle" onclick="toggleNav()">☰</div>
 
     <div id="mySidebar" class="sidebar">
@@ -250,13 +259,33 @@
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card">
                 <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
-                <div style="border-bottom: 1px solid #333; padding-bottom:15px; margin-bottom:15px;">
-                    <h3 style="margin:0;">EXNESS</h3>
-                    <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">DAFTAR EXNESS</button>
+                
+                <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                    <h3 style="margin:0; color:white;">EXNESS</h3>
+                    <div style="margin: 10px 0;">
+                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+                    </div>
+                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
+                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
+                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
+                        <li>Regulasi Internasional ketat & terpercaya.</li>
+                    </ul>
+                    <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
                 </div>
-                <div>
-                    <h3 style="margin:0;">HEADWAY</h3>
-                    <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">DAFTAR HEADWAY</button>
+
+                <div style="padding-bottom:10px;">
+                    <h3 style="margin:0; color:white;">HEADWAY</h3>
+                    <div style="margin: 10px 0;">
+                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+                    </div>
+                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                        <li>Leverage Unlimited (Tanpa Batas).</li>
+                        <li>Bonus deposit melimpah untuk modal kecil.</li>
+                        <li>Eksekusi order sangat cepat & stabil.</li>
+                        <li>Support bank lokal Indonesia.</li>
+                    </ul>
+                    <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
                 </div>
             </div>
         </div></div>
@@ -271,7 +300,6 @@
     </div>
 
     <script>
-        // FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
