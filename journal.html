@@ -40,7 +40,7 @@
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         
         * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-        input, textarea { -webkit-user-select: text; user-select: text; }
+        input, textarea, select { -webkit-user-select: text; user-select: text; }
 
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
@@ -49,8 +49,8 @@
         #sidebar.open { left: 0; }
         .side-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1999; display: none; backdrop-filter: blur(4px); }
         .side-overlay.show { display: block; }
-        .side-link { padding: 15px; color: #9ca3af; font-weight: bold; border-radius: 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 13px; transition: 0.2s; }
-        .side-link:hover, .side-link.active { background: rgba(56, 189, 248, 0.1); color: white; border-left: 4px solid var(--blue); }
+        .side-link { padding: 15px; color: #9ca3af; font-weight: bold; border-radius: 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 13px; transition: 0.2s; border: 1px solid transparent; }
+        .side-link:hover, .side-link.active { background: rgba(56, 189, 248, 0.1); color: white; border-color: rgba(56, 189, 248, 0.2); border-left: 4px solid var(--blue); }
         .side-link.logout { color: var(--red); margin-top: auto; border-top: 1px solid #1f2937; padding-top: 20px; }
 
         /* HEADER */
@@ -63,7 +63,7 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 120px; }
 
-        /* BIAS CARDS */
+        /* BIAS CARDS (STYLE MEWAH) */
         .bias-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
         .bias-card { background: var(--card); border-radius: 16px; border: 1px solid #1f2937; padding: 15px; }
         .bias-header { font-size: 9px; color: #555; text-transform: uppercase; margin-bottom: 10px; font-weight: 900; letter-spacing: 1px; }
@@ -75,7 +75,7 @@
         .mini-stat { background: #050a14; padding: 10px; border-radius: 10px; border: 1px solid #1f2937; text-align: center; }
         .mini-stat span { font-size: 8px; color: #555; display: block; }
 
-        /* LOT CALC & FORMS */
+        /* LOT CALC & JOURNAL STYLES */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
         .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
@@ -94,10 +94,6 @@
         .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
         .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
 
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 100px; padding: 12px; position: relative; text-align: left; }
-        .upload-box label { font-size: 8px; color: var(--blue); font-weight: 900; display: block; margin-bottom: 8px; }
-        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 6px; }
         .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
 
         .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
@@ -127,7 +123,7 @@
         <h2 style="font-family:'Orbitron'; color:var(--blue); text-align:center; margin-bottom:30px;">FS MENU</h2>
         <div class="side-link active" onclick="openTab('announce-tab', this)">📢 NEWS</div>
         <div class="side-link" onclick="openTab('chart-tab', this)">📈 CHART & BIAS</div>
-        <div class="side-link" onclick="openTab('journal-tab', this)">📓 JOURNAL</div>
+        <div class="side-link" onclick="openTab('journal-tab', this)">📓 TRADING JOURNAL</div>
         <div class="side-link" onclick="openTab('monitor-tab', this)">🖥️ PERFORMANCE</div>
         <div class="side-link" onclick="openTab('community-tab', this)">👥 COMMUNITY</div>
         <div class="side-link" onclick="openTab('broker-tab', this)">🏦 BROKER</div>
@@ -164,12 +160,12 @@
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #1f2937; color:var(--blue); padding:10px; border-radius:8px; flex-grow:1; font-size:12px;" value="XAUUSD">
                 <button onclick="updateChart()" style="background:var(--blue); border:none; padding:10px 15px; border-radius:8px; font-weight:bold; color:black;">SWITCH</button>
             </div>
-            <div id="tv_v60" style="height:350px; width:100%; margin-top:15px; border-radius:16px; overflow:hidden; border:1px solid #1f2937;"></div>
+            <div id="tv_v60" style="height:400px; width:100%; margin-top:15px; border-radius:16px; overflow:hidden; border:1px solid #1f2937;"></div>
             
             <div class="bias-grid">
                 <div class="bias-card">
                     <div class="bias-header">Fundamental Bias</div>
-                    <div class="sentiment-box"><b style="font-size:12px;">GLOBAL SENTIMENT</b> <span class="tag tag-neutral">NEUTRAL</span></div>
+                    <div class="sentiment-box"><b style="font-size:12px;">GLOBAL MARKET SENTIMENT</b> <span class="tag tag-neutral">NEUTRAL</span></div>
                     <p style="font-size:9px; color:#555; margin-top:5px;">Mixed signals, balanced market sentiment.</p>
                 </div>
                 <div class="bias-card">
@@ -193,42 +189,45 @@
                 </div>
                 <div class="lot-result-block">
                     <div><small>Rec. Lot</small><br><b id="res-lot">0.00 Lot</b></div>
-                    <div><small>Margin</small><br><b id="res-margin">$ 0.00</b></div>
+                    <div><small>Margin Used</small><br><b id="res-margin">$ 0.00</b></div>
                 </div>
             </div>
             <form id="tradingForm" class="notion-form" onsubmit="return false;">
-                <div class="form-item"><label>📅 DATE</label><input type="date" id="date"></div>
-                <div class="form-item"><label>💰 PAIR SELECTION</label>
+                <div class="form-item"><label>📅 Date</label><input type="date" id="date"></div>
+                <div class="form-item"><label>💰 Pair Selection</label>
                     <select id="pair">
                         <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
                         <optgroup label="FOREX"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option></optgroup>
                         <optgroup label="INDICES"><option value="NAS100">NAS100</option><option value="US30">US30</option></optgroup>
+                        <optgroup label="CRYPTO"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option></optgroup>
                     </select>
                 </div>
-                <div class="form-item"><label>🕒 SESSION</label><div class="chip-grid">
+                <div class="form-item"><label>🕒 Session</label><div class="chip-grid">
                     <div class="chip" onclick="setV('session', 'ASIA', this)">ASIA</div>
                     <div class="chip" onclick="setV('session', 'LONDON', this)">LONDON</div>
                     <div class="chip" onclick="setV('session', 'NY', this)">NY</div>
                 </div></div>
-                <div class="form-item"><label>⚡ MODEL</label><div class="chip-grid">
+                <div class="form-item"><label>⚡ Entry Model</label><div class="chip-grid">
                     <div class="chip" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div>
                     <div class="chip" onclick="setV('style', 'CONFIRM', this)">CONFIRM</div>
+                    <div class="chip" onclick="setV('style', 'RE-ENTRY', this)">RE-ENTRY</div>
                 </div></div>
-                <div class="form-item"><label>🧠 EMOTION</label><div class="chip-grid">
+                <div class="form-item"><label>🧠 Emotion</label><div class="chip-grid">
                     <div class="chip" onclick="setV('emo', 'CALM', this)">CALM</div>
                     <div class="chip" onclick="setV('emo', 'FOMO', this)">FOMO</div>
                     <div class="chip" onclick="setV('emo', 'GREEDY', this)">GREEDY</div>
                 </div></div>
-                <div class="form-item"><label>🎯 POI</label><div class="check-grid">
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label>
-                    <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label>
+                <div class="form-item"><label>🎯 POI ICT (LENGKAP)</label><div class="check-grid">
                     <label class="check-item"><input type="checkbox" class="poi-check" value="AMD"> AMD</label>
                     <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label>
+                    <label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label>
+                    <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label>
+                    <label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                    <label class="check-item"><input type="checkbox" class="poi-check" value="LIQUIDITY"> LIQ</label>
                     <label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label>
                 </div></div>
-                <div class="form-item"><label>📝 REASON</label><textarea id="reason" placeholder="Analyse..."></textarea></div>
-                <div class="form-item"><label>📊 RESULT</label><div class="chip-grid">
+                <div class="form-item"><label>📝 Reason & Notes</label><textarea id="reason" placeholder="Analyse here..."></textarea></div>
+                <div class="form-item"><label>📊 Result</label><div class="chip-grid">
                     <div class="chip" onclick="setV('res', 'TP', this)">💰 TP</div>
                     <div class="chip" onclick="setV('res', 'SL', this)">💀 SL</div>
                     <div class="chip" onclick="setV('res', 'BE', this)">⚖️ BE</div>
@@ -241,19 +240,23 @@
                 <button type="button" class="btn-save" onclick="save()">🚀 SAVE TRANSACTION</button>
             </form>
             <div id="hist"></div>
-        </div></div>
-
+        </div>
         <div id="monitor-tab" class="tab-content"><div class="inner-padding">
             <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
                     <option value="XAUUSD">XAUUSD</option><option value="EURUSD">EURUSD</option>
+                    <option value="GBPUSD">GBPUSD</option><option value="BTCUSD">BTCUSD</option>
+                    <option value="NAS100">NAS100</option>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()">
-                    <option value="ALL">ALL TIME</option><option value="04" selected>APRIL</option><option value="05">MEI</option>
+                    <option value="ALL">ALL TIME</option>
+                    <option value="01">JAN</option><option value="02">FEB</option>
+                    <option value="03">MAR</option><option value="04" selected>APR</option>
+                    <option value="05">MEI</option><option value="06">JUN</option>
                 </select>
             </div>
-            <div style="background:var(--card); padding:10px; border-radius:15px; height:220px; border:1px solid #1f2937;"><canvas id="equityChart"></canvas></div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
                 <div class="mini-stat">Total P&L<br><b id="st-pnl" style="color:var(--blue);">$ 0.00</b></div>
                 <div class="mini-stat">Win Rate<br><b id="st-wr" style="color:var(--green);">0%</b></div>
@@ -276,63 +279,121 @@
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card"><h3>EXNESS</h3><p style="font-size:10px; color:#aaa;">Instant Withdrawal. <b>Deposit mulai $1.</b></p><button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold;">DAFTAR</button></div>
+            <div class="broker-card">
+                <h3 style="font-family:'Orbitron';">EXNESS</h3>
+                <p style="font-size:10px; color:#aaa;">Instant Withdrawal. <b>Deposit mulai $1.</b></p>
+                <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4')" style="background:var(--blue); border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold;">DAFTAR</button>
+            </div>
+            <div class="broker-card">
+                <h3 style="font-family:'Orbitron';">HEADWAY</h3>
+                <p style="font-size:10px; color:#aaa;">Leverage Unlimited. <b>Deposit mulai $1.</b></p>
+                <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db')" style="background:white; color:black; border:none; padding:10px; width:100%; border-radius:8px; font-weight:bold;">DAFTAR</button>
+            </div>
         </div></div>
-        
-        <div id="donasi-tab" class="tab-content" style="text-align:center;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" style="width:80%; margin-top:20px; border-radius:15px;"></div>
+
+        <div id="donasi-tab" class="tab-content" style="text-align:center;"><div class="inner-padding">
+            <div class="broker-card" style="text-align:center;">
+                <h2 style="font-family:'Orbitron'; font-size:1rem;">DONATION SUPPORT</h2>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS">
+            </div>
+        </div></div>
     </div>
-
     <script>
-        const config = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", appId: "1:915558934014:web:08442d20712f2010f58caf" };
-        firebase.initializeApp(config); const auth = firebase.auth(), rtdb = firebase.database(); 
-        let curU=null, sRes='', sSession='', sStyle='', sEmo='', bB='', bA='', myChart=null, allTrades=[];
+        const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), rtdb = firebase.database();
+        let curUser = null, sRes = '', sSession = '', sStyle = '', sEmo = '', bB = '', bA = '', myChart = null, allTrades = [];
 
-        function toggleMenu(){ document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.side-overlay').classList.toggle('show'); }
-        function openTab(id, el){ document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); if(el) el.classList.add('active'); toggleMenu(); if(id==='chart-tab') updateChart(); }
-        function setV(t,v,el){ el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); if(t==='res')sRes=v; if(t==='session')sSession=v; if(t==='style')sStyle=v; if(t==='emo')sEmo=v; }
-        function procImg(i, id){ const f=i.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ const b=e.target.result; document.getElementById(id).src=b; document.getElementById(id).style.display='block'; if(id==='pb') bB=b; else bA=b; }; r.readAsDataURL(f); }
-        function login(){ auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-        function logout(){ if(confirm("Keluar?")) auth.signOut().then(()=>location.reload()); }
-        
-        auth.onAuthStateChanged(u=>{ if(u){ curU=u; document.getElementById('auth-screen').style.display='none'; loadData(); updateChart(); loadChat(); 
-            rtdb.ref('presence').on('value',s=>document.getElementById('online-users').innerText=s.numChildren());
-            rtdb.ref('users').on('value',s=>document.getElementById('total-users').innerText=s.numChildren());
-        }});
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.side-overlay').classList.toggle('show'); }
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function logout() { if(confirm("Keluar?")) auth.signOut().then(() => location.reload()); }
 
-        function save(){
-            if(!sRes||!curU) return alert("Pilih Result!");
-            const pois = Array.from(document.querySelectorAll('.poi-check:checked')).map(c=>c.value);
-            const data = { date:document.getElementById('date').value, pair:document.getElementById('pair').value, session:sSession||'N/A', model:sStyle||'N/A', emotion:sEmo||'N/A', poi:pois.join(', ')||'-', reason:document.getElementById('reason').value||'-', pnl:parseFloat(document.getElementById('pnl').value)||0, res:sRes, bef:bB, aft:bA };
-            rtdb.ref('users/'+curU.uid+'/trades').push(data).then(()=>{ alert("SAVED!"); loadData(); document.getElementById('tradingForm').reset(); bB=''; bA=''; });
+        auth.onAuthStateChanged(u => { 
+            if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); } 
+            else { document.getElementById('auth-screen').style.display='flex'; }
+        });
+
+        function setupTracker() {
+            if(!curUser) return;
+            const pRef = rtdb.ref('presence/' + curUser.uid);
+            rtdb.ref('.info/connected').on('value', snap => { if(snap.val()) { pRef.set({email: curUser.email, status: "online"}); pRef.onDisconnect().remove(); } });
+            rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); });
+            rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); });
         }
 
-        function updateChart(){ const p=document.getElementById('chart-pair').value.toUpperCase(); document.getElementById('tv_v60').innerHTML=`<iframe style="width:100%;height:100%;border:none;" src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&theme=dark"></iframe>`; }
-        function loadData(){ rtdb.ref('users/'+curU.uid+'/trades').on('value', snap => { allTrades = snap.val()?Object.entries(snap.val()).map(([id,v])=>({...v,id})):[]; render(allTrades); }); }
-        function del(id){ if(confirm("Hapus?")) rtdb.ref('users/'+curU.uid+'/trades/'+id).remove(); }
-        function sendMsg(){ const i=document.getElementById('chat-input'); if(i.value) rtdb.ref('chat').push({uid:curU.uid, name:curU.email.split('@')[0], msg:i.value}); i.value=''; }
-        function loadChat(){ rtdb.ref('chat').limitToLast(20).on('value', s=>{ const b=document.getElementById('chat-messages'); b.innerHTML=''; s.forEach(c=>{ const d=c.val(); const v=document.createElement('div'); v.className=`msg-bubble ${d.uid===curU.uid?'mine':''}`; v.innerHTML=`<b>${d.name}</b><br>${d.msg}`; b.appendChild(v); }); b.scrollTop=b.scrollHeight; }); }
+        function openTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.side-link').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(el) el.classList.add('active');
+            if(document.getElementById('sidebar').classList.contains('open')) toggleMenu();
+            if(id === 'chart-tab') updateChart();
+        }
 
-        function render(trades){
-            const h=document.getElementById('hist'); h.innerHTML='<h3 style="font-family:Orbitron;">HISTORY</h3>'; 
-            let tp=0, win=0, eq=[0], labels=['Start'], fM=document.getElementById('mon-month').value, fP=document.getElementById('mon-pair').value, daysData={};
-            trades.sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(t=>{ 
-                if((fM==='ALL'||t.date.split('-')[1]===fM)&&(fP==='ALL'||t.pair===fP)){
-                    tp+=t.pnl; if(t.res==='TP') win++; eq.push(tp); labels.push(t.date); 
-                    if(!daysData[t.date]) daysData[t.date]=0; daysData[t.date]+=t.pnl;
+        function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; if(t==='emo') sEmo = v; }
+        function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
+
+        function save() {
+            if(!sRes || !curUser) return alert("Pilih Result!");
+            const pois = Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value);
+            const t = { 
+                date: document.getElementById('date').value, pair: document.getElementById('pair').value, 
+                session: sSession || 'N/A', entry_style: sStyle || 'N/A', emotion: sEmo || 'N/A', 
+                poi: pois.join(', ') || '-', reason: document.getElementById('reason').value || '-', 
+                pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, bef: bB, aft: bA 
+            };
+            rtdb.ref('users/' + curUser.uid + '/trades').push(t).then(() => { alert("SAVED!"); loadData(); resetForm(); });
+        }
+
+        function resetForm() { document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); document.getElementById('pb').style.display='none'; document.getElementById('pa').style.display='none'; bB=''; bA=''; }
+
+        function updateChart() {
+            const p = document.getElementById('chart-pair').value.toUpperCase();
+            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&theme=dark&locale=id"></iframe>`;
+        }
+
+        function loadData() { rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
+        function loadChat() { rtdb.ref('chat').limitToLast(20).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(c => { const d = c.val(); const div = document.createElement('div'); div.className = `msg-bubble ${d.uid === curUser.uid ? 'mine' : ''}`; div.innerHTML = `<b>${d.name}</b><br>${d.msg}`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
+        
+        function calcLot() {
+            const b = parseFloat(document.getElementById('calc-bal').value), r = parseFloat(document.getElementById('calc-risk').value), s = parseFloat(document.getElementById('calc-sl').value);
+            if(b && r && s) { const l = (b*(r/100))/(s*10); document.getElementById('res-lot').innerText = l.toFixed(2) + " Lot"; document.getElementById('res-margin').innerText = "$ " + (l*200).toFixed(2); }
+        }
+
+        function render(trades) {
+            const h = document.getElementById('hist'); h.innerHTML = '<h3 style="font-family:Orbitron; margin-top:30px;">RIWAYAT TRADE</h3>';
+            let totalP = 0, win = 0, filtered = 0, eqData = [0], labels = ['Start'];
+            const fM = document.getElementById('mon-month').value, fP = document.getElementById('mon-pair').value, daysData = {};
+            const sorted = trades.sort((a,b) => new Date(a.date) - new Date(b.date));
+            sorted.forEach(t => { 
+                const tM = t.date ? t.date.split('-')[1] : '';
+                if((fM === 'ALL' || tM === fM) && (fP === 'ALL' || t.pair === fP)) {
+                    totalP += t.pnl; if(t.res === 'TP') win++; filtered++; eqData.push(totalP); labels.push(t.date);
+                    if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl;
                 }
             });
-            trades.reverse().forEach(t=>{
-                const c=document.createElement('div'); c.className='history-card';
-                c.innerHTML=`<div class="btn-del" onclick="del('${t.id}')">✕</div><div style="font-size:10px;color:var(--blue)"><b>${t.date} | ${t.pair} (${t.res})</b></div>
-                <div class="h-details"><div>🕒 SES: ${t.session}</div><div>⚡ MOD: ${t.model}</div><div>🧠 EMO: ${t.emotion}</div><div>🎯 POI: ${t.poi}</div></div>
-                <div style="font-size:10px;margin-top:10px;">${t.reason}</div><div class="tracker-display">${t.bef?`<img src="${t.bef}" class="tracker-img">`:''}${t.aft?`<img src="${t.aft}" class="tracker-img">`:''}</div>`; h.appendChild(c);
+            trades.reverse().forEach(t => {
+                const card = document.createElement('div'); card.className = 'history-card';
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.pair} (${t.res})</div>
+                <div class="h-details"><div>🕒 SES: ${t.session}</div><div>⚡ MOD: ${t.entry_style}</div><div>🧠 EMO: ${t.emotion}</div><div>🎯 POI: ${t.poi}</div></div>
+                <div style="font-size:10px; margin-top:10px;">${t.reason}</div>
+                <div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img">` : ''}</div>`;
+                h.appendChild(card);
             });
-            document.getElementById('st-pnl').innerText=`$ ${tp.toFixed(2)}`; document.getElementById('st-wr').innerText=trades.length?Math.round((win/trades.length)*100)+"%":"0%";
-            if(myChart) myChart.destroy(); myChart=new Chart(document.getElementById('equityChart'), {type:'line', data:{labels, datasets:[{label:'Equity',data:eq,borderColor:'#ef4444',fill:false}]}, options:{responsive:true,maintainAspectRatio:false}});
-            const cal=document.getElementById('cal'); cal.innerHTML=''; let mIdx=fM==='ALL'?new Date().getMonth():parseInt(fM)-1, dCount=new Date(2026,mIdx+1,0).getDate();
-            for(let i=1;i<=dCount;i++){
-                const ds=`2026-${String(mIdx+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`, p=daysData[ds]||0, v=document.createElement('div');
-                v.className=`cal-day ${p>0?'profit':p<0?'loss':''}`; v.innerHTML=`${i}<br><b style="font-size:6px">${p?p.toFixed(0):''}</b>`; cal.appendChild(v);
+            document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`;
+            document.getElementById('st-wr').innerText = filtered ? Math.round((win/filtered)*100)+"%" : "0%";
+            if(myChart) myChart.destroy();
+            const ctx = document.getElementById('equityChart').getContext('2d');
+            myChart = new Chart(ctx, { type:'line', data:{labels, datasets:[{label:'Equity',data:eqData,borderColor:'#ef4444',fill:false,tension:0.3}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{grid:{display:false},ticks:{color:'#ef4444',font:{size:8}}}}}});
+            const cal = document.getElementById('cal'); cal.innerHTML = '';
+            let monthIdx = fM === 'ALL' ? new Date().getMonth() : parseInt(fM)-1;
+            let days = new Date(2026, monthIdx+1, 0).getDate();
+            for(let i=1; i<=days; i++) {
+                const ds = `2026-${String(monthIdx+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`, pnl = daysData[ds] || 0;
+                const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
+                div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
             }
         }
     </script>
