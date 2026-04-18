@@ -184,11 +184,10 @@
             <div class="mon-filters" style="display:flex; gap:10px; margin-bottom:15px;">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
-                    <option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option>
-                    <option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option>
-                    <option value="USDJPY">USDJPY</option><option value="BTCUSD">BTCUSD</option>
-                    <option value="ETHUSD">ETHUSD</option><option value="US30">US30</option>
-                    <option value="NAS100">NAS100</option>
+                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
                 </select>
                 <select id="mon-month" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL TIME</option>
@@ -206,6 +205,10 @@
         </div></div>
 
         <div id="community-tab" class="tab-content"><div class="inner-padding">
+            <div class="premium-tracker" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div class="p-card"><small>Registered</small><b id="total-users">0</b></div>
+                <div class="p-card"><small>Online</small><b id="online-users">0</b></div>
+            </div>
             <div class="chat-premium">
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
@@ -261,7 +264,26 @@
             }
         });
 
-        function setupTracker() { const pRef = rtdb.ref('presence/' + curUser.uid); rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); }}); rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); }
+        function setupTracker() { 
+            const pRef = rtdb.ref('presence/' + curUser.uid); 
+            rtdb.ref('.info/connected').on('value', snap => { 
+                if (snap.val() === true) { 
+                    pRef.set({ email: curUser.email, status: "online" }); 
+                    pRef.onDisconnect().remove(); 
+                }
+            }); 
+            rtdb.ref('presence').on('value', snap => { 
+                const count = snap.numChildren();
+                const el = document.getElementById('online-users');
+                if(el) el.innerText = count; 
+            }); 
+            rtdb.ref('users').on('value', snap => { 
+                const count = snap.numChildren();
+                const el = document.getElementById('total-users');
+                if(el) el.innerText = count; 
+            }); 
+        }
+        
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
         function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isM = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isM ? 'mine' : ''}`; div.innerHTML = `<div style="font-size:8px; color:var(--blue); margin-bottom:2px;"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
 
@@ -376,7 +398,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } 
             });
 
-            // PERBAIKAN KALENDER: Otomatis deteksi jumlah hari dalam sebulan
             const cal = document.getElementById('cal'); 
             cal.innerHTML = '';
             
