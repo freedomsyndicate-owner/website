@@ -6,21 +6,19 @@
     <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
     
     <script>
-        // === SISTEM PENGAMANAN TINGKAT TINGGI ===
-        document.addEventListener('contextmenu', event => event.preventDefault()); // Blokir Klik Kanan
+        // === SUPER SECURITY: ANTI-COPY & ANTI-VIEW SOURCE ===
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
-            // Blokir F12, Ctrl+Shift+I/J/C, Ctrl+U (View Source), Ctrl+S (Save), Ctrl+A (Select All)
             if(e.keyCode == 123 || 
               (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
               (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
                 return false;
             }
         };
-        // Anti Drag & Seleksi Teks
         document.addEventListener('selectstart', function(e) { e.preventDefault(); });
         document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
-        // CLEAN POPUP (Hapus nama domain GitHub)
+        // CLEAN POPUP (Menghilangkan nama domain di alert/confirm)
         window.alert = function(message) {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -121,7 +119,7 @@
         #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
     <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
     <div id="auth-screen">
         <div class="auth-card">
@@ -285,9 +283,7 @@
         
         function logout() {
             if(confirm("Yakin ingin keluar?")) {
-                auth.signOut().then(() => {
-                    location.reload();
-                }).catch(e => alert("Logout Gagal: " + e.message));
+                auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message));
             }
         }
 
@@ -386,14 +382,14 @@
 
         function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         
-        // === FIX CHART: MENGGUNAKAN IFRAME EMBED AGAR ANTI BLOKIR WIFI ===
+        // === FIX CHART: MENGGUNAKAN IFRAME EMBED UNTUK LOLOS BLOKIR WIFI ===
         function updateChart() { 
             const p = document.getElementById('chart-pair').value.toUpperCase(); 
             const container = document.getElementById('tv_v60');
             container.innerHTML = `
                 <iframe 
                     style="width: 100%; height: 100%; border: none;" 
-                    src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart&utm_term=${p}"
+                    src="https://s.tradingview.com/widgetembed/?symbol=${p}&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&theme=dark&style=1&timezone=Etc%2FUTC&locale=id"
                 ></iframe>`;
         }
 
