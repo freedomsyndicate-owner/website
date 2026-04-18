@@ -12,7 +12,8 @@
                 return false;
             }
         };
-        // PERBAIKAN 1: Menghapus nama domain GitHub di popup alert
+
+        // CLEAN POPUP (Menghilangkan nama domain)
         window.alert = function(message) {
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
@@ -20,6 +21,16 @@
             document.documentElement.appendChild(iframe);
             iframe.contentWindow.alert(message);
             document.documentElement.removeChild(iframe);
+        };
+
+        window.confirm = function(message) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            const result = iframe.contentWindow.confirm(message);
+            document.documentElement.removeChild(iframe);
+            return result;
         };
     </script>
     
@@ -43,7 +54,6 @@
         .fixed-top { flex-shrink: 0; padding: 15px 10px 5px 10px; background: var(--bg); z-index: 100; text-align: center; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
-        /* Navigasi Grid disesuaikan untuk 8 Tombol (Termasuk Logout) */
         .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 15px; padding: 0 5px; }
         .tab-btn { cursor: pointer; background: var(--card); border: 1px solid #1f2937; padding: 10px 2px; border-radius: 8px; font-size: 7px; font-weight: bold; color: #9ca3af; text-transform: uppercase; text-align: center; }
         .tab-btn.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
@@ -267,7 +277,6 @@
 
         function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         
-        // PERBAIKAN 3: Fungsi Logout
         function logout() {
             if(confirm("Yakin ingin keluar?")) {
                 auth.signOut().then(() => {
@@ -317,7 +326,6 @@
             else { document.getElementById('res-lot').innerText = "0.00 Lot"; document.getElementById('res-margin').innerText = "$ 0.00"; }
         }
 
-        // PERBAIKAN 2: Pastikan tab navigasi tidak hilang
         function openTab(id, el) { 
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
@@ -356,7 +364,6 @@
                 alert("TRANSAKSI BERHASIL DISIMPAN!");
                 resetForm();
                 loadData();
-                // PERBAIKAN 2: Tetap di tab journal setelah save, jangan reload halaman penuh
             }).catch(e => alert("Gagal Simpan: " + e.message));
         }
 
