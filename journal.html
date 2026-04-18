@@ -80,21 +80,6 @@
         .tab-content.active { display: block; }
         .inner-padding { padding: 15px; padding-bottom: 150px; }
 
-        /* NEW DASHBOARD ELEMENTS */
-        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .dash-card { background: #0d1117; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; }
-        .dash-title { font-size: 8px; font-family: 'Orbitron'; color: #8b949e; margin-bottom: 8px; border-bottom: 1px solid #30363d; padding-bottom: 4px; display: flex; justify-content: space-between; }
-        .sent-badge { padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: bold; }
-        .sent-neutral { background: rgba(234, 179, 8, 0.2); color: var(--be); }
-        .sent-bullish { background: rgba(74, 222, 128, 0.2); color: var(--green); }
-        .sent-bearish { background: rgba(239, 68, 68, 0.2); color: var(--red); }
-        
-        .bias-item { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 4px; color: #ccc; }
-        .bias-val { font-weight: bold; }
-
-        .risk-bar-container { height: 6px; background: #1f2937; border-radius: 3px; margin: 10px 0; position: relative; }
-        .risk-bar-fill { height: 100%; background: linear-gradient(to right, var(--green), var(--be), var(--red)); border-radius: 3px; width: 53%; } /* Sample 53% */
-
         /* LOT CALC & FORMS */
         .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
         .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
@@ -191,15 +176,24 @@
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
                 <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
-            
             <div id="tv_v60" style="height:100%; width:100%; min-height: 550px;"></div>
         </div>
 
-        <div id="economic-tab" class="tab-content"><div class="inner-padding">
-            <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; overflow:hidden; height: 600px;">
-                <iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&category=_main,central_banks,inflation,employment,economic_activity,confidence,housing,bonds&importance=2,3&features=datepicker,timezone&countries=5,25,32,6,37,7,22,39,35,43,10,11,42,12,4,17,36,110,14&calType=day&timeZone=62&lang=65" width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+        <div id="economic-tab" class="tab-content" style="height: 100%; overflow-y: auto;">
+            <div class="inner-padding" style="height: 100vh; padding-bottom: 200px;">
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; overflow:hidden; height: 100%; min-height: 500px; position: relative;">
+                    <iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&category=_main,central_banks,inflation,employment,economic_activity,confidence,housing,bonds&importance=2,3&features=datepicker,timezone&countries=5,25,32,6,37,7,22,39,35,43,10,11,42,12,4,17,36,110,14&calType=day&timeZone=62&lang=65" 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        allowtransparency="true" 
+                        marginwidth="0" 
+                        marginheight="0"
+                        style="border:none; position:absolute; top:0; left:0; width:100%; height:100%;">
+                    </iframe>
+                </div>
             </div>
-        </div></div>
+        </div>
 
         <div id="journal-tab" class="tab-content"><div class="inner-padding">
             <div class="lot-calc-box">
