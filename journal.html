@@ -126,6 +126,10 @@
         .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
         
         #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
+
+        /* ELEGAN SYNDICATE IFRAME DECORATOR */
+        .iframe-container { width: 100%; height: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
+        .syndicate-calendar { width: 100%; height: 100%; border: none; filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2); }
     </style>
 </head>
 <body>
@@ -178,9 +182,9 @@
 
         <div id="economic-tab" class="tab-content" style="background:#050a14;">
             <div class="inner-padding" style="height: calc(100vh - 120px); padding: 10px;">
-                <div style="width:100%; height:100%; border:1px solid #1f2937; border-radius:15px; overflow:hidden;">
-                    <iframe src="https://www.tradays.com/en/economic-calendar/widget?mode=2&amp;utm_source=tradays.com" 
-                        style="width: 100%; height: 100%; border: none;" 
+                <div class="iframe-container">
+                    <iframe class="syndicate-calendar" 
+                        src="https://www.tradays.com/en/economic-calendar/widget?mode=2&amp;utm_source=tradays.com" 
                         referrerpolicy="no-referrer-when-downgrade"
                         allow="autoplay; encrypted-media"></iframe>
                 </div>
