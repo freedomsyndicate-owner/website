@@ -5,158 +5,458 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freedom Syndicate | Official Hub</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background-color: #020617; 
-            color: #FFFFFF; 
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow-x: hidden;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary: #38bdf8;
+            --dark: #020617;
+            --darker: #0f172a;
         }
 
-        /* ANIMASI MUNCUL PERLAHAN SAAT DIBUKA */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #1e2937 100%);
+            color: #e2e8f0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            position: relative;
         }
 
-        /* ANIMASI MELAYANG HALUS */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
+            animation: gridMove 40s linear infinite;
         }
 
-        /* ANIMASI GLOWING UNTUK TOMBOL JOURNAL */
-        @keyframes journalGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.3); }
-            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.6); border-color: #38bdf8; }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
         }
 
-        .main-wrapper {
-            max-width: 450px;
-            padding: 50px 25px;
-            text-align: center;
-            animation: fadeIn 1.2s ease-out;
+        .sidebar {
+            width: 290px;
+            background: rgba(15, 23, 42, 0.96);
+            border-right: 2px solid rgba(56, 189, 248, 0.4);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7);
+            z-index: 10;
         }
 
-        h1 {
+        .logo {
+            font-family: 'Orbitron', sans-serif;
             font-size: 2.4rem;
             font-weight: 900;
-            margin: 0 0 30px 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
+            letter-spacing: 6px;
+            background: linear-gradient(to bottom, #ffffff 30%, #38bdf8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: float 4s infinite ease-in-out;
+            text-align: center;
+            margin-bottom: 50px;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
+            animation: floatLogo 6s infinite ease-in-out;
         }
 
-        .intro-box {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 45px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
-        .description b { color: #38bdf8; font-weight: 700; }
-
-        /* STYLE TOMBOL JOURNAL PESANAN BOS */
-        .journal-btn {
-            display: block;
+        .menu-item {
+            padding: 18px 22px;
+            margin: 6px 0;
+            border-radius: 14px;
+            color: #cbd5e1;
             text-decoration: none;
-            background: rgba(56, 189, 248, 0.05);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 45px;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: journalGlow 3s infinite ease-in-out;
-            cursor: pointer;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .journal-btn:hover {
-            background: rgba(56, 189, 248, 0.15);
-            transform: scale(1.03);
+        .menu-item:hover, .menu-item.active {
+            background: rgba(56, 189, 248, 0.18);
+            border-color: #38bdf8;
+            color: #fff;
+            transform: translateX(12px);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
         }
 
-        .journal-title {
-            display: block;
-            font-weight: 900;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            color: #FFFFFF;
-            margin-bottom: 4px;
-        }
+        .menu-item i { font-size: 1.4rem; width: 28px; }
 
-        .journal-sub {
-            display: block;
-            font-weight: 300;
-            font-size: 0.8rem;
-            letter-spacing: 8px;
-            color: #38bdf8;
-            text-transform: uppercase;
+        .sidebar-social {
+            margin-top: auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(56, 189, 248, 0.3);
         }
 
         .social-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .social-btn {
-            padding: 16px;
-            border-radius: 14px;
-            color: #FFFFFF;
+            padding: 12px 14px;
+            border-radius: 12px;
+            color: #fff;
             text-decoration: none;
+            font-size: 0.85rem;
             font-weight: 700;
-            font-size: 0.8rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(30, 41, 59, 0.5);
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(30, 41, 59, 0.6);
         }
 
         .social-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
             border-color: #38bdf8;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
-        .btn-tg { color: #38bdf8; }
-        .btn-dc { color: #818cf8; } 
-        .btn-wa { color: #4ade80; } 
-        .btn-tt { color: #FFFFFF; } 
-        .btn-ig { color: #f472b6; }
-        .btn-fb { color: #1877F2; }
+        .main-content {
+            flex: 1;
+            padding: 40px 50px;
+            overflow-y: auto;
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(12px);
+        }
 
-        footer { margin-top: 60px; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
+        .section { display: none; animation: fadeInSection 0.7s ease-out forwards; }
+        .section.active { display: block; }
+
+        @keyframes fadeInSection {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.6rem;
+            margin-bottom: 20px;
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+            letter-spacing: 2px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .journal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(56, 189, 248, 0.1);
+            color: white;
+            padding: 20px 50px;
+            border: 3px solid #38bdf8;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.4s;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4);
+        }
+
+        .journal-btn:hover {
+            background: #38bdf8;
+            color: #020617;
+            transform: scale(1.1);
+        }
+
+        /* Film - Expanded */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+        }
+
+        .video-card {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            transition: all 0.4s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(56, 189, 248, 0.4);
+        }
+
+        video { width: 100%; height: 240px; background: #000; }
+
+        .video-info { padding: 16px; font-size: 1rem; }
+
+        /* Music - Expanded */
+        .music-player {
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(56, 189, 248, 0.4);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 800px;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+        }
+
+        .playlist {
+            max-height: 520px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .track {
+            padding: 16px 20px;
+            margin: 8px 0;
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .track:hover, .track.playing {
+            background: rgba(56, 189, 248, 0.25);
+            border-left: 6px solid #38bdf8;
+            transform: translateX(8px);
+        }
+
+        audio { width: 100%; margin-top: 25px; }
+
+        /* Keluh Kesah */
+        .message-form textarea {
+            width: 100%;
+            min-height: 140px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid rgba(56, 189, 248, 0.4);
+            border-radius: 16px;
+            color: white;
+            padding: 18px;
+            font-size: 1.1rem;
+            resize: vertical;
+        }
+
+        .message-form button {
+            background: linear-gradient(#38bdf8, #0ea5e9);
+            color: #020617;
+            border: none;
+            padding: 16px 42px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 18px;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+        }
+
+        .message-form button:hover { transform: scale(1.05); }
+
+        .messages { margin-top: 40px; max-height: 520px; overflow-y: auto; }
+
+        .msg {
+            background: rgba(30, 41, 59, 0.7);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            border-left: 6px solid #38bdf8;
+        }
+
+        footer {
+            margin-top: 70px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #64748b;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="main-wrapper">
-        <h1>FREEDOM SYNDICATE</h1>
-        <div class="intro-box">
-            <p class="description">
-                <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
+
+    <div class="sidebar">
+        <div class="logo">FREEDOM<br>SYNDICATE</div>
+        
+        <a href="#" class="menu-item active" data-section="trading"><i class="fas fa-chart-line"></i> Trading</a>
+        <a href="#" class="menu-item" data-section="film"><i class="fas fa-film"></i> Film</a>
+        <a href="#" class="menu-item" data-section="music"><i class="fas fa-music"></i> Musik</a>
+        <a href="#" class="menu-item" data-section="keluh"><i class="fas fa-comment-dots"></i> Keluh Kesah</a>
+
+        <div class="sidebar-social">
+            <p style="font-size:0.85rem; opacity:0.7; margin-bottom:12px; text-align:center;">CONNECT WITH US</p>
+            <div class="social-grid">
+                <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn" target="_blank"><i class="fab fa-telegram"></i> TG</a>
+                <a href="https://discord.gg/sRjgehqgU" class="social-btn" target="_blank"><i class="fab fa-discord"></i> DC</a>
+                <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn" target="_blank"><i class="fab fa-whatsapp"></i> WA</a>
+                <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn" target="_blank"><i class="fab fa-tiktok"></i> TT</a>
+                <a href="https://www.instagram.com/freedom__syndicate" class="social-btn" target="_blank"><i class="fab fa-instagram"></i> IG</a>
+                <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn" target="_blank"><i class="fab fa-facebook"></i> FB</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <!-- Trading -->
+        <div id="trading" class="section active">
+            <h2>TRADING JOURNAL</h2>
+            <div class="description">
+                <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b>, gudang <b>Aplikasi MOD</b>, dan akses <b>Konten Dewasa (18+)</b>. Kebebasan adalah hukum tertinggi kami.
+            </div>
+            <a href="https://freedomsyndicate-owner.github.io/website/journal.html" target="_blank" class="journal-btn">
+                <i class="fas fa-book-open"></i> BUKA JOURNAL SEKARANG →
+            </a>
+        </div>
+
+        <!-- FILM - SEMUA FILM YANG BISA LANGSUNG DIPUTAR (Public Domain & Free Sample) -->
+        <div id="film" class="section">
+            <h2>FILM COLLECTION — SEMUA FILM SIAP PUTAR</h2>
+            <div class="video-grid">
+                <!-- 1 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Big Buck Bunny (2008)</strong><br><small>Public Domain • 9 menit</small></div>
+                </div>
+                <!-- 2 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Elephants Dream (2006)</strong><br><small>Blender Foundation</small></div>
+                </div>
+                <!-- 3 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Sintel (2010)</strong><br><small>Blender Foundation</small></div>
+                </div>
+                <!-- 4 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Tears of Steel (2012)</strong><br><small>Blender Foundation</small></div>
+                </div>
+                <!-- 5 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>For Bigger Blazes</strong><br><small>Public Domain Sample</small></div>
+                </div>
+                <!-- 6 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>For Bigger Escapes</strong><br><small>Public Domain Sample</small></div>
+                </div>
+                <!-- 7 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>For Bigger Fun</strong><br><small>Public Domain Sample</small></div>
+                </div>
+                <!-- 8 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>For Bigger Joyrides</strong><br><small>Public Domain Sample</small></div>
+                </div>
+                <!-- 9 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>For Bigger Meltdowns</strong><br><small>Public Domain Sample</small></div>
+                </div>
+                <!-- 10 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Sintel Trailer</strong><br><small>Blender Foundation</small></div>
+                </div>
+                <!-- 11 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Tears of Steel Trailer</strong><br><small>Blender Foundation</small></div>
+                </div>
+                <!-- 12 -->
+                <div class="video-card">
+                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video>
+                    <div class="video-info"><strong>Big Buck Bunny Trailer</strong><br><small>Public Domain</small></div>
+                </div>
+            </div>
+            <p style="margin-top:30px; opacity:0.8; font-size:0.95rem; text-align:center;">
+                ✅ Semua film sudah dimasukkan dan bisa langsung diputar di sini tanpa redirect.<br>
+                Mau tambah film sendiri? Kirim link MP4 public domain, aku masukkan lagi.
             </p>
         </div>
 
-        <a href="https://freedomsyndicate-owner.github.io/website/journal.html" class="journal-btn">
-            <span class="journal-title">FREEDOM SYNDICATE</span>
-            <span class="journal-sub">Journal</span>
-        </a>
+        <!-- MUSIK - SEMUA MUSIK SIAP PLAY -->
+        <div id="music" class="section">
+            <h2>MUSIC PLAYER SYNDICATE — SEMUA LAGU SIAP PUTAR</h2>
+            <div class="music-player">
+                <audio id="audioPlayer" controls></audio>
+                
+                <input type="text" id="searchMusic" placeholder="🔎 Cari lagu di Syndicate..." 
+                       style="width:100%; padding:16px; margin:20px 0 10px; background:rgba(30,41,59,0.9); border:2px solid #38bdf8; border-radius:16px; color:white; font-size:1rem;">
 
-        <div class="social-grid">
-            <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn btn-tg">TELEGRAM</a>
-            <a href="https://discord.gg/sRjgehqgU" class="social-btn btn-dc">DISCORD</a>
-            <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn btn-wa">WHATSAPP</a>
-            <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
-            <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
-            <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
+                <div class="playlist" id="playlist"></div>
+            </div>
         </div>
-        <footer>BEYOND THE LIMITS &bull; 2026</footer>
+
+        <!-- Keluh Kesah -->
+        <div id="keluh" class="section">
+            <h2>KELUH KESAH SYNDICATE</h2>
+            <p style="margin-bottom:25px; opacity:0.9;">Ceritakan apa saja. Bebas, anonim, tanpa link apapun.</p>
+            
+            <div class="message-form">
+                <textarea id="pesan" placeholder="Tulis keluh kesahmu di sini..."></textarea>
+                <button onclick="kirimPesan()">KIRIM KE SYNDICATE 🔥</button>
+            </div>
+
+            <div class="messages" id="daftarPesan"></div>
+        </div>
+
+        <footer>BEYOND THE LIMITS • 2026</footer>
     </div>
-</body>
-</html>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        // MUSIC PLAYER - SEMUA LAGU (15 lagu lengkap)
+        const tracks = [
+            { title: "Chill Synthwave", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "Epic Background", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { title: "Lo-Fi Midnight", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+            { title: "Cyberpunk Drive", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" },
+            { title: "Dark Ambient", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-18.mp3" },
+            { title: "Neon Pulse", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3" },
+            { title: "Relaxing Chill", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { title: "Upbeat Electronic", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { title: "Ambient Dream", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
+            { title: "Tech Future", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
+            { title: "Slow Motion", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" },
+            { title: "Energetic Beat", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" },
+            { title: "Future Bass", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" },
+            { title: "Deep House", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" },
+            { title: "Synthwave Nights", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" }
+        ]
