@@ -130,6 +130,13 @@
         /* ELEGAN SYNDICATE IFRAME DECORATOR */
         .iframe-container { width: 100%; height: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
         .syndicate-calendar { width: 100%; height: 100%; border: none; filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2); }
+
+        /* FITUR BARU: SUB-TAB & WIDGET */
+        .sub-nav { display: flex; gap: 5px; margin-bottom: 10px; background: #0d1117; padding: 5px; border-radius: 10px; border: 1px solid #1f2937; }
+        .sub-link { flex: 1; text-align: center; font-size: 8px; color: #9ca3af; padding: 8px 5px; cursor: pointer; border-radius: 7px; font-family: 'Orbitron'; transition: 0.3s; }
+        .sub-link.active { background: var(--blue); color: black; font-weight: bold; }
+        .sentiment-box { margin-top: 15px; background: #0a0e14; border: 1px solid #1f2937; border-radius: 12px; padding: 10px; }
+        .widget-label { font-family: 'Orbitron'; font-size: 9px; color: var(--blue); margin-bottom: 8px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -177,16 +184,39 @@
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
                 <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
-            <div id="tv_v60" style="height:100%; width:100%; min-height: 550px;"></div>
+            <div id="tv_v60" style="height:450px; width:100%;"></div>
+            
+            <div class="inner-padding" style="padding-top:0;">
+                <div class="sentiment-box">
+                    <div class="widget-label">📊 LIVE MARKET SENTIMENT</div>
+                    <iframe src="https://it.widgets.investing.com/live-currency-cross-rates?theme=darkTheme&pairs=1,2,3,4,5,7,8,9,10" width="100%" height="350" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+                </div>
+            </div>
         </div>
 
         <div id="economic-tab" class="tab-content" style="background:#050a14;">
-            <div class="inner-padding" style="height: calc(100vh - 120px); padding: 10px;">
-                <div class="iframe-container">
-                    <iframe class="syndicate-calendar" 
-                        src="https://www.tradays.com/en/economic-calendar/widget?mode=2&amp;utm_source=tradays.com" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        allow="autoplay; encrypted-media"></iframe>
+            <div class="inner-padding">
+                <div class="sub-nav">
+                    <div class="sub-link active" onclick="switchEco('cal-v', this)">CALENDAR</div>
+                    <div class="sub-link" onclick="switchEco('news-v', this)">WORLD NEWS</div>
+                    <div class="sub-link" onclick="switchEco('tv-v', this)">ECONOMIC TV</div>
+                </div>
+
+                <div id="cal-v" class="eco-view">
+                    <div class="iframe-container" style="height:550px;">
+                        <iframe class="syndicate-calendar" src="https://www.tradays.com/en/economic-calendar/widget?mode=2" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div id="news-v" class="eco-view" style="display:none;">
+                    <iframe src="https://www.investing.com/news/economy" style="width:100%; height:600px; border:none; border-radius:12px; filter: invert(0.88) hue-rotate(180deg);"></iframe>
+                </div>
+
+                <div id="tv-v" class="eco-view" style="display:none;">
+                    <div class="sentiment-box">
+                        <div class="widget-label">📺 BLOOMBERG LIVE TV</div>
+                        <iframe width="100%" height="250" src="https://www.youtube.com/embed/dp8PhLsUcFE?autoplay=1&mute=1" title="Bloomberg Live" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -473,6 +503,14 @@
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; 
                 cal.appendChild(div);
             }
+        }
+
+        // FUNGSI BARU SWITCH SUB-TAB ECONOMIC
+        function switchEco(viewId, el) {
+            document.querySelectorAll('.eco-view').forEach(v => v.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+            document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
         }
     </script>
 </body>
