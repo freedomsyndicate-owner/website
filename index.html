@@ -10,7 +10,6 @@
         :root {
             --primary: #38bdf8;
             --dark: #020617;
-            --darker: #0f172a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,6 +23,7 @@
             position: relative;
         }
 
+        /* Background grid neon */
         body::before {
             content: '';
             position: absolute;
@@ -36,11 +36,9 @@
             animation: gridMove 40s linear infinite;
         }
 
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 60px 60px; }
-        }
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
 
+        /* SIDEBAR */
         .sidebar {
             width: 290px;
             background: rgba(15, 23, 42, 0.96);
@@ -48,7 +46,7 @@
             padding: 30px 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 8px 0 40px rgba(0,0,0,0.7);
             z-index: 10;
         }
 
@@ -63,12 +61,6 @@
             text-align: center;
             margin-bottom: 50px;
             text-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
-            animation: floatLogo 6s infinite ease-in-out;
-        }
-
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
         }
 
         .menu-item {
@@ -127,6 +119,7 @@
             border-color: #38bdf8;
         }
 
+        /* MAIN CONTENT */
         .main-content {
             flex: 1;
             padding: 40px 50px;
@@ -149,7 +142,6 @@
             margin-bottom: 20px;
             color: #38bdf8;
             text-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
-            letter-spacing: 2px;
         }
 
         .description {
@@ -185,7 +177,7 @@
             transform: scale(1.1);
         }
 
-        /* Film - Expanded */
+        /* FILM & MUSIC */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -200,16 +192,12 @@
             transition: all 0.4s;
         }
 
-        .video-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(56, 189, 248, 0.4);
-        }
+        .video-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(56, 189, 248, 0.4); }
 
         video { width: 100%; height: 240px; background: #000; }
 
         .video-info { padding: 16px; font-size: 1rem; }
 
-        /* Music - Expanded */
         .music-player {
             background: rgba(15, 23, 42, 0.9);
             border: 2px solid rgba(56, 189, 248, 0.4);
@@ -291,11 +279,89 @@
             letter-spacing: 4px;
             font-weight: 700;
         }
+
+        /* ================= RESPONSIVE MOBILE FIX ================= */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow-y: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 15px 10px;
+                border-right: none;
+                border-bottom: 2px solid rgba(56, 189, 248, 0.4);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            
+            .logo {
+                font-size: 1.9rem;
+                margin-bottom: 10px;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .menu-item {
+                flex: 1;
+                font-size: 0.95rem;
+                padding: 12px 10px;
+                margin: 4px;
+                justify-content: center;
+                text-align: center;
+                min-width: 110px;
+            }
+            
+            .menu-item i { width: auto; margin-right: 6px; }
+            
+            .sidebar-social {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .main-content {
+                padding: 20px 15px;
+                flex: none;
+            }
+            
+            h2 { font-size: 2.1rem; }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-card video {
+                height: 200px;
+            }
+            
+            .music-player {
+                padding: 20px;
+            }
+            
+            .playlist {
+                max-height: 420px;
+            }
+            
+            .journal-btn {
+                padding: 16px 30px;
+                font-size: 1.2rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="logo">FREEDOM<br>SYNDICATE</div>
         
@@ -317,6 +383,7 @@
         </div>
     </div>
 
+    <!-- MAIN CONTENT -->
     <div class="main-content">
 
         <!-- Trading -->
@@ -330,86 +397,29 @@
             </a>
         </div>
 
-        <!-- FILM - SEMUA FILM YANG BISA LANGSUNG DIPUTAR (Public Domain & Free Sample) -->
+        <!-- FILM (SEMUA FILM SIAP PUTAR) -->
         <div id="film" class="section">
             <h2>FILM COLLECTION — SEMUA FILM SIAP PUTAR</h2>
             <div class="video-grid">
-                <!-- 1 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Big Buck Bunny (2008)</strong><br><small>Public Domain • 9 menit</small></div>
-                </div>
-                <!-- 2 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Elephants Dream (2006)</strong><br><small>Blender Foundation</small></div>
-                </div>
-                <!-- 3 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Sintel (2010)</strong><br><small>Blender Foundation</small></div>
-                </div>
-                <!-- 4 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Tears of Steel (2012)</strong><br><small>Blender Foundation</small></div>
-                </div>
-                <!-- 5 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>For Bigger Blazes</strong><br><small>Public Domain Sample</small></div>
-                </div>
-                <!-- 6 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>For Bigger Escapes</strong><br><small>Public Domain Sample</small></div>
-                </div>
-                <!-- 7 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>For Bigger Fun</strong><br><small>Public Domain Sample</small></div>
-                </div>
-                <!-- 8 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>For Bigger Joyrides</strong><br><small>Public Domain Sample</small></div>
-                </div>
-                <!-- 9 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>For Bigger Meltdowns</strong><br><small>Public Domain Sample</small></div>
-                </div>
-                <!-- 10 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Sintel Trailer</strong><br><small>Blender Foundation</small></div>
-                </div>
-                <!-- 11 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Tears of Steel Trailer</strong><br><small>Blender Foundation</small></div>
-                </div>
-                <!-- 12 -->
-                <div class="video-card">
-                    <video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video>
-                    <div class="video-info"><strong>Big Buck Bunny Trailer</strong><br><small>Public Domain</small></div>
-                </div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video><div class="video-info"><strong>Big Buck Bunny (2008)</strong><br><small>Public Domain</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4"></video><div class="video-info"><strong>Elephants Dream (2006)</strong><br><small>Blender Foundation</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4"></video><div class="video-info"><strong>Sintel (2010)</strong><br><small>Blender Foundation</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4"></video><div class="video-info"><strong>Tears of Steel (2012)</strong><br><small>Blender Foundation</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4"></video><div class="video-info"><strong>For Bigger Blazes</strong><br><small>Public Domain</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4"></video><div class="video-info"><strong>For Bigger Escapes</strong><br><small>Public Domain</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4"></video><div class="video-info"><strong>For Bigger Fun</strong><br><small>Public Domain</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4"></video><div class="video-info"><strong>For Bigger Joyrides</strong><br><small>Public Domain</small></div></div>
+                <div class="video-card"><video controls><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" type="video/mp4"></video><div class="video-info"><strong>For Bigger Meltdowns</strong><br><small>Public Domain</small></div></div>
             </div>
-            <p style="margin-top:30px; opacity:0.8; font-size:0.95rem; text-align:center;">
-                ✅ Semua film sudah dimasukkan dan bisa langsung diputar di sini tanpa redirect.<br>
-                Mau tambah film sendiri? Kirim link MP4 public domain, aku masukkan lagi.
-            </p>
         </div>
 
-        <!-- MUSIK - SEMUA MUSIK SIAP PLAY -->
+        <!-- MUSIK (15 LAGU SIAP PLAY) -->
         <div id="music" class="section">
-            <h2>MUSIC PLAYER SYNDICATE — SEMUA LAGU SIAP PUTAR</h2>
+            <h2>MUSIC PLAYER — SEMUA LAGU SIAP PUTAR</h2>
             <div class="music-player">
                 <audio id="audioPlayer" controls></audio>
-                
-                <input type="text" id="searchMusic" placeholder="🔎 Cari lagu di Syndicate..." 
+                <input type="text" id="searchMusic" placeholder="🔎 Cari lagu..." 
                        style="width:100%; padding:16px; margin:20px 0 10px; background:rgba(30,41,59,0.9); border:2px solid #38bdf8; border-radius:16px; color:white; font-size:1rem;">
-
                 <div class="playlist" id="playlist"></div>
             </div>
         </div>
@@ -418,12 +428,10 @@
         <div id="keluh" class="section">
             <h2>KELUH KESAH SYNDICATE</h2>
             <p style="margin-bottom:25px; opacity:0.9;">Ceritakan apa saja. Bebas, anonim, tanpa link apapun.</p>
-            
             <div class="message-form">
                 <textarea id="pesan" placeholder="Tulis keluh kesahmu di sini..."></textarea>
                 <button onclick="kirimPesan()">KIRIM KE SYNDICATE 🔥</button>
             </div>
-
             <div class="messages" id="daftarPesan"></div>
         </div>
 
@@ -442,7 +450,7 @@
             });
         });
 
-        // MUSIC PLAYER - SEMUA LAGU (15 lagu lengkap)
+        // Music (15 lagu)
         const tracks = [
             { title: "Chill Synthwave", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
             { title: "Epic Background", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
@@ -459,4 +467,65 @@
             { title: "Future Bass", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" },
             { title: "Deep House", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" },
             { title: "Synthwave Nights", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" }
-        ]
+        ];
+
+        const audio = document.getElementById('audioPlayer');
+        const playlistEl = document.getElementById('playlist');
+
+        function loadPlaylist(filtered = tracks) {
+            playlistEl.innerHTML = '';
+            filtered.forEach(track => {
+                const div = document.createElement('div');
+                div.className = 'track';
+                div.innerHTML = `<span><i class="fas fa-play-circle"></i> ${track.title}</span>`;
+                div.onclick = () => {
+                    audio.src = track.src;
+                    audio.play();
+                    document.querySelectorAll('.track').forEach(t => t.classList.remove('playing'));
+                    div.classList.add('playing');
+                };
+                playlistEl.appendChild(div);
+            });
+        }
+
+        document.getElementById('searchMusic').addEventListener('input', function() {
+            const term = this.value.toLowerCase();
+            const filtered = tracks.filter(t => t.title.toLowerCase().includes(term));
+            loadPlaylist(filtered);
+        });
+
+        loadPlaylist();
+
+        // Keluh Kesah
+        function kirimPesan() {
+            const input = document.getElementById('pesan');
+            const teks = input.value.trim();
+            if (!teks) return alert("Pesan tidak boleh kosong!");
+            if (/https?:\/\/|www\.|bit\.ly|tinyurl/i.test(teks)) {
+                return alert("❌ Link tidak diizinkan!");
+            }
+            const daftar = document.getElementById('daftarPesan');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'msg';
+            msgDiv.innerHTML = `<strong>🕵️ Anonymous Syndicate</strong><br><small>${new Date().toLocaleString('id-ID')}</small><br><br>${teks.replace(/\n/g, '<br>')}`;
+            daftar.prepend(msgDiv);
+
+            let pesanLama = JSON.parse(localStorage.getItem('syndicateMessages') || '[]');
+            pesanLama.unshift({ time: new Date().toLocaleString('id-ID'), text: teks });
+            localStorage.setItem('syndicateMessages', JSON.stringify(pesanLama));
+            input.value = '';
+        }
+
+        window.onload = () => {
+            const daftar = document.getElementById('daftarPesan');
+            const saved = JSON.parse(localStorage.getItem('syndicateMessages') || '[]');
+            saved.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'msg';
+                div.innerHTML = `<strong>🕵️ Anonymous Syndicate</strong><br><small>${msg.time}</small><br><br>${msg.text.replace(/\n/g, '<br>')}`;
+                daftar.appendChild(div);
+            });
+        };
+    </script>
+</body>
+</html>
