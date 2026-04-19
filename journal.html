@@ -150,7 +150,7 @@
     <div class="menu-toggle" onclick="toggleNav()">☰</div>
 
     <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&times;</a>
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
         <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News</a>
         <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
@@ -215,7 +215,7 @@
                 
                 <div id="cal-box" class="sub-eco-content" style="height: 600px;">
                     <div class="iframe-container">
-                        <iframe class="syndicate-calendar" src="https://www.tradays.com/en/economic-calendar/widget?mode=2&amp;utm_source=tradays.com" referrerpolicy="no-referrer-when-downgrade" allow="autoplay; encrypted-media"></iframe>
+                        <iframe class="syndicate-calendar" src="https://www.tradays.com/en/economic-calendar/widget?mode=2&utm_source=tradays.com" referrerpolicy="no-referrer-when-downgrade" allow="autoplay; encrypted-media"></iframe>
                     </div>
                 </div>
 
@@ -317,33 +317,70 @@
         </div></div>
 
         <div id="broker-tab" class="tab-content"><div class="inner-padding">
-            <div class="broker-card">
-                <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
-                <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
-                    <h3 style="margin:0; color:white;">EXNESS</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+            <div class="sub-tab-nav">
+                <button class="sub-tab-btn active" onclick="showSubBroker('forex-box', this)">FOREX BROKER</button>
+                <button class="sub-tab-btn" onclick="showSubBroker('crypto-box', this)">CRYPTO EXCHANGE</button>
+            </div>
+
+            <div id="forex-box" class="sub-broker-content">
+                <div class="broker-card">
+                    <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI FOREX</h2>
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white;">EXNESS</h3>
+                        <div style="margin: 10px 0;">
+                            <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+                        </div>
+                        <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                            <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
+                            <li>Spread sangat rendah mulai dari 0.0 pips.</li>
+                            <li>Tersedia Akun Cent, Standard, & Pro.</li>
+                            <li>Regulasi Internasional ketat & terpercaya.</li>
+                        </ul>
+                        <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
                     </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
-                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
-                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
-                        <li>Regulasi Internasional ketat & terpercaya.</li>
-                    </ul>
-                    <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
+                    <div style="padding-bottom:10px;">
+                        <h3 style="margin:0; color:white;">HEADWAY</h3>
+                        <div style="margin: 10px 0;">
+                            <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+                        </div>
+                        <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
+                            <li>Leverage Unlimited (Tanpa Batas).</li>
+                            <li>Bonus deposit melimpah untuk modal kecil.</li>
+                            <li>Eksekusi order sangat cepat & stabil.</li>
+                            <li>Support bank lokal Indonesia.</li>
+                        </ul>
+                        <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
+                    </div>
                 </div>
-                <div style="padding-bottom:10px;">
-                    <h3 style="margin:0; color:white;">HEADWAY</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
+            </div>
+
+            <div id="crypto-box" class="sub-broker-content" style="display:none;">
+                <div class="broker-card">
+                    <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">CRYPTO EXCHANGE</h2>
+                    
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:15px; margin-bottom:15px;">
+                        <h3 style="margin:0; color:white;">INDODAX</h3>
+                        <p style="font-size:10px; color:var(--green); margin:5px 0;">Keunggulan: Terdaftar BAPPEBTI, Penarikan Rupiah Instant.</p>
+                        <button onclick="window.open('https://indodax.onelink.me/qyYY/referral?deep_link_value=page:register,id:recehlisan', '_blank')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer;">DAFTAR INDODAX</button>
                     </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Leverage Unlimited (Tanpa Batas).</li>
-                        <li>Bonus deposit melimpah untuk modal kecil.</li>
-                        <li>Eksekusi order sangat cepat & stabil.</li>
-                        <li>Support bank lokal Indonesia.</li>
-                    </ul>
-                    <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
+
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:15px; margin-bottom:15px;">
+                        <h3 style="margin:0; color:white;">BINANCE</h3>
+                        <p style="font-size:10px; color:var(--green); margin:5px 0;">Keunggulan: Exchange No. 1 Dunia, Likuiditas Tertinggi, Fitur Lengkap.</p>
+                        <button onclick="window.open('https://www.bmwweb.biz/referral/earn-together/refer2earn-usdc/claim?hl=id&ref=GRO_28502_XAS8E&utm_source=referral_entrance', '_blank')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer;">DAFTAR BINANCE</button>
+                    </div>
+
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:15px; margin-bottom:15px;">
+                        <h3 style="margin:0; color:white;">BYBIT</h3>
+                        <p style="font-size:10px; color:var(--green); margin:5px 0;">Keunggulan: Platform Trading Futures Terbaik, Event Menarik.</p>
+                        <button onclick="window.open('https://www.bybitglobal.com/invite?ref=7NNYA', '_blank')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer;">DAFTAR BYBIT</button>
+                    </div>
+
+                    <div>
+                        <h3 style="margin:0; color:white;">BITGET</h3>
+                        <p style="font-size:10px; color:var(--green); margin:5px 0;">Keunggulan: Copy Trade Crypto Terpopuler, Biaya Kompetitif.</p>
+                        <button onclick="window.open('https://www.abcdstable.com/id/referral/register?clacCode=NLUJD8X0&from=%2Fid%2Fevents%2Freferral-all-program&source=events&utmSource=PremierInviter', '_blank')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer;">DAFTAR BITGET</button>
+                    </div>
                 </div>
             </div>
         </div></div>
@@ -426,10 +463,18 @@
             if(id==='monitor-tab' || id==='community-tab' || id==='announce-tab') loadData(); 
         }
 
-        // NEW: SUB-ECO NAVIGATION
+        // NAVIGATION SWITCHER
         function showSubEco(boxId, btn) {
             document.querySelectorAll('.sub-eco-content').forEach(b => b.style.display = 'none');
             document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(boxId).style.display = 'block';
+            btn.classList.add('active');
+        }
+
+        function showSubBroker(boxId, btn) {
+            document.querySelectorAll('.sub-broker-content').forEach(b => b.style.display = 'none');
+            // Mencari sub-tab-btn khusus di dalam broker-tab agar tidak konflik dengan economic-tab
+            btn.parentNode.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(boxId).style.display = 'block';
             btn.classList.add('active');
         }
