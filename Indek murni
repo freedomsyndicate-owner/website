@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freedom Syndicate | Official Hub</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background-color: #020617; 
+            color: #FFFFFF; 
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* ANIMASI MUNCUL PERLAHAN SAAT DIBUKA */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ANIMASI MELAYANG HALUS */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ANIMASI GLOWING UNTUK TOMBOL JOURNAL */
+        @keyframes journalGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.6); border-color: #38bdf8; }
+        }
+
+        .main-wrapper {
+            max-width: 450px;
+            padding: 50px 25px;
+            text-align: center;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            margin: 0 0 30px 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        .intro-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 45px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .description b { color: #38bdf8; font-weight: 700; }
+
+        /* STYLE TOMBOL JOURNAL PESANAN BOS */
+        .journal-btn {
+            display: block;
+            text-decoration: none;
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 45px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: journalGlow 3s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        .journal-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            transform: scale(1.03);
+        }
+
+        .journal-title {
+            display: block;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }
+
+        .journal-sub {
+            display: block;
+            font-weight: 300;
+            font-size: 0.8rem;
+            letter-spacing: 8px;
+            color: #38bdf8;
+            text-transform: uppercase;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .social-btn {
+            padding: 16px;
+            border-radius: 14px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .social-btn:hover {
+            transform: scale(1.05);
+            border-color: #38bdf8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        .btn-tg { color: #38bdf8; }
+        .btn-dc { color: #818cf8; } 
+        .btn-wa { color: #4ade80; } 
+        .btn-tt { color: #FFFFFF; } 
+        .btn-ig { color: #f472b6; }
+        .btn-fb { color: #1877F2; }
+
+        footer { margin-top: 60px; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <h1>FREEDOM SYNDICATE</h1>
+        <div class="intro-box">
+            <p class="description">
+                <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
+            </p>
+        </div>
+
+        <a href="https://freedomsyndicate-owner.github.io/website/journal.html" class="journal-btn">
+            <span class="journal-title">FREEDOM SYNDICATE</span>
+            <span class="journal-sub">Journal</span>
+        </a>
+
+        <div class="social-grid">
+            <a href="https://t.me/+PFV6bP6F8k5hMTNl" class="social-btn btn-tg">TELEGRAM</a>
+            <a href="https://discord.gg/sRjgehqgU" class="social-btn btn-dc">DISCORD</a>
+            <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn btn-wa">WHATSAPP</a>
+            <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
+            <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
+            <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
+        </div>
+        <footer>BEYOND THE LIMITS &bull; 2026</footer>
+    </div>
+</body>
+</html>
