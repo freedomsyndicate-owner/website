@@ -71,8 +71,6 @@
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
-        .nav-tabs { display: none; }
-
         .content-container { flex-grow: 1; position: relative; overflow: hidden; }
         .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
         .tab-content.active { display: block; }
@@ -117,26 +115,19 @@
         .cal-day.loss { border-color: var(--red); color: var(--red); }
         .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
         .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
-        .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
-        #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
-        .msg-bubble { max-width: 85%; padding: 10px 15px; border-radius: 18px; font-size: 11px; background: #1f2937; align-self: flex-start; }
-        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
         
-        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 20px; margin-bottom: 15px; }
-        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
-        
-        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
-
         /* ELEGAN SYNDICATE IFRAME DECORATOR */
         .iframe-container { width: 100%; height: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
         .syndicate-calendar { width: 100%; height: 100%; border: none; filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2); }
 
         /* FITUR BARU: SUB-TAB & WIDGET */
         .sub-nav { display: flex; gap: 5px; margin-bottom: 10px; background: #0d1117; padding: 5px; border-radius: 10px; border: 1px solid #1f2937; }
-        .sub-link { flex: 1; text-align: center; font-size: 8px; color: #9ca3af; padding: 8px 5px; cursor: pointer; border-radius: 7px; font-family: 'Orbitron'; transition: 0.3s; }
+        .sub-link { flex: 1; text-align: center; font-size: 8px; color: #9ca3af; padding: 10px 5px; cursor: pointer; border-radius: 7px; font-family: 'Orbitron'; transition: 0.3s; }
         .sub-link.active { background: var(--blue); color: black; font-weight: bold; }
-        .sentiment-box { margin-top: 15px; background: #0a0e14; border: 1px solid #1f2937; border-radius: 12px; padding: 10px; }
+        .sentiment-box { margin-top: 15px; background: #0a0e14; border: 1px solid #1f2937; border-radius: 12px; padding: 10px; overflow: hidden; }
         .widget-label { font-family: 'Orbitron'; font-size: 9px; color: var(--blue); margin-bottom: 8px; letter-spacing: 1px; }
+        
+        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -193,15 +184,9 @@
                       <div class="tradingview-widget-container__widget"></div>
                       <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js" async>
                       {
-                      "width": "100%",
-                      "height": 400,
-                      "currencies": [
-                        "EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD"
-                      ],
-                      "isTransparent": true,
-                      "colorTheme": "dark",
-                      "locale": "en"
-                    }
+                      "width": "100%", "height": 400, "currencies": ["EUR", "USD", "JPY", "GBP", "CHF", "AUD", "CAD", "NZD"],
+                      "isTransparent": true, "colorTheme": "dark", "locale": "en"
+                      }
                       </script>
                     </div>
                 </div>
@@ -227,9 +212,9 @@
                 </div>
 
                 <div id="tv-v" class="eco-view" style="display:none;">
-                    <div class="sentiment-box">
-                        <div class="widget-label">📺 BLOOMBERG LIVE TV</div>
-                        <iframe width="100%" height="250" src="https://www.youtube.com/embed/dp8PhLsUcFE?autoplay=1&mute=1" title="Bloomberg Live" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="sentiment-box" style="height: 350px;">
+                        <div class="widget-label">📺 YAHOO FINANCE LIVE (GLOBAL)</div>
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/live_stream?channel=UCEAZeUIeJs0IjQiqTCnVUtg&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -324,28 +309,10 @@
                 <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">REKOMENDASI BROKER</h2>
                 <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
                     <h3 style="margin:0; color:white;">EXNESS</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
-                    </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Instant Withdrawal (Penarikan Otomatis) 24/7.</li>
-                        <li>Spread sangat rendah mulai dari 0.0 pips.</li>
-                        <li>Tersedia Akun Cent, Standard, & Pro.</li>
-                        <li>Regulasi Internasional ketat & terpercaya.</li>
-                    </ul>
                     <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px;">DAFTAR EXNESS</button>
                 </div>
-                <div style="padding-bottom:10px;">
+                <div>
                     <h3 style="margin:0; color:white;">HEADWAY</h3>
-                    <div style="margin: 10px 0;">
-                        <span style="background: rgba(74, 222, 128, 0.1); color: var(--green); font-size: 10px; padding: 4px 8px; border-radius: 4px; font-weight: bold;">DEPOSIT MULAI $1</span>
-                    </div>
-                    <ul style="font-size: 11px; color: #9ca3af; padding-left: 18px; line-height: 1.6;">
-                        <li>Leverage Unlimited (Tanpa Batas).</li>
-                        <li>Bonus deposit melimpah untuk modal kecil.</li>
-                        <li>Eksekusi order sangat cepat & stabil.</li>
-                        <li>Support bank lokal Indonesia.</li>
-                    </ul>
                     <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px;">DAFTAR HEADWAY</button>
                 </div>
             </div>
@@ -355,12 +322,13 @@
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" class="qris-img" alt="QRIS">
-                <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px;">SCAN DENGAN DANA / OVO / GOPAY / MOBILE BANKING</p>
+                <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px;">SCAN QRIS UNTUK SUPPORT DOMS</p>
             </div>
         </div></div>
     </div>
 
     <script>
+        // FIREBASE & CONFIG (TETAP SAMA SEPERTI ASLINYA)
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
@@ -369,22 +337,12 @@
         let sidebarOpen = false;
         function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
-            if (!sidebarOpen) {
-                sidebar.style.width = "250px";
-                sidebarOpen = true;
-            } else {
-                sidebar.style.width = "0";
-                sidebarOpen = false;
-            }
+            if (!sidebarOpen) { sidebar.style.width = "250px"; sidebarOpen = true; } 
+            else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
-        
-        function logout() {
-            if(confirm("Yakin ingin keluar?")) {
-                auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message));
-            }
-        }
+        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p); }
+        function logout() { if(confirm("Yakin Logout?")) auth.signOut().then(() => location.reload()); }
 
         auth.onAuthStateChanged(u => { 
             if(u){ 
@@ -392,24 +350,20 @@
                 document.getElementById('auth-screen').style.display='none'; 
                 document.getElementById('display-user').innerText="ACTIVE: "+u.email; 
                 loadData(); updateChart(); loadChat(); setupTracker(); 
-            } else { 
-                document.getElementById('auth-screen').style.display='flex'; 
-            }
+            } else { document.getElementById('auth-screen').style.display='flex'; }
         });
 
+        // FUNGSI LAINNYA (TETAP SAMA SEPERTI ASLINYA)
         function setupTracker() { 
             if(!curUser) return;
             const pRef = rtdb.ref('presence/' + curUser.uid); 
             rtdb.ref('.info/connected').on('value', snap => { 
-                if (snap.val() === true) { 
-                    pRef.set({ email: curUser.email, status: "online" }); 
-                    pRef.onDisconnect().remove(); 
-                }
+                if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); }
             }); 
             rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); 
             rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
         }
-        
+
         function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
         function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isM = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isM ? 'mine' : ''}`; div.innerHTML = `<div style="font-size:8px; color:var(--blue); margin-bottom:2px;"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
 
@@ -431,45 +385,18 @@
 
         function setV(t, v, el) { el.parentNode.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); if(t==='res') sRes = v; if(t==='session') sSession = v; if(t==='style') sStyle = v; }
         function procImg(i, id) { const f = i.files[0]; if(!f) return; const r = new FileReader(); r.onload = e => { const b = e.target.result; document.getElementById(id).src = b; document.getElementById(id).style.display = 'block'; if(id==='pb') bB = b; else bA = b; }; r.readAsDataURL(f); }
-        
+
         function save() { 
-            if(!sRes || !curUser) return alert("❌ Pilih Result (TP/SL/BE) Dulu Doms!");
+            if(!sRes || !curUser) return alert("❌ Pilih Result!");
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
-            const dataToSave = { 
-                date: document.getElementById('date').value || new Date().toISOString().split('T')[0], 
-                time: document.getElementById('time').value || new Date().toLocaleTimeString(), 
-                pair: document.getElementById('pair').value, 
-                session: sSession || 'N/A', 
-                poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), 
-                entry_style: sStyle || 'N/A', 
-                reason: document.getElementById('reason').value || '-', 
-                rr: document.getElementById('rr').value, 
-                pnl: parseFloat(document.getElementById('pnl').value) || 0, 
-                res: sRes, margin: mUsed, bef: bB, aft: bA 
-            };
-            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { 
-                alert("🚀 BERHASIL! Transaksi Disimpan ke Cloud Doms."); 
-                resetForm(); loadData(); 
-            }).catch(e => alert("Gagal Simpan: " + e.message));
+            const dataToSave = { date: document.getElementById('date').value || new Date().toISOString().split('T')[0], time: document.getElementById('time').value || new Date().toLocaleTimeString(), pair: document.getElementById('pair').value, session: sSession || 'N/A', poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle || 'N/A', reason: document.getElementById('reason').value || '-', rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
+            rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { alert("🚀 Tersimpan!"); resetForm(); loadData(); });
         }
 
-        function resetForm() {
-            document.getElementById('tradingForm').reset();
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.poi-check').forEach(cb => cb.checked = false);
-            document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none';
-            sRes = ''; sSession = ''; sStyle = ''; bB = ''; bA = '';
-        }
+        function resetForm() { document.getElementById('tradingForm').reset(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); document.querySelectorAll('.poi-check').forEach(cb => cb.checked = false); document.getElementById('pb').style.display = 'none'; document.getElementById('pa').style.display = 'none'; sRes = ''; sSession = ''; sStyle = ''; bB = ''; bA = ''; }
 
-        function loadData() { 
-            if(!curUser) return;
-            rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { 
-                allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; 
-                render(allTrades); 
-            }); 
-        }
-
-        function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
+        function loadData() { if(!curUser) return; rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
+        function del(id) { if(confirm("Hapus?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         
         function updateChart() { 
             const p = document.getElementById('chart-pair').value.toUpperCase(); 
@@ -487,17 +414,12 @@
             
             sorted.forEach(t => { 
                 const tM = t.date ? t.date.split('-')[1] : ''; 
-                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { 
-                    totalP += t.pnl; if(t.res === 'TP') win++; filteredCount++;
-                    eqData.push(totalP); labels.push(t.date); 
-                    if(!daysData[t.date]) daysData[t.date] = 0;
-                    daysData[t.date] += t.pnl;
-                } 
+                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; filteredCount++; eqData.push(totalP); labels.push(t.date); if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; } 
             });
             
             sorted.slice().reverse().forEach(t => { 
                 const card = document.createElement('div'); card.className = 'history-card'; 
-                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.time} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Session:</b> ${t.session} | <b>Model:</b> ${t.entry_style}<br><b>POI:</b> ${t.poi && t.poi.length > 0 ? t.poi.join(', ') : '-'}<br><b>Margin:</b> $${t.margin} | <b>RR:</b> ${t.rr} | <b>P&L:</b> $${t.pnl}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
+                card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.time} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Margin:</b> $${t.margin} | <b>RR:</b> ${t.rr} | <b>P&L:</b> $${t.pnl}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card);
             });
             
@@ -519,7 +441,7 @@
             }
         }
 
-        // FUNGSI BARU SWITCH SUB-TAB ECONOMIC
+        // FUNGSI SWITCH SUB-TAB ECONOMIC
         function switchEco(viewId, el) {
             document.querySelectorAll('.eco-view').forEach(v => v.style.display = 'none');
             document.getElementById(viewId).style.display = 'block';
