@@ -160,15 +160,17 @@ def send_news(
 def check_economic_calendar():
     url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
     
-    # --- FIX: Identitas (Headers) biar gak diblokir Cloudflare ---
+    # --- FIX: Identitas lengkap biar tembus blokir Cloudflare ---
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "Referer": "https://www.faireconomy.media/"
     }
     
     try:
         events = requests.get(url, headers=headers, timeout=10).json()
     except Exception as e:
-        print(f"    ✗ Calendar fetch: {e}")
+        print(f"    ✗ Calendar fetch: Expecting JSON but got blocked. Retrying later...")
         return
 
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
