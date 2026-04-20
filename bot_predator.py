@@ -94,16 +94,26 @@ class ICT_Ultimate_Engine:
 
     def get_protocol(self):
         a     = self._safe_get_analysis(self.daily_h)
-        bias  = a.summary['RECOMMENDATION']
-        atr   = a.indicators['ATR']
-        close = a.indicators['close']
-        proto = "XAMD" if atr > close * 0.0015 else "AMDX"
+        # FIX: Pakai .get() supaya anti-crash kalau TradingView tidak mengirim data
+        bias  = a.summary.get('RECOMMENDATION', 'NEUTRAL')
+        atr   = a.indicators.get('ATR', 0)
+        close = a.indicators.get('close', 0)
+        
+        # Mencegah error jika close = 0
+        if close > 0 and atr > close * 0.0015:
+            proto = "XAMD"
+        else:
+            proto = "AMDX"
+            
         return proto, bias
 
     def sniper_entry(self, bias):
         d     = self._safe_get_analysis(self.micro_h).indicators
-        price = d['close']
-        sl_v  = abs(d['high'] - d['low']) * 2.0
+        price = d.get('close', 0)
+        high  = d.get('high', price)
+        low   = d.get('low', price)
+        
+        sl_v  = abs(high - low) * 2.0
         if "BUY" in bias:
             return price, price-sl_v, price+sl_v*1.5, price+sl_v*2.5, price+sl_v*3.5, "BUY"
         return price, price+sl_v, price-sl_v*1.5, price-sl_v*2.5, price-sl_v*3.5, "SELL"
