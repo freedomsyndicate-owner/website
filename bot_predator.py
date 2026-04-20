@@ -1,19 +1,17 @@
 """
 ╔══════════════════════════════════════════════════════════════════════════╗
-║       GLOBAL PREDATOR V11 — ICT SUPREME ENGINE                          ║
+║       GLOBAL PREDATOR V11 — ICT SUPREME ENGINE (FULL SYNC)              ║
 ║       ─────────────────────────────────────────────────────             ║
-║       ✅ Daily Bias & Quarterly Theory                                   ║
-║       ✅ Market Structure (BOS / CHoCH)                                  ║
-║       ✅ Order Block & FVG Detection                                    ║
-║       ✅ SMT Divergence & Premium/Discount                              ║
-║       📡 Signals → Telegram + Discord + Firebase (Website Tab)           ║
+║       ✅ Otak: ICT Logic (Daily Bias, ATR, AMDX/XAMD)                   ║
+║       📡 Output: Telegram + Discord + Website (Journal)                 ║
+║       ⏰ Waktu: UTC+7 (WIB) - Reset Harian Otomatis                     ║
 ╚══════════════════════════════════════════════════════════════════════════╝
-Install: pip install requests tradingview_ta
 """
 
 import requests
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from tradingview_ta import TA_Handler, Interval
 
 # ─── CONFIGURATION ─────────────────────────────────────────────────────────────
 TOKEN_TG        = "8196511062:AAGyfWcRUk9uw_lc_aQgUW6vLyyRmgF1hcE"
@@ -28,12 +26,145 @@ PAIRS = {
     "GBPUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "EURUSD"},
     "USDJPY":  {"ex": "OANDA",   "scr": "forex",  "corr": "DX"},
     "AUDUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "NZDUSD"},
-    "EURUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "GBPUSD"},
-    "NZDUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "AUDUSD"},
-    "USDCAD":  {"ex": "OANDA",   "scr": "forex",  "corr": "DX"},
 }
 
-# ══════════════════════════════════════════════════════════════════════════════
+last_reset_date = None
+
+# ─── TIME & RESET HELPERS ──────────────────────────────────────────────────────
+def get_now_local():
+    """Mengambil waktu sekarang dalam format WIB (UTC+7)"""
+    return datetime.now(timezone(timedelta(hours=7)))
+
+def reset_signal_if_new_day():
+    """Hapus signal di website setiap ganti hari jam 00:00 WIB"""
+    global last_reset_date
+    now = get_now_local()
+    current_date = now.strftime("%Y-%m-%d")
+
+    if last_reset_date is None or last_reset_date != current_date:
+        try:
+            # Hapus node 'ict' di Firebase agar website bersih setiap pagi
+            requests.delete(f"{FIREBASE_DB_URL}/signals/ict.json", timeout=10)
+            last_reset_date = current_date
+            print(f"🔄 [RESET] Database Website Dibersihkan: {current_date}")
+        except: pass
+
+# ─── SENDER SYSTEM ────────────────────────────────────────────────────────────
+def send_all(msg, signal_data):
+    reset_signal_if_new_day()
+
+    # 1. Telegram
+    try:
+        requests.post(f"https://api.telegram.org/bot{TOKEN_TG}/sendMessage",
+                      json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_TG,
+                            "text": msg, "parse_mode": "Markdown"}, timeout=10)
+    except: pass
+    
+    # 2. Discord
+    try:
+        requests.post(DISCORD_WEBHOOK, json={"content": msg}, timeout=10)
+    except: pass
+    
+    # 3. Website Journal (Firebase)
+    if signal_data:
+        try:
+            # Gunakan POST agar signal menumpuk di list 'signals/ict'
+            requests.post(f"{FIREBASE_DB_URL}/signals/ict.json", json=signal_data, timeout=10)
+            print(f"✅ [SYNC] Signal {signal_data['pair']} terkirim ke Website")
+        except: pass
+
+# ─── PREDATOR ENGINE (ICT LOGIC) ──────────────────────────────────────────────
+class ICT_Ultimate_Engine:
+    def __init__(self, sym, ex, scr, corr):
+        self.symbol = sym
+        self.corr   = corr
+        # Handler untuk Daily Bias (Bias Harian)
+        self.daily_h = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_1_DAY)
+        # Handler untuk Micro Entry (5 Menit)
+        self.micro_h = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_5_MINUTES)
+
+    def get_analysis_data(self):
+        """Mengambil Bias Harian dan menentukan Protocol AMDX/XAMD"""
+        a = self.daily_h.get_analysis()
+        bias = a.summary.get('RECOMMENDATION', 'NEUTRAL')
+        atr = a.indicators.get('ATR', 0)
+        close = a.indicators.get('close', 0)
+        
+        # Logika Protocol asli milikmu
+        proto = "XAMD" if (close > 0 and atr > close * 0.0015) else "AMDX"
+        return proto, bias
+
+    def sniper_entry(self, bias):
+        """Menentukan titik Entry, SL, dan TP berdasarkan volatility"""
+        d = self.micro_h.get_analysis().indicators
+        price = d.get('close', 0)
+        high = d.get('high', price)
+        low = d.get('low', price)
+        
+        # Perhitungan SL dan TP Multiplier asli
+        sl_v = abs(high - low) * 2.0
+        
+        if "BUY" in bias:
+            direction = "BUY"
+            return price, price - sl_v, price + sl_v * 1.5, price + sl_v * 2.5, direction
+        else:
+            direction = "SELL"
+            return price, price + sl_v, price - sl_v * 1.5, price - sl_v * 2.5, direction
+
+# ─── MAIN LOOP ───────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    print(f"🚀 PREDATOR V11 ONLINE (WIB TIME)")
+    
+    while True:
+        now = get_now_local()
+        ts = now.strftime("%Y-%m-%d %H:%M WIB")
+        print(f"[{ts}] Scanning markets...")
+
+        for pair, cfg in PAIRS.items():
+            try:
+                # 1. Jalankan Engine TradingView
+                bot = ICT_Ultimate_Engine(pair, cfg['ex'], cfg['scr'], cfg['corr'])
+                proto, bias = bot.get_analysis_data()
+                
+                # 2. Filter Signal (Hanya kirim jika ada RECOMMENDATION BUY/SELL)
+                if "BUY" in bias or "SELL" in bias:
+                    entry, sl, tp1, tp2, direction = bot.sniper_entry(bias)
+                    score = 9 if "STRONG" in bias else 7
+                    strength = "STRONG 🔥" if score >= 8 else "MODERATE ✅"
+                    
+                    # 3. Format Pesan
+                    msg = (f"🚨 **PREDATOR: {pair}**\n━━━━━━━━━━━━\n"
+                           f"📡 **{direction}** | Score {score}/10 {strength}\n"
+                           f"🎯 Entry: `{entry:.5f}`\n🛑 SL: `{sl:.5f}`\n"
+                           f"💰 TP1: `{tp1:.5f}` | TP2: `{tp2:.5f}`\n"
+                           f"🧠 {proto} | SMT vs {cfg['corr']}\n🕐 {ts}")
+
+                    # 4. Format Data untuk Website Journal
+                    signal_data = {
+                        "pair": pair,
+                        "direction": direction,
+                        "strength": strength,
+                        "score": score,
+                        "price": round(entry, 5),
+                        "sl": round(sl, 5),
+                        "tp1": round(tp1, 5),
+                        "tp2": round(tp2, 5),
+                        "trend_htf": bias,
+                        "kill_zone": proto,
+                        "reasons": [f"Bias: {bias}", f"SMT: {cfg['corr']}", f"Proto: {proto}"],
+                        "timestamp": ts,
+                        "source": "predator_v11"
+                    }
+                    
+                    # 5. Kirim SINKRON ke Tele, Discord, Website
+                    send_all(msg, signal_data)
+                    time.sleep(10) # Jeda agar tidak kena limit API
+
+            except Exception as e:
+                print(f"✗ Error {pair}: {e}")
+        
+        print("⏳ Scan Complete. Standby 60 min...")
+        time.sleep(3600) # Scan setiap 1 jam
 #  FIREBASE HELPERS
 # ══════════════════════════════════════════════════════════════════════════════
 def push_to_firebase(path: str, data: dict):
