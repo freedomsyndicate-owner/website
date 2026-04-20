@@ -1,30 +1,23 @@
 @echo off
-title FREEDOM SYNDICATE - PATROLI SYSTEM
+title FREEDOM SYNDICATE SYSTEM
 color 0b
 
-echo =======================================================
-echo    FREEDOM SYNDICATE V11 - SUPREME PATROLI MODE
-echo =======================================================
-echo.
+echo [1/4] Menghubungkan ke Jaringan Tor...
+:: Ganti path di bawah sesuai lokasi instalasi Tor Browser kamu
+start "" "C:\Users\%USERNAME%\Desktop\Tor Browser\Browser\firefox.exe"
+timeout /t 15
 
-:: 1. Jalankan Tor Expert Bundle (Pindah IP)
-echo [1/3] Menyiapkan Mesin Pindah IP (Tor)...
-:: Sesuaikan path tor.exe jika kamu letakkan di folder lain
-start "TOR_NETWORK" /min "C:\DOMS_SYSTEM\Tor\tor.exe"
-timeout /t 10
+echo [2/4] Menjalankan Predator V11...
+start "PREDATOR" python predator_v11.py
 
-:: 2. Jalankan Bot Predator V11
-echo [2/3] Menjalankan Global Predator V11...
-start "DOMS_PREDATOR" python C:\DOMS_SYSTEM\predator_v11.py
-timeout /t 5
+echo [3/4] Menjalankan Fundamental Radar...
+start "FUNDA" python funda_radar.py
 
-:: 3. Jalankan Bot Syndicate Radar (Atau Bot Kedua kamu)
-echo [3/3] Menjalankan Syndicate Radar...
-start "SYNDICATE_RADAR" python C:\DOMS_SYSTEM\syndicate_radar.py
+echo [4/4] Menjalankan Syndicate Radar...
+start "RADAR" python syndicate_radar.py
 
 echo.
-echo -------------------------------------------------------
-echo [OK] SEMUA SISTEM AKTIF 24 JAM.
-echo [!] JANGAN TUTUP JENDELA CMD YANG TERBUKA.
-echo -------------------------------------------------------
+echo ========================================
+echo SEMUA SISTEM PATROLI AKTIF 24 JAM!
+echo ========================================
 pause
