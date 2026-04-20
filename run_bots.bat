@@ -1,22 +1,20 @@
 @echo off
-:: Berpindah ke folder tempat file berada agar tidak error path
-cd /d "%~dp0"
+:: Berpindah ke folder sistem agar path sesuai
+cd /d "C:\DOMS_SYSTEM"
 
-title Freedom Syndicate - System Runner
+title Freedom Syndicate - Global Runner
 echo ---------------------------------------------------
 echo Memulai Global Predator V11 dan Supreme Radar V1...
-echo Pastikan TOR BROWSER sudah terbuka!
+echo Status: IP Stealth via Tor Browser Aktif
 echo ---------------------------------------------------
 pause
 
-:: Menjalankan Predator V11 di jendela baru
-:: Gunakan tanda kutip agar aman jika ada spasi
+:: Menjalankan Predator V11 (pastikan nama file sesuai foto)
 start "Predator Engine" cmd /k "python predator_v11-1.py"
 
-:: Menjalankan Supreme Radar di jendela baru
+:: Menjalankan Supreme Radar (pastikan nama file sesuai foto)
 start "Supreme Radar" cmd /k "python supreme_radar.py"
 
 echo.
-echo Bot sedang berjalan di jendela terpisah.
-echo Jangan tutup jendela ini sebelum bot selesai.
+echo Kedua bot sedang berjalan. JANGAN tutup jendela ini.
 exit
