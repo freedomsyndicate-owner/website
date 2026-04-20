@@ -1,0 +1,157 @@
+"""
+╔══════════════════════════════════════════════════════════════════════════╗
+║       GLOBAL PREDATOR V11 — ICT SUPREME ENGINE (STEALTH)                 ║
+║       ─────────────────────────────────────────────────────              ║
+║       ✅ Anti-Banned: Auto-Rotating IP via Tor Network                   ║
+║       ✅ Strategy: ICT Daily Bias, Protocol AMDX/XAMD                    ║
+║       ✅ Output: Telegram, Discord, & Firebase Journal                   ║
+╚══════════════════════════════════════════════════════════════════════════╝
+"""
+
+import requests
+import time
+import random
+from datetime import datetime, timezone
+from tradingview_ta import TA_Handler, Interval
+
+# ─── CONFIGURATION ─────────────────────────────────────────────────────────────
+TOKEN_TG        = "8196511062:AAGyfWcRUk9uw_lc_aQgUW6vLyyRmgF1hcE"
+CHAT_ID_TG      = "-1003660980986"
+TOPIC_ID_TG     = 18
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1489306608554217736/vTC-HQBFwXWsiBE0WImdB0Uq88WppsSjCb548y5W5aFAubZVYXBgFCEuMLbcB22H1h7H"
+FIREBASE_DB_URL = "https://freedomsyndicatecloud-default-rtdb.firebaseio.com"
+
+# PROXY CONFIG (Tor Browser Windows default port: 9150)
+PROXIES = {
+    'http':  'socks5://127.0.0.1:9150',
+    'https': 'socks5://127.0.0.1:9150'
+}
+
+PAIRS = {
+    "XAUUSD":  {"ex": "OANDA",   "scr": "cfd",    "corr": "XAUEUR"},
+    "BTCUSDT": {"ex": "BINANCE", "scr": "crypto", "corr": "ETHUSDT"},
+    "GBPUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "EURUSD"},
+    "USDJPY":  {"ex": "OANDA",   "scr": "forex",  "corr": "DX"},
+    "AUDUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "NZDUSD"},
+    "EURUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "GBPUSD"},
+    "NZDUSD":  {"ex": "OANDA",   "scr": "forex",  "corr": "AUDUSD"},
+    "USDCAD":  {"ex": "OANDA",   "scr": "forex",  "corr": "DX"},
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  STEALTH ENGINE HELPERS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def get_current_ip():
+    """Cek IP apakah sudah lewat Tor atau belum"""
+    try:
+        # Gunakan timeout agar tidak stuck kalau Tor belum konek
+        r = requests.get('https://api.ipify.org', proxies=PROXIES, timeout=10)
+        return r.text
+    except:
+        return "DISCONNECTED (Pastikan Tor Browser Aktif!)"
+
+def push_to_firebase(path: str, data: dict):
+    try:
+        # Firebase tidak perlu lewat Proxy agar stabil
+        requests.post(f"{FIREBASE_DB_URL}/{path}.json", json=data, timeout=10)
+    except: pass
+
+def send_all(msg, signal_data=None):
+    # Telegram & Discord (Direct connection/No Proxy)
+    try:
+        requests.post(f"https://api.telegram.org/bot{TOKEN_TG}/sendMessage",
+            json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_TG,
+                  "text": msg, "parse_mode": "Markdown"}, timeout=10)
+    except: pass
+    
+    try:
+        requests.post(DISCORD_WEBHOOK, json={"content": msg}, timeout=10)
+    except: pass
+    
+    if signal_data:
+        push_to_firebase("signals/ict", signal_data)
+
+class PredatorEngine:
+    def __init__(self, sym, ex, scr):
+        self.symbol = sym
+        # Integrasi Proxy langsung ke Handler TradingView
+        self.daily = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_1_DAY, proxies=PROXIES)
+        self.micro = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_5_MINUTES, proxies=PROXIES)
+
+    def _safe_get(self, handler):
+        # Jeda acak 5-10 detik sebelum fetch agar tidak terbaca bot pattern
+        time.sleep(random.uniform(5.0, 10.0))
+        try:
+            return handler.get_analysis()
+        except Exception as e:
+            print(f"      ✗ Error fetch {self.symbol}: {e}")
+            return None
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  MAIN RUNNER
+# ══════════════════════════════════════════════════════════════════════════════
+
+if __name__ == "__main__":
+    print("\n" + "="*50)
+    print("🚀 GLOBAL PREDATOR V11 — HACKER MODE (WINDOWS)")
+    print("📍 Status Proxy Tor:", get_current_ip())
+    print("="*50 + "\n")
+
+    # Notifikasi Bot Online
+    send_all("🔥 **PREDATOR V11 STEALTH** ONLINE\n📍 IP Location: `Hidden via Tor`")
+
+    while True:
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        print(f"[{ts}] Memulai scanning {len(PAIRS)} pairs...")
+
+        for pair, cfg in PAIRS.items():
+            print(f"  > Analyzing {pair}...")
+            bot = PredatorEngine(pair, cfg['ex'], cfg['scr'])
+            
+            # 1. Cek Daily Bias
+            daily_data = bot._safe_get(bot.daily)
+            if not daily_data: continue
+            
+            bias = daily_data.summary['RECOMMENDATION']
+            atr  = daily_data.indicators.get('ATR', 0)
+            close = daily_data.indicators.get('close', 0)
+            proto = "XAMD" if atr > (close * 0.0015) else "AMDX"
+
+            # 2. Cek Micro Confirmation (5m)
+            if "BUY" in bias or "SELL" in bias:
+                micro_data = bot._safe_get(bot.micro)
+                if not micro_data: continue
+                
+                price = micro_data.indicators['close']
+                high  = micro_data.indicators['high']
+                low   = micro_data.indicators['low']
+                sl_val = abs(high - low) * 1.5 # ICT Standard Buffer
+                
+                direction = "BUY" if "BUY" in bias else "SELL"
+                tp_val = sl_val * 2.0 # Minimal RR 1:2
+                
+                # Signal Notification
+                msg = (f"🚨 **PREDATOR: {pair}**\n━━━━━━━━━━━━\n"
+                       f"📡 **{direction}** | Strategy: {proto}\n"
+                       f"🎯 Price: `{price:.5f}`\n"
+                       f"🧠 Bias: {bias}\n"
+                       f"🕐 {ts}\n"
+                       f"📍 Node: `Encrypted`")
+
+                signal_data = {
+                    "pair": pair, "direction": direction, "price": round(price, 5),
+                    "bias": bias, "protocol": proto, "timestamp": ts
+                }
+                
+                send_all(msg, signal_data)
+                print(f"    ✅ {pair} Signal Sent!")
+
+            # Jeda antar koin lebih lama (20-40 detik) agar benar-benar aman
+            time.sleep(random.randint(20, 40))
+
+        # Scan selesai, istirahat 30 menit
+        wait_min = 30
+        print(f"\n[OK] Scan selesai. IP saat ini: {get_current_ip()}")
+        print(f"⏳ Istirahat {wait_min} menit sebelum scan berikutnya...")
+        time.sleep(wait_min * 60)
