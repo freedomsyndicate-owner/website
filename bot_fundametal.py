@@ -27,16 +27,12 @@ TOPIC_ID_TG     = 18
 DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1489314765074595840/BRby0L3L4cfUUGyDpihSBjRlHPpNutFiZWF5mFYU6CpCkjoEA9Hw1A2W0c6LEUgO30i7"
 FIREBASE_DB_URL = "https://freedomsyndicatecloud-default-rtdb.firebaseio.com"
 
-# FIX: Headers browser agar tidak diblok server calendar
-CALENDAR_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://www.forexfactory.com/",
-}
-
 # ─── STATE ─────────────────────────────────────────────────────────────────────
 reported_alerts: set = set()
+
+# ─── CACHE SYSTEM (Ditambahkan agar tidak kena HTTP 429) ───────────────────────
+CALENDAR_CACHE = None
+LAST_CALENDAR_FETCH = 0
 
 try:
     from deep_translator import GoogleTranslator
@@ -166,35 +162,29 @@ def send_news(
 #  ECONOMIC CALENDAR
 # ══════════════════════════════════════════════════════════════════════════════
 def check_economic_calendar():
-    # FIX: Coba 2 URL sumber calendar, pakai headers browser agar tidak empty
-    urls = [
-        "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
-        "https://nfs.faireconomy.media/ff_calendar_nextweek.json",
-    ]
-    events = None
-    for url in urls[:1]:  # Tetap pakai thisweek dulu
-        for attempt in range(3):
-            try:
-                r = requests.get(url, headers=CALENDAR_HEADERS, timeout=15)
-                r.raise_for_status()
-                text = r.text.strip()
-                if not text:
-                    print(f"    ⚠ Calendar: Empty response (attempt {attempt+1}), retry...")
-                    time.sleep(5)
-                    continue
-                events = r.json()
-                break
-            except Exception as e:
-                print(f"    ✗ Calendar fetch: {e}")
-                if attempt < 2:
-                    time.sleep(5)
-        if events:
-            break
+    global CALENDAR_CACHE, LAST_CALENDAR_FETCH
+    now_ts = time.time()
+    
+    # Fetch data baru hanya setiap 15 menit (900 detik) untuk menghindari 429
+    if CALENDAR_CACHE is None or (now_ts - LAST_CALENDAR_FETCH) > 900:
+        url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+        try:
+            res = requests.get(url, headers=headers, timeout=10)
+            if res.status_code == 200:
+                CALENDAR_CACHE = res.json()
+                LAST_CALENDAR_FETCH = now_ts
+            elif res.status_code == 429:
+                print("    ! HTTP 429: Limit API Calendar tercapai. Memakai cache lama sementara.")
+                if CALENDAR_CACHE is None: return
+            else:
+                print(f"    ✗ Calendar fetch error: {res.status_code}")
+                if CALENDAR_CACHE is None: return
+        except Exception as e:
+            print(f"    ✗ Calendar fetch: {e}")
+            if CALENDAR_CACHE is None: return
 
-    if not events:
-        print("    ✗ Calendar: Gagal ambil data setelah 3 percobaan")
-        return
-
+    events = CALENDAR_CACHE
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
 
     for event in events:
