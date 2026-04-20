@@ -15,23 +15,6 @@ import requests
 import time
 from datetime import datetime, timezone
 
-# FIX: Patch requests session SEBELUM import tradingview_ta
-# agar TradingView tidak blok dengan 403 Forbidden
-_orig_send = requests.Session.send
-def _patched_send(self, request, **kwargs):
-    request.headers.update({
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/124.0.0.0 Safari/537.36"
-        ),
-        "Origin":  "https://www.tradingview.com",
-        "Referer": "https://www.tradingview.com/",
-        "Accept-Language": "en-US,en;q=0.9",
-    })
-    return _orig_send(self, request, **kwargs)
-requests.Session.send = _patched_send
-
 # ─── CONFIGURATION ─────────────────────────────────────────────────────────────
 TOKEN_TG        = "8196511062:AAGyfWcRUk9uw_lc_aQgUW6vLyyRmgF1hcE"
 CHAT_ID_TG      = "-1003660980986"
@@ -100,21 +83,15 @@ class ICT_Ultimate_Engine:
         self.daily_h = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_1_DAY)
         self.micro_h = TA_Handler(symbol=sym, exchange=ex, screener=scr, interval=Interval.INTERVAL_5_MINUTES)
 
-    # FIX: Proteksi API TradingView (Anti-429/403) — retry + backoff lebih panjang
-    def _safe_get_analysis(self, handler, retries=5):
+    # FIX: Proteksi API TradingView (Anti-429/403)
+    def _safe_get_analysis(self, handler, retries=5): # Diubah dari 3 menjadi 5
         for i in range(retries):
             try:
                 return handler.get_analysis()
             except Exception as e:
-                err_str = str(e)
-                if "403" in err_str or "429" in err_str:
-                    wait = (i + 1) * 10  # 10s, 20s, 30s, 40s, 50s
-                    print(f"    ⚠ TradingView {err_str[:40]} — retry {i+1}/{retries} in {wait}s")
-                    time.sleep(wait)
-                else:
-                    if i == retries - 1: raise e
-                    time.sleep(5)
-        raise Exception(f"TradingView gagal setelah {retries} percobaan")
+                if i == retries - 1: raise e
+                print(f"      ! TradingView API terhambat (429). Retry {i+1}/{retries} dalam 10 detik...")
+                time.sleep(10) # Diubah dari 3 ke 10 detik agar API punya waktu reset
 
     def get_protocol(self):
         a     = self._safe_get_analysis(self.daily_h)
@@ -153,11 +130,15 @@ if __name__ == "__main__":
         for pair, cfg in PAIRS.items():
             if not TV_AVAILABLE: break
             try:
-                # FIX: Delay 5 detik antar pair agar API aman (naik dari 3s)
-                time.sleep(5)
+                # FIX: Delay 10 detik antar koin agar API aman (sebelumnya 3)
+                time.sleep(10) 
                 
                 bot = ICT_Ultimate_Engine(pair, cfg['ex'], cfg['scr'], cfg['corr'])
                 proto, bias = bot.get_protocol()
+                
+                # Tambah jeda kecil sebelum fetch timeframe micro
+                time.sleep(3) 
+                
                 if "BUY" in bias or "SELL" in bias:
                     entry, sl, tp1, tp2, tp3, direction = bot.sniper_entry(bias)
                     score    = bot.get_score(bias)
