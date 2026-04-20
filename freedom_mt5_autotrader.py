@@ -38,18 +38,21 @@ CHAT_ID_TG = "-1003660980986"
 TOPIC_ID   = 18
 
 # ─── PAIRS TRADING ─────────────────────────────────────────────────────────────
-# XAUUSD only | Lot 0.03 fixed | Headway-Real
+# Sesuaikan dengan yang tersedia di broker Headway
 PAIRS_CONFIG = {
-    "XAUUSD": {"lot": 0.03, "dec": 2, "min_sl": 2.0, "max_sl": 25.0, "spread_max": 35},
+    "XAUUSD": {"lot": 0.01, "dec": 2, "min_sl": 2.0,   "max_sl": 20.0,  "spread_max": 30},
+    "GBPUSD": {"lot": 0.01, "dec": 5, "min_sl": 0.0010, "max_sl": 0.006, "spread_max": 20},
+    "EURUSD": {"lot": 0.01, "dec": 5, "min_sl": 0.0010, "max_sl": 0.006, "spread_max": 15},
+    "USDJPY": {"lot": 0.01, "dec": 3, "min_sl": 0.10,   "max_sl": 0.60,  "spread_max": 20},
+    "BTCUSD": {"lot": 0.01, "dec": 2, "min_sl": 150.0,  "max_sl": 1500.0,"spread_max": 500},
 }
 
 # ─── RISK MANAGEMENT ───────────────────────────────────────────────────────────
-RISK_PER_TRADE_PCT   = 1.0    # Info saja (lot fixed 0.03)
-MAX_OPEN_TRADES      = 1      # Hanya 1 posisi XAUUSD sekaligus
-MAX_DAILY_LOSS_PCT   = 5.0    # Bot berhenti jika rugi 5% hari ini
-MAX_DRAWDOWN_PCT     = 10.0   # Bot BERHENTI TOTAL jika DD > 10%
-FIXED_LOT            = 0.03   # Lot tetap
-MAGIC_NUMBER         = 202604 # ID unik bot ini di MT5
+RISK_PER_TRADE_PCT   = 1.0   # Max 1% balance per trade
+MAX_OPEN_TRADES      = 3     # Max posisi terbuka sekaligus
+MAX_DAILY_LOSS_PCT   = 5.0   # Bot berhenti jika rugi 5% balance hari ini
+MAX_DRAWDOWN_PCT     = 10.0  # Bot berhenti total jika DD > 10%
+MAGIC_NUMBER         = 202604  # ID unik bot ini di MT5
 
 # ─── STATE ─────────────────────────────────────────────────────────────────────
 daily_start_balance  = None
@@ -493,17 +496,41 @@ def analyze_pair_ict(symbol):
 
 def calculate_lot(symbol, sl_distance, risk_pct=RISK_PER_TRADE_PCT):
     """
-    Pakai FIXED_LOT = 0.03 untuk XAUUSD.
-    Validasi ke broker min/max volume.
+    Hitung lot berdasarkan % risk dari balance
+    Formula: Lot = (Balance * Risk%) / (SL_distance * Pip_value)
     """
-    sym_info = mt5.symbol_info(symbol)
-    lot = FIXED_LOT
-    if sym_info:
-        lot = max(sym_info.volume_min, min(FIXED_LOT, sym_info.volume_max))
     account = mt5.account_info()
-    if account:
-        est_risk = sl_distance * lot * 100
-        print(f"  💰 {symbol}: Lot {lot} | Est. Risk ≈ ${est_risk:.2f} | Balance ${account.balance:.2f}")
+    if not account:
+        return PAIRS_CONFIG[symbol]['lot']  # fallback default lot
+
+    balance      = account.balance
+    risk_amount  = balance * (risk_pct / 100.0)
+
+    sym_info = mt5.symbol_info(symbol)
+    if not sym_info:
+        return PAIRS_CONFIG[symbol]['lot']
+
+    # Pip value: 1 lot = berapa USD per pip
+    # Contract size * point
+    contract_size = sym_info.trade_contract_size
+    point         = sym_info.point
+    tick_value    = sym_info.trade_tick_value
+    tick_size     = sym_info.trade_tick_size
+
+    # SL dalam ticks
+    sl_ticks    = sl_distance / tick_size
+    value_per_lot = sl_ticks * tick_value
+
+    if value_per_lot <= 0:
+        return PAIRS_CONFIG[symbol]['lot']
+
+    raw_lot = risk_amount / value_per_lot
+    # Round ke volume step
+    vol_step = sym_info.volume_step
+    lot      = round(raw_lot / vol_step) * vol_step
+    lot      = max(sym_info.volume_min, min(lot, sym_info.volume_max))
+
+    print(f"  💰 {symbol}: Balance ${balance:.2f} | Risk {risk_pct}% = ${risk_amount:.2f} | Lot: {lot}")
     return lot
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -529,4 +556,218 @@ def place_order(signal):
         return False
 
     price     = tick.ask if direction == "BUY" else tick.bid
-    order_type = mt5.ORDER_TYPE_BUY if direction == "BUY" else
+    order_type = mt5.ORDER_TYPE_BUY if direction == "BUY" else mt5.ORDER_TYPE_SELL
+    deviation  = 20  # Slippage max 20 points
+
+    # Sesuaikan SL/TP ke digits pair
+    digits = mt5.symbol_info(symbol).digits
+
+    request = {
+        "action":       mt5.TRADE_ACTION_DEAL,
+        "symbol":       symbol,
+        "volume":       lot,
+        "type":         order_type,
+        "price":        round(price, digits),
+        "sl":           round(sl, digits),
+        "tp":           round(tp, digits),
+        "deviation":    deviation,
+        "magic":        MAGIC_NUMBER,
+        "comment":      f"ICT-{signal['session']}-{signal['macro_phase'][:3]}",
+        "type_time":    mt5.ORDER_TIME_GTC,
+        "type_filling": mt5.ORDER_FILLING_IOC,
+    }
+
+    result = mt5.order_send(request)
+
+    if result.retcode == mt5.TRADE_RETCODE_DONE:
+        msg = (
+            f"✅ *ORDER MASUK: {symbol}* ✅\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"📥 *{direction}* @ `{price:.{dec}f}`\n"
+            f"🛑 *SL:* `{sl:.{dec}f}`\n"
+            f"🏆 *TP:* `{tp:.{dec}f}`\n"
+            f"📐 *RR:* {signal['rr']:.1f}:1\n"
+            f"🎯 *Lot:* {lot}\n"
+            f"📍 *Zone:* {signal['entry_type']}\n"
+            f"🔥 *Setup:* {signal['msb']} | {signal['daily_bias']}\n"
+            f"🕐 *Sesi:* {signal['session']} | {signal['macro']}\n"
+            f"_Freedom Syndicate MT5 | {datetime.now(WIB).strftime('%H:%M WIB')}_"
+        )
+        send_telegram(msg)
+        print(f"  ✅ ORDER MASUK #{result.order}: {direction} {symbol} @ {price:.{dec}f} | SL:{sl:.{dec}f} TP:{tp:.{dec}f}")
+        return True
+    else:
+        print(f"  ❌ Order gagal [{symbol}]: {result.retcode} — {result.comment}")
+        if result.retcode == 10004:  # Requote
+            print("     Requote! Coba lagi...")
+        elif result.retcode == 10013:
+            print("     Invalid request — cek SL/TP minimum distance broker")
+        return False
+
+# ══════════════════════════════════════════════════════════════════════════════
+# RISK MANAGEMENT — DAILY LOSS & DRAWDOWN GUARD
+# ══════════════════════════════════════════════════════════════════════════════
+
+def check_risk_guard():
+    """
+    Cek apakah bot boleh trading:
+    - Jika daily loss > MAX_DAILY_LOSS_PCT → stop hari ini
+    - Jika equity drawdown > MAX_DRAWDOWN_PCT → stop total
+    """
+    global daily_start_balance
+
+    account = mt5.account_info()
+    if not account:
+        return False
+
+    balance = account.balance
+    equity  = account.equity
+
+    if daily_start_balance is None:
+        daily_start_balance = balance
+
+    daily_pnl_pct = ((balance - daily_start_balance) / max(daily_start_balance, 1)) * 100
+    dd_pct        = ((daily_start_balance - equity) / max(daily_start_balance, 1)) * 100
+
+    if daily_pnl_pct <= -MAX_DAILY_LOSS_PCT:
+        msg = f"🚨 *DAILY LOSS LIMIT*\nPnL hari ini: {daily_pnl_pct:.1f}%\nBot berhenti trading hari ini!"
+        send_telegram(msg)
+        print(f"🚨 Daily loss {daily_pnl_pct:.1f}% — melewati batas {MAX_DAILY_LOSS_PCT}%")
+        return False
+
+    if dd_pct >= MAX_DRAWDOWN_PCT:
+        msg = f"🚨 *MAX DRAWDOWN*\nDD: {dd_pct:.1f}%\nBot BERHENTI TOTAL!"
+        send_telegram(msg)
+        print(f"🚨 MAX DRAWDOWN {dd_pct:.1f}% — bot berhenti total!")
+        return False
+
+    # Cek jumlah posisi terbuka
+    positions = mt5.positions_get(magic=MAGIC_NUMBER)
+    if positions and len(positions) >= MAX_OPEN_TRADES:
+        print(f"  ⏸️  Max {MAX_OPEN_TRADES} posisi terbuka, skip scan")
+        return False
+
+    return True
+
+def count_open_positions_by_symbol(symbol):
+    """Cek apakah sudah ada posisi terbuka di pair ini"""
+    positions = mt5.positions_get(symbol=symbol, magic=MAGIC_NUMBER)
+    return len(positions) if positions else 0
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TELEGRAM NOTIFIKASI
+# ══════════════════════════════════════════════════════════════════════════════
+
+def send_telegram(msg):
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot{TOKEN_TG}/sendMessage",
+            json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID,
+                  "text": msg, "parse_mode": "Markdown"},
+            timeout=8
+        )
+    except:
+        pass
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MAIN LOOP
+# ══════════════════════════════════════════════════════════════════════════════
+
+def run_autotrader():
+    global daily_start_balance, session_traded_pairs
+
+    print(f"\n🚀 {BOT_NAME} STARTING...")
+    print(f"   Pairs   : {list(PAIRS_CONFIG.keys())}")
+    print(f"   Risk    : {RISK_PER_TRADE_PCT}% per trade")
+    print(f"   Max DD  : {MAX_DRAWDOWN_PCT}%")
+    print(f"   Magic # : {MAGIC_NUMBER}\n")
+
+    if not connect_mt5():
+        print("❌ Tidak bisa connect MT5. Pastikan MT5 sudah dibuka dan login.")
+        return
+
+    send_telegram(f"🚀 *{BOT_NAME}* ONLINE\nPairs: {', '.join(PAIRS_CONFIG.keys())}\nRisk: {RISK_PER_TRADE_PCT}%/trade")
+
+    last_session = None
+    scan_interval = 60  # Scan setiap 60 detik
+
+    while True:
+        try:
+            now_wib = datetime.now(WIB)
+            session = get_active_session()
+
+            # Reset session_traded_pairs saat ganti sesi
+            if session != last_session:
+                session_traded_pairs = set()
+                last_session = session
+                if session != "OFF":
+                    print(f"\n🔔 [{now_wib.strftime('%H:%M WIB')}] Sesi {session} dimulai!")
+
+            print(f"\n[{now_wib.strftime('%H:%M:%S WIB')}] Sesi: {session} | {get_killzone_label()}")
+
+            # Cek risk guard
+            if not check_risk_guard():
+                time.sleep(300)  # Tunggu 5 menit sebelum cek lagi
+                continue
+
+            # OFF session — tidak scan
+            if session == "OFF":
+                print("  💤 OFF Session — menunggu sesi berikutnya...")
+                time.sleep(scan_interval)
+                continue
+
+            # Scan setiap pair
+            for symbol in PAIRS_CONFIG.keys():
+                # Skip jika sudah ada posisi di pair ini
+                if count_open_positions_by_symbol(symbol) > 0:
+                    print(f"  ⏭️  {symbol}: Sudah ada posisi terbuka, skip")
+                    continue
+
+                # Skip jika sudah entry di sesi ini
+                if symbol in session_traded_pairs:
+                    print(f"  ⏭️  {symbol}: Sudah entry di sesi {session} ini")
+                    continue
+
+                print(f"  🔍 Analisa {symbol}...")
+                signal = analyze_pair_ict(symbol)
+
+                if signal:
+                    print(f"  🎯 SETUP DITEMUKAN: {symbol} {signal['direction']} | RR {signal['rr']:.1f}:1")
+                    print(f"     Entry Zone : {signal['entry_type']}")
+                    print(f"     Daily Bias : {signal['daily_bias']} — {signal['bias_detail']}")
+                    print(f"     MSB        : {signal['msb']}")
+                    print(f"     Macro      : {signal['macro']}")
+
+                    success = place_order(signal)
+                    if success:
+                        session_traded_pairs.add(symbol)
+                else:
+                    print(f"  💭 {symbol}: Tidak ada setup ICT valid")
+
+                time.sleep(2)  # Jeda antar pair
+
+            # Update daily balance di jam 00:00 WIB
+            if now_wib.hour == 0 and now_wib.minute < 2:
+                acc = mt5.account_info()
+                if acc:
+                    daily_start_balance = acc.balance
+                    print(f"📅 Daily balance reset: ${daily_start_balance:.2f}")
+
+            print(f"  ✅ Scan selesai. Next scan dalam {scan_interval}s...")
+            time.sleep(scan_interval)
+
+        except KeyboardInterrupt:
+            print("\n⛔ Bot dihentikan manual.")
+            send_telegram("⛔ Freedom MT5 Bot dihentikan manual.")
+            mt5.shutdown()
+            break
+        except Exception as e:
+            print(f"❌ Error utama: {e}")
+            time.sleep(30)
+            # Reconnect jika terputus
+            if not mt5.account_info():
+                print("🔄 Reconnecting MT5...")
+                connect_mt5()
+
+if __name__ == "__main__":
+    run_autotrader()
