@@ -75,7 +75,6 @@ def trim_firebase(path: str, keep: int = 100):
 # ══════════════════════════════════════════════════════════════════════════════
 #  DELIVERY — Telegram + Discord + Firebase
 # ══════════════════════════════════════════════════════════════════════════════
-# Discord embed color palette
 IMPACT_COLOR = {
     "HIGH":        0xE74C3C,   # Red
     "MEDIUM":      0xF39C12,   # Orange
@@ -159,12 +158,6 @@ def send_news(
 #  ECONOMIC CALENDAR
 # ══════════════════════════════════════════════════════════════════════════════
 def check_economic_calendar():
-    """
-    Comprehensive economic calendar scanner:
-      • Pre-event alerts at T-15, T-5, T-1 minutes (ALL impacts)
-      • Live result with Beat / Miss / Inline analysis
-      • ICT market note after each release
-    """
     url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
     try:
         events = requests.get(url, timeout=10).json()
@@ -189,388 +182,70 @@ def check_economic_calendar():
         imp_icon = IMPACT_ICON.get(impact, "⚪")
         wib_str  = (e_time + timedelta(hours=7)).strftime("%H:%M WIB")
 
-        # ── PRE-EVENT ALERTS ──────────────────────────────────────────────────
+        # PRE-EVENT ALERTS (H-15, H-5, H-1)
         for mins in [15, 5, 1]:
             lo, hi = mins - 0.4, mins + 0.4
             if lo <= diff_min <= hi:
                 aid = f"PRE_{title}_{event['date']}_{mins}"
                 if aid not in reported_alerts:
                     urgency = "🚨 IMMINENT!" if mins == 1 else ("⚠️ ALERT" if mins == 5 else "📢 NOTICE")
-
-                    body = (
-                        f"{urgency} _{mins} menit lagi_\n\n"
-                        f"📋 *Event:*  {title}\n"
-                        f"🏛️ *Currency:*  {currency}  |  *Impact:*  {imp_icon} {impact}\n"
-                        f"🕒 *Waktu:*  {wib_str}\n"
-                        f"━━━━━━━━━━━━━━━━\n"
-                        f"📊 *Forecast:*  {event.get('forecast', 'N/A')}\n"
-                        f"📜 *Previous:*  {event.get('previous', 'N/A')}\n"
-                        f"━━━━━━━━━━━━━━━━\n"
-                    )
-
-                    if impact == "HIGH":
-                        body += (
-                            "🔴 *HIGH IMPACT* — Volatilitas ekstrim!\n"
-                            "• Pertimbangkan tutup/perkecil posisi terbuka\n"
-                            "• Pasang SL ketat / trail stop\n"
-                            "• Tunggu spike + retest setelah data keluar\n"
-                            "• _ICT: Wait for displacement & FVG to form_"
-                        )
-                    elif impact == "MEDIUM":
-                        body += (
-                            "🟡 *MEDIUM IMPACT* — Potensi 20–50 pip movement\n"
-                            "• Monitor candle M5 setelah rilis\n"
-                            "• _ICT: Look for OB retest after spike_"
-                        )
-                    else:
-                        body += "🟢 *LOW IMPACT* — Minimal movement expected, tetap monitor."
-
-                    send_news(
-                        f"📡 PRE-EVENT: {title}", body,
-                        imp_icon, impact=impact, category="economic"
-                    )
+                    body = (f"{urgency} _{mins} menit lagi_\n\n"
+                            f"📋 *Event:* {title}\n"
+                            f"🏛️ *Currency:* {currency} | *Impact:* {imp_icon} {impact}\n"
+                            f"🕒 *Waktu:* {wib_str}\n"
+                            f"━━━━━━━━━━━━━━━━\n"
+                            f"📊 *Forecast:* {event.get('forecast', 'N/A')}\n"
+                            f"📜 *Previous:* {event.get('previous', 'N/A')}\n")
+                    send_news(f"📡 PRE-EVENT: {title}", body, imp_icon, impact=impact, category="economic")
                     reported_alerts.add(aid)
 
-        # ── POST-EVENT RESULT ─────────────────────────────────────────────────
+        # POST-EVENT RESULT
         if -10 <= diff_min <= 0:
             rid = f"RESULT_{title}_{event['date']}"
             if rid not in reported_alerts:
                 actual = event.get("actual")
                 if actual:
                     forecast = event.get("forecast", "N/A")
-                    previous = event.get("previous", "N/A")
-
-                    # Beat / Miss / Inline
-                    beat_miss   = ""
-                    implication = ""
-                    try:
-                        def parse_num(s):
-                            return float(
-                                str(s).replace("%", "").replace("K", "e3")
-                                .replace("M", "e6").replace("B", "e9")
-                                .replace(",", "")
-                            )
-                        av = parse_num(actual)
-                        fv = parse_num(forecast)
-                        if av > fv:
-                            beat_miss   = "✅ *BEAT FORECAST* 🚀"
-                            implication = (
-                                f"Positif untuk *{currency}* → potensi penguatan.\n"
-                                f"_ICT: Bullish displacement candle mungkin terbentuk._"
-                            )
-                        elif av < fv:
-                            beat_miss   = "❌ *MISS FORECAST* 📉"
-                            implication = (
-                                f"Negatif untuk *{currency}* → potensi pelemahan.\n"
-                                f"_ICT: Bearish displacement candle mungkin terbentuk._"
-                            )
-                        else:
-                            beat_miss   = "➖ *INLINE*"
-                            implication = "Minimal impact. Market sudah price in."
-                    except Exception:
-                        beat_miss = "⚡ Data released"
-
-                    body = (
-                        f"📊 *Actual:*  `{actual}`  {beat_miss}\n"
-                        f"🎯 *Forecast:*  {forecast}\n"
-                        f"📜 *Previous:*  {previous}\n"
-                        f"━━━━━━━━━━━━━━━━\n"
-                        f"🏛️ *Currency:*  {currency}  |  *Impact:*  {imp_icon} {impact}\n"
-                    )
-                    if implication:
-                        body += f"\n💡 *Market Implication:*\n{implication}"
-
-                    body += (
-                        f"\n\n_ICT Tip: Tunggu candle M5/M15 konfirmasi, cari OB / FVG "
-                        f"sebelum entry — jangan masuk langsung saat spike!_"
-                    )
-
-                    send_news(
-                        f"📈 RESULT: {title}", body,
-                        "📊", impact=impact, category="economic"
-                    )
+                    body = (f"📈 **DATA RELEASED: {title}**\n"
+                            f"━━━━━━━━━━━━━━━━━━━━\n"
+                            f"📌 **Actual:** `{actual}`\n"
+                            f"🎯 **Forecast:** {forecast}\n"
+                            f"📜 **Previous:** {event.get('previous', 'N/A')}\n"
+                            f"━━━━━━━━━━━━━━━━━━━━\n"
+                            f"🏛️ **Curr:** {currency} | **Impact:** {impact}")
+                    send_news(f"📈 RESULT: {title}", body, "📊", impact=impact, category="economic")
                     reported_alerts.add(rid)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  WEEKLY CALENDAR BRIEF  (every Monday 07:00 UTC)
-# ══════════════════════════════════════════════════════════════════════════════
-def send_weekly_brief():
-    now = datetime.now(timezone.utc)
-    if now.weekday() != 0 or not (7 <= now.hour < 8):
-        return
-
-    wk_id = f"WEEKLY_{now.strftime('%Y-W%W')}"
-    if wk_id in reported_alerts:
-        return
-
-    url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
-    try:
-        events = requests.get(url, timeout=10).json()
-    except Exception:
-        return
-
-    highs = [e for e in events if e.get("impact", "").upper() == "HIGH"]
-    meds  = [e for e in events if e.get("impact", "").upper() == "MEDIUM"]
-
-    body = f"📅 *THIS WEEK HIGH-IMPACT EVENTS ({len(highs)} events):*\n━━━━━━━━━━━━━━━━\n"
-    for e in highs[:12]:
-        try:
-            et  = datetime.strptime(e["date"], "%Y-%m-%dT%H:%M:%S%z")
-            wib = (et + timedelta(hours=7)).strftime("%a %d/%m %H:%M WIB")
-            body += f"🔴 `{wib}` — *{e['title']}*  ({e.get('currency', e.get('country',''))})\n"
-        except Exception:
-            pass
-
-    if meds:
-        body += f"\n🟡 *MEDIUM IMPACT ({len(meds)} events):*\n"
-        for e in meds[:8]:
-            try:
-                et  = datetime.strptime(e["date"], "%Y-%m-%dT%H:%M:%S%z")
-                wib = (et + timedelta(hours=7)).strftime("%a %d/%m %H:%M WIB")
-                body += f"🟡 `{wib}` — {e['title']}  ({e.get('currency', e.get('country',''))})\n"
-            except Exception:
-                pass
-
-    body += (
-        "\n━━━━━━━━━━━━━━━━\n"
-        "_ICT Note: Minggu ini perhatikan sell-side & buy-side liquidity "
-        "sebelum High-Impact events. Market sering manipulation H-1 sebelum data._\n"
-        "_Freedom Syndicate — Plan your week, trade the setup._"
-    )
-
-    send_news("🗓️ WEEKLY CALENDAR BRIEF", body, "📅", impact="MEDIUM", category="economic")
-    reported_alerts.add(wk_id)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  SESSION BRIEF  (Asia / London / NY open)
-# ══════════════════════════════════════════════════════════════════════════════
-SESSION_BRIEFS = {
-    0: {
-        "name": "Asia", "icon": "🌏",
-        "pairs": "USDJPY, AUDUSD, NZDUSD, XAUUSD",
-        "wib":  "07:00–10:00 WIB",
-        "ict":  "Asia sets the range. London will sweep it. "
-                "Look for equal highs/lows forming = liquidity being built."
-    },
-    7: {
-        "name": "London", "icon": "🇬🇧",
-        "pairs": "EURUSD, GBPUSD, XAUUSD, USDCAD",
-        "wib":  "14:00–17:00 WIB",
-        "ict":  "London Kill Zone. Expect manipulation of Asia range first "
-                "(sweep of highs or lows), then true institutional move begins. "
-                "Watch for CHoCH on M15 post-sweep = entry signal."
-    },
-    13: {
-        "name": "New York", "icon": "🗽",
-        "pairs": "EURUSD, GBPUSD, XAUUSD, USDJPY, BTCUSDT",
-        "wib":  "20:00–23:00 WIB",
-        "ict":  "NY Kill Zone. Highest volume, clearest moves. "
-                "Continuation of London or full reversal. "
-                "Look for NY Open Rejection / AM Kill Zone entries at OB/FVG."
-    },
-}
-
-
-def send_session_brief():
-    now  = datetime.now(timezone.utc)
-    hour = now.hour
-    if hour not in SESSION_BRIEFS:
-        return
-    if now.minute > 5:
-        return   # Only fire within the first 5 min of the session hour
-
-    s = SESSION_BRIEFS[hour]
-    brief_id = f"BRIEF_{s['name']}_{now.strftime('%Y-%m-%d')}"
-    if brief_id in reported_alerts:
-        return
-
-    # Fetch upcoming events in next 4 hours
-    upcoming_lines = ""
-    url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
-    try:
-        events = requests.get(url, timeout=10).json()
-        cnt = 0
-        for e in events:
-            try:
-                et   = datetime.strptime(e["date"], "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=None)
-                diff = (et - now.replace(tzinfo=None)).total_seconds() / 3600
-                if 0 <= diff <= 4 and e.get("impact", "").upper() in ("HIGH", "MEDIUM"):
-                    imp_icon = "🔴" if e.get("impact","").upper() == "HIGH" else "🟡"
-                    wib = (et + timedelta(hours=7)).strftime("%H:%M WIB")
-                    upcoming_lines += f"{imp_icon} `{wib}` *{e['title']}*  ({e.get('currency', e.get('country',''))})\n"
-                    cnt += 1
-                    if cnt >= 5:
-                        break
-            except Exception:
-                pass
-    except Exception:
-        pass
-
-    upcoming_block = f"\n📅 *Upcoming Events (next 4h):*\n{upcoming_lines}" if upcoming_lines else ""
-
-    body = (
-        f"{s['icon']} *{s['name'].upper()} SESSION OPEN*\n"
-        f"🕒 {s['wib']}\n"
-        f"━━━━━━━━━━━━━━━━\n"
-        f"📊 *Active Pairs:* {s['pairs']}\n\n"
-        f"🧠 *ICT Note:*\n_{s['ict']}_"
-        f"{upcoming_block}\n\n"
-        f"_Trade smart. No FOMO. — Freedom Syndicate_"
-    )
-
-    send_news(
-        f"{s['icon']} {s['name']} Session Brief", body,
-        s["icon"], impact="MEDIUM", category="session_brief"
-    )
-    reported_alerts.add(brief_id)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  GEOPOLITICAL INTEL — KEYWORDS
-# ══════════════════════════════════════════════════════════════════════════════
-HIGH_GEO_KEYS = [
-    "war", "nuclear", "missile", "attack", "invasion", "explosion", "airstrike",
-    "bomb", "drone attack", "coup", "collapse", "bank collapse", "default",
-    "fed rate", "fomc", "cpi", "nfp", "rate hike", "rate cut", "emergency",
-]
-MED_GEO_KEYS = [
-    "sanctions", "tariff", "trade war", "inflation", "recession", "opec",
-    "oil cut", "gdp", "rate decision", "debt ceiling", "geopolitical",
-    "ceasefire", "negotiation", "tension",
-]
-ALL_GEO_KEYS = HIGH_GEO_KEYS + MED_GEO_KEYS + [
-    "trump", "biden", "xi jinping", "putin", "zelensky", "netanyahu",
-    "iran", "israel", "ukraine", "russia", "china", "taiwan", "north korea",
-    "saudi arabia", "opec", "oil", "gold", "xau", "fed", "ecb", "boj",
-]
-
-
-def _classify_geo(title: str) -> tuple:
-    tl = title.lower()
-    if any(k in tl for k in HIGH_GEO_KEYS):
-        return "HIGH", "🚨", "GEOPOLITICAL"
-    if any(k in tl for k in MED_GEO_KEYS):
-        return "MEDIUM", "⚡", "GEOPOLITICAL"
-    return "LOW", "🌍", "GEOPOLITICAL"
-
-
-# ── Source 1: CryptoPanic ──────────────────────────────────────────────────────
-def check_cryptopanic():
+def check_global_intel():
     url = "https://cryptopanic.com/api/v1/posts/?kind=news&public=true"
     try:
         res = requests.get(url, timeout=10).json()
-    except Exception as e:
-        print(f"    ✗ CryptoPanic: {e}")
-        return
-
-    for post in res.get("results", [])[:25]:
-        pid = str(post.get("id", ""))
-        if pid in reported_alerts:
-            continue
-
-        title_en = post.get("title", "")
-        if not any(k in title_en.lower() for k in ALL_GEO_KEYS):
-            continue
-
-        title_id   = translate(title_en)
-        source_dom = post.get("source", {}).get("domain", "cryptopanic")
-        url_post   = post.get("url", "")
-        img        = (post.get("metadata") or {}).get("image")
-
-        impact, icon, cat = _classify_geo(title_en)
-
-        body = (
-            f"🇮🇩 *{title_id}*\n\n"
-            f"🇺🇸 _{title_en}_\n\n"
-            f"📰 *Source:* {source_dom}\n"
-            f"🔗 [Baca selengkapnya]({url_post})"
-        )
-
-        send_news("🌍 GLOBAL INTEL", body, icon, image_url=img, impact=impact, category=cat)
-        reported_alerts.add(pid)
-        time.sleep(2)
-
-
-# ── Source 2: RSS Feed (BBC / Reuters-style) ───────────────────────────────────
-RSS_FEEDS = [
-    ("BBC World", "https://feeds.bbci.co.uk/news/world/rss.xml"),
-    ("BBC Business", "https://feeds.bbci.co.uk/news/business/rss.xml"),
-]
-
-
-def _parse_rss_items(xml: str) -> list:
-    """Minimal RSS parser without feedparser dependency."""
-    items = []
-    for chunk in xml.split("<i        events = requests.get(url, timeout=10).json()
-        now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
-        
-        for event in events:
-            e_time = datetime.strptime(event['date'], '%Y-%m-%dT%H:%M:%S%z').replace(tzinfo=None)
-            diff = (e_time - now_utc).total_seconds() / 60
-            impact = event['impact'].upper()
-            
-            # 1. TRIGGER ALARM SEMUA IMPACT (H-5 & H-1)
-            if (1 <= diff <= 1.5) or (5 <= diff <= 5.5):
-                alert_id = f"ALARM_{event['title']}_{event['date']}_{int(diff)}"
-                if alert_id not in reported_alerts:
-                    wib = (e_time + timedelta(hours=7)).strftime('%H:%M')
-                    icon = "🔴" if "HIGH" in impact else "🟡" if "MEDIUM" in impact else "🟢"
-                    txt = f"⚡ **NEWS ALARM: {int(diff)} MENIT LAGI**\n\n🔥 **DATA:** {event['title']}\n🏛️ **CURR:** {event['country']} | **IMPACT:** {impact}\n🕒 **WAKTU WIB:** {wib}\n\n⚠️ *SYNDICATE READY!*"
-                    send_alert("OMNISCIENCE RADAR", txt, icon, impact=impact)
-                    reported_alerts.add(alert_id)
-
-            # 2. TRIGGER LIVE RESULT SEMUA IMPACT (ACTUAL DATA)
-            # Dicek dari menit ke-0 sampai 5 menit setelah rilis
-            if (-5 <= diff <= 0):
-                res_id = f"RESULT_{event['title']}_{event['date']}"
-                if res_id not in reported_alerts:
-                    # Hanya kirim jika data 'actual' sudah keluar dari server
-                    actual = event.get('actual')
-                    if actual:
-                        forecast = event.get('forecast', 'N/A')
-                        previous = event.get('previous', 'N/A')
-                        icon = "📊"
-                        
-                        txt = (f"📈 **DATA RELEASED: {event['title']}**\n"
-                               f"━━━━━━━━━━━━━━━━━━━━\n"
-                               f"📌 **Actual:** `{actual}`\n"
-                               f"🎯 **Forecast:** {forecast}\n"
-                               f"📜 **Previous:** {previous}\n"
-                               f"━━━━━━━━━━━━━━━━━━━━\n"
-                               f"🏛️ **Curr:** {event['country']} | **Impact:** {impact}\n"
-                               f"#{event['country']} #Gold #Forex")
-                        send_alert("SUPREME DATA RESULT", txt, icon, impact=impact)
-                        reported_alerts.add(res_id)
-    except: pass
-
-def check_global_intel():
-    """RADAR GEOPOLITIK BRUTAL"""
-    url = "https://cryptopanic.com/api/v1/posts/?kind=news"
-    try:
-        res = requests.get(url, timeout=10).json()
-        for post in res['results'][:15]:
-            if post['id'] not in reported_alerts:
-                title_en = post['title']
+        for post in res.get("results", [])[:15]:
+            pid = str(post.get("id", ""))
+            if pid not in reported_alerts:
+                title_en = post.get("title", "")
                 keys = ['trump', 'war', 'iran', 'israel', 'oil', 'fed', 'fomc', 'cpi', 'ppi', 'missile', 'nuclear', 'attack', 'china', 'russia', 'gold', 'xau']
-                
                 if any(k in title_en.lower() for k in keys):
-                    try: indo = translator.translate(title_en)
-                    except: indo = title_en
+                    title_id = translate(title_en)
                     img = post.get('metadata', {}).get('image')
-                    
-                    pesan = (f"🌍 **BREAKING GLOBAL NEWS**\n\n"
-                             f"🇮🇩 **INDO:** {indo}\n\n"
+                    body = (f"🌍 **BREAKING GLOBAL NEWS**\n\n"
+                             f"🇮🇩 **INDO:** {title_id}\n\n"
                              f"🇺🇸 **ORIG:** {title_en}\n\n"
                              f"🔗 [BACA DETAIL]({post['url']})")
-                    
-                    send_alert("MARKET BREAKER", pesan, "💥", image_url=img, impact="HIGH")
-                    reported_alerts.add(post['id'])
+                    send_news("🌍 GLOBAL INTEL", body, "💥", image_url=img, impact="HIGH", category="geopolitical")
+                    reported_alerts.add(pid)
     except: pass
 
 if __name__ == "__main__":
-    send_alert("SYSTEM SUPREME ONLINE", "V10 FULL DATA AKTIF!\n\n✅ Alarm 🟢🟡🔴 (H-5 & H-1)\n✅ Live Result (Actual/Forecast/Prev)\n✅ Geopolitik Visual\n✅ Auto-Clean Memory", "🦅", impact="MEDIUM")
+    # FIX: Notifikasi Aktif Terpusat ke Telegram, Discord & Website
+    send_news(
+        title="SYSTEM SUPREME ONLINE",
+        body="V11 FULL DATA AKTIF!\n\n✅ Alarm 🟢🟡🔴 (H-15, H-5 & H-1)\n✅ Live Result (Actual/Forecast/Prev)\n✅ Geopolitik Visual\n✅ Auto-Clean Memory",
+        icon="🦅",
+        impact="SYSTEM",
+        category="system"
+    )
+    
     while True:
         check_economic_calendar()
         check_global_intel()
