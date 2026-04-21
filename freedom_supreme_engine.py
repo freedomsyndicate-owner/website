@@ -296,26 +296,70 @@ def calculate_ict_sltp(pair, direction, entry, atr, indicators):
 
 def send_to_all(msg, category="signal", data=None):
     """Broadcast ke Telegram, Discord, dan Firebase"""
-    # Telegram
+
+    # ── Telegram ────────────────────────────────────────────────────────────────
     token = TOKEN_TG_PREDATOR if category == "signal" else TOKEN_TG_SUPREME
     try:
-        requests.post(f"https://api.telegram.org/bot{token}/sendMessage", 
-                      json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_GENERAL, 
-                            "text": msg, "parse_mode": "Markdown"}, timeout=10)
-    except: pass
+        r = requests.post(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_GENERAL,
+                  "text": msg, "parse_mode": "Markdown"},
+            timeout=10
+        )
+        if not r.ok:
+            print(f"⚠️ Telegram [{category}] error {r.status_code}: {r.text[:200]}")
+    except Exception as e:
+        print(f"❌ Telegram [{category}] exception: {e}")
 
-    # Discord
+    # ── Discord ─────────────────────────────────────────────────────────────────
+    # Discord limit: 2000 char untuk content biasa → pakai Embed agar aman sampai 4096 char
     webhook = DISCORD_PREDATOR if category == "signal" else DISCORD_FUNDA
-    try:
-        requests.post(webhook, json={"content": msg}, timeout=10)
-    except: pass
 
-    # Web (Firebase)
+    # Pilih warna embed berdasarkan kategori & isi pesan
+    if category == "signal":
+        color = 0x00FF99 if "BUY" in msg else 0xFF4444   # Hijau = BUY, Merah = SELL
+    else:
+        # Fundamental: merah = HIGH, kuning = MEDIUM, hijau = LOW
+        if "HIGH" in msg:   color = 0xFF0000
+        elif "MEDIUM" in msg: color = 0xFFAA00
+        else:               color = 0x00CC44
+
+    # Bersihkan Telegram Markdown agar bisa dibaca di Discord
+    discord_msg = (msg
+        .replace("*", "**")        # Telegram *bold* → Discord **bold**
+        .replace("`", "`")         # backtick tetap sama
+    )
+
+    # Potong jika masih terlalu panjang (embed description max 4096)
+    if len(discord_msg) > 4096:
+        discord_msg = discord_msg[:4090] + "\n..."
+
+    embed_payload = {
+        "embeds": [{
+            "description": discord_msg,
+            "color": color,
+            "footer": {"text": f"Freedom Syndicate • {datetime.now(WIB).strftime('%H:%M WIB')}"}
+        }]
+    }
+
+    try:
+        r = requests.post(webhook, json=embed_payload, timeout=10)
+        if not r.ok:
+            print(f"⚠️ Discord [{category}] error {r.status_code}: {r.text[:200]}")
+        else:
+            print(f"✅ Discord [{category}] terkirim.")
+    except Exception as e:
+        print(f"❌ Discord [{category}] exception: {e}")
+
+    # ── Web (Firebase) ──────────────────────────────────────────────────────────
     if data:
         path = "signals/ict" if category == "signal" else "signals/fundamental"
         try:
-            requests.post(f"{FIREBASE_URL}/{path}.json", json=data, timeout=10)
-        except: pass
+            r = requests.post(f"{FIREBASE_URL}/{path}.json", json=data, timeout=10)
+            if not r.ok:
+                print(f"⚠️ Firebase [{category}] error {r.status_code}: {r.text[:100]}")
+        except Exception as e:
+            print(f"❌ Firebase [{category}] exception: {e}")
 
 # ─── MAIN RUNNER ────────────────────────────────────────────────────────────────
 
@@ -399,17 +443,17 @@ def run_freedom_engine():
                             continue
 
                         sig_msg = (
-                            f"🦅 *PREDATOR SIGNAL: {pair}* 🦅\n"
+                            f"🦅 *GLOBAL SIGNAL: {pair}* 🦅\n"
                             f"━━━━━━━━━━━━━━━━━━━━━━━\n"
                             f"🔥 *Logic:* {logic}\n"
                             f"📥 *Action:* {direction}\n"
-                            f"🎯 *Entry:* `{entry:.{cfg['dec']}f}`\n"
-                            f"🛑 *SL:* `{sl:.{cfg['dec']}f}` | 🏆 *TP:* `{tp:.{cfg['dec']}f}`\n\n"
+                            f"🎯 *Price:* `{entry:.{cfg['dec']}f}`\n"
+                            f"🛑 *SL:* `{sl:.{cfg['dec']}f}` | 🎯 *TP:* `{tp:.{cfg['dec']}f}`\n\n"
                             f"📊 *ICT Zone Analysis:*\n{ict_text}\n\n"
                             f"📐 *SL/TP Structure:*\n• {zone_info}\n"
                             f"━━━━━━━━━━━━━━━━━━━━━━━\n"
-                            f"🏛 *Market:* {cfg['ex']} | 🕐 {get_killzone()}\n"
-                            f"_Freedom Syndicate | {datetime.now(WIB).strftime('%H:%M WIB')}_"
+                            f"🏛 *Market:* {cfg['ex']} | 🕐 *Macro Status:* ACTIVE\n"
+                            f"⏰ *Update:* {datetime.now(WIB).strftime('%H:%M:%S WIB')}"
                         )
                         
                         send_to_all(sig_msg, category="signal", data={"pair": pair, "entry": entry, "tp": tp, "sl": sl})
