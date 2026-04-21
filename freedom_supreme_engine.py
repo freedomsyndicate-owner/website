@@ -294,8 +294,12 @@ def calculate_ict_sltp(pair, direction, entry, atr, indicators):
     return raw_sl, raw_tp, sl_distance, rr_actual, zone_info
 
 
-def send_to_all(msg, category="signal", data=None):
-    """Broadcast ke Telegram, Discord, dan Firebase"""
+def send_to_all(tg_msg, category="signal", data=None, discord_msg=None):
+    """
+    Broadcast ke Telegram, Discord, dan Firebase.
+    tg_msg      = pesan lengkap untuk Telegram
+    discord_msg = pesan pendek untuk Discord (opsional; jika None pakai tg_msg)
+    """
 
     # ── Telegram ────────────────────────────────────────────────────────────────
     token = TOKEN_TG_PREDATOR if category == "signal" else TOKEN_TG_SUPREME
@@ -303,47 +307,38 @@ def send_to_all(msg, category="signal", data=None):
         r = requests.post(
             f"https://api.telegram.org/bot{token}/sendMessage",
             json={"chat_id": CHAT_ID_TG, "message_thread_id": TOPIC_ID_GENERAL,
-                  "text": msg, "parse_mode": "Markdown"},
+                  "text": tg_msg, "parse_mode": "Markdown"},
             timeout=10
         )
         if not r.ok:
             print(f"⚠️ Telegram [{category}] error {r.status_code}: {r.text[:200]}")
+        else:
+            print(f"✅ Telegram [{category}] terkirim.")
     except Exception as e:
         print(f"❌ Telegram [{category}] exception: {e}")
 
     # ── Discord ─────────────────────────────────────────────────────────────────
-    # Discord limit: 2000 char untuk content biasa → pakai Embed agar aman sampai 4096 char
-    webhook = DISCORD_PREDATOR if category == "signal" else DISCORD_FUNDA
+    webhook  = DISCORD_PREDATOR if category == "signal" else DISCORD_FUNDA
+    d_text   = discord_msg if discord_msg else tg_msg   # Pakai versi pendek jika ada
 
-    # Pilih warna embed berdasarkan kategori & isi pesan
+    # Warna embed: signal hijau/merah, fundamental sesuai impact
     if category == "signal":
-        color = 0x00FF99 if "BUY" in msg else 0xFF4444   # Hijau = BUY, Merah = SELL
+        color = 0x00FF99 if "BUY" in d_text else 0xFF4444
     else:
-        # Fundamental: merah = HIGH, kuning = MEDIUM, hijau = LOW
-        if "HIGH" in msg:   color = 0xFF0000
-        elif "MEDIUM" in msg: color = 0xFFAA00
-        else:               color = 0x00CC44
+        if "HIGH" in d_text:    color = 0xFF0000
+        elif "MEDIUM" in d_text: color = 0xFFAA00
+        else:                   color = 0x00CC44
 
-    # Bersihkan Telegram Markdown agar bisa dibaca di Discord
-    discord_msg = (msg
-        .replace("*", "**")        # Telegram *bold* → Discord **bold**
-        .replace("`", "`")         # backtick tetap sama
-    )
-
-    # Potong jika masih terlalu panjang (embed description max 4096)
-    if len(discord_msg) > 4096:
-        discord_msg = discord_msg[:4090] + "\n..."
-
-    embed_payload = {
-        "embeds": [{
-            "description": discord_msg,
-            "color": color,
-            "footer": {"text": f"Freedom Syndicate • {datetime.now(WIB).strftime('%H:%M WIB')}"}
-        }]
-    }
+    # Potong jika melebihi batas embed Discord (4096 char)
+    if len(d_text) > 4096:
+        d_text = d_text[:4090] + "\n..."
 
     try:
-        r = requests.post(webhook, json=embed_payload, timeout=10)
+        r = requests.post(
+            webhook,
+            json={"content": d_text},   # plain text, pendek, pasti < 2000 char
+            timeout=10
+        )
         if not r.ok:
             print(f"⚠️ Discord [{category}] error {r.status_code}: {r.text[:200]}")
         else:
@@ -442,7 +437,14 @@ def run_freedom_engine():
                             print(f"⛔ {pair} signal ditolak — {zone_info}")
                             continue
 
-                        sig_msg = (
+                        # ── Buat short logic label untuk Discord ─────────────
+                        if proto == "AMDX":
+                            short_logic = f"AMDX: MANIPULATION {'LOW' if direction == 'BUY' else 'HIGH'} (JUDAS)"
+                        else:
+                            short_logic = f"XAMD: EXPANSION {'BULLISH' if direction == 'BUY' else 'BEARISH'}"
+
+                        # ── Telegram: pesan LENGKAP (detail ICT) ─────────────
+                        tg_msg = (
                             f"🦅 *GLOBAL SIGNAL: {pair}* 🦅\n"
                             f"━━━━━━━━━━━━━━━━━━━━━━━\n"
                             f"🔥 *Logic:* {logic}\n"
@@ -455,8 +457,24 @@ def run_freedom_engine():
                             f"🏛 *Market:* {cfg['ex']} | 🕐 *Macro Status:* ACTIVE\n"
                             f"⏰ *Update:* {datetime.now(WIB).strftime('%H:%M:%S WIB')}"
                         )
+
+                        # ── Discord: pesan PENDEK seperti gambar signal-market ─
+                        disc_msg = (
+                            f"🦅 GLOBAL SIGNAL: {pair} 🦅\n"
+                            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+                            f"🔥 Logic: {short_logic}\n"
+                            f"📥 Action: {direction}\n"
+                            f"🎯 Price: {entry:.{cfg['dec']}f}\n"
+                            f"🛑 SL: {sl:.{cfg['dec']}f} | 🎯 TP: {tp:.{cfg['dec']}f}\n"
+                            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+                            f"🏛 Market: {cfg['ex']}\n"
+                            f"🕐 Macro Status: ACTIVE\n"
+                            f"⏰ Update: {datetime.now(WIB).strftime('%H:%M:%S WIB')}"
+                        )
                         
-                        send_to_all(sig_msg, category="signal", data={"pair": pair, "entry": entry, "tp": tp, "sl": sl})
+                        send_to_all(tg_msg, category="signal",
+                                    data={"pair": pair, "entry": entry, "tp": tp, "sl": sl},
+                                    discord_msg=disc_msg)
                         time.sleep(30) # Anti-spam antar pair
 
                 except Exception as e:
