@@ -515,10 +515,14 @@
 
     function setupTracker() { 
         if(!curUser) return;
+        // Tulis ke members setiap kali login agar Registered terhitung
+        rtdb.ref('members/' + curUser.uid).set({ email: curUser.email });
         const pRef = rtdb.ref('presence/' + curUser.uid); 
         rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); } }); 
+        // Online = hitung node presence (auto hapus saat disconnect)
         rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); 
-        rtdb.ref('users').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
+        // Registered = hitung node members (permanen, bertambah tiap user login)
+        rtdb.ref('members').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
     }
     
     function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
@@ -612,7 +616,7 @@
                 if (s.entry_low && s.entry_high) {
                     entryVal = `<div style="font-size:8px;line-height:1.5">${fmt(s.entry_low)}<br><span style="color:#4b5563">–</span><br>${fmt(s.entry_high)}</div>`;
                 } else {
-                    const raw = s.price || s.entry || s.zone_entry || null;
+                    const raw = s.price || s.entry || s.entry_price || s.entry_zone || s.zone_entry || s.zone || s.level || s.open_price || null;
                     entryVal = fmt(raw);
                 }
 
@@ -640,10 +644,7 @@
                         <div class="ict-level-item tp-item"><div class="lbl">TP1</div><div class="val">${fmt(s.tp1)}</div></div>
                         <div class="ict-level-item tp-item"><div class="lbl">TP2</div><div class="val">${fmt(s.tp2)}</div></div>
                     </div>
-                    ${targetLabel || slLabel ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;">
-                        ${targetLabel ? `<span style="background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);border-radius:4px;font-size:7px;padding:2px 6px;font-family:'Orbitron'">${targetLabel}</span>` : ''}
-                        ${slLabel ? `<span style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2);border-radius:4px;font-size:7px;padding:2px 6px;font-family:'Orbitron'">${slLabel}</span>` : ''}
-                    </div>` : ''}
+
                     ${reasons ? `<div class="ict-reasons"><span style="font-family:'Orbitron';font-size:7px;color:#38bdf8;letter-spacing:1px;">📋 ALASAN ENTRY</span><br>${reasons}</div>` : ''}
                     <div class="ict-footer">
                         <span>HTF: ${s.trend_htf || 'N/A'} ${s.kill_zone ? '· ⏰ '+s.kill_zone : ''}</span>
