@@ -1026,6 +1026,134 @@ def send_news(msg, data=None):
 # MAIN RUNNER
 # ══════════════════════════════════════════════════════════════
 
+def send_startup_notification():
+    """
+    Kirim pesan startup ke Telegram + Discord (kedua channel)
+    saat bot pertama kali dijalankan.
+    """
+    now_str  = datetime.now(WIB).strftime('%d %b %Y  %H:%M:%S WIB')
+    session  = get_session_info()
+
+    # Jadwal window berikutnya
+    wait_min  = minutes_until_next_window()
+    if session['is_active']:
+        window_status = f"✅ *{session['killzone']}* — Bot langsung scan!"
+    else:
+        wake_at = (datetime.now(WIB) + timedelta(minutes=wait_min)).strftime('%H:%M WIB')
+        window_status = f"💤 OFF-WINDOW — Bot scan saat *{wake_at}*"
+
+    # ── TELEGRAM — satu pesan ke kedua bot (Predator + Supreme) ──
+    tg_msg = (
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"🦅  *FREEDOM SYNDICATE ONLINE*  🦅\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"✅ *Bot berhasil diaktifkan!*\n"
+        f"🕐 Waktu: `{now_str}`\n\n"
+        f"📡 *Mode:* PURE ICT — Zero Oscillators\n"
+        f"🔬 *Konfirmasi:* CISD · FVG · BSL/SSL Sweep · P/D Zone\n"
+        f"🔀 *SMT:* XAUUSD/XAUEUR · GBP/EUR · BTC/ETH\n\n"
+        f"🗓 *Jadwal Killzone (WIB):*\n"
+        f"   🗡️ Asia KZ       : 07:00 – 11:00\n"
+        f"   🗡️ London KZ     : 13:00 – 16:00\n"
+        f"   🗡️ NY AM KZ      : 20:30 – 22:00\n"
+        f"   🗡️ NY PM KZ      : 01:00 – 03:00\n\n"
+        f"🥈 *Silver Bullet (WIB):*\n"
+        f"   London SB  : 14:00 – 15:00\n"
+        f"   NY AM SB   : 21:00 – 22:00\n"
+        f"   NY PM SB   : 01:00 – 02:00\n\n"
+        f"📊 *Status Saat Ini:*\n"
+        f"   {window_status}\n"
+        f"   📅 AMDX: {session['phase']}\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"_Signal hanya dikirim saat Killzone / Silver Bullet aktif._"
+    )
+
+    for token in [TOKEN_TG_PREDATOR, TOKEN_TG_SUPREME]:
+        try:
+            r = requests.post(
+                f"https://api.telegram.org/bot{token}/sendMessage",
+                json={
+                    "chat_id":           CHAT_ID_TG,
+                    "message_thread_id": TOPIC_ID_GENERAL,
+                    "text":              tg_msg,
+                    "parse_mode":        "Markdown",
+                },
+                timeout=10,
+            )
+            status = "✅" if r.ok else f"⚠️ {r.status_code}"
+            print(f"  Telegram startup [{token[:20]}...]: {status}")
+        except Exception as e:
+            print(f"  ❌ Telegram startup error: {e}")
+        time.sleep(1)
+
+    # ── DISCORD SIGNAL channel (PREDATOR) ─────────────────────
+    disc_signal_msg = {
+        "embeds": [{
+            "title": "🦅  FREEDOM SYNDICATE — BOT ONLINE",
+            "description": (
+                f"✅ **Bot Signal aktif dan siap scan!**\n"
+                f"🕐 `{now_str}`\n\n"
+                f"**Mode:** PURE ICT · Zero Oscillators\n"
+                f"**Pairs:** XAUUSD · GBPUSD · EURUSD · USDJPY · BTCUSDT\n"
+                f"**Konfirmasi:** CISD · FVG · BSL/SSL Sweep · Premium/Discount\n"
+                f"**SMT:** XAUUSD/XAUEUR · GBP/EUR · BTC/ETH\n\n"
+                f"**Killzone (WIB):**\n"
+                f"```\n"
+                f"🗡️ Asia KZ     07:00 – 11:00\n"
+                f"🗡️ London KZ   13:00 – 16:00\n"
+                f"🗡️ NY AM KZ    20:30 – 22:00\n"
+                f"🗡️ NY PM KZ    01:00 – 03:00\n"
+                f"```\n"
+                f"**Silver Bullet (WIB):**\n"
+                f"```\n"
+                f"🥈 London SB   14:00 – 15:00\n"
+                f"🥈 NY AM SB    21:00 – 22:00\n"
+                f"🥈 NY PM SB    01:00 – 02:00\n"
+                f"```\n"
+                f"**Status:** {session['killzone']}\n"
+                f"**AMDX Phase:** {session['phase']}\n\n"
+                f"*Signal hanya dikirim saat Killzone / Silver Bullet aktif.*"
+            ),
+            "color": 0x00FF88,
+            "footer": {"text": f"Freedom Syndicate Supreme v4  •  {now_str}"}
+        }]
+    }
+
+    # ── DISCORD FUNDAMENTAL channel (SUPREME/FUNDA) ───────────
+    disc_funda_msg = {
+        "embeds": [{
+            "title": "🦅  FREEDOM SYNDICATE — FUNDAMENTAL RADAR ONLINE",
+            "description": (
+                f"✅ **Fundamental Radar aktif!**\n"
+                f"🕐 `{now_str}`\n\n"
+                f"**Fungsi channel ini:**\n"
+                f"📋 Alert berita ekonomi High/Medium/Low impact\n"
+                f"⚠️ Peringatan 1 jam sebelum news dirilis\n"
+                f"🏛️ Mata uang yang dipantau: USD · EUR · GBP · JPY\n\n"
+                f"**Sumber data:** ForexFactory Calendar\n"
+                f"**Anti-spam:** Setiap event hanya dikirim 1x\n\n"
+                f"*Bot akan alert otomatis saat ada berita high impact.*"
+            ),
+            "color": 0xFFAA00,
+            "footer": {"text": f"Freedom Syndicate Supreme v4  •  {now_str}"}
+        }]
+    }
+
+    for webhook, payload, label in [
+        (DISCORD_PREDATOR, disc_signal_msg,  "Signal"),
+        (DISCORD_FUNDA,    disc_funda_msg,   "Fundamental"),
+    ]:
+        try:
+            r = requests.post(webhook, json=payload, timeout=10)
+            status = "✅" if r.ok else f"⚠️ {r.status_code}"
+            print(f"  Discord startup [{label}]: {status}")
+        except Exception as e:
+            print(f"  ❌ Discord startup [{label}] error: {e}")
+        time.sleep(1)
+
+    print(f"  📣 Startup notifications sent.\n")
+
+
 def run_freedom_engine():
     print(f"\n{'═'*62}")
     print(f"  🦅  {BOT_NAME}  —  SUPREME ENGINE v4.0")
@@ -1033,6 +1161,10 @@ def run_freedom_engine():
     print(f"  Sessions (WIB): Asia 07-11 | London 13-16 | NY 20:30-22")
     print(f"  Silver Bullet:  London 14-15 | NY AM 21-22 | NY PM 01-02")
     print(f"{'═'*62}\n")
+
+    # ── Kirim notifikasi startup ke semua platform ────────────
+    print(f"  📣 Mengirim notifikasi startup...")
+    send_startup_notification()
 
     while True:
         try:
