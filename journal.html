@@ -515,13 +515,18 @@
 
     function setupTracker() { 
         if(!curUser) return;
-        // Tulis ke members setiap kali login agar Registered terhitung
-        rtdb.ref('members/' + curUser.uid).set({ email: curUser.email });
+        // Tulis ke members setiap login → Registered bertambah
+        rtdb.ref('members/' + curUser.uid).set({ email: curUser.email, lastSeen: firebase.database.ServerValue.TIMESTAMP });
         const pRef = rtdb.ref('presence/' + curUser.uid); 
-        rtdb.ref('.info/connected').on('value', snap => { if (snap.val() === true) { pRef.set({ email: curUser.email, status: "online" }); pRef.onDisconnect().remove(); } }); 
-        // Online = hitung node presence (auto hapus saat disconnect)
+        rtdb.ref('.info/connected').on('value', snap => { 
+            if (snap.val() === true) { 
+                pRef.set({ email: curUser.email, status: "online", ts: firebase.database.ServerValue.TIMESTAMP }); 
+                pRef.onDisconnect().remove(); 
+            } 
+        }); 
+        // Online = hitung presence (auto hapus saat disconnect)
         rtdb.ref('presence').on('value', snap => { document.getElementById('online-users').innerText = snap.numChildren(); }); 
-        // Registered = hitung node members (permanen, bertambah tiap user login)
+        // Registered = hitung members (permanen, bertambah tiap ada user login)
         rtdb.ref('members').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
     }
     
@@ -611,27 +616,39 @@
                 const barColor = score >= 8 ? '#4ade80' : score >= 5 ? '#eab308' : '#ef4444';
                 const reasons = (s.reasons || []).slice(0, 4).map(r => `<span>•</span> ${r}`).join('<br>');
 
-                // Entry: support price, entry field, or zone range (entry_low / entry_high)
+                // Entry Zone: cek agresif/konfirm (dari bot FS), lalu range, lalu single value
                 let entryVal = '--';
-                if (s.entry_low && s.entry_high) {
+                if (s.agresif && s.konfirm) {
+                    entryVal = `<div style="font-size:8px;line-height:1.7"><span style="color:#eab308;font-size:7px">AGR</span> ${fmt(s.agresif)}<br><span style="color:#38bdf8;font-size:7px">KNF</span> ${fmt(s.konfirm)}</div>`;
+                } else if (s.agresif) {
+                    entryVal = fmt(s.agresif);
+                } else if (s.konfirm) {
+                    entryVal = fmt(s.konfirm);
+                } else if (s.entry_low && s.entry_high) {
                     entryVal = `<div style="font-size:8px;line-height:1.5">${fmt(s.entry_low)}<br><span style="color:#4b5563">–</span><br>${fmt(s.entry_high)}</div>`;
                 } else {
-                    const raw = s.price || s.entry || s.entry_price || s.entry_zone || s.zone_entry || s.zone || s.level || s.open_price || null;
+                    const raw = s.price || s.entry || s.entry_price || s.entry_zone || s.zone_entry || s.zone || s.level || s.market_price || s.open_price || null;
                     entryVal = fmt(raw);
                 }
 
-                // Keterangan: signal outcome target
-                const hasTP1 = s.tp1 && s.tp1 != 0;
-                const hasTP2 = s.tp2 && s.tp2 != 0;
-                const targetLabel = hasTP2 ? `🎯 Target TP1: ${fmt(s.tp1)} / TP2: ${fmt(s.tp2)}` : hasTP1 ? `🎯 Target TP1: ${fmt(s.tp1)}` : '';
-                const slLabel = s.sl ? `⚠️ SL: ${fmt(s.sl)}` : '';
+                // Format timestamp ke WIB
+                let timeDisplay = s.timestamp || '';
+                if (s.timestamp) {
+                    try {
+                        const d = new Date(s.timestamp);
+                        if (!isNaN(d)) {
+                            timeDisplay = d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', timeZone:'Asia/Jakarta'})
+                                        + ' · ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                        }
+                    } catch(e) {}
+                }
 
                 return `
                 <div class="ict-signal-card ${dir}">
                     <div class="ict-card-top">
                         <div>
                             <div class="ict-pair">${(s.pair||'--').replace('USD','<span>USD</span>')}</div>
-                            <div class="ict-time">${s.timestamp || ''}</div>
+                            <div class="ict-time">${timeDisplay}</div>
                         </div>
                         <div style="text-align:right">
                             <div class="ict-badge ${dir}">${dir === 'buy' ? '▲ BUY' : dir === 'sell' ? '▼ SELL' : '⏸ WAIT'}</div>
@@ -644,7 +661,6 @@
                         <div class="ict-level-item tp-item"><div class="lbl">TP1</div><div class="val">${fmt(s.tp1)}</div></div>
                         <div class="ict-level-item tp-item"><div class="lbl">TP2</div><div class="val">${fmt(s.tp2)}</div></div>
                     </div>
-
                     ${reasons ? `<div class="ict-reasons"><span style="font-family:'Orbitron';font-size:7px;color:#38bdf8;letter-spacing:1px;">📋 ALASAN ENTRY</span><br>${reasons}</div>` : ''}
                     <div class="ict-footer">
                         <span>HTF: ${s.trend_htf || 'N/A'} ${s.kill_zone ? '· ⏰ '+s.kill_zone : ''}</span>
@@ -689,13 +705,26 @@
                 const typeLabel   = type === 'result' ? 'LIVE RESULT' : type === 'geo' ? 'BREAKING NEWS' : 'ALARM';
                 const typeClass   = type === 'result' ? 'result' : type === 'geo' ? 'geo' : 'alarm';
 
-                // Derive event time from s.time, s.event_time, or timestamp
-                let eventTime = s.time || s.event_time || '';
+                // Derive event time: cek semua kemungkinan field nama
+                let eventTime = s.time || s.event_time || s.release_time || s.scheduled_time || s.event_date || '';
                 if (!eventTime && s.timestamp) {
                     try {
                         const d = new Date(s.timestamp);
-                        eventTime = d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                        if (!isNaN(d)) {
+                            eventTime = d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                        }
                     } catch(e) {}
+                }
+                // Format timestamp footer
+                let fundFooterTs = '';
+                if (s.timestamp) {
+                    try {
+                        const d = new Date(s.timestamp);
+                        if (!isNaN(d)) {
+                            fundFooterTs = d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric', timeZone:'Asia/Jakarta'})
+                                         + ' · ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                        }
+                    } catch(e) { fundFooterTs = s.timestamp; }
                 }
 
                 let dataRows = '';
@@ -735,7 +764,7 @@
                     <div class="fund-title">${s.title || 'News'}</div>
                     <div class="fund-body">${s.body || ''}</div>
                     ${dataRows}
-                    <div class="fund-time">${s.country ? '🏛️ '+s.country+' · ' : ''}${s.timestamp || ''}</div>
+                    <div class="fund-time">${s.country ? '🏛️ '+s.country+' · ' : ''}${fundFooterTs}</div>
                 </div>`;
             }).join('');
 
