@@ -587,40 +587,75 @@
             return;
         }
 
-        container.innerHTML = signals.map(s => {
-            const dir   = (s.direction || 'WAIT').toLowerCase();
-            const score = s.score || 0;
-            const pct   = Math.min(100, (score / 10) * 100);
-            const barColor = score >= 8 ? '#4ade80' : score >= 5 ? '#eab308' : '#ef4444';
-            const reasons = (s.reasons || []).slice(0, 4).map(r => `<span>•</span> ${r}`).join('<br>');
+        // Group signals by date
+        const groups = {};
+        signals.forEach(s => {
+            const dateKey = (s.timestamp || '').split('T')[0] || 'Unknown';
+            if (!groups[dateKey]) groups[dateKey] = [];
+            groups[dateKey].push(s);
+        });
+        const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
 
-            return `
-            <div class="ict-signal-card ${dir}">
-                <div class="ict-card-top">
-                    <div>
-                        <div class="ict-pair">${(s.pair||'--').replace('USD','<span>USD</span>')}</div>
-                        <div class="ict-time">${s.timestamp || ''}</div>
+        container.innerHTML = sortedDates.map(dateKey => {
+            let dateLabel = dateKey;
+            try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'}); } catch(e) {}
+
+            const cards = groups[dateKey].map(s => {
+                const dir   = (s.direction || 'WAIT').toLowerCase();
+                const score = s.score || 0;
+                const pct   = Math.min(100, (score / 10) * 100);
+                const barColor = score >= 8 ? '#4ade80' : score >= 5 ? '#eab308' : '#ef4444';
+                const reasons = (s.reasons || []).slice(0, 4).map(r => `<span>•</span> ${r}`).join('<br>');
+
+                // Entry: support price, entry field, or zone range (entry_low / entry_high)
+                let entryVal = '--';
+                if (s.entry_low && s.entry_high) {
+                    entryVal = `<div style="font-size:8px;line-height:1.5">${fmt(s.entry_low)}<br><span style="color:#4b5563">–</span><br>${fmt(s.entry_high)}</div>`;
+                } else {
+                    const raw = s.price || s.entry || s.zone_entry || null;
+                    entryVal = fmt(raw);
+                }
+
+                // Keterangan: signal outcome target
+                const hasTP1 = s.tp1 && s.tp1 != 0;
+                const hasTP2 = s.tp2 && s.tp2 != 0;
+                const targetLabel = hasTP2 ? `🎯 Target TP1: ${fmt(s.tp1)} / TP2: ${fmt(s.tp2)}` : hasTP1 ? `🎯 Target TP1: ${fmt(s.tp1)}` : '';
+                const slLabel = s.sl ? `⚠️ SL: ${fmt(s.sl)}` : '';
+
+                return `
+                <div class="ict-signal-card ${dir}">
+                    <div class="ict-card-top">
+                        <div>
+                            <div class="ict-pair">${(s.pair||'--').replace('USD','<span>USD</span>')}</div>
+                            <div class="ict-time">${s.timestamp || ''}</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="ict-badge ${dir}">${dir === 'buy' ? '▲ BUY' : dir === 'sell' ? '▼ SELL' : '⏸ WAIT'}</div>
+                            <div style="font-size:8px;color:#6b7280;margin-top:4px;">${s.strength || ''}</div>
+                        </div>
                     </div>
-                    <div style="text-align:right">
-                        <div class="ict-badge ${dir}">${dir === 'buy' ? '▲ BUY' : dir === 'sell' ? '▼ SELL' : '⏸ WAIT'}</div>
-                        <div style="font-size:8px;color:#6b7280;margin-top:4px;">${s.strength || ''}</div>
+                    <div class="ict-levels">
+                        <div class="ict-level-item entry"><div class="lbl">Entry Zone</div><div class="val" style="font-size:9px">${entryVal}</div></div>
+                        <div class="ict-level-item sl-item"><div class="lbl">SL</div><div class="val">${fmt(s.sl)}</div></div>
+                        <div class="ict-level-item tp-item"><div class="lbl">TP1</div><div class="val">${fmt(s.tp1)}</div></div>
+                        <div class="ict-level-item tp-item"><div class="lbl">TP2</div><div class="val">${fmt(s.tp2)}</div></div>
                     </div>
-                </div>
-                <div class="ict-levels">
-                    <div class="ict-level-item entry"><div class="lbl">Entry</div><div class="val">${fmt(s.price)}</div></div>
-                    <div class="ict-level-item sl-item"><div class="lbl">SL</div><div class="val">${fmt(s.sl)}</div></div>
-                    <div class="ict-level-item tp-item"><div class="lbl">TP1</div><div class="val">${fmt(s.tp1)}</div></div>
-                    <div class="ict-level-item tp-item"><div class="lbl">TP2</div><div class="val">${fmt(s.tp2)}</div></div>
-                </div>
-                ${reasons ? `<div class="ict-reasons">${reasons}</div>` : ''}
-                <div class="ict-footer">
-                    <span>HTF: ${s.trend_htf || 'N/A'} ${s.kill_zone ? '· ⏰ '+s.kill_zone : ''}</span>
-                    <div class="ict-score">
-                        <span>Score ${score}/10</span>
-                        <div class="ict-score-bar"><div class="ict-score-fill" style="width:${pct}%;background:${barColor}"></div></div>
+                    ${targetLabel || slLabel ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;">
+                        ${targetLabel ? `<span style="background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);border-radius:4px;font-size:7px;padding:2px 6px;font-family:'Orbitron'">${targetLabel}</span>` : ''}
+                        ${slLabel ? `<span style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2);border-radius:4px;font-size:7px;padding:2px 6px;font-family:'Orbitron'">${slLabel}</span>` : ''}
+                    </div>` : ''}
+                    ${reasons ? `<div class="ict-reasons"><span style="font-family:'Orbitron';font-size:7px;color:#38bdf8;letter-spacing:1px;">📋 ALASAN ENTRY</span><br>${reasons}</div>` : ''}
+                    <div class="ict-footer">
+                        <span>HTF: ${s.trend_htf || 'N/A'} ${s.kill_zone ? '· ⏰ '+s.kill_zone : ''}</span>
+                        <div class="ict-score">
+                            <span>Score ${score}/10</span>
+                            <div class="ict-score-bar"><div class="ict-score-fill" style="width:${pct}%;background:${barColor}"></div></div>
+                        </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
+            }).join('');
+
+            return `<div><div style="font-family:'Orbitron';font-size:8px;color:#38bdf8;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);border-radius:8px;padding:6px 12px;margin:14px 0 8px;letter-spacing:1px;">📅 ${dateLabel}</div>${cards}</div>`;
         }).join('');
     }
 
@@ -633,37 +668,77 @@
             return;
         }
 
-        container.innerHTML = signals.map(s => {
-            const impact = (s.impact || 'LOW').toUpperCase();
-            const type   = (s.type || 'alarm').toLowerCase();
-            const impactClass = impact === 'HIGH' ? 'high' : impact === 'MEDIUM' ? 'medium' : 'low';
-            const typeLabel   = type === 'result' ? 'LIVE RESULT' : type === 'geo' ? 'BREAKING NEWS' : 'ALARM';
-            const typeClass   = type === 'result' ? 'result' : type === 'geo' ? 'geo' : 'alarm';
+        // Group signals by date
+        const groups = {};
+        signals.forEach(s => {
+            const rawDate = s.date || (s.timestamp || '').split('T')[0] || 'Unknown';
+            if (!groups[rawDate]) groups[rawDate] = [];
+            groups[rawDate].push(s);
+        });
+        const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
 
-            let dataRows = '';
-            if (s.actual) {
-                const beatMiss = s.actual && s.forecast
-                    ? (parseFloat(s.actual) > parseFloat(s.forecast) ? 'beat' : 'miss')
-                    : '';
-                dataRows = `
-                <div class="fund-data-row">
-                    <div class="fund-data-item"><div class="dlbl">Actual</div><div class="dval ${beatMiss}">${s.actual}</div></div>
-                    <div class="fund-data-item"><div class="dlbl">Forecast</div><div class="dval">${s.forecast || 'N/A'}</div></div>
-                    <div class="fund-data-item"><div class="dlbl">Previous</div><div class="dval">${s.previous || 'N/A'}</div></div>
+        container.innerHTML = sortedDates.map(dateKey => {
+            let dateLabel = dateKey;
+            try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'}); } catch(e) {}
+
+            const cards = groups[dateKey].map(s => {
+                const impact = (s.impact || 'LOW').toUpperCase();
+                const type   = (s.type || 'alarm').toLowerCase();
+                const impactClass = impact === 'HIGH' ? 'high' : impact === 'MEDIUM' ? 'medium' : 'low';
+                const typeLabel   = type === 'result' ? 'LIVE RESULT' : type === 'geo' ? 'BREAKING NEWS' : 'ALARM';
+                const typeClass   = type === 'result' ? 'result' : type === 'geo' ? 'geo' : 'alarm';
+
+                // Derive event time from s.time, s.event_time, or timestamp
+                let eventTime = s.time || s.event_time || '';
+                if (!eventTime && s.timestamp) {
+                    try {
+                        const d = new Date(s.timestamp);
+                        eventTime = d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                    } catch(e) {}
+                }
+
+                let dataRows = '';
+                if (s.actual !== undefined || s.forecast !== undefined || s.previous !== undefined) {
+                    const beatMiss = s.actual && s.forecast
+                        ? (parseFloat(s.actual) > parseFloat(s.forecast) ? 'beat' : 'miss')
+                        : '';
+                    dataRows = `
+                    <div class="fund-data-row">
+                        <div class="fund-data-item">
+                            <div class="dlbl">📊 BEFORE</div>
+                            <div class="dval">${s.forecast != null ? s.forecast : 'N/A'}</div>
+                            <div style="font-size:6px;color:#4b5563;margin-top:2px;">Forecast</div>
+                        </div>
+                        <div class="fund-data-item">
+                            <div class="dlbl">✅ AFTER</div>
+                            <div class="dval ${beatMiss}">${s.actual != null ? s.actual : 'N/A'}</div>
+                            <div style="font-size:6px;color:#4b5563;margin-top:2px;">Actual</div>
+                        </div>
+                        <div class="fund-data-item">
+                            <div class="dlbl">⏮ PREV</div>
+                            <div class="dval">${s.previous != null ? s.previous : 'N/A'}</div>
+                            <div style="font-size:6px;color:#4b5563;margin-top:2px;">Previous</div>
+                        </div>
+                    </div>`;
+                }
+
+                return `
+                <div class="fund-card ${impactClass}">
+                    <div class="fund-card-top">
+                        <span class="fund-type ${typeClass}">${typeLabel}</span>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            ${eventTime ? `<span style="font-family:'Orbitron';font-size:8px;color:#eab308;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.2);border-radius:4px;padding:2px 6px;">⏰ ${eventTime}</span>` : ''}
+                            <span class="fund-impact ${impact}">${impact}</span>
+                        </div>
+                    </div>
+                    <div class="fund-title">${s.title || 'News'}</div>
+                    <div class="fund-body">${s.body || ''}</div>
+                    ${dataRows}
+                    <div class="fund-time">${s.country ? '🏛️ '+s.country+' · ' : ''}${s.timestamp || ''}</div>
                 </div>`;
-            }
+            }).join('');
 
-            return `
-            <div class="fund-card ${impactClass}">
-                <div class="fund-card-top">
-                    <span class="fund-type ${typeClass}">${typeLabel}</span>
-                    <span class="fund-impact ${impact}">${impact}</span>
-                </div>
-                <div class="fund-title">${s.title || 'News'}</div>
-                <div class="fund-body">${s.body || ''}</div>
-                ${dataRows}
-                <div class="fund-time">${s.country ? '🏛️ '+s.country+' · ' : ''}${s.timestamp || ''}</div>
-            </div>`;
+            return `<div><div style="font-family:'Orbitron';font-size:8px;color:#38bdf8;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);border-radius:8px;padding:6px 12px;margin:14px 0 8px;letter-spacing:1px;">📅 ${dateLabel}</div>${cards}</div>`;
         }).join('');
     }
 
