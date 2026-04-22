@@ -113,122 +113,152 @@ def safe_ta(symbol, exchange, screener, interval):
 
 
 # ══════════════════════════════════════════════════════════════
-# ICT SESSION ENGINE (Proper UTC → WIB mapping)
+# ICT SESSION ENGINE — Referensi UTC-4 (New York Time) → WIB
+# ══════════════════════════════════════════════════════════════
+#
+#  Konversi: UTC-4 + 11 jam = WIB (UTC+7)
+#
+#  ┌─────────────────────────────────────────────────────────┐
+#  │  SESI           UTC-4           WIB (UTC+7)             │
+#  │  ─────────────────────────────────────────────────────  │
+#  │  Asia Session   20:00–00:00     07:00–11:00             │
+#  │  London Session 02:00–05:00     13:00–16:00  ← gambar   │
+#  │  NY AM Session  09:30–11:00     20:30–22:00  ← gambar   │
+#  │                                                         │
+#  │  ICT KILLZONES (prime window, reversal entry):          │
+#  │  Asia KZ        20:00–00:00     07:00–11:00             │
+#  │  London KZ      02:00–05:00     13:00–16:00             │
+#  │  NY AM KZ       09:30–11:00     20:30–22:00             │
+#  │  NY PM KZ       14:00–16:00     01:00–03:00             │
+#  │                                                         │
+#  │  ICT SILVER BULLET (ultra-high prob, 1-hour window):    │
+#  │  London SB      03:00–04:00     14:00–15:00             │
+#  │  NY AM SB       10:00–11:00     21:00–22:00             │
+#  │  NY PM SB       14:00–15:00     01:00–02:00             │
+#  │                                                         │
+#  │  ICT MACRO WINDOWS (90-min micro-cycle transition):     │
+#  │  London Open    02:33           13:33                   │
+#  │  London AM      04:03           15:03                   │
+#  │  NY Pre-Open    08:50–09:10     19:50–20:10             │
+#  │  NY AM ⚡       09:50–10:10     20:50–21:10 ← terkuat  │
+#  │  NY AM2         10:50–11:10     21:50–22:10             │
+#  │  NY PM          11:50–12:10     22:50–23:10             │
+#  │                                                         │
+#  │  AMDX DAILY (based on sesi):                            │
+#  │  A Accumulation 20:00–02:00 UTC-4  → 07:00–13:00 WIB   │
+#  │  M Manipulation 02:00–05:00 UTC-4  → 13:00–16:00 WIB   │
+#  │  D Distribution 05:00–09:30 UTC-4  → 16:00–20:30 WIB   │
+#  │  X eXpansion    09:30–16:00 UTC-4  → 20:30–03:00 WIB   │
+#  └─────────────────────────────────────────────────────────┘
+#
+#  BOT HANYA AKTIF saat Killzone ATAU Silver Bullet.
+#  Di luar window itu = TIDUR, tidak scan, tidak kirim signal.
 # ══════════════════════════════════════════════════════════════
 
+# Semua window dalam total menit sejak 00:00 WIB
+# Format: (start_min, end_min, label, priority)
+# priority: 3=Silver Bullet, 2=Killzone, 1=Macro only
+
+_WINDOWS = [
+    # ── Asia Killzone ──────────────────────────────────────────
+    (7*60,      11*60,     "ASIA KILLZONE",        2, "ASIA"),
+    # ── London Killzone ───────────────────────────────────────
+    (13*60,     16*60,     "LONDON KILLZONE",      2, "LONDON"),
+    # ── London Silver Bullet (dalam London KZ) ────────────────
+    (14*60,     15*60,     "LONDON SILVER BULLET", 3, "LONDON"),
+    # ── NY AM Killzone ────────────────────────────────────────
+    (20*60+30,  22*60,     "NY AM KILLZONE",       2, "NEW YORK"),
+    # ── NY AM Silver Bullet ───────────────────────────────────
+    (21*60,     22*60,     "NY AM SILVER BULLET",  3, "NEW YORK"),
+    # ── NY PM Killzone (lewat tengah malam) ───────────────────
+    (1*60,      3*60,      "NY PM KILLZONE",       2, "NEW YORK"),
+    # ── NY PM Silver Bullet ───────────────────────────────────
+    (1*60,      2*60,      "NY PM SILVER BULLET",  3, "NEW YORK"),
+]
+
+_MACROS = [
+    (13*60+33, 13*60+50, "LONDON OPEN MACRO"),
+    (15*60+3,  15*60+20, "LONDON AM MACRO"),
+    (19*60+50, 20*60+10, "NY PRE-OPEN MACRO"),
+    (20*60+50, 21*60+10, "NY AM MACRO ⚡"),
+    (21*60+50, 22*60+10, "NY AM2 MACRO"),
+    (22*60+50, 23*60+10, "NY PM MACRO"),
+]
+
+def _total_min():
+    now = datetime.now(WIB)
+    return now.hour * 60 + now.minute
+
+def minutes_until_next_window():
+    """
+    Hitung berapa menit sampai window Killzone/SB berikutnya.
+    Dipakai bot untuk tidur efisien, bukan polling tiap menit.
+    """
+    t = _total_min()
+    # Kumpulkan semua start time dari windows
+    starts = []
+    for s, e, lbl, pri, sess in _WINDOWS:
+        # Kalau window sudah lewat hari ini, tambah 1440 (besok)
+        starts.append(s if s > t else s + 1440)
+    next_start = min(starts)
+    wait = next_start - t
+    return max(wait, 1)
+
 def get_session_info():
-    """
-    ICT proper sessions & killzones.
-    
-    WIB = UTC+7. Semua jam di bawah dalam WIB:
+    """Return context sesi ICT saat ini."""
+    t = _total_min()
 
-    SESSION RANGES (WIB):
-      Asia:    07:00 – 14:00
-      London:  14:00 – 21:00
-      New York:19:00 – 04:00+1 (overlap London 19:00-21:00)
-      Dead:    04:00 – 07:00
+    # ── Cari window aktif tertinggi prioritasnya ──────────────
+    active_windows = [(pri, lbl, sess) for s, e, lbl, pri, sess in _WINDOWS if s <= t < e]
+    # Sort by priority desc
+    active_windows.sort(key=lambda x: x[0], reverse=True)
 
-    ICT KILLZONES (prime reversal/entry windows, WIB):
-      Asia KZ:    07:00 – 10:00
-      London KZ:  14:00 – 17:00 (London open = highest probability)
-      NY AM KZ:   19:00 – 22:00 (NY open = trend continuation/reversal)
-      NY PM KZ:   00:00 – 02:00 (NY close manipulation)
-
-    ICT SILVER BULLET WINDOWS (ultra-high probability, WIB):
-      London SB:  10:00 – 11:00 (03:00–04:00 UTC)
-      NY AM SB:   17:00 – 18:00 (10:00–11:00 UTC)
-      NY PM SB:   21:00 – 22:00 (14:00–15:00 UTC)
-
-    ICT MACRO WINDOWS (90-min cycle transitions, WIB):
-      09:33 – 10:00  | Asia Macro
-      11:03 – 11:30  | London Pre-Market Macro
-      15:50 – 16:10  | London Close Macro
-      16:50 – 17:10  | NY Pre-Open Macro
-      20:50 – 21:10  | NY AM Macro  ← Most powerful
-      22:50 – 23:10  | NY PM Macro
-
-    AMDX Daily Pattern (WIB):
-      A (Accumulation):  07:00–14:00 — Asia builds range
-      M (Manipulation):  14:00–16:00 — London sweeps Asia H/L (Judas Swing)
-      D (Distribution):  16:00–19:00 — Pre-NY setup
-      X (eXpansion):     19:00–03:00 — NY drives true direction
-    """
-    now      = datetime.now(WIB)
-    hr, mn   = now.hour, now.minute
-    total    = hr * 60 + mn
-
-    # ── Session ───────────────────────────────────────────────
-    if 7*60 <= total < 14*60:
-        session = "ASIA"
-        is_active = True
-    elif 14*60 <= total < 21*60:
-        session = "LONDON"
-        is_active = True
-    elif total >= 19*60 or total < 4*60:
-        session = "NEW YORK"
-        is_active = True
+    if active_windows:
+        priority, window_label, session = active_windows[0]
+        is_killzone  = priority >= 2
+        is_silver    = priority == 3
+        is_active    = True
     else:
-        session = "DEAD ZONE (04:00–07:00)"
-        is_active = False
+        window_label = "OFF-WINDOW"
+        session      = "OFF"
+        is_killzone  = False
+        is_silver    = False
+        is_active    = False
 
-    # ── Killzone ──────────────────────────────────────────────
-    if 7*60 <= total <= 10*60:
-        killzone = "🗡️ ASIA KILLZONE"
-    elif 14*60 <= total <= 17*60:
-        killzone = "🗡️ LONDON KILLZONE ⚡"
-    elif 19*60 <= total <= 22*60:
-        killzone = "🗡️ NY AM KILLZONE ⚡"
-    elif 0*60 <= total <= 2*60:
-        killzone = "🗡️ NY PM KILLZONE"
+    # Killzone icon
+    if is_silver:
+        kz_icon = f"🥈 SILVER BULLET: {window_label}"
+    elif is_killzone:
+        kz_icon = f"🗡️ KILLZONE: {window_label}"
     else:
-        killzone = "💤 OFF-KILLZONE"
+        kz_icon = "💤 OFF-WINDOW — Bot menunggu Killzone berikutnya"
 
-    # ── Silver Bullet ─────────────────────────────────────────
-    if 10*60 <= total <= 11*60:
-        silver = "🥈 LONDON SILVER BULLET 🥈"
-    elif 17*60 <= total <= 18*60:
-        silver = "🥈 NY AM SILVER BULLET 🥈"
-    elif 21*60 <= total <= 22*60:
-        silver = "🥈 NY PM SILVER BULLET 🥈"
-    else:
-        silver = None
-
-    # ── Macro Window ──────────────────────────────────────────
-    macros = [
-        (9*60+33,  10*60+0,   "ASIA MACRO"),
-        (11*60+3,  11*60+30,  "LONDON PRE-MARKET MACRO"),
-        (15*60+50, 16*60+10,  "LONDON CLOSE MACRO"),
-        (16*60+50, 17*60+10,  "NY PRE-OPEN MACRO"),
-        (20*60+50, 21*60+10,  "NY AM MACRO ⚡"),
-        (22*60+50, 23*60+10,  "NY PM MACRO"),
-    ]
-    macro = next((lbl for s, e, lbl in macros if s <= total <= e), None)
+    # ── Macro ─────────────────────────────────────────────────
+    macro = next((lbl for s, e, lbl in _MACROS if s <= t < e), None)
 
     # ── AMDX Phase ────────────────────────────────────────────
-    if 7*60 <= total < 14*60:
-        phase = "A — ACCUMULATION (Asia Range Building)"
-        amdx  = "A"
-    elif 14*60 <= total < 16*60:
-        phase = "M — MANIPULATION (Judas Swing / London Sweep)"
-        amdx  = "M"
-    elif 16*60 <= total < 19*60:
-        phase = "D — DISTRIBUTION (Pre-NY Setup)"
-        amdx  = "D"
-    elif total >= 19*60 or total < 4*60:
-        phase = "X — eXPANSION (NY True Direction)"
-        amdx  = "X"
+    if 7*60 <= t < 13*60:
+        phase, amdx = "A — ACCUMULATION (Asia builds range)",          "A"
+    elif 13*60 <= t < 16*60:
+        phase, amdx = "M — MANIPULATION (London Judas Swing)",         "M"
+    elif 16*60 <= t < 20*60+30:
+        phase, amdx = "D — DISTRIBUTION (Pre-NY setup)",               "D"
+    elif t >= 20*60+30 or t < 3*60:
+        phase, amdx = "X — eXPANSION (NY true direction)",             "X"
     else:
-        phase = "DEAD ZONE — Avoid"
-        amdx  = "OFF"
+        phase, amdx = "TRANSITION — Tunggu Killzone",                  "OFF"
 
     return {
-        "session":   session,
-        "killzone":  killzone,
-        "silver":    silver,
-        "macro":     macro,
-        "phase":     phase,
-        "amdx":      amdx,
-        "is_active": is_active,
+        "session":    session,
+        "killzone":   kz_icon,
+        "silver":     window_label if is_silver else None,
+        "macro":      macro,
+        "phase":      phase,
+        "amdx":       amdx,
+        "is_active":  is_active,
+        "is_killzone":is_killzone,
+        "is_silver":  is_silver,
+        "priority":   active_windows[0][0] if active_windows else 0,
     }
 
 
@@ -997,10 +1027,12 @@ def send_news(msg, data=None):
 # ══════════════════════════════════════════════════════════════
 
 def run_freedom_engine():
-    print(f"\n{'═'*60}")
-    print(f"  🦅  {BOT_NAME}  —  SUPREME ENGINE v3.0")
-    print(f"  ICT: OB · CISD · PSP · SMT · AMDX · HTF Cascade")
-    print(f"{'═'*60}\n")
+    print(f"\n{'═'*62}")
+    print(f"  🦅  {BOT_NAME}  —  SUPREME ENGINE v4.0")
+    print(f"  PURE ICT | ZERO OSCILLATORS | Killzone-Only Signals")
+    print(f"  Sessions (WIB): Asia 07-11 | London 13-16 | NY 20:30-22")
+    print(f"  Silver Bullet:  London 14-15 | NY AM 21-22 | NY PM 01-02")
+    print(f"{'═'*62}\n")
 
     while True:
         try:
@@ -1058,16 +1090,28 @@ def run_freedom_engine():
             # 2. SESSION CHECK
             # ══════════════════════════════════════════════════
             session_info = get_session_info()
-            print(f"  Session: {session_info['session']}  |  {session_info['killzone']}")
-            if session_info['silver']:
-                print(f"  ⭐ {session_info['silver']}")
+            now_str      = datetime.now(WIB).strftime('%H:%M:%S WIB')
+            print(f"  [{now_str}] {session_info['killzone']}")
             if session_info['macro']:
-                print(f"  ⏰ MACRO: {session_info['macro']}")
+                print(f"  ⏰ {session_info['macro']}")
+            print(f"  📅 AMDX: {session_info['phase']}")
 
+            # ══════════════════════════════════════════════════
+            # GATE: Hanya aktif saat Killzone atau Silver Bullet
+            # Di luar window = tidur efisien, bukan polling spam
+            # ══════════════════════════════════════════════════
             if not session_info['is_active']:
-                print(f"  💤 DEAD ZONE — skip scan.")
-                time.sleep(600)
+                wait_min = minutes_until_next_window()
+                wake_at  = (datetime.now(WIB) + timedelta(minutes=wait_min)).strftime('%H:%M WIB')
+                print(f"  💤 OFF-WINDOW — Tidur {wait_min} menit. Bangun ~{wake_at}")
+                print(f"     (Bot HANYA scan saat Killzone / Silver Bullet)")
+                time.sleep(wait_min * 60)
                 continue
+
+            # Silver Bullet → scan lebih sering (setiap 3 menit)
+            # Killzone biasa → scan setiap 5 menit
+            # Bukan silver = setiap 10 menit dalam killzone
+            scan_interval = 180 if session_info['is_silver'] else 300
 
             # ══════════════════════════════════════════════════
             # 3. SIGNAL SCAN — per pair
@@ -1075,10 +1119,14 @@ def run_freedom_engine():
             for pair, cfg in PAIRS.items():
                 print(f"\n  ── Scanning {pair} ──")
                 try:
-                    # Anti-spam: 15 menit minimum antar signal per pair
+                    # Anti-spam: cooldown per pair
+                    # Silver Bullet = 10 menit (window cuma 1 jam, jangan miss)
+                    # Killzone biasa = 20 menit (window lebih lebar)
+                    cooldown = 600 if session_info['is_silver'] else 1200
                     now_ts = time.time()
-                    if pair in last_signal_time and (now_ts - last_signal_time[pair]) < 900:
-                        print(f"     ⏳ Cooldown aktif, skip.")
+                    if pair in last_signal_time and (now_ts - last_signal_time[pair]) < cooldown:
+                        remaining = int((cooldown - (now_ts - last_signal_time[pair])) / 60)
+                        print(f"     ⏳ Cooldown {remaining}m — skip.")
                         continue
 
                     # ── HTF Cascade Bias ──────────────────────
@@ -1152,8 +1200,18 @@ def run_freedom_engine():
                     rotate_tor_ip()
                     time.sleep(10)
 
-            print(f"\n[{datetime.now(WIB).strftime('%H:%M:%S WIB')}] Cycle complete. Next scan in 10 min...")
-            time.sleep(600)
+            # ── Cek apakah masih dalam window aktif ──────────
+            si_end = get_session_info()
+            if si_end['is_active']:
+                label = "Silver Bullet" if si_end['is_silver'] else "Killzone"
+                print(f"\n  [{datetime.now(WIB).strftime('%H:%M WIB')}] {label} masih aktif — scan lagi dalam {scan_interval//60} menit...")
+                time.sleep(scan_interval)
+            else:
+                # Window baru saja tutup → tidur sampai window berikutnya
+                wait_min = minutes_until_next_window()
+                wake_at  = (datetime.now(WIB) + timedelta(minutes=wait_min)).strftime('%H:%M WIB')
+                print(f"\n  [{datetime.now(WIB).strftime('%H:%M WIB')}] Window selesai. Tidur {wait_min} menit. Bangun ~{wake_at}")
+                time.sleep(wait_min * 60)
 
         except Exception as e:
             print(f"❌ Main loop error: {e}")
