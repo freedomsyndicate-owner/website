@@ -402,8 +402,21 @@
 
     <div id="community-tab" class="tab-content"><div class="inner-padding">
         <div class="premium-tracker" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-            <div class="p-card"><small>Registered</small><b id="total-users">0</b></div>
-            <div class="p-card"><small>Online</small><b id="online-users">0</b></div>
+            <div class="p-card" style="padding:16px 12px;">
+                <div style="font-size:20px; margin-bottom:4px;">👥</div>
+                <div style="font-family:'Orbitron'; font-size:22px; font-weight:900; color:var(--blue); line-height:1;" id="total-users">0</div>
+                <div style="font-size:9px; font-weight:700; color:#9ca3af; margin-top:4px; text-transform:uppercase; letter-spacing:1px;">Member Daftar</div>
+                <div style="font-size:8px; color:#4b5563; margin-top:2px;">Sudah pakai Journal ini</div>
+            </div>
+            <div class="p-card" style="padding:16px 12px; border-color:rgba(74,222,128,0.25);">
+                <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px;">
+                    <span style="width:8px; height:8px; background:var(--green); border-radius:50%; display:inline-block; animation:pulse-dot 1.2s infinite;"></span>
+                    <span style="font-size:10px; color:var(--green); font-family:'Orbitron'; font-size:8px; letter-spacing:1px;">LIVE</span>
+                </div>
+                <div style="font-family:'Orbitron'; font-size:22px; font-weight:900; color:var(--green); line-height:1;" id="online-users">0</div>
+                <div style="font-size:9px; font-weight:700; color:#9ca3af; margin-top:4px; text-transform:uppercase; letter-spacing:1px;">Sedang Online</div>
+                <div style="font-size:8px; color:#4b5563; margin-top:2px;">Aktif menggunakan Journal</div>
+            </div>
         </div>
         <div class="chat-premium">
             <div id="chat-messages"></div>
