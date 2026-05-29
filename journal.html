@@ -221,7 +221,7 @@
         <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
         <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
-        <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker</a>
+        <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
@@ -428,6 +428,7 @@
             <div class="sub-tab-nav">
                 <button class="sub-tab-btn active" onclick="showSubBroker('forex-box', this)">FOREX BROKER</button>
                 <button class="sub-tab-btn" onclick="showSubBroker('crypto-box', this)">CRYPTO EXCHANGE</button>
+                <button class="sub-tab-btn" onclick="showSubBroker('funded-box', this)">🚀 FUNDED</button>
             </div>
 
             <div id="forex-box" class="sub-broker-content">
@@ -491,6 +492,106 @@
                     </div>
                 </div>
             </div>
+
+            <div id="funded-box" class="sub-broker-content" style="display:none;">
+                <div class="broker-card">
+                    <h2 style="font-family:'Orbitron'; color:var(--green); margin-top:0;">🚀 FUNDED ACCOUNTS</h2>
+                    <p style="font-size:9px; color:#6b7280; margin-bottom:20px;">Program funded terpilih — modal dari mereka, profit buat kamu. Daftar lewat link di bawah untuk support Freedom Syndicate.</p>
+
+                    <!-- 1. Sure Leverage Funding -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">SURE LEVERAGE FUNDING</h3>
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:8px; padding:2px 7px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">RECOMMENDED</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Leverage tinggi — cocok untuk trader ICT/SMC aggressive.</li>
+                            <li>Payout cepat &amp; sistem evaluasi yang fair dan transparan.</li>
+                            <li>Challenge 1 atau 2 tahap tersedia sesuai preferensi trader.</li>
+                            <li>Support berbagai instrumen: Forex, Gold, dan Indices.</li>
+                        </ul>
+                        <button onclick="window.open('https://sureleveragefunding.com/?ref=SANLANA1903-HNBBV', '_blank')" style="background:var(--green); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; font-size:10px; margin-top:8px;">DAFTAR SURE LEVERAGE</button>
+                    </div>
+
+                    <!-- 2. Goat Funded -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">GOAT FUNDED TRADER</h3>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Profit split hingga 90% — salah satu tertinggi di industri.</li>
+                            <li>Tidak ada minimum trading days, fleksibel untuk semua gaya trading.</li>
+                            <li>Scaling plan tersedia: account bisa naik hingga $4 juta modal.</li>
+                            <li>Refund biaya challenge setelah payout pertama berhasil dicairkan.</li>
+                        </ul>
+                        <button onclick="window.open('https://checkout.goatfundedtrader.com/aff/Sanlana039/', '_blank')" style="background:#111827; border:1px solid var(--green); color:var(--green); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR GOAT FUNDED</button>
+                    </div>
+
+                    <!-- 3. Aqua Funded -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">AQUA FUNDED</h3>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Aturan trading longgar — cocok untuk trader news &amp; swing style.</li>
+                            <li>Profit split kompetitif dengan proses payout yang cepat &amp; mudah.</li>
+                            <li>Dashboard user-friendly dengan tracking performa real-time.</li>
+                            <li>Tersedia akun instant funding tanpa melewati tahap evaluasi panjang.</li>
+                        </ul>
+                        <button onclick="window.open('https://www.aquafunded.com/?afmc=3wr', '_blank')" style="background:#111827; border:1px solid var(--blue); color:var(--blue); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR AQUA FUNDED</button>
+                    </div>
+
+                    <!-- 4. Funding Traders -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">FUNDING TRADERS</h3>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Promo kode aktif — diskon spesial tersedia untuk pengguna baru.</li>
+                            <li>Program 2-phase challenge dengan target realistis &amp; drawdown wajar.</li>
+                            <li>Payout mingguan tersedia, cocok untuk cash flow yang konsisten.</li>
+                            <li>Mendukung MetaTrader 4 &amp; 5 dengan eksekusi order yang instan.</li>
+                        </ul>
+                        <button onclick="window.open('https://fundingtraders.com/?ref=wii13982181&promo=wii13982181', '_blank')" style="background:#111827; border:1px solid var(--be); color:var(--be); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING TRADERS</button>
+                    </div>
+
+                    <!-- 5. TX3 Funding -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">TX3 FUNDING</h3>
+                        <div style="background:rgba(234,179,8,0.08); border:1px dashed rgba(234,179,8,0.3); border-radius:8px; padding:8px 12px; margin:8px 0; display:flex; align-items:center; gap:10px;">
+                            <span style="font-family:'Orbitron'; font-size:8px; color:var(--be);">🎁 PROMO CODE:</span>
+                            <span style="font-family:'Orbitron'; font-size:13px; color:white; font-weight:bold; letter-spacing:2px;">SANLANA</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Gunakan kode promo SANLANA untuk diskon eksklusif saat daftar.</li>
+                            <li>Challenge model terbaru dengan aturan drawdown yang fleksibel.</li>
+                            <li>Payout on-demand — request kapanpun setelah syarat terpenuhi.</li>
+                            <li>Platform modern dengan analitik performa trading yang lengkap.</li>
+                        </ul>
+                        <button onclick="window.open('https://dashboard.fx.tx3funding.com/new-challenge?referral=AFR_30F72B30EF', '_blank')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR TX3 FUNDING</button>
+                    </div>
+
+                    <!-- 6. Funding Pips -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">FUNDING PIPS</h3>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Salah satu funded firm terbesar &amp; paling terpercaya secara global.</li>
+                            <li>Profit split hingga 80% dengan proses verifikasi yang transparan.</li>
+                            <li>Pilihan akun $5K hingga $200K dengan berbagai model challenge.</li>
+                            <li>Komunitas trader aktif &amp; educational resources lengkap tersedia.</li>
+                        </ul>
+                        <button onclick="window.open('https://app.fundingpips.com/register?ref=0ED7BC02', '_blank')" style="background:var(--blue); border:none; color:black; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING PIPS</button>
+                    </div>
+
+                    <!-- 7. Blue Guardian -->
+                    <div>
+                        <h3 style="margin:0; color:white; margin-bottom:6px;">BLUE GUARDIAN</h3>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Tidak ada time limit dalam challenge — bebas tekanan waktu.</li>
+                            <li>Profit split hingga 85% dengan opsi scaling account yang agresif.</li>
+                            <li>Reward konsisten bagi trader dengan performa stabil jangka panjang.</li>
+                            <li>Mendukung EA/bot trading &amp; strategi overnight dan weekend holding.</li>
+                        </ul>
+                        <button onclick="window.open('https://blueguardian.com/?afmc=223t', '_blank')" style="background:#111827; border:1px solid #38bdf8; color:#38bdf8; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR BLUE GUARDIAN</button>
+                    </div>
+
+                </div>
+            </div>
+
         </div></div>
 
         <div id="donasi-tab" class="tab-content"><div class="inner-padding">
