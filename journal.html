@@ -1,4 +1,578 @@
-ank')" style="background:#FFD700; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BYBIT</button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
+
+    <script>
+        // === SISTEM PENGAMANAN TINGKAT TINGGI ===
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || 
+              (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
+              (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
+                return false;
+            }
+        };
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+        document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+        window.alert = function(message) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            iframe.contentWindow.alert(message);
+            document.documentElement.removeChild(iframe);
+        };
+        window.confirm = function(message) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.setAttribute('src', 'data:text/plain,');
+            document.documentElement.appendChild(iframe);
+            const result = iframe.contentWindow.confirm(message);
+            document.documentElement.removeChild(iframe);
+            return result;
+        };
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
+        :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
+        
+        * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
+        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
+        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
+        .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
+
+        .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
+        @keyframes glowText {
+            from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
+            to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
+        }
+
+        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
+        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
+        .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
+        
+        .content-container { flex-grow: 1; position: relative; overflow: hidden; }
+        .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
+        .tab-content.active { display: block; }
+        .inner-padding { padding: 15px; padding-bottom: 150px; }
+
+        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
+        .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .lot-input-item input, .lot-input-item select { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 8px; padding: 10px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
+        .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
+        .lot-res-item b { font-family: 'Orbitron'; font-size: 12px; color: var(--be); }
+
+        .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
+        .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; font-family: 'Poppins'; padding: 5px 0; }
+        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
+        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
+        .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
+        .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
+        .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
+
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 100px; padding: 12px; position: relative; text-align: left; }
+        .upload-box label { font-size: 8px; color: var(--blue); font-weight: 900; letter-spacing: 1px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .upload-box input { width: 100%; font-size: 8px; color: #555; background: transparent; }
+        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 6px; }
+        
+        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
+
+        .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
+        .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; }
+        .h-detail { font-size: 8px; color: #fff; line-height: 1.6; }
+        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
+        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
+        .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
+        .cal-day.profit { border-color: var(--green); color: var(--green); }
+        .cal-day.loss { border-color: var(--red); color: var(--red); }
+        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
+        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
+        
+        .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
+        #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
+        .msg-bubble { max-width: 85%; padding: 10px 15px; border-radius: 18px; font-size: 11px; background: #1f2937; align-self: flex-start; }
+        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
+        
+        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 20px; margin-bottom: 15px; }
+        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
+        
+        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
+
+        .iframe-container { width: 100%; height: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
+        .syndicate-calendar { width: 100%; height: 100%; border: none; filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2); }
+
+        .sub-tab-nav { display: flex; gap: 10px; margin-bottom: 10px; background: #111827; padding: 8px; border-radius: 12px; }
+        .sub-tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: #9ca3af; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 6px; }
+        .sub-tab-btn.active { background: var(--blue); color: black; font-weight: bold; }
+        .widget-box { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 10px; margin-top: 15px; overflow: hidden; }
+        .widget-title { font-family: 'Orbitron'; font-size: 10px; color: var(--blue); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        /* === SIGNAL TAB STYLES === */
+        .signal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .signal-live-badge { display: flex; align-items: center; gap: 6px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); padding: 4px 10px; border-radius: 20px; font-family: 'Orbitron'; font-size: 8px; color: var(--green); }
+        .signal-live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse-dot 1.2s infinite; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.3;transform:scale(0.6);} }
+        
+        .sig-section-title { font-family: 'Orbitron'; font-size: 9px; letter-spacing: 2px; color: #4b5563; text-transform: uppercase; margin: 18px 0 10px; display: flex; align-items: center; gap: 8px; }
+        .sig-section-title::after { content: ''; flex: 1; height: 1px; background: #1f2937; }
+
+        /* ICT SIGNAL CARD */
+        .ict-signal-card { background: linear-gradient(145deg, #0a0e14, #0d1117); border: 1px solid #1f2937; border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; overflow: hidden; transition: border-color 0.3s; }
+        .ict-signal-card.buy  { border-left: 3px solid var(--green); }
+        .ict-signal-card.sell { border-left: 3px solid var(--red); }
+        .ict-signal-card.wait { border-left: 3px solid #374151; }
+        .ict-signal-card::before { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(56,189,248,0.04), transparent); pointer-events: none; }
+        .ict-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .ict-badge { font-family: 'Orbitron'; font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .ict-badge.buy  { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+        .ict-badge.sell { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .ict-badge.wait { background: rgba(55,65,81,0.5); color: #6b7280; border: 1px solid #374151; }
+        .ict-pair { font-family: 'Orbitron'; font-size: 18px; color: white; letter-spacing: 1px; }
+        .ict-pair span { color: var(--blue); }
+        .ict-time { font-size: 8px; color: #4b5563; margin-top: 2px; }
+        .ict-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0; }
+        .ict-level-item .lbl { font-size: 7px; color: #4b5563; text-transform: uppercase; }
+        .ict-level-item .val { font-family: 'Orbitron'; font-size: 10px; font-weight: bold; }
+        .ict-level-item.entry .val { color: var(--be); }
+        .ict-level-item.sl-item .val { color: var(--red); }
+        .ict-level-item.tp-item .val { color: var(--green); }
+        .ict-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); font-size: 8px; color: #4b5563; }
+        .ict-score { display: flex; align-items: center; gap: 4px; }
+        .ict-score-bar { width: 40px; height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; }
+        .ict-score-fill { height: 100%; border-radius: 2px; }
+        .ict-reasons { font-size: 8px; color: #374151; line-height: 1.6; padding: 6px 8px; background: rgba(0,0,0,0.2); border-radius: 6px; margin-top: 6px; }
+        .ict-reasons span { color: #6b7280; }
+
+        /* FUNDAMENTAL CARD */
+        .fund-card { background: linear-gradient(145deg, #0a0e14, #0d1117); border: 1px solid #1f2937; border-radius: 16px; padding: 14px; margin-bottom: 10px; position: relative; overflow: hidden; }
+        .fund-card.high   { border-left: 3px solid var(--red); }
+        .fund-card.medium { border-left: 3px solid var(--be); }
+        .fund-card.low    { border-left: 3px solid var(--green); }
+        .fund-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .fund-type { font-family: 'Orbitron'; font-size: 8px; padding: 2px 8px; border-radius: 4px; }
+        .fund-type.alarm  { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .fund-type.result { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+        .fund-type.geo    { background: rgba(234,179,8,0.1); color: var(--be); border: 1px solid rgba(234,179,8,0.2); }
+        .fund-impact { font-size: 7px; font-family: 'Orbitron'; padding: 2px 6px; border-radius: 3px; }
+        .fund-impact.HIGH   { background: rgba(239,68,68,0.2); color: var(--red); }
+        .fund-impact.MEDIUM { background: rgba(234,179,8,0.2); color: var(--be); }
+        .fund-impact.LOW    { background: rgba(74,222,128,0.2); color: var(--green); }
+        .fund-title { font-size: 11px; color: white; font-weight: 600; margin-bottom: 4px; }
+        .fund-body { font-size: 9px; color: #6b7280; line-height: 1.5; }
+        .fund-data-row { display: flex; gap: 8px; margin-top: 8px; }
+        .fund-data-item { flex: 1; text-align: center; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 6px 4px; }
+        .fund-data-item .dlbl { font-size: 7px; color: #374151; text-transform: uppercase; }
+        .fund-data-item .dval { font-family: 'Orbitron'; font-size: 10px; color: white; }
+        .fund-data-item .dval.beat   { color: var(--green); }
+        .fund-data-item .dval.miss   { color: var(--red); }
+        .fund-time { font-size: 7px; color: #374151; margin-top: 6px; }
+
+        /* EMPTY STATE */
+        .sig-empty { text-align: center; padding: 30px 20px; background: rgba(0,0,0,0.2); border: 1px dashed #1f2937; border-radius: 12px; }
+        .sig-empty .sig-empty-icon { font-size: 28px; margin-bottom: 8px; }
+        .sig-empty p { font-size: 10px; color: #374151; font-family: 'Orbitron'; }
+
+        /* SIGNAL FILTER */
+        .sig-filter { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
+        .sig-filter::-webkit-scrollbar { display: none; }
+        .sig-filter-btn { flex-shrink: 0; font-family: 'Orbitron'; font-size: 8px; padding: 6px 12px; border-radius: 20px; border: 1px solid #1f2937; background: transparent; color: #6b7280; cursor: pointer; white-space: nowrap; }
+        .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
+    </style>
+</head>
+<body>
+    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
+
+    <div class="menu-toggle" onclick="toggleNav()">☰</div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
+        <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News</a>
+        <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal</a>
+        <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
+        <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
+        <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
+        <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
+        <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
+        <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
+        <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
+        <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
+    </div>
+
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h1 style="font-family:'Orbitron'; color:white; font-size:1.1rem;">FREEDOM SYNDICATE</h1>
+            <button class="btn-google" id="googleBtn" onclick="login()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE</button>
+        </div>
+    </div>
+
+    <div class="fixed-top">
+        <h1 class="logo">FREEDOM SYNDICATE</h1>
+        <div class="anim-journal">( JOURNAL )</div>
+        <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
+    </div>
+
+    <div class="content-container">
+        <div id="announce-tab" class="tab-content active"><div class="inner-padding">
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:25px; border-left:5px solid var(--red);">
+                <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
+                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
+                <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
+            </div>
+            </div></div>
+
+        <!-- ===== SIGNAL TAB ===== -->
+        <div id="signal-tab" class="tab-content"><div class="inner-padding">
+
+            <div class="signal-header">
+                <h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0;">📡 LIVE SIGNAL</h2>
+                <div class="signal-live-badge"><div class="signal-live-dot"></div>REAL-TIME</div>
+            </div>
+
+            <!-- FILTER -->
+            <div class="sig-filter">
+                <button class="sig-filter-btn active" onclick="filterSignals('all', this)">ALL</button>
+                <button class="sig-filter-btn" onclick="filterSignals('ict', this)">ICT PREDATOR</button>
+                <button class="sig-filter-btn" onclick="filterSignals('fundamental', this)">FUNDAMENTAL</button>
+                <button class="sig-filter-btn" onclick="filterSignals('buy', this)">🟢 BUY</button>
+                <button class="sig-filter-btn" onclick="filterSignals('sell', this)">🔴 SELL</button>
+            </div>
+
+            <!-- ICT PREDATOR SIGNALS -->
+            <div id="ict-signals-section">
+                <div class="sig-section-title">⚡ ICT PREDATOR SIGNALS</div>
+                <div id="ict-signals-container">
+                    <div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MENUNGGU SINYAL ICT...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Bot akan push sinyal otomatis</p></div>
+                </div>
+            </div>
+
+            <!-- FUNDAMENTAL SIGNALS -->
+            <div id="fund-signals-section">
+                <div class="sig-section-title">🌍 FUNDAMENTAL & NEWS</div>
+                <div id="fund-signals-container">
+                    <div class="sig-empty"><div class="sig-empty-icon">📰</div><p>MENUNGGU DATA FUNDAMENTAL...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Economic calendar & breaking news</p></div>
+                </div>
+            </div>
+
+        </div></div>
+
+        <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
+            <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937;">
+                <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
+                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
+            </div>
+            <div id="tv_v60" style="height:450px; width:100%;"></div>
+            
+            <div class="inner-padding" style="padding-top:0;">
+                <div class="widget-box">
+                    <div class="widget-title">📊 MARKET SENTIMENT (TECHNICALS)</div>
+                    <div id="sentiment-widget-container" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="economic-tab" class="tab-content" style="background:#050a14;">
+            <div class="inner-padding">
+                <div class="sub-tab-nav">
+                    <button class="sub-tab-btn active" onclick="showSubEco('cal-box', this)">CALENDAR</button>
+                    <button class="sub-tab-btn" onclick="showSubEco('tv-box', this)">MARKET TV</button>
+                    <button class="sub-tab-btn" onclick="showSubEco('news-box', this)">ECO NEWS</button>
+                </div>
+                
+                <div id="cal-box" class="sub-eco-content" style="height: 600px;">
+                    <div class="iframe-container">
+                        <iframe class="syndicate-calendar" src="https://www.tradays.com/en/economic-calendar/widget?mode=2&utm_source=tradays.com" referrerpolicy="no-referrer-when-downgrade" allow="autoplay; encrypted-media"></iframe>
+                    </div>
+                </div>
+
+                <div id="tv-box" class="sub-eco-content" style="display:none; height: 500px;">
+                    <div class="widget-box" style="height: 100%;">
+                        <div class="widget-title">📺 BLOOMBERG / LIVE NEWS TV</div>
+                        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJjW88bg&autoplay=1&mute=1" width="100%" height="90%" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <div id="news-box" class="sub-eco-content" style="display:none; height: 600px;">
+                    <iframe src="https://www.investing.com/news/economy" style="width:100%; height:100%; border:none; filter: invert(0.9) hue-rotate(180deg);"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div id="journal-tab" class="tab-content"><div class="inner-padding">
+            <!-- ... sama persis seperti sebelumnya (form journal) ... -->
+            <div class="lot-calc-box">
+                <div class="lot-input-grid">
+                    <div class="lot-input-item"><label>💰 Balance ($)</label><input type="number" id="calc-bal" placeholder="1000" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>⚠️ Risk (%)</label><input type="number" id="calc-risk" placeholder="1" oninput="calcLot()"></div>
+                    <div class="lot-input-item"><label>📉 SL (Pips)</label><input type="number" id="calc-sl" placeholder="30" oninput="calcLot()"></div>
+                </div>
+                <div class="lot-input-item" style="margin-bottom:12px;"><label>⚙️ Leverage (1:X)</label>
+                    <select id="calc-lev" onchange="calcLot()">
+                        <option value="1">1:1</option><option value="100">1:100</option><option value="500" selected>1:500</option><option value="1000">1:1000</option><option value="2000">1:2000</option><option value="3000">1:3000</option><option value="999999">1:Unlimited</option>
+                    </select>
+                </div>
+                <div class="lot-result-block">
+                    <div class="lot-res-item"><small>🎯 Rec. Lot Size</small><b id="res-lot">0.00 Lot</b></div>
+                    <div class="lot-res-item"><small>💵 Min. Margin</small><b id="res-margin">$ 0.00</b></div>
+                </div>
+            </div>
+            <form id="tradingForm" onsubmit="return false;">
+                <div class="notion-form">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📅 Date</label><input type="date" id="date"></div><div class="form-item"><label>⌚ Time</label><input type="time" id="time"></div></div>
+                    <div class="form-item"><label>🪙 Pair Selection</label>
+                        <select id="pair">
+                            <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
+                            <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                            <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                            <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                        </select>
+                    </div>
+                    <div class="form-item" style="border:none;"><label>🕒 Session</label><div class="chip-grid"><div class="chip" data-type="session" onclick="setV('session', 'SYDNEY', this)">SYDNEY</div><div class="chip" data-type="session" onclick="setV('session', 'ASIA', this)">ASIA</div><div class="chip" data-type="session" onclick="setV('session', 'LONDON', this)">LONDON</div><div class="chip" data-type="session" onclick="setV('session', 'NY', this)">NY</div></div></div>
+                    <div class="form-item" style="border:none;"><label>🎯 POI (LENGKAP)</label><div class="check-grid">
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="QM"> QM</label><label class="check-item"><input type="checkbox" class="poi-check" value="FVG"> FVG</label><label class="check-item"><input type="checkbox" class="poi-check" value="IFVG"> IFVG</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="OB"> OB</label><label class="check-item"><input type="checkbox" class="poi-check" value="CISD"> CISD</label><label class="check-item"><input type="checkbox" class="poi-check" value="PSP"> PSP</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="poi-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label><label class="check-item"><input type="checkbox" class="poi-check" value="SUP"> SUP</label><label class="check-item"><input type="checkbox" class="poi-check" value="RES"> RES</label>
+                    </div></div>
+                    <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid" style="grid-template-columns:1fr 1fr;"><div class="chip" data-type="style" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" data-type="style" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div></div></div>
+                    <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
+                    <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-type="res" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
+                    
+                    <div class="photo-grid">
+                        <div class="upload-box"><label>📸 BEFORE</label><input type="file" onchange="procImg(this, 'pb')"><img id="pb"></div>
+                        <div class="upload-box"><label>📸 AFTER</label><input type="file" onchange="procImg(this, 'pa')"><img id="pa"></div>
+                    </div>
+                    <button type="button" class="btn-save" onclick="save()">🚀 SAVE TRANSACTION</button>
+                </div>
+            </form>
+            <div id="hist"></div>
+        </div></div>
+
+        <!-- ... sisa kode HTML sama persis ... -->
+        <div id="monitor-tab" class="tab-content"><div class="inner-padding">
+            <div class="mon-filters" style="display:flex; gap:10px; margin-bottom:15px;">
+                <select id="mon-pair" class="mon-select" onchange="loadData()">
+                    <option value="ALL">ALL PAIRS</option>
+                    <optgroup label="METAL"><option value="XAUUSD">XAUUSD</option><option value="XAGUSD">XAGUSD</option></optgroup>
+                    <optgroup label="FOREX MAJOR"><option value="EURUSD">EURUSD</option><option value="GBPUSD">GBPUSD</option><option value="USDJPY">USDJPY</option><option value="AUDUSD">AUDUSD</option><option value="USDCAD">USDCAD</option><option value="USDCHF">USDCHF</option></optgroup>
+                    <optgroup label="FOREX CROSS"><option value="EURJPY">EURJPY</option><option value="GBPJPY">GBPJPY</option><option value="EURGBP">EURGBP</option><option value="AUDJPY">AUDJPY</option><option value="EURAUD">EURAUD</option><option value="GBPAUD">GBPAUD</option></optgroup>
+                    <optgroup label="CRYPTO/INDICES"><option value="BTCUSD">BTCUSD</option><option value="ETHUSD">ETHUSD</option><option value="SOLUSD">SOLUSD</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="GER40">GER40</option><option value="HK50">HK50</option></optgroup>
+                </select>
+                <select id="mon-month" class="mon-select" onchange="loadData()">
+                    <option value="ALL">ALL TIME</option>
+                    <option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04">APRIL</option><option value="05">MEI</option><option value="06">JUNI</option><option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option><option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option>
+                </select>
+            </div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
+            <div id="cal" class="calendar-grid"></div>
+        </div></div>
+
+        <div id="community-tab" class="tab-content"><div class="inner-padding">
+            <div class="premium-tracker" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div class="p-card" style="padding:16px 12px;">
+                    <div style="font-size:20px; margin-bottom:4px;">👥</div>
+                    <div style="font-family:'Orbitron'; font-size:22px; font-weight:900; color:var(--blue); line-height:1;" id="total-users">0</div>
+                    <div style="font-size:9px; font-weight:700; color:#9ca3af; margin-top:4px; text-transform:uppercase; letter-spacing:1px;">Member Daftar</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px;">Sudah pakai Journal ini</div>
+                </div>
+                <div class="p-card" style="padding:16px 12px; border-color:rgba(74,222,128,0.25);">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px;">
+                        <span style="width:8px; height:8px; background:var(--green); border-radius:50%; display:inline-block; animation:pulse-dot 1.2s infinite;"></span>
+                        <span style="font-size:10px; color:var(--green); font-family:'Orbitron'; font-size:8px; letter-spacing:1px;">LIVE</span>
+                    </div>
+                    <div style="font-family:'Orbitron'; font-size:22px; font-weight:900; color:var(--green); line-height:1;" id="online-users">0</div>
+                    <div style="font-size:9px; font-weight:700; color:#9ca3af; margin-top:4px; text-transform:uppercase; letter-spacing:1px;">Sedang Online</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px;">Aktif menggunakan Journal</div>
+                </div>
+            </div>
+            <div class="chat-premium">
+                <div id="chat-messages"></div>
+                <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
+                    <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
+                    <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:12px; padding:0 20px; font-weight:900; font-family:'Orbitron'; cursor:pointer;">SEND</button>
+                </div>
+            </div>
+        </div></div>
+
+        <div id="broker-tab" class="tab-content"><div class="inner-padding">
+            <div class="sub-tab-nav">
+                <button class="sub-tab-btn active" onclick="showSubBroker('forex-box', this)">FOREX BROKER</button>
+                <button class="sub-tab-btn" onclick="showSubBroker('crypto-box', this)">CRYPTO EXCHANGE</button>
+                <button class="sub-tab-btn" onclick="showSubBroker('funded-box', this)">🚀 FUNDED</button>
+            </div>
+
+            <div id="forex-box" class="sub-broker-content">
+                <div class="broker-card">
+                    <h2 style="font-family:'Orbitron'; color:var(--be); margin-top:0;">🏆 REKOMENDASI FOREX BROKER</h2>
+                    <p style="font-size:9px; color:#6b7280; margin-bottom:20px;">Broker terpilih & terpercaya — diurutkan dari paling direkomendasikan untuk trader Indonesia.</p>
+
+                    <!-- 1. EXNESS -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">EXNESS</h3>
+                            <span style="background:rgba(234,179,8,0.15); color:var(--be); font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">⭐ TOP PICK</span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">DEPOSIT MULAI $1</span>
+                            <span style="background:rgba(56,189,248,0.1); color:var(--blue); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">REGULASI KETAT</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>✨ Penarikan dana <b style="color:white;">INSTAN 24/7</b> — uangmu langsung cair kapanpun.</li>
+                            <li>💎 Spread ultra-rendah mulai <b style="color:white;">0.0 pips</b> — maksimalkan setiap pip profit.</li>
+                            <li>🏦 Tersedia Akun Cent, Standard & Pro — cocok dari pemula hingga pro.</li>
+                            <li>🔒 Regulasi internasional paling ketat: FCA, CySEC, FSCA & lebih.</li>
+                            <li>🇮🇩 Support penuh bank lokal Indonesia & e-wallet populer.</li>
+                        </ul>
+                        <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px; font-size:10px;">DAFTAR EXNESS SEKARANG</button>
+                    </div>
+
+                    <!-- 2. OCTAFX -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">OCTAFX</h3>
+                            <span style="background:rgba(74,222,128,0.15); color:var(--green); font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">🔥 POPULER ASIA</span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">DEPOSIT MULAI $1</span>
+                            <span style="background:rgba(239,68,68,0.1); color:var(--red); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">BONUS 50%</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>🎁 Bonus deposit <b style="color:white;">hingga 50%</b> — modal kecil jadi terasa lebih besar.</li>
+                            <li>⚡ Eksekusi order super cepat dengan teknologi server premium.</li>
+                            <li>📱 Aplikasi mobile terbaik — trading nyaman dari mana saja kapan saja.</li>
+                            <li>🏆 Broker pemenang puluhan penghargaan internasional bergengsi.</li>
+                            <li>💬 Support customer service 24/7 dalam Bahasa Indonesia yang ramah.</li>
+                        </ul>
+                        <button onclick="window.open('https://elev8link.com/igpXhljJB5m', '_blank')" style="background:linear-gradient(135deg,#ff6b35,#f7931e); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR OCTAFX SEKARANG</button>
+                    </div>
+
+                    <!-- 3. HEADWAY -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">HEADWAY</h3>
+                            <span style="background:rgba(56,189,248,0.15); color:var(--blue); font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">♾️ UNLIMITED LEV</span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">DEPOSIT MULAI $1</span>
+                            <span style="background:rgba(56,189,248,0.1); color:var(--blue); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">LEVERAGE TAK TERBATAS</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>♾️ Leverage <b style="color:white;">Unlimited (Tanpa Batas)</b> — kontrol penuh modal trading kamu.</li>
+                            <li>💰 Bonus deposit melimpah — modal kecilmu bisa terasa jauh lebih besar.</li>
+                            <li>⚡ Eksekusi order sangat cepat & stabil — tidak ada requote menjengkelkan.</li>
+                            <li>🇮🇩 Support lengkap bank lokal Indonesia untuk deposit & withdraw mudah.</li>
+                            <li>📊 Tersedia akun Cent ideal untuk latihan strategi ICT/SMC dengan risiko mini.</li>
+                        </ul>
+                        <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px; font-size:10px;">DAFTAR HEADWAY SEKARANG</button>
+                    </div>
+
+                    <!-- 4. VALETAX -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:20px; margin-bottom:20px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">VALETAX</h3>
+                            <span style="background:rgba(167,139,250,0.15); color:#a78bfa; font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">💜 HIGH LEVERAGE</span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">DEPOSIT MULAI $1</span>
+                            <span style="background:rgba(167,139,250,0.1); color:#a78bfa; font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">LEVERAGE 1:2000</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>🚀 Leverage hingga <b style="color:white;">1:2000</b> — trading agresif dengan modal mungil sekalipun.</li>
+                            <li>💎 Spread kompetitif dengan eksekusi instan tanpa dealing desk.</li>
+                            <li>🎁 Program bonus & cashback menarik untuk trader aktif setiap bulannya.</li>
+                            <li>🔐 Dana klien tersimpan aman di rekening terpisah (segregated account).</li>
+                            <li>📈 Cocok untuk strategi scalping cepat maupun swing trading jangka panjang.</li>
+                        </ul>
+                        <button onclick="window.open('https://ma.valetax.com/p/5330607', '_blank')" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR VALETAX SEKARANG</button>
+                    </div>
+
+                    <!-- 5. TRADINGPRO -->
+                    <div>
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">TRADINGPRO</h3>
+                            <span style="background:rgba(234,179,8,0.15); color:var(--be); font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">🖥️ PRO PLATFORM</span>
+                        </div>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">DEPOSIT MULAI $1</span>
+                            <span style="background:rgba(234,179,8,0.1); color:var(--be); font-size:9px; padding:3px 8px; border-radius:4px; font-weight:bold;">MT4 & MT5</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>🖥️ Platform MetaTrader 4 & <b style="color:white;">MetaTrader 5</b> tersedia penuh — siap untuk EA.</li>
+                            <li>📊 Tools analisa profesional lengkap untuk trader teknikal serius.</li>
+                            <li>⚙️ Infrastruktur server premium — uptime tinggi & koneksi ultra-stabil.</li>
+                            <li>🌍 Instrumen trading lengkap: Forex, Emas, Indices, & komoditas global.</li>
+                            <li>🤝 Dedicated account manager untuk trader VIP — support personal terbaik.</li>
+                        </ul>
+                        <button onclick="window.open('http://secure.tradingpro.com/links/go/16603', '_blank')" style="background:linear-gradient(135deg,#1e3a5f,#38bdf8); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR TRADINGPRO SEKARANG</button>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div id="crypto-box" class="sub-broker-content" style="display:none;">
+                <div class="broker-card">
+                    <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">💎 CRYPTO EXCHANGE</h2>
+                    <p style="font-size:9px; color:#6b7280; margin-bottom:20px;">Diurutkan dari yang paling populer secara global hingga lokal Indonesia.</p>
+
+                    <!-- 1. BINANCE -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:15px; margin-bottom:15px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">BINANCE</h3>
+                            <span style="background:rgba(234,179,8,0.1); color:var(--be); font-size:8px; padding:2px 7px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">#1 GLOBAL</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Exchange terbesar di dunia dengan volume trading tertinggi.</li>
+                            <li>Likuiditas sangat dalam — cocok untuk order besar sekalipun.</li>
+                            <li>Fitur paling lengkap: Spot, Futures, Staking, NFT, Launchpad.</li>
+                            <li>Biaya trading terendah mulai 0.1% dengan diskon BNB.</li>
+                        </ul>
+                        <button onclick="window.open('https://www.bmwweb.biz/referral/earn-together/refer2earn-usdc/claim?hl=id&ref=GRO_28502_XAS8E&utm_source=referral_entrance', '_blank')" style="background:#F0B90B; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BINANCE</button>
+                    </div>
+
+                    <!-- 2. BYBIT -->
+                    <div style="border-bottom: 1px solid #1f2937; padding-bottom:15px; margin-bottom:15px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
+                            <h3 style="margin:0; color:white;">BYBIT</h3>
+                            <span style="background:rgba(74,222,128,0.1); color:var(--green); font-size:8px; padding:2px 7px; border-radius:4px; font-weight:bold; font-family:'Orbitron';">#2 FUTURES</span>
+                        </div>
+                        <ul style="font-size:10px; color:#9ca3af; padding-left:18px; line-height:1.8; margin:8px 0;">
+                            <li>Platform futures & derivatif terbaik kedua di dunia.</li>
+                            <li>UI paling intuitif — favorit trader profesional global.</li>
+                            <li>Copy trade, Grid Bot, DCA Bot tersedia lengkap dalam satu platform.</li>
+                            <li>Event & bonus deposit rutin untuk pengguna baru maupun lama.</li>
+                        </ul>
+                        <button onclick="window.open('https://www.bybitglobal.com/invite?ref=7NNYA', '_blank')" style="background:#FFD700; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BYBIT</button>
                     </div>
 
                     <!-- 3. MEXC -->
@@ -241,230 +815,7 @@ ank')" style="background:#FFD700; border:none; color:black; padding:10px; width:
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
 
         let sidebarOpen = false;
-        function toggleN<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FS | Freedom Syndicate V68 PREMIUM SECURE</title>
-
-    <script>
-        // === SISTEM PENGAMANAN TINGKAT TINGGI ===
-        document.addEventListener('contextmenu', event => event.preventDefault()); 
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123 || 
-              (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || 
-              (e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'A'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0)))) {
-                return false;
-            }
-        };
-        document.addEventListener('selectstart', function(e) { e.preventDefault(); });
-        document.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
-        window.alert = function(message) {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.setAttribute('src', 'data:text/plain,');
-            document.documentElement.appendChild(iframe);
-            iframe.contentWindow.alert(message);
-            document.documentElement.removeChild(iframe);
-        };
-        window.confirm = function(message) {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.setAttribute('src', 'data:text/plain,');
-            document.documentElement.appendChild(iframe);
-            const result = iframe.contentWindow.confirm(message);
-            document.documentElement.removeChild(iframe);
-            return result;
-        };
-    </script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
-        :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
-        
-        * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-        input, textarea { -webkit-user-select: text; user-select: text; }
-
-        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-
-        .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
-        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
-        .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
-        .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
-
-        .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
-        @keyframes glowText {
-            from { text-shadow: 0 0 2px var(--be); opacity: 0.6; }
-            to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
-        }
-
-        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
-        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
-        .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
-        
-        .content-container { flex-grow: 1; position: relative; overflow: hidden; }
-        .tab-content { display: none; width: 100%; height: 100%; overflow-y: auto; box-sizing: border-box; }
-        .tab-content.active { display: block; }
-        .inner-padding { padding: 15px; padding-bottom: 150px; }
-
-        .lot-calc-box { background: linear-gradient(145deg, #0d1117, #161b22); border: 1px solid var(--be); border-radius: 20px; padding: 18px; margin-bottom: 25px; }
-        .lot-input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-        .lot-input-item label { font-size: 7px; color: #8b949e; display: block; margin-bottom: 5px; text-transform: uppercase; }
-        .lot-input-item input, .lot-input-item select { background: #050a14; border: 1px solid #30363d; color: white; border-radius: 8px; padding: 10px; width: 100%; font-size: 11px; outline: none; box-sizing: border-box; }
-        .lot-result-block { background: rgba(234, 179, 8, 0.08); border: 1px dashed rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
-        .lot-res-item b { font-family: 'Orbitron'; font-size: 12px; color: var(--be); }
-
-        .notion-form { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #1f2937; margin-bottom: 25px; }
-        .form-item { margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .form-item label { font-size: 9px; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
-        .form-item select, .form-item input, .form-item textarea { background: transparent; border: none; color: white; width: 100%; font-size: 13px; outline: none; font-family: 'Poppins'; padding: 5px 0; }
-        .chip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 5px; }
-        .chip { text-align: center; padding: 8px 2px; border-radius: 6px; background: #111827; border: 1px solid #1f2937; font-size: 8px; font-weight: bold; cursor: pointer; color: #555; }
-        .chip.active { border-color: var(--blue); color: white; background: rgba(56, 189, 248, 0.1); }
-        .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-        .check-item { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #fff; cursor: pointer; }
-        .check-item input { width: 14px; height: 14px; accent-color: var(--blue); }
-
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .upload-box { background: #0a0e14; border: 1px dashed #333; border-radius: 12px; min-height: 100px; padding: 12px; position: relative; text-align: left; }
-        .upload-box label { font-size: 8px; color: var(--blue); font-weight: 900; letter-spacing: 1px; display: block; margin-bottom: 8px; text-transform: uppercase; }
-        .upload-box input { width: 100%; font-size: 8px; color: #555; background: transparent; }
-        .upload-box img { width: 100%; height: auto; max-height: 80px; object-fit: contain; display: none; margin-top: 10px; border-radius: 6px; }
-        
-        .btn-save { width: 100%; background: var(--blue); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; }
-
-        .history-card { background: #0a0e14; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #1f2937; position: relative; }
-        .h-header { font-size: 10px; color: var(--blue); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; margin-bottom: 8px; }
-        .h-detail { font-size: 8px; color: #fff; line-height: 1.6; }
-        .tracker-display { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .tracker-img { width: 100%; aspect-ratio: 16/9; background: #111827; border-radius: 8px; object-fit: cover; border: 1px solid #333; cursor: pointer; }
-        .btn-del { position: absolute; top: 12px; right: 12px; color: var(--red); cursor: pointer; font-size: 14px; }
-
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; width: 100%; }
-        .cal-day { aspect-ratio: 1/1.2; background: #111827; border-radius: 6px; font-size: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1f2937; }
-        .cal-day.profit { border-color: var(--green); color: var(--green); }
-        .cal-day.loss { border-color: var(--red); color: var(--red); }
-        .mon-select { background: #111827; border: 1px solid #1f2937; color: var(--blue); font-size: 10px; padding: 12px; border-radius: 10px; outline: none; appearance: auto; width: 100%; }
-        .p-card { background: rgba(13, 17, 23, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 15px; text-align: center; backdrop-filter: blur(10px); }
-        
-        .chat-premium { background: var(--card); border: 1px solid #1f2937; border-radius: 24px; display: flex; flex-direction: column; height: 450px; overflow: hidden; }
-        #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle at top right, #0d1117, #050a14); }
-        .msg-bubble { max-width: 85%; padding: 10px 15px; border-radius: 18px; font-size: 11px; background: #1f2937; align-self: flex-start; }
-        .msg-bubble.mine { align-self: flex-end; background: linear-gradient(135deg, #0369a1, #075985); color: white; }
-        
-        .broker-card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 20px; margin-bottom: 15px; }
-        .qris-img { width: 100%; max-width: 250px; border-radius: 15px; margin: 10px auto; display: block; border: 2px solid white; }
-        
-        #modal-zoom { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
-
-        .iframe-container { width: 100%; height: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
-        .syndicate-calendar { width: 100%; height: 100%; border: none; filter: invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2); }
-
-        .sub-tab-nav { display: flex; gap: 10px; margin-bottom: 10px; background: #111827; padding: 8px; border-radius: 12px; }
-        .sub-tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: #9ca3af; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 6px; }
-        .sub-tab-btn.active { background: var(--blue); color: black; font-weight: bold; }
-        .widget-box { background: var(--card); border: 1px solid #1f2937; border-radius: 15px; padding: 10px; margin-top: 15px; overflow: hidden; }
-        .widget-title { font-family: 'Orbitron'; font-size: 10px; color: var(--blue); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-        /* === SIGNAL TAB STYLES === */
-        .signal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .signal-live-badge { display: flex; align-items: center; gap: 6px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); padding: 4px 10px; border-radius: 20px; font-family: 'Orbitron'; font-size: 8px; color: var(--green); }
-        .signal-live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse-dot 1.2s infinite; }
-        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.3;transform:scale(0.6);} }
-        
-        .sig-section-title { font-family: 'Orbitron'; font-size: 9px; letter-spacing: 2px; color: #4b5563; text-transform: uppercase; margin: 18px 0 10px; display: flex; align-items: center; gap: 8px; }
-        .sig-section-title::after { content: ''; flex: 1; height: 1px; background: #1f2937; }
-
-        /* ICT SIGNAL CARD */
-        .ict-signal-card { background: linear-gradient(145deg, #0a0e14, #0d1117); border: 1px solid #1f2937; border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; overflow: hidden; transition: border-color 0.3s; }
-        .ict-signal-card.buy  { border-left: 3px solid var(--green); }
-        .ict-signal-card.sell { border-left: 3px solid var(--red); }
-        .ict-signal-card.wait { border-left: 3px solid #374151; }
-        .ict-signal-card::before { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle, rgba(56,189,248,0.04), transparent); pointer-events: none; }
-        .ict-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .ict-badge { font-family: 'Orbitron'; font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
-        .ict-badge.buy  { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
-        .ict-badge.sell { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-        .ict-badge.wait { background: rgba(55,65,81,0.5); color: #6b7280; border: 1px solid #374151; }
-        .ict-pair { font-family: 'Orbitron'; font-size: 18px; color: white; letter-spacing: 1px; }
-        .ict-pair span { color: var(--blue); }
-        .ict-time { font-size: 8px; color: #4b5563; margin-top: 2px; }
-        .ict-levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 10px 0; }
-        .ict-level-item .lbl { font-size: 7px; color: #4b5563; text-transform: uppercase; }
-        .ict-level-item .val { font-family: 'Orbitron'; font-size: 10px; font-weight: bold; }
-        .ict-level-item.entry .val { color: var(--be); }
-        .ict-level-item.sl-item .val { color: var(--red); }
-        .ict-level-item.tp-item .val { color: var(--green); }
-        .ict-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); font-size: 8px; color: #4b5563; }
-        .ict-score { display: flex; align-items: center; gap: 4px; }
-        .ict-score-bar { width: 40px; height: 3px; background: #1f2937; border-radius: 2px; overflow: hidden; }
-        .ict-score-fill { height: 100%; border-radius: 2px; }
-        .ict-reasons { font-size: 8px; color: #374151; line-height: 1.6; padding: 6px 8px; background: rgba(0,0,0,0.2); border-radius: 6px; margin-top: 6px; }
-        .ict-reasons span { color: #6b7280; }
-
-        /* FUNDAMENTAL CARD */
-        .fund-card { background: linear-gradient(145deg, #0a0e14, #0d1117); border: 1px solid #1f2937; border-radius: 16px; padding: 14px; margin-bottom: 10px; position: relative; overflow: hidden; }
-        .fund-card.high   { border-left: 3px solid var(--red); }
-        .fund-card.medium { border-left: 3px solid var(--be); }
-        .fund-card.low    { border-left: 3px solid var(--green); }
-        .fund-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .fund-type { font-family: 'Orbitron'; font-size: 8px; padding: 2px 8px; border-radius: 4px; }
-        .fund-type.alarm  { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-        .fund-type.result { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
-        .fund-type.geo    { background: rgba(234,179,8,0.1); color: var(--be); border: 1px solid rgba(234,179,8,0.2); }
-        .fund-impact { font-size: 7px; font-family: 'Orbitron'; padding: 2px 6px; border-radius: 3px; }
-        .fund-impact.HIGH   { background: rgba(239,68,68,0.2); color: var(--red); }
-        .fund-impact.MEDIUM { background: rgba(234,179,8,0.2); color: var(--be); }
-        .fund-impact.LOW    { background: rgba(74,222,128,0.2); color: var(--green); }
-        .fund-title { font-size: 11px; color: white; font-weight: 600; margin-bottom: 4px; }
-        .fund-body { font-size: 9px; color: #6b7280; line-height: 1.5; }
-        .fund-data-row { display: flex; gap: 8px; margin-top: 8px; }
-        .fund-data-item { flex: 1; text-align: center; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 6px 4px; }
-        .fund-data-item .dlbl { font-size: 7px; color: #374151; text-transform: uppercase; }
-        .fund-data-item .dval { font-family: 'Orbitron'; font-size: 10px; color: white; }
-        .fund-data-item .dval.beat   { color: var(--green); }
-        .fund-data-item .dval.miss   { color: var(--red); }
-        .fund-time { font-size: 7px; color: #374151; margin-top: 6px; }
-
-        /* EMPTY STATE */
-        .sig-empty { text-align: center; padding: 30px 20px; background: rgba(0,0,0,0.2); border: 1px dashed #1f2937; border-radius: 12px; }
-        .sig-empty .sig-empty-icon { font-size: 28px; margin-bottom: 8px; }
-        .sig-empty p { font-size: 10px; color: #374151; font-family: 'Orbitron'; }
-
-        /* SIGNAL FILTER */
-        .sig-filter { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; }
-        .sig-filter::-webkit-scrollbar { display: none; }
-        .sig-filter-btn { flex-shrink: 0; font-family: 'Orbitron'; font-size: 8px; padding: 6px 12px; border-radius: 20px; border: 1px solid #1f2937; background: transparent; color: #6b7280; cursor: pointer; white-space: nowrap; }
-        .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
-    </style>
-</head>
-<body>
-    <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
-
-    <div class="menu-toggle" onclick="toggleNav()">☰</div>
-
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
-        <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News</a>
-        <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal</a>
-        <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
-        <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
-        <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
-        <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
-        <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
-        <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Fundav() {
+        function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
             if (!sidebarOpen) { sidebar.style.width = "250px"; sidebarOpen = true; } 
             else { sidebar.style.width = "0"; sidebarOpen = false; }
