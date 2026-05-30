@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freedom Syndicate - Garapan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00d4ff;
+            --yellow-text: #f1c40f;
+            --bg-dark: #0a0b10;
+            --card-bg: #161b22;
+            --sidebar-bg: #0a0b10;
+            --text-white: #e6edf3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header Style (Sesuai Gambar 1) --- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: var(--bg-dark);
+            position: relative;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .hamburger {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 1.5px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .hamburger:hover {
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+        }
+
+        .header-text {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-text h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px rgba(0, 212, 255, 0.5);
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+
+        .header-text .subtitle {
+            color: var(--yellow-text);
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .header-text .active-email {
+            color: #4b5563;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        /* --- Sidebar Style (Sesuai Gambar 2) --- */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid #1f2937;
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #ef4444; /* Warna Merah */
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #8b949e;
+            transition: all 0.3s;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .menu-item i {
+            width: 35px;
+            font-size: 1.1rem;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Background overlay untuk menutup menu di luar jangkauan */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+            display: none;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .content-card {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            padding: clamp(20px, 5vw, 40px);
+            border-radius: 16px;
+            border: 1px solid #30363d;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        h2 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .description {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.7;
+            color: #c9d1d9;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Link Cards --- */
+        .link-card {
+            background: rgba(0, 212, 255, 0.04);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+
+        .link-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .link-card .site-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-card .site-desc {
+            font-size: 0.88rem;
+            color: #8b949e;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .link-card .visit-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff22, #00d4ff44);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .link-card .visit-btn:hover {
+            background: var(--primary-color);
+            color: #0a0b10;
+        }
+
+        .bank-card {
+            border-color: rgba(241, 196, 15, 0.25);
+            background: rgba(241, 196, 15, 0.03);
+        }
+
+        .bank-card:hover {
+            border-color: var(--yellow-text);
+            box-shadow: 0 0 16px rgba(241, 196, 15, 0.15);
+        }
+
+        .bank-card .site-name { color: var(--yellow-text); }
+
+        .bank-card .visit-btn {
+            background: linear-gradient(135deg, #f1c40f22, #f1c40f44);
+            border-color: var(--yellow-text);
+            color: var(--yellow-text);
+        }
+
+        .bank-card .visit-btn:hover {
+            background: var(--yellow-text);
+            color: #0a0b10;
+        }
+
+        .badge {
+            background: #00d4ff22;
+            border: 1px solid #00d4ff55;
+            color: var(--primary-color);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .badge.gold {
+            background: #f1c40f22;
+            border-color: #f1c40f55;
+            color: var(--yellow-text);
+        }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 30px 15px; }
+            .description { text-align: left; }
+            .hamburger { left: 15px; padding: 4px 8px; font-size: 1rem; }
+            .header-text h1 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-text">
+            <h1>FREEDOM SYNDICATE</h1>
+            <span class="subtitle">( GARAPAN )</span>
+            <span class="active-email">ACTIVE: guest@freedomsyndicate.com</span>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="close-btn" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="showContent('utama', this)">
+                <i class="fas fa-home"></i>
+                <span>Halaman Utama</span>
+            </li>
+            <li class="menu-item" onclick="showContent('airdrop', this)">
+                <i class="fas fa-parachute-box"></i>
+                <span>Airdrop</span>
+            </li>
+            <li class="menu-item" onclick="showContent('kebutuhan', this)">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Kebutuhan</span>
+            </li>
+            <li class="menu-item" onclick="showContent('gratisan', this)">
+                <i class="fas fa-gift"></i>
+                <span>Gratisan</span>
+            </li>
+            <li class="menu-item" onclick="showContent('garapanweb', this)">
+                <i class="fas fa-globe"></i>
+                <span>Garapan Website</span>
+            </li>
+            <li class="menu-item" onclick="showContent('bank', this)">
+                <i class="fas fa-landmark"></i>
+                <span>Bank</span>
+            </li>
+            <li class="menu-item" onclick="showContent('share', this)">
+                <i class="fas fa-share-nodes"></i>
+                <span>Share Garapan</span>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div id="display-card" class="content-card">
+            <h2 id="content-title">Selamat Datang di Freedom Syndicate</h2>
+            <p id="content-desc" class="description">
+                Ini adalah pusat navigasi utama untuk segala jenis garapan yang kami kelola. Freedom Syndicate hadir untuk memudahkan Anda mengakses informasi mulai dari dunia Crypto, kebutuhan harian, hingga berbagai peluang gratisan lainnya secara terorganisir. Pilih salah satu kategori di sidebar untuk memulai penelusuran konten.
+            </p>
+            <div id="extra-content" class="feature-grid">
+                <div class="feature-item">Dapatkan Update Cepat</div>
+                <div class="feature-item">Komunitas Solid</div>
+                <div class="feature-item">Garapan Terverifikasi</div>
+            </div>
+            <div id="extra-html" style="display:none;"></div>
+        </div>
+    </main>
+
+    <script>
+        const contentData = {
+            utama: {
+                title: "Halaman Utama Garapan",
+                desc: "Selamat datang di dashboard utama Freedom Syndicate. Di sini adalah titik awal Anda untuk menjelajahi berbagai peluang dan informasi penting. Kami menyusun navigasi ini agar Anda bisa dengan mudah menemukan garapan yang sesuai, baik itu untuk jangka panjang (Airdrop) maupun manfaat harian (Kebutuhan & Gratisan). Silakan pilih menu di samping untuk melihat detail isinya.",
+                showGrid: true,
+                html: null
+            },
+            airdrop: {
+                title: "Airdrop & Crypto",
+                desc: "Temukan daftar garapan terbaru seputar dunia Crypto, mulai dari Airdrop potensial, Testnet yang sedang berjalan, cara menjalankan Node, hingga Cloud Mining yang terpercaya. Kami fokus membagikan project-project dengan fundamental kuat yang berpotensi memberikan profit maksimal di masa mendatang bagi seluruh anggota syndicate.",
+                showGrid: false,
+                html: null
+            },
+            kebutuhan: {
+                title: "Kebutuhan & Promo",
+                desc: "Bagian ini didedikasikan untuk berbagi informasi seputar kebutuhan sehari-hari yang lebih hemat. Kami akan membagikan update promo dari merchant populer seperti Alfamart, Indomaret, hingga voucher belanja online. Tujuannya adalah agar setiap member bisa memenuhi kebutuhan hidup dengan cara yang lebih cerdas dan ekonomis melalui sistem promo.",
+                showGrid: false,
+                html: null
+            },
+            gratisan: {
+                title: "Zona Gratisan & Penghasil Uang",
+                desc: "Siapa yang tidak suka gratisan? Di tab ini, kami akan rutin membagikan info mengenai kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang (E-Wallet) yang sudah terbukti membayar. Semua informasi di sini difilter agar hanya membagikan sesuatu yang benar-benar bermanfaat dan bukan scam.",
+                showGrid: false,
+                html: null
+            },
+            share: {
+                title: "Share Apapun Di Sini",
+                desc: "Freedom Syndicate adalah komunitas yang tumbuh bersama. Di menu ini, kami membuka ruang bagi siapa saja yang ingin berbagi garapan menarik yang mereka temukan di luar sana. Baik itu peluang bisnis baru atau trik-trik bermanfaat lainnya. Pastikan Anda menyertakan keterangan yang jelas agar mudah dipahami oleh anggota lainnya.",
+                showGrid: false,
+                html: null
+            },
+            garapanweb: {
+                title: "💰 Garapan Website Penghasil Dollar",
+                desc: "Kumpulan website terpercaya yang sudah terbukti membayar anggota Freedom Syndicate. Daftarkan dirimu sekarang dan mulai hasilkan dollar dari mana saja, kapan saja — cukup modal HP dan koneksi internet!",
+                showGrid: false,
+                html: `
+                    <div class="link-card">
+                        <div class="site-name"><i class="fas fa-bolt"></i> InventMoney <span class="badge">Instant Pay</span></div>
+                        <div class="site-desc">🚀 Financial SuperApp untuk para internet earner di seluruh dunia! Selesaikan berbagai task online, dapatkan bayaran secara instan langsung ke akunmu. Cocok untuk pemula maupun yang sudah berpengalaman — daftar gratis dan mulai hasilkan dollar hari ini juga!</div>
+                        <a href="https://app.inventmoney.com/r/7QT7M4U4" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                    </div>
+                    <div class="link-card">
+                        <div class="site-name"><i class="fas fa-star"></i> Swagbucks <span class="badge">Paling Populer</span></div>
+                        <div class="site-desc">🌟 Platform penghasil poin (SBs) nomor 1 di dunia yang sudah membayar jutaan pengguna! Kumpulkan poin dari survey, nonton video, belanja online, sampai main game — lalu tukar dengan PayPal Cash atau Gift Card favoritmu. Sudah terbukti LEGIT sejak 2008!</div>
+                        <a href="https://www.swagbucks.com/p/register?rb=214943199&rp=1" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                    </div>
+                    <div class="link-card">
+                        <div class="site-name"><i class="fas fa-clock"></i> TimeBucks <span class="badge">Multi-Task</span></div>
+                        <div class="site-desc">⏰ Manfaatkan waktu luangmu jadi dollar nyata! TimeBucks menawarkan ratusan cara untuk menghasilkan uang: survei berbayar, menonton konten, mengikuti akun sosial media, hingga task sederhana lainnya. Withdrawal tersedia via PayPal, Payoneer, dan berbagai metode lainnya. Daftar gratis, mulai earning sekarang!</div>
+                        <a href="https://timebucks.com/?refID=228475587" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                    </div>
+                `
+            },
+            bank: {
+                title: "🏦 Rekening Bank Digital Terbaik",
+                desc: "Kelola keuanganmu lebih cerdas dengan bank digital pilihan Freedom Syndicate. Bebas biaya admin, transfer gratis, dan fitur modern langsung dari genggamanmu!",
+                showGrid: false,
+                html: `
+                    <div class="link-card bank-card">
+                        <div class="site-name"><i class="fas fa-university"></i> Krom Bank <span class="badge gold">0% Admin</span></div>
+                        <div class="site-desc">🏅 Bank digital generasi baru dari grup Kredivo! Nikmati tabungan dengan bunga kompetitif, transfer antar bank GRATIS tanpa batas, dan tampilan aplikasi yang sangat modern. Buka rekening 100% online hanya dalam 5 menit — tanpa antri, tanpa ribet!</div>
+                        <div style="background:rgba(241,196,15,0.08);border:1px dashed rgba(241,196,15,0.5);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:0.85rem;line-height:1.6;color:#e6edf3;">
+                            🎁 <strong style="color:#f1c40f;">PROMO SPESIAL!</strong><br>
+                            Daftar pakai link ini → Masukkan saldo <strong style="color:#f1c40f;">Rp300.000</strong> → Simpan selama <strong style="color:#f1c40f;">1 bulan</strong><br>
+                            💰 Langsung dapat reward <strong style="color:#f1c40f;">Rp150.000</strong> gratis!
+                        </div>
+                        <a href="https://krom.id/referral/?code=LWLC9820" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
+                    </div>
+                    <div class="link-card bank-card">
+                        <div class="site-name"><i class="fas fa-exchange-alt"></i> Wise <span class="badge gold">Multi-Valuta</span></div>
+                        <div class="site-desc">🌍 Solusi terbaik untuk transfer uang internasional dengan kurs real-time tanpa markup tersembunyi! Wise hadir dengan rekening multi-valuta — simpan, kirim, dan terima uang dalam 50+ mata uang termasuk USD, EUR, GBP. Wajib punya buat kamu yang punya penghasilan dollar atau sering transaksi luar negeri!</div>
+                        <a href="https://wise.com/invite/ahpc/muhammadikhsanm1" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Wise</a>
+                    </div>
+                    <div class="link-card bank-card">
+                        <div class="site-name"><i class="fas fa-gem"></i> Aladin Bank <span class="badge gold">Syariah</span></div>
+                        <div class="site-desc">✨ Bank syariah digital pertama di Indonesia yang hadir 100% lewat aplikasi! Aladin Bank menawarkan tabungan syariah dengan fitur modern: bagi hasil kompetitif, transfer gratis, bayar tagihan, hingga investasi reksa dana — semua dalam satu aplikasi. Halal, aman, dan praktis untuk keseharianmu!</div>
+                        <a href="https://account.aladinbank.id/gabung/OHG5FN" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
+                    </div>
+                `
+            }
+        };
+
+        // Fungsi Tambahan untuk Drawer Sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebar-overlay').classList.toggle('open');
+        }
+
+        function showContent(key, element) {
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            const card = document.getElementById('display-card');
+            const grid = document.getElementById('extra-content');
+            const extraHtml = document.getElementById('extra-html');
+            
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = 'fadeIn 0.5s ease-out';
+
+            document.getElementById('content-title').innerText = contentData[key].title;
+            document.getElementById('content-desc').innerText = contentData[key].desc;
+            
+            grid.style.display = contentData[key].showGrid ? 'grid' : 'none';
+
+            if (contentData[key].html) {
+                extraHtml.innerHTML = contentData[key].html;
+                extraHtml.style.display = 'block';
+            } else {
+                extraHtml.innerHTML = '';
+                extraHtml.style.display = 'none';
+            }
+
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('open');
+        }
+    </script>
+</body>
+</html>
