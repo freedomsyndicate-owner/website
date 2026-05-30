@@ -44,13 +44,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- PWA -->
-    <link rel="manifest" id="pwa-manifest">
-    <meta name="theme-color" content="#050a14">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FS Journal">
-    <meta name="mobile-web-app-capable" content="yes">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
@@ -72,9 +65,9 @@
             to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
         }
 
-        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
-        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
+        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999999; pointer-events: auto; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; position: relative; z-index: 999999; pointer-events: auto !important; }
+        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; position: relative; z-index: 999999; pointer-events: auto !important; touch-action: manipulation; -webkit-tap-highlight-color: rgba(56,189,248,0.2); }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
@@ -227,7 +220,7 @@
         .ticker-dot { width:3px; height:3px; border-radius:50%; background:rgba(56,189,248,0.3); margin:0 4px; flex-shrink:0; display:inline-block; }
 
         /* ===== SCAN LINE OVERLAY ===== */
-        .scanlines { position:fixed; inset:0; pointer-events:none; z-index:99998; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+        .scanlines { position:fixed; inset:0; pointer-events:none !important; z-index:50; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
 
         /* ===== TAB TRANSITION ===== */
         .tab-content { display:none; width:100%; height:100%; overflow-y:auto; box-sizing:border-box; }
@@ -318,7 +311,7 @@
         .corner-deco.br { bottom:8px; right:8px; border-bottom:2px solid rgba(56,189,248,0.4); border-right:2px solid rgba(56,189,248,0.4); }
 
         /* ===== MATRIX CANVAS ===== */
-        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; opacity:0.025; }
+        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none !important; z-index:-1; opacity:0.025; }
 
         /* ===== AUTH SCREEN UPGRADE ===== */
         .auth-card { position:relative; overflow:hidden; }
@@ -355,86 +348,9 @@
         /* ===== BLINK CURSOR ===== */
         #display-user::after { content:'_'; animation:blink 1s step-end infinite; color:var(--blue); }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-        /* ===== PWA INSTALL BANNER ===== */
-        #pwa-install-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(135deg, #060d1a, #0a1628);
-            border-top: 2px solid rgba(56,189,248,0.4);
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 9998;
-            transform: translateY(110%);
-            transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
-            box-shadow: 0 -8px 40px rgba(56,189,248,0.15);
-        }
-        #pwa-install-bar.show { transform: translateY(0); }
-        #pwa-install-bar .pwa-icon {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: #050a14;
-            border: 1.5px solid rgba(56,189,248,0.4);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        #pwa-install-bar .pwa-icon svg { width:32px; height:32px; }
-        #pwa-install-bar .pwa-text { flex: 1; min-width: 0; }
-        #pwa-install-bar .pwa-text b { font-family:'Orbitron'; font-size:10px; color:white; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        #pwa-install-bar .pwa-text span { font-size:9px; color:#4b5563; }
-        #pwa-install-bar .pwa-btn-install {
-            background: var(--blue);
-            color: black;
-            border: none;
-            padding: 11px 16px;
-            border-radius: 10px;
-            font-family: 'Orbitron';
-            font-size: 9px;
-            font-weight: 900;
-            cursor: pointer;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
-            animation: pwaBtnGlow 2s ease-in-out infinite alternate;
-        }
-        @keyframes pwaBtnGlow {
-            from { box-shadow: 0 0 8px rgba(56,189,248,0.4); }
-            to   { box-shadow: 0 0 22px rgba(56,189,248,0.8), 0 0 40px rgba(56,189,248,0.3); }
-        }
-        #pwa-install-bar .pwa-btn-close {
-            background: transparent;
-            border: 1px solid #1f2937;
-            color: #374151;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 8px;
-            flex-shrink: 0;
-            line-height: 1;
-        }
-        #pwa-install-bar .pwa-btn-close:hover { color: #6b7280; border-color:#374151; }
-
     </style>
 </head>
 <body>
-
-
-    <!-- PWA INSTALL BAR -->
-    <div id="pwa-install-bar">
-        <div class="pwa-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
-  <rect width="44" height="44" rx="10" fill="#050a14"/>
-  <polyline points="4,33 13,19 20,25 29,12 37,18 42,8" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="42" cy="8" r="2.5" fill="#4ade80"/>
-  <text x="22" y="42" text-anchor="middle" font-family="monospace" font-size="7" font-weight="bold" fill="#38bdf8">FS</text>
-</svg></div>
-        <div class="pwa-text">
-            <b>FREEDOM SYNDICATE</b>
-            <span>Pasang sebagai aplikasi di HP kamu</span>
-        </div>
-        <button class="pwa-btn-install" id="pwa-btn-install">⬇ INSTALL</button>
-        <button class="pwa-btn-close" id="pwa-btn-close">✕</button>
-    </div>
 
     <!-- MATRIX CANVAS -->
     <canvas id="matrix-canvas"></canvas>
@@ -1075,7 +991,7 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
+        function login() { const p = new firebase.auth.GoogleAuthProvider(); p.addScope('email'); p.addScope('profile'); auth.signInWithRedirect(p); }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
         auth.onAuthStateChanged(u => { 
@@ -1578,88 +1494,6 @@
                 menuToggle.classList.toggle('open');
             };
         }
-
-        // ===== PWA: INLINE MANIFEST =====
-        (function(){
-            const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
-  <rect width="44" height="44" rx="10" fill="#050a14"/>
-  <polyline points="4,33 13,19 20,25 29,12 37,18 42,8" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="42" cy="8" r="2.5" fill="#4ade80"/>
-  <text x="22" y="42" text-anchor="middle" font-family="monospace" font-size="7" font-weight="bold" fill="#38bdf8">FS</text>
-</svg>`;
-            const svgB64  = btoa(unescape(encodeURIComponent(svgIcon)));
-            const manifest = {
-                name: "Freedom Syndicate Journal",
-                short_name: "FS Journal",
-                description: "Premium ICT Trading Journal & Signal Platform",
-                start_url: "./",
-                display: "standalone",
-                background_color: "#050a14",
-                theme_color: "#050a14",
-                orientation: "portrait-primary",
-                icons: [
-                    { src: "data:image/svg+xml;base64," + svgB64, sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
-                    { src: "data:image/svg+xml;base64," + svgB64, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
-                ]
-            };
-            const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-            document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-        })();
-
-        // ===== PWA: SERVICE WORKER =====
-        (function(){
-            if(!('serviceWorker' in navigator)) return;
-            const sw = `
-const C='fs-v2';
-self.addEventListener('install',e=>{self.skipWaiting();});
-self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});
-self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});
-`;
-            const url = URL.createObjectURL(new Blob([sw],{type:'application/javascript'}));
-            navigator.serviceWorker.register(url,{scope:'./'})
-                .then(()=>console.log('[FS] SW OK'))
-                .catch(e=>console.warn('[FS] SW fail',e));
-        })();
-
-        // ===== PWA: INSTALL PROMPT =====
-        (function(){
-            let deferred = null;
-            const bar   = document.getElementById('pwa-install-bar');
-            const btnIn = document.getElementById('pwa-btn-install');
-            const btnCl = document.getElementById('pwa-btn-close');
-            if(!bar) return;
-
-            window.addEventListener('beforeinstallprompt', e => {
-                e.preventDefault();
-                deferred = e;
-                // Only show bar when user is NOT on auth screen
-                function tryShow() {
-                    const auth = document.getElementById('auth-screen');
-                    const isAuthVisible = auth && (auth.style.display !== 'none');
-                    if(isAuthVisible) {
-                        setTimeout(tryShow, 1000);
-                    } else {
-                        setTimeout(() => bar.classList.add('show'), 1500);
-                    }
-                }
-                setTimeout(tryShow, 3000);
-            });
-
-            btnIn && btnIn.addEventListener('click', async () => {
-                if(!deferred) return;
-                deferred.prompt();
-                const { outcome } = await deferred.userChoice;
-                deferred = null;
-                bar.classList.remove('show');
-            });
-
-            btnCl && btnCl.addEventListener('click', () => {
-                bar.classList.remove('show');
-                deferred = null;
-            });
-
-            window.addEventListener('appinstalled', () => bar.classList.remove('show'));
-        })();
 
     </script>
 </body>
