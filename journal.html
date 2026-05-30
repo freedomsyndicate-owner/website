@@ -207,19 +207,17 @@
         .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
 
         /* ===== TICKER TAPE ===== */
-        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.95); border-bottom:1px solid rgba(56,189,248,0.2); padding:5px 0; position:relative; z-index:99; flex-shrink:0; }
-        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; }
-        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14,transparent); }
-        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14,transparent); }
-        .ticker-track { display:flex; gap:0; white-space:nowrap; animation:tickerScroll 60s linear infinite; }
-        .ticker-track:hover { animation-play-state:paused; }
-        @keyframes tickerScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-        .ticker-item { display:inline-flex; align-items:center; gap:6px; padding:2px 18px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; }
-        .ticker-pair { color:#6b7280; }
+        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.97); border-bottom:1px solid rgba(56,189,248,0.25); border-top:1px solid rgba(56,189,248,0.1); padding:0; position:relative; z-index:99; flex-shrink:0; height:26px; }
+        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; pointer-events:none; }
+        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14 40%,transparent); }
+        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14 40%,transparent); }
+        .ticker-inner { position:absolute; top:0; left:0; display:flex; align-items:center; height:100%; will-change:transform; }
+        .ticker-item { display:inline-flex; align-items:center; gap:5px; padding:0 16px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; }
+        .ticker-pair { color:#4b5563; }
         .ticker-price { color:white; font-weight:bold; }
         .ticker-chg.up   { color:#4ade80; }
         .ticker-chg.down { color:#ef4444; }
-        .ticker-sep { color:rgba(56,189,248,0.2); margin:0 4px; }
+        .ticker-dot { width:3px; height:3px; border-radius:50%; background:rgba(56,189,248,0.3); margin:0 4px; flex-shrink:0; display:inline-block; }
 
         /* ===== SCAN LINE OVERLAY ===== */
         .scanlines { position:fixed; inset:0; pointer-events:none; z-index:99998; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
@@ -393,9 +391,7 @@
 
     <!-- LIVE TICKER TAPE -->
     <div class="ticker-wrap" id="ticker-wrap">
-        <div class="ticker-track" id="ticker-track">
-            <!-- items injected by JS -->
-        </div>
+        <div class="ticker-inner" id="ticker-inner"></div>
     </div>
 
     <div class="content-container">
@@ -1417,47 +1413,77 @@
             setInterval(draw, 55);
         })();
 
-        // ===== LIVE TICKER TAPE =====
-        const TICKER_PAIRS = [
-            {pair:'XAUUSD',base:2340},{pair:'EURUSD',base:1.0850},{pair:'GBPUSD',base:1.2700},
-            {pair:'USDJPY',base:154.50},{pair:'AUDUSD',base:0.6450},{pair:'USDCAD',base:1.3650},
-            {pair:'USDCHF',base:0.9020},{pair:'NZDUSD',base:0.5920},{pair:'EURJPY',base:167.50},
-            {pair:'GBPJPY',base:196.30},{pair:'EURGBP',base:0.8540},{pair:'XAGUSD',base:29.45},
-            {pair:'BTCUSD',base:65000},{pair:'ETHUSD',base:3200},{pair:'NAS100',base:18500},{pair:'US30',base:38500}
-        ];
-        let tickerPrices = {};
-        TICKER_PAIRS.forEach(p => {
-            tickerPrices[p.pair] = { price: p.base, prev: p.base, base: p.base };
-        });
+        // ===== LIVE TICKER TAPE (SMOOTH INFINITE SCROLL) =====
+        (function(){
+            const PAIRS = [
+                {pair:'XAUUSD',base:2340,d:2},{pair:'EURUSD',base:1.0850,d:5},{pair:'GBPUSD',base:1.2700,d:5},
+                {pair:'USDJPY',base:154.50,d:2},{pair:'AUDUSD',base:0.6450,d:5},{pair:'USDCAD',base:1.3650,d:5},
+                {pair:'USDCHF',base:0.9020,d:5},{pair:'NZDUSD',base:0.5920,d:5},{pair:'EURJPY',base:167.50,d:2},
+                {pair:'GBPJPY',base:196.30,d:2},{pair:'EURGBP',base:0.8540,d:5},{pair:'XAGUSD',base:29.45,d:2},
+                {pair:'BTCUSD',base:65000,d:2},{pair:'ETHUSD',base:3200,d:2},{pair:'NAS100',base:18500,d:2},{pair:'US30',base:38500,d:2}
+            ];
 
-        function updateTicker(){
-            const track = document.getElementById('ticker-track');
-            if(!track) return;
-            // randomize small price movement
-            TICKER_PAIRS.forEach(p => {
-                const t = tickerPrices[p.pair];
-                t.prev = t.price;
-                const move = (Math.random()-0.5) * p.base * 0.0004;
-                t.price = Math.max(p.base * 0.9, t.price + move);
+            // State per pair
+            const state = {};
+            PAIRS.forEach(p => { state[p.pair] = { price: p.base, prev: p.base, dir: 1 }; });
+
+            const inner = document.getElementById('ticker-inner');
+            if(!inner) return;
+
+            // Build DOM items — 3 full sets so loop is seamless
+            const allPairs = [...PAIRS, ...PAIRS, ...PAIRS];
+            inner.innerHTML = allPairs.map((p,i) =>
+                `<span class="ticker-item" data-pair="${p.pair}" data-idx="${i}">` +
+                `<span class="ticker-pair">${p.pair}</span> ` +
+                `<span class="ticker-price" id="tp-${i}">${p.base.toFixed(p.d)}</span> ` +
+                `<span class="ticker-chg up" id="tc-${i}">▲0.${'0'.repeat(p.d-1)}1</span>` +
+                `<span class="ticker-dot"></span>` +
+                `</span>`
+            ).join('');
+
+            // Wait one frame to measure real width
+            requestAnimationFrame(() => {
+                const totalW = inner.scrollWidth;
+                const oneSetW = totalW / 3;  // width of one full set of pairs
+                let x = 0;
+                const speed = 0.5; // px per frame — smooth & readable
+
+                // Price update every 2.5s — update DOM in-place, NO innerHTML rebuild
+                function updatePrices() {
+                    PAIRS.forEach(p => {
+                        const s = state[p.pair];
+                        s.prev = s.price;
+                        const move = (Math.random() - 0.48) * p.base * 0.00035;
+                        s.price = Math.max(p.base * 0.85, s.price + move);
+                        const chg = s.price - s.prev;
+                        const arrow = chg >= 0 ? '▲' : '▼';
+                        const cls   = chg >= 0 ? 'up' : 'down';
+                        // Update all 3 copies
+                        for(let copy = 0; copy < 3; copy++){
+                            const idx = copy * PAIRS.length + PAIRS.indexOf(p);
+                            const priceEl = document.getElementById('tp-' + idx);
+                            const chgEl   = document.getElementById('tc-' + idx);
+                            if(priceEl) priceEl.textContent = s.price.toFixed(p.d);
+                            if(chgEl) {
+                                chgEl.textContent = arrow + Math.abs(chg).toFixed(p.d);
+                                chgEl.className = 'ticker-chg ' + cls;
+                            }
+                        }
+                    });
+                }
+                setInterval(updatePrices, 2500);
+
+                // Scroll loop — rAF based, perfectly smooth
+                function tick() {
+                    x += speed;
+                    // When we've scrolled one full set, snap back seamlessly
+                    if(x >= oneSetW) x -= oneSetW;
+                    inner.style.transform = 'translateX(-' + x + 'px)';
+                    requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
             });
-            const decimals = (pair) => ['XAUUSD','XAGUSD','BTCUSD','ETHUSD','NAS100','US30','USDJPY','EURJPY','GBPJPY'].includes(pair) ? 2 : 5;
-            const items = [...TICKER_PAIRS, ...TICKER_PAIRS].map(p => {
-                const t = tickerPrices[p.pair];
-                const chg = t.price - t.prev;
-                const cls = chg >= 0 ? 'up' : 'down';
-                const arrow = chg >= 0 ? '▲' : '▼';
-                const d = decimals(p.pair);
-                return `<span class="ticker-item">
-                    <span class="ticker-pair">${p.pair}</span>
-                    <span class="ticker-price">${t.price.toFixed(d)}</span>
-                    <span class="ticker-chg ${cls}">${arrow}${Math.abs(chg).toFixed(d)}</span>
-                    <span class="ticker-sep">|</span>
-                </span>`;
-            }).join('');
-            track.innerHTML = items;
-        }
-        updateTicker();
-        setInterval(updateTicker, 3000);
+        })();
 
         // ===== MENU TOGGLE ICON ANIM =====
         const menuToggle = document.querySelector('.menu-toggle');
