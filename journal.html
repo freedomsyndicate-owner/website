@@ -67,7 +67,7 @@
 
         #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999999; pointer-events: auto; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; position: relative; z-index: 999999; pointer-events: auto !important; }
-        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; position: relative; z-index: 999999; pointer-events: auto !important; touch-action: manipulation; -webkit-tap-highlight-color: rgba(56,189,248,0.2); }
+        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; position: relative; z-index: 999999; pointer-events: auto !important; touch-action: manipulation; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
@@ -220,7 +220,7 @@
         .ticker-dot { width:3px; height:3px; border-radius:50%; background:rgba(56,189,248,0.3); margin:0 4px; flex-shrink:0; display:inline-block; }
 
         /* ===== SCAN LINE OVERLAY ===== */
-        .scanlines { position:fixed; inset:0; pointer-events:none !important; z-index:50; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+        .scanlines { position:fixed; inset:0; pointer-events:none !important; z-index:10; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
 
         /* ===== TAB TRANSITION ===== */
         .tab-content { display:none; width:100%; height:100%; overflow-y:auto; box-sizing:border-box; }
@@ -991,8 +991,34 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); p.addScope('email'); p.addScope('profile'); auth.signInWithRedirect(p); }
+        function login() {
+            const p = new firebase.auth.GoogleAuthProvider();
+            p.addScope('email');
+            p.addScope('profile');
+            // Popup dulu (cepat), fallback redirect kalau blocked
+            auth.signInWithPopup(p)
+                .then(result => { /* onAuthStateChanged akan handle */ })
+                .catch(e => {
+                    if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+                        // Fallback ke redirect
+                        auth.signInWithRedirect(p);
+                    } else {
+                        alert('Login gagal: ' + e.message);
+                    }
+                });
+        }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
+
+        // Handle redirect result (fallback dari popup-blocked)
+        auth.getRedirectResult().then(result => {
+            if(result && result.user) {
+                // onAuthStateChanged akan otomatis fire, tidak perlu handle manual
+            }
+        }).catch(e => {
+            if(e.code && e.code !== 'auth/no-auth-event') {
+                console.warn('Redirect error:', e.message);
+            }
+        });
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
