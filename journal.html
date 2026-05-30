@@ -44,6 +44,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
+        <!-- PWA -->
+    <link rel="manifest" id="pwa-manifest">
+    <meta name="theme-color" content="#050a14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Freedom Syndicate">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Freedom Syndicate">
+    <link rel="apple-touch-icon" href="https://api.iconify.design/mdi:chart-line.svg?color=%2338bdf8&width=192&height=192">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
@@ -348,9 +358,77 @@
         /* ===== BLINK CURSOR ===== */
         #display-user::after { content:'_'; animation:blink 1s step-end infinite; color:var(--blue); }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ===== PWA INSTALL BANNER ===== */
+        #pwa-install-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(135deg, #0d1117, #0a1628);
+            border-top: 1px solid rgba(56,189,248,0.3);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99999;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 -8px 32px rgba(56,189,248,0.1);
+        }
+        #pwa-install-bar.show { transform: translateY(0); }
+        #pwa-install-bar .pwa-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: linear-gradient(135deg,#0369a1,#38bdf8);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(56,189,248,0.4);
+        }
+        #pwa-install-bar .pwa-text { flex: 1; }
+        #pwa-install-bar .pwa-text b { font-family:'Orbitron'; font-size:10px; color:white; display:block; }
+        #pwa-install-bar .pwa-text span { font-size:9px; color:#4b5563; }
+        #pwa-install-bar .pwa-btn-install {
+            background: var(--blue);
+            color: black;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-family: 'Orbitron';
+            font-size: 9px;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 0 14px rgba(56,189,248,0.4);
+            animation: pwaGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes pwaGlow {
+            from { box-shadow: 0 0 8px rgba(56,189,248,0.3); }
+            to   { box-shadow: 0 0 20px rgba(56,189,248,0.7); }
+        }
+        #pwa-install-bar .pwa-btn-close {
+            background: transparent;
+            border: none;
+            color: #374151;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        #pwa-install-bar .pwa-btn-close:hover { color: #6b7280; }
+
     </style>
 </head>
 <body>
+
+
+    <!-- PWA INSTALL BAR -->
+    <div id="pwa-install-bar">
+        <div class="pwa-icon">📈</div>
+        <div class="pwa-text">
+            <b>FREEDOM SYNDICATE</b>
+            <span>Install sebagai aplikasi di HP kamu</span>
+        </div>
+        <button class="pwa-btn-install" id="pwa-btn-install">⬇ INSTALL</button>
+        <button class="pwa-btn-close" id="pwa-btn-close">✕</button>
+    </div>
 
     <!-- MATRIX CANVAS -->
     <canvas id="matrix-canvas"></canvas>
@@ -1494,6 +1572,99 @@
                 menuToggle.classList.toggle('open');
             };
         }
+
+        // ===== PWA: INLINE MANIFEST =====
+        (function(){
+            const manifest = {
+                name: "Freedom Syndicate Journal",
+                short_name: "FS Journal",
+                description: "Premium ICT Trading Journal & Signal Platform",
+                start_url: "./",
+                display: "standalone",
+                background_color: "#050a14",
+                theme_color: "#050a14",
+                orientation: "portrait",
+                icons: [
+                    {
+                        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%23050a14'/%3E%3Crect x='8' y='8' width='176' height='176' rx='20' fill='none' stroke='%2338bdf8' stroke-width='2' opacity='0.3'/%3E%3Cpolyline points='20,130 55,80 85,105 115,55 145,75 172,40' fill='none' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='172' cy='40' r='8' fill='%234ade80'/%3E%3Ctext x='96' y='168' text-anchor='middle' font-family='monospace' font-size='14' font-weight='bold' fill='%2338bdf8' letter-spacing='2'%3EFS%3C/text%3E%3C/svg%3E",
+                        sizes: "192x192",
+                        type: "image/svg+xml",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='60' fill='%23050a14'/%3E%3Crect x='12' y='12' width='488' height='488' rx='54' fill='none' stroke='%2338bdf8' stroke-width='4' opacity='0.3'/%3E%3Cpolyline points='50,360 145,210 225,275 305,140 390,195 462,100' fill='none' stroke='%2338bdf8' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='462' cy='100' r='22' fill='%234ade80'/%3E%3Ctext x='256' y='460' text-anchor='middle' font-family='monospace' font-size='40' font-weight='bold' fill='%2338bdf8' letter-spacing='6'%3EFS%3C/text%3E%3C/svg%3E",
+                        sizes: "512x512",
+                        type: "image/svg+xml",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+            const url  = URL.createObjectURL(blob);
+            document.getElementById('pwa-manifest').href = url;
+        })();
+
+        // ===== PWA: SERVICE WORKER (inline via blob) =====
+        (function(){
+            const swCode = `
+const CACHE = 'fs-journal-v1';
+const ASSETS = ['./', './index.html'];
+self.addEventListener('install', e => {
+    e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+    e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+});
+`;
+            if('serviceWorker' in navigator){
+                const swBlob = new Blob([swCode], {type:'application/javascript'});
+                const swUrl  = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl, {scope:'./'})
+                    .then(()=>console.log('[FS] SW registered'))
+                    .catch(e=>console.warn('[FS] SW error',e));
+            }
+        })();
+
+        // ===== PWA: INSTALL PROMPT =====
+        (function(){
+            let deferredPrompt = null;
+            const bar    = document.getElementById('pwa-install-bar');
+            const btnIn  = document.getElementById('pwa-btn-install');
+            const btnCl  = document.getElementById('pwa-btn-close');
+
+            // Show bar when browser fires beforeinstallprompt
+            window.addEventListener('beforeinstallprompt', e => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Small delay so it doesn't pop up immediately
+                setTimeout(() => bar.classList.add('show'), 2500);
+            });
+
+            // Install clicked
+            btnIn && btnIn.addEventListener('click', async () => {
+                if(!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                bar.classList.remove('show');
+            });
+
+            // Close clicked
+            btnCl && btnCl.addEventListener('click', () => {
+                bar.classList.remove('show');
+                // Don't show again for this session
+                deferredPrompt = null;
+            });
+
+            // Hide if already installed
+            window.addEventListener('appinstalled', () => {
+                bar.classList.remove('show');
+                console.log('[FS] App installed!');
+            });
+        })();
 
     </script>
 </body>
