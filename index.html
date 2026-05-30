@@ -993,7 +993,7 @@
         <ul class="sidebar-menu">
             <li><button onclick="openTab('home', this)" class="active-tab">🏠 Beranda</button></li>
             <li><button onclick="openTab('trading', this)">📈 Trading</button></li>
-            <li><button onclick="openTab('garapan', this)">💰 Info Garapan</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
             <li><button onclick="openTab('keluhkesah', this)">🗣️ Keluh Kesah</button></li>
             <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
             <li><button onclick="openTab('dewasa', this)">🔞 Konten 18+</button></li>
@@ -1149,6 +1149,11 @@
     </div>
 
     <script>
+        // --- LOGIC BUKA GARAPAN ---
+        function bukaGarapan() {
+            window.location.href = 'garapan.html';
+        }
+
         // --- LOGIC SIDEBAR ---
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('pageOverlay');
