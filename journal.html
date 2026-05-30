@@ -372,6 +372,7 @@
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
+        <a href="#" class="nav-link" onclick="openTab('download-tab', this); toggleNav()">⬇️ Download</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
 
@@ -969,6 +970,73 @@
 
         </div></div>
 
+        <!-- ===== DOWNLOAD TAB ===== -->
+        <div id="download-tab" class="tab-content"><div class="inner-padding">
+            <h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0 0 16px;">⬇️ DOWNLOAD APLIKASI</h2>
+            <p style="font-size:10px; color:#6b7280; margin-bottom:20px;">Install aplikasi resmi Freedom Syndicate & tools trading yang direkomendasikan langsung ke perangkatmu.</p>
+
+            <!-- FS PWA Install -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid rgba(56,189,248,0.3); border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#0369a1,#38bdf8); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">🦅</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">FREEDOM SYNDICATE</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">freedomsyndicatecloud.github.io</div>
+                    <div style="font-size:8px; color:#6b7280;">Signal • Journal • Monitor</div>
+                </div>
+                <button id="pwa-install-btn" onclick="installPWA()" style="background:var(--blue); color:black; border:none; padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- MetaTrader 5 -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#1e3a5f,#0369a1); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">📊</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">METATRADER 5</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">MetaQuotes Ltd</div>
+                    <div style="font-size:8px; color:#6b7280;">Platform trading forex & emas</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5','_blank')" style="background:#111827; color:var(--green); border:1px solid var(--green); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- TradingView -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">📈</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">TRADINGVIEW</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">TradingView Inc.</div>
+                    <div style="font-size:8px; color:#6b7280;">Chart & analisa teknikal</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=com.tradingview.tradingviewapp','_blank')" style="background:#111827; color:var(--be); border:1px solid var(--be); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- Telegram -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#0088cc,#00aaff); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">✈️</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">TELEGRAM</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">Telegram FZ-LLC</div>
+                    <div style="font-size:8px; color:#6b7280;">Terima sinyal bot otomatis</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=org.telegram.messenger','_blank')" style="background:#111827; color:#00aaff; border:1px solid #00aaff; padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- Investing.com -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#c0392b,#e74c3c); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">🌍</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">INVESTING.COM</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">Fusion Media Ltd</div>
+                    <div style="font-size:8px; color:#6b7280;">Kalender ekonomi & berita</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=com.fusionmedia.investing','_blank')" style="background:#111827; color:var(--red); border:1px solid var(--red); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <div id="pwa-install-note" style="display:none; background:rgba(56,189,248,0.08); border:1px dashed rgba(56,189,248,0.3); border-radius:12px; padding:14px; text-align:center; margin-top:10px;">
+                <div style="font-size:20px; margin-bottom:6px;">📲</div>
+                <div style="font-family:'Orbitron'; font-size:9px; color:var(--blue); margin-bottom:4px;">CARA INSTALL FS APP</div>
+                <div style="font-size:9px; color:#9ca3af; line-height:1.7;">Di Chrome: ketuk menu <b style="color:white;">⋮</b> pojok kanan atas → <b style="color:white;">Tambahkan ke layar utama</b><br>Di Safari: ketuk ikon <b style="color:white;">Share ↑</b> → <b style="color:white;">Add to Home Screen</b></div>
+            </div>
+        </div></div>
+
         <div id="donasi-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
@@ -995,17 +1063,14 @@
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
-            // Popup dulu (cepat), fallback redirect kalau blocked
-            auth.signInWithPopup(p)
-                .then(result => { /* onAuthStateChanged akan handle */ })
-                .catch(e => {
-                    if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
-                        // Fallback ke redirect
-                        auth.signInWithRedirect(p);
-                    } else {
-                        alert('Login gagal: ' + e.message);
-                    }
-                });
+            // Langsung pakai redirect — lebih reliable di mobile & GitHub Pages
+            // Popup sering diblokir browser mobile & iframe security policy
+            const btn = document.getElementById('googleBtn');
+            if(btn) { btn.disabled = true; btn.innerText = '⏳ MENGALIHKAN...'; }
+            auth.signInWithRedirect(p).catch(e => {
+                if(btn) { btn.disabled = false; btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE'; }
+                alert('Login gagal: ' + e.message);
+            });
         }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
@@ -1407,6 +1472,29 @@
                 const dateStr = `${year}-${String(monthIndex + 1).padStart(2,'0')}-${String(i).padStart(2,'0')}`; const pnl = daysData[dateStr] || 0;
                 const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
+            }
+        }
+
+        // ===== PWA INSTALL HANDLER =====
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    deferredPrompt = null;
+                    const btn = document.getElementById('pwa-install-btn');
+                    if(choice.outcome === 'accepted') {
+                        if(btn) { btn.innerText = '✅ TERPASANG'; btn.disabled = true; btn.style.background = '#1f2937'; btn.style.color = 'var(--green)'; }
+                    }
+                });
+            } else {
+                // Browser tidak support PWA prompt — tampilkan petunjuk manual
+                document.getElementById('pwa-install-note').style.display = 'block';
+                document.getElementById('pwa-install-note').scrollIntoView({ behavior:'smooth' });
             }
         }
 
