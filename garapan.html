@@ -339,6 +339,26 @@
         }
         .promo-box strong { color: var(--yellow); }
 
+        /* ===== IMAGE FRAME ===== */
+        .img-frame { margin-bottom: 14px; border-radius: 12px; overflow: hidden; }
+        .img-frame img { margin-bottom: 0 !important; }
+        .img-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(56,189,248,0.05);
+            border: 1px dashed rgba(56,189,248,0.3);
+            border-radius: 12px;
+            padding: 24px 16px;
+            color: var(--primary);
+            font-size: 0.88rem;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .img-placeholder i { font-size: 2rem; opacity: 0.6; }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -411,7 +431,11 @@
             <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang yang sudah terbukti membayar. Semua sudah difilter — hanya yang benar-benar bermanfaat, bukan scam.</p>
 
             <div class="link-card">
-                <img src="https://i.ibb.co/N29nQSMx" alt="Bansos eSIM XL" style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;">
+                <div class="img-frame" id="img1-frame">
+                    <img src="https://i.ibb.co/N29nQSMx/image.jpg" alt="Bansos eSIM XL"
+                        onerror="document.getElementById('img1-frame').innerHTML='<div class=\'img-placeholder\'><i class=\'fas fa-sim-card\'></i><span>📌 Bansos eSIM XL · 120GB / 1 Tahun</span></div>'"
+                        style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;display:block;">
+                </div>
                 <div class="site-name"><i class="fas fa-sim-card"></i> Bansos eSIM Gratis XL <span class="badge">120GB / 1 Tahun</span></div>
                 <div class="site-desc">
                     📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis Bundling 120GB / 1 Tahun</strong><br><br>
@@ -425,7 +449,11 @@
             </div>
 
             <div class="link-card">
-                <img src="https://i.ibb.co/8LVY2SnK" alt="Bansos eSIM Hyfe" style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;">
+                <div class="img-frame" id="img2-frame">
+                    <img src="https://i.ibb.co/8LVY2SnK/image.jpg" alt="Bansos eSIM Hyfe"
+                        onerror="document.getElementById('img2-frame').innerHTML='<div class=\'img-placeholder\'><i class=\'fas fa-wifi\'></i><span>📌 Bansos eSIM Hyfe.id · 5GB / 7 Hari</span></div>'"
+                        style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;display:block;">
+                </div>
                 <div class="site-name"><i class="fas fa-wifi"></i> Bansos eSIM Gratis Hyfe.id <span class="badge">5GB · 7 Hari</span></div>
                 <div class="site-desc">
                     📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis 5GB 7 Hari — Hyfeid</strong><br><br>
