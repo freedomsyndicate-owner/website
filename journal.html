@@ -1003,7 +1003,7 @@
     </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
+        const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicate-owner.github.io", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
@@ -1019,13 +1019,18 @@
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
-            // Langsung pakai redirect — lebih reliable di mobile & GitHub Pages
-            // Popup sering diblokir browser mobile & iframe security policy
+            p.setCustomParameters({ prompt: 'select_account' });
             const btn = document.getElementById('googleBtn');
-            if(btn) { btn.disabled = true; btn.innerText = '⏳ MENGALIHKAN...'; }
+            if(btn) { btn.disabled = true; btn.innerHTML = '⏳ MENGALIHKAN...'; }
             auth.signInWithRedirect(p).catch(e => {
-                if(btn) { btn.disabled = false; btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE'; }
-                alert('Login gagal: ' + e.message);
+                console.warn('Redirect gagal, coba popup:', e);
+                // Fallback ke popup jika redirect tidak bisa
+                auth.signInWithPopup(p).then(result => {
+                    // onAuthStateChanged akan handle
+                }).catch(e2 => {
+                    if(btn) { btn.disabled = false; btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE'; }
+                    alert('Login gagal: ' + e2.message + '\n\nPastikan pop-up tidak diblokir browser.');
+                });
             });
         }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
