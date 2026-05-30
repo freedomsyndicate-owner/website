@@ -374,7 +374,6 @@
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
-        <a href="#" class="nav-link" onclick="openTab('download-tab', this); toggleNav()">⬇️ Download</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
 
@@ -974,26 +973,6 @@
 
         </div></div>
 
-        <!-- ===== DOWNLOAD TAB ===== -->
-        <div id="download-tab" class="tab-content"><div class="inner-padding">
-            <h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0 0 8px;">⬇️ INSTALL FS APP</h2>
-            <p style="font-size:10px; color:#6b7280; margin-bottom:20px;">Install Freedom Syndicate langsung ke layar utama perangkatmu.</p>
-            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid rgba(56,189,248,0.3); border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
-                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#0369a1,#38bdf8); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">🦅</div>
-                <div style="flex:1; min-width:0;">
-                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">FREEDOM SYNDICATE</div>
-                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">freedomsyndicate-owner.github.io</div>
-                    <div style="font-size:8px; color:#6b7280;">Signal • Journal • Monitor</div>
-                </div>
-                <button id="pwa-install-btn" onclick="installPWA()" style="background:#38bdf8; color:black; border:none; padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
-            </div>
-            <div style="background:rgba(56,189,248,0.08); border:1px dashed rgba(56,189,248,0.3); border-radius:12px; padding:14px; text-align:center;">
-                <div style="font-size:20px; margin-bottom:6px;">📲</div>
-                <div style="font-family:'Orbitron'; font-size:9px; color:#38bdf8; margin-bottom:4px;">CARA INSTALL FS APP</div>
-                <div style="font-size:9px; color:#9ca3af; line-height:1.7;">Di Chrome: ketuk menu <b style="color:white;">⋮</b> pojok kanan atas → <b style="color:white;">Tambahkan ke layar utama</b><br>Di Safari: ketuk ikon <b style="color:white;">Share ↑</b> → <b style="color:white;">Add to Home Screen</b></div>
-            </div>
-        </div></div>
-
         <div id="donasi-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
@@ -1016,10 +995,8 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' }); auth.signInWithRedirect(p); }
+        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
-
-        auth.getRedirectResult().catch(e => { if(e.code && e.code !== 'auth/no-auth-event') console.warn('Redirect error:', e.message); });
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
