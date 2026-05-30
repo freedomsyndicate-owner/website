@@ -205,9 +205,160 @@
         .sig-filter::-webkit-scrollbar { display: none; }
         .sig-filter-btn { flex-shrink: 0; font-family: 'Orbitron'; font-size: 8px; padding: 6px 12px; border-radius: 20px; border: 1px solid #1f2937; background: transparent; color: #6b7280; cursor: pointer; white-space: nowrap; }
         .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
+
+        /* ===== TICKER TAPE ===== */
+        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.95); border-bottom:1px solid rgba(56,189,248,0.2); padding:5px 0; position:relative; z-index:99; flex-shrink:0; }
+        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; }
+        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14,transparent); }
+        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14,transparent); }
+        .ticker-track { display:flex; gap:0; white-space:nowrap; animation:tickerScroll 60s linear infinite; }
+        .ticker-track:hover { animation-play-state:paused; }
+        @keyframes tickerScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .ticker-item { display:inline-flex; align-items:center; gap:6px; padding:2px 18px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; }
+        .ticker-pair { color:#6b7280; }
+        .ticker-price { color:white; font-weight:bold; }
+        .ticker-chg.up   { color:#4ade80; }
+        .ticker-chg.down { color:#ef4444; }
+        .ticker-sep { color:rgba(56,189,248,0.2); margin:0 4px; }
+
+        /* ===== SCAN LINE OVERLAY ===== */
+        .scanlines { position:fixed; inset:0; pointer-events:none; z-index:99998; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+
+        /* ===== TAB TRANSITION ===== */
+        .tab-content { display:none; width:100%; height:100%; overflow-y:auto; box-sizing:border-box; }
+        .tab-content.active { display:block; animation:tabFadeIn 0.35s ease forwards; }
+        .tab-content.tab-exit { animation:tabFadeOut 0.2s ease forwards; }
+        @keyframes tabFadeIn {
+            from { opacity:0; transform:translateY(12px) scale(0.99); filter:blur(2px); }
+            to   { opacity:1; transform:translateY(0)  scale(1);    filter:blur(0); }
+        }
+        @keyframes tabFadeOut {
+            from { opacity:1; }
+            to   { opacity:0; }
+        }
+
+        /* ===== SUB-TAB TRANSITION ===== */
+        .sub-broker-content.sub-fade { animation:subFadeIn 0.3s ease forwards; }
+        .sub-eco-content.sub-fade    { animation:subFadeIn 0.3s ease forwards; }
+        @keyframes subFadeIn {
+            from { opacity:0; transform:translateX(-10px); }
+            to   { opacity:1; transform:translateX(0); }
+        }
+
+        /* ===== HEADER UPGRADES ===== */
+        .fixed-top { position:relative; overflow:hidden; }
+        .fixed-top::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(56,189,248,0.8),transparent); animation:scanLine 3s linear infinite; }
+        @keyframes scanLine { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+
+        .logo { animation:logoPulse 4s ease-in-out infinite; }
+        @keyframes logoPulse {
+            0%,100% { text-shadow:0 0 10px var(--blue),0 0 20px rgba(56,189,248,0.3); }
+            50%      { text-shadow:0 0 20px var(--blue),0 0 40px rgba(56,189,248,0.6),0 0 60px rgba(56,189,248,0.2); }
+        }
+
+        /* ===== MENU TOGGLE ANIMATION ===== */
+        .menu-toggle { transition:all 0.3s; }
+        .menu-toggle:hover { transform:scale(1.2) rotate(90deg); text-shadow:0 0 20px var(--blue),0 0 40px var(--blue); }
+        .menu-toggle.open { transform:rotate(90deg); }
+
+        /* ===== SIDEBAR UPGRADE ===== */
+        .sidebar a { position:relative; overflow:hidden; }
+        .sidebar a::before { content:''; position:absolute; left:-100%; top:0; bottom:0; width:3px; background:var(--blue); transition:left 0.3s; box-shadow:0 0 10px var(--blue); }
+        .sidebar a:hover::before,.sidebar a.active::before { left:0; }
+        .sidebar a::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(56,189,248,0.03)); opacity:0; transition:opacity 0.3s; }
+        .sidebar a:hover::after,.sidebar a.active::after { opacity:1; }
+
+        /* ===== CARD HOVER EFFECTS ===== */
+        .broker-card { transition:border-color 0.3s,box-shadow 0.3s; }
+        .broker-card:hover { border-color:rgba(56,189,248,0.3); box-shadow:0 0 20px rgba(56,189,248,0.05),inset 0 0 20px rgba(56,189,248,0.02); }
+
+        .ict-signal-card { transition:transform 0.2s,box-shadow 0.2s; }
+        .ict-signal-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(56,189,248,0.08); }
+
+        .history-card { transition:border-color 0.3s; }
+        .history-card:hover { border-color:rgba(56,189,248,0.25); }
+
+        /* ===== BUTTON GLOW PULSE ===== */
+        .btn-save { position:relative; overflow:hidden; transition:box-shadow 0.3s; }
+        .btn-save:hover { box-shadow:0 0 20px rgba(56,189,248,0.5); }
+        .btn-save::after { content:''; position:absolute; top:50%; left:50%; width:0; height:0; background:rgba(255,255,255,0.15); border-radius:50%; transform:translate(-50%,-50%); transition:width 0.5s,height 0.5s,opacity 0.5s; opacity:0; }
+        .btn-save:active::after { width:200px; height:200px; opacity:0; }
+
+        /* ===== SUB TAB BTN ===== */
+        .sub-tab-btn { transition:all 0.25s; position:relative; overflow:hidden; }
+        .sub-tab-btn.active { box-shadow:0 0 14px rgba(56,189,248,0.4); }
+        .sub-tab-btn:not(.active):hover { color:var(--blue); background:rgba(56,189,248,0.05); }
+
+        /* ===== CHIP ANIMATION ===== */
+        .chip { transition:all 0.2s; }
+        .chip:hover { border-color:rgba(56,189,248,0.4); color:#9ca3af; transform:scale(1.04); }
+        .chip.active { animation:chipGlow 1.5s ease-in-out infinite alternate; }
+        @keyframes chipGlow {
+            from { box-shadow:0 0 4px rgba(56,189,248,0.3); }
+            to   { box-shadow:0 0 12px rgba(56,189,248,0.6); }
+        }
+
+        /* ===== LIVE DOT UPGRADED ===== */
+        .signal-live-dot { box-shadow:0 0 6px var(--green); }
+
+        /* ===== P-CARD (COMMUNITY) ===== */
+        .p-card { transition:all 0.3s; }
+        .p-card:hover { border-color:rgba(56,189,248,0.4); box-shadow:0 0 20px rgba(56,189,248,0.1); transform:translateY(-2px); }
+
+        /* ===== CORNER DECORATION ===== */
+        .corner-deco { position:absolute; width:16px; height:16px; pointer-events:none; }
+        .corner-deco.tl { top:8px; left:8px; border-top:2px solid rgba(56,189,248,0.4); border-left:2px solid rgba(56,189,248,0.4); }
+        .corner-deco.tr { top:8px; right:8px; border-top:2px solid rgba(56,189,248,0.4); border-right:2px solid rgba(56,189,248,0.4); }
+        .corner-deco.bl { bottom:8px; left:8px; border-bottom:2px solid rgba(56,189,248,0.4); border-left:2px solid rgba(56,189,248,0.4); }
+        .corner-deco.br { bottom:8px; right:8px; border-bottom:2px solid rgba(56,189,248,0.4); border-right:2px solid rgba(56,189,248,0.4); }
+
+        /* ===== MATRIX CANVAS ===== */
+        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; opacity:0.025; }
+
+        /* ===== AUTH SCREEN UPGRADE ===== */
+        .auth-card { position:relative; overflow:hidden; }
+        .auth-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(56,189,248,0.05),transparent 30%); animation:authRotate 6s linear infinite; }
+        @keyframes authRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+        /* ===== GLITCH TITLE EFFECT ===== */
+        .logo { position:relative; }
+        .logo::before,.logo::after { content:'FREEDOM SYNDICATE'; position:absolute; inset:0; }
+        .logo::before { color:rgba(56,189,248,0.7); animation:glitch1 4s infinite; clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%); }
+        .logo::after  { color:rgba(56,189,248,0.4); animation:glitch2 4s infinite; clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%); }
+        @keyframes glitch1 {
+            0%,94%,100%{transform:none;opacity:0}
+            95%{transform:translateX(-3px);opacity:1}
+            97%{transform:translateX(3px);opacity:1}
+            99%{transform:none;opacity:0}
+        }
+        @keyframes glitch2 {
+            0%,90%,100%{transform:none;opacity:0}
+            91%{transform:translateX(3px);opacity:1}
+            93%{transform:translateX(-3px);opacity:1}
+            95%{transform:none;opacity:0}
+        }
+
+        /* ===== SCROLL BAR ===== */
+        ::-webkit-scrollbar { width:3px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:rgba(56,189,248,0.3); border-radius:3px; }
+        ::-webkit-scrollbar-thumb:hover { background:rgba(56,189,248,0.6); }
+
+        /* ===== EQUITY CHART GLOW ===== */
+        #equityChart { filter:drop-shadow(0 0 4px rgba(239,68,68,0.4)); }
+
+        /* ===== BLINK CURSOR ===== */
+        #display-user::after { content:'_'; animation:blink 1s step-end infinite; color:var(--blue); }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     </style>
 </head>
 <body>
+
+    <!-- MATRIX CANVAS -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- SCANLINES -->
+    <div class="scanlines"></div>
     <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
 
     <div class="menu-toggle" onclick="toggleNav()">☰</div>
@@ -237,6 +388,14 @@
         <h1 class="logo">FREEDOM SYNDICATE</h1>
         <div class="anim-journal">( JOURNAL )</div>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
+    </div>
+
+
+    <!-- LIVE TICKER TAPE -->
+    <div class="ticker-wrap" id="ticker-wrap">
+        <div class="ticker-track" id="ticker-track">
+            <!-- items injected by JS -->
+        </div>
     </div>
 
     <div class="content-container">
@@ -1119,28 +1278,37 @@
             else { document.getElementById('res-lot').innerText = "0.00 Lot"; document.getElementById('res-margin').innerText = "$ 0.00"; }
         }
 
-        function openTab(id, el) { 
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
-            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active')); 
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active'); 
-            if(el) el.classList.add('active'); 
-            if(id==='chart-tab') updateChart(); 
-            if(id==='signal-tab') { renderIctSignals(); renderFundSignals(); }
-            if(id==='monitor-tab' || id==='community-tab' || id==='announce-tab') loadData(); 
+        function openTab(id, el) {
+            document.querySelectorAll('.tab-content.active').forEach(c => {
+                c.classList.add('tab-exit');
+                setTimeout(() => { c.classList.remove('active','tab-exit'); }, 180);
+            });
+            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            setTimeout(() => {
+                const target = document.getElementById(id);
+                if(target) { target.classList.add('active'); }
+                if(el) el.classList.add('active');
+                if(id==='chart-tab') updateChart();
+                if(id==='signal-tab') { renderIctSignals(); renderFundSignals(); }
+                if(id==='monitor-tab' || id==='community-tab' || id==='announce-tab') loadData();
+            }, 150);
         }
 
         function showSubEco(boxId, btn) {
-            document.querySelectorAll('.sub-eco-content').forEach(b => b.style.display = 'none');
+            document.querySelectorAll('.sub-eco-content').forEach(b => { b.style.display = 'none'; b.classList.remove('sub-fade'); });
             document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(boxId).style.display = 'block';
+            const box = document.getElementById(boxId);
+            box.style.display = 'block';
+            requestAnimationFrame(() => box.classList.add('sub-fade'));
             btn.classList.add('active');
         }
 
         function showSubBroker(boxId, btn) {
-            document.querySelectorAll('.sub-broker-content').forEach(b => b.style.display = 'none');
+            document.querySelectorAll('.sub-broker-content').forEach(b => { b.style.display = 'none'; b.classList.remove('sub-fade'); });
             btn.parentNode.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(boxId).style.display = 'block';
+            const box = document.getElementById(boxId);
+            box.style.display = 'block';
+            requestAnimationFrame(() => box.classList.add('sub-fade'));
             btn.classList.add('active');
         }
 
@@ -1204,6 +1372,88 @@
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
             }
         }
+
+        // ===== MATRIX RAIN =====
+        (function(){
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+            resize();
+            window.addEventListener('resize', resize);
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-*/=<>$£€¥@#%&?!アイウエオカキクケコ'.split('');
+            const fontSize = 11;
+            let cols = Math.floor(canvas.width / fontSize);
+            let drops = Array(cols).fill(1);
+            function draw(){
+                ctx.fillStyle = 'rgba(5,10,20,0.05)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = fontSize + 'px monospace';
+                drops.forEach((y,i) => {
+                    const ch = chars[Math.floor(Math.random()*chars.length)];
+                    const x = i * fontSize;
+                    ctx.globalAlpha = Math.random() * 0.5 + 0.1;
+                    ctx.fillText(ch, x, y * fontSize);
+                    if(y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                });
+                ctx.globalAlpha = 1;
+            }
+            setInterval(draw, 55);
+        })();
+
+        // ===== LIVE TICKER TAPE =====
+        const TICKER_PAIRS = [
+            {pair:'XAUUSD',base:2340},{pair:'EURUSD',base:1.0850},{pair:'GBPUSD',base:1.2700},
+            {pair:'USDJPY',base:154.50},{pair:'AUDUSD',base:0.6450},{pair:'USDCAD',base:1.3650},
+            {pair:'USDCHF',base:0.9020},{pair:'NZDUSD',base:0.5920},{pair:'EURJPY',base:167.50},
+            {pair:'GBPJPY',base:196.30},{pair:'EURGBP',base:0.8540},{pair:'XAGUSD',base:29.45},
+            {pair:'BTCUSD',base:65000},{pair:'ETHUSD',base:3200},{pair:'NAS100',base:18500},{pair:'US30',base:38500}
+        ];
+        let tickerPrices = {};
+        TICKER_PAIRS.forEach(p => {
+            tickerPrices[p.pair] = { price: p.base, prev: p.base, base: p.base };
+        });
+
+        function updateTicker(){
+            const track = document.getElementById('ticker-track');
+            if(!track) return;
+            // randomize small price movement
+            TICKER_PAIRS.forEach(p => {
+                const t = tickerPrices[p.pair];
+                t.prev = t.price;
+                const move = (Math.random()-0.5) * p.base * 0.0004;
+                t.price = Math.max(p.base * 0.9, t.price + move);
+            });
+            const decimals = (pair) => ['XAUUSD','XAGUSD','BTCUSD','ETHUSD','NAS100','US30','USDJPY','EURJPY','GBPJPY'].includes(pair) ? 2 : 5;
+            const items = [...TICKER_PAIRS, ...TICKER_PAIRS].map(p => {
+                const t = tickerPrices[p.pair];
+                const chg = t.price - t.prev;
+                const cls = chg >= 0 ? 'up' : 'down';
+                const arrow = chg >= 0 ? '▲' : '▼';
+                const d = decimals(p.pair);
+                return `<span class="ticker-item">
+                    <span class="ticker-pair">${p.pair}</span>
+                    <span class="ticker-price">${t.price.toFixed(d)}</span>
+                    <span class="ticker-chg ${cls}">${arrow}${Math.abs(chg).toFixed(d)}</span>
+                    <span class="ticker-sep">|</span>
+                </span>`;
+            }).join('');
+            track.innerHTML = items;
+        }
+        updateTicker();
+        setInterval(updateTicker, 3000);
+
+        // ===== MENU TOGGLE ICON ANIM =====
+        const menuToggle = document.querySelector('.menu-toggle');
+        if(menuToggle){
+            const origToggle = window.toggleNav;
+            window.toggleNav = function(){
+                origToggle();
+                menuToggle.classList.toggle('open');
+            };
+        }
+
     </script>
 </body>
 </html>
