@@ -65,9 +65,9 @@
             to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
         }
 
-        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; }
-        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
+        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999999; pointer-events: auto; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 20px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; position: relative; z-index: 999999; pointer-events: auto !important; }
+        .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; position: relative; z-index: 999999; pointer-events: auto !important; touch-action: manipulation; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
         .logo { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--blue); margin: 0; }
         
@@ -207,22 +207,20 @@
         .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
 
         /* ===== TICKER TAPE ===== */
-        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.95); border-bottom:1px solid rgba(56,189,248,0.2); padding:5px 0; position:relative; z-index:99; flex-shrink:0; }
-        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; }
-        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14,transparent); }
-        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14,transparent); }
-        .ticker-track { display:flex; gap:0; white-space:nowrap; animation:tickerScroll 60s linear infinite; }
-        .ticker-track:hover { animation-play-state:paused; }
-        @keyframes tickerScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-        .ticker-item { display:inline-flex; align-items:center; gap:6px; padding:2px 18px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; }
-        .ticker-pair { color:#6b7280; }
+        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.97); border-bottom:1px solid rgba(56,189,248,0.25); border-top:1px solid rgba(56,189,248,0.1); padding:0; position:relative; z-index:99; flex-shrink:0; height:26px; }
+        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; pointer-events:none; }
+        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14 40%,transparent); }
+        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14 40%,transparent); }
+        .ticker-inner { position:absolute; top:0; left:0; display:flex; align-items:center; height:100%; will-change:transform; }
+        .ticker-item { display:inline-flex; align-items:center; gap:5px; padding:0 16px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; }
+        .ticker-pair { color:#4b5563; }
         .ticker-price { color:white; font-weight:bold; }
         .ticker-chg.up   { color:#4ade80; }
         .ticker-chg.down { color:#ef4444; }
-        .ticker-sep { color:rgba(56,189,248,0.2); margin:0 4px; }
+        .ticker-dot { width:3px; height:3px; border-radius:50%; background:rgba(56,189,248,0.3); margin:0 4px; flex-shrink:0; display:inline-block; }
 
         /* ===== SCAN LINE OVERLAY ===== */
-        .scanlines { position:fixed; inset:0; pointer-events:none; z-index:99998; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+        .scanlines { position:fixed; inset:0; pointer-events:none !important; z-index:10; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
 
         /* ===== TAB TRANSITION ===== */
         .tab-content { display:none; width:100%; height:100%; overflow-y:auto; box-sizing:border-box; }
@@ -313,7 +311,7 @@
         .corner-deco.br { bottom:8px; right:8px; border-bottom:2px solid rgba(56,189,248,0.4); border-right:2px solid rgba(56,189,248,0.4); }
 
         /* ===== MATRIX CANVAS ===== */
-        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; opacity:0.025; }
+        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none !important; z-index:-1; opacity:0.025; }
 
         /* ===== AUTH SCREEN UPGRADE ===== */
         .auth-card { position:relative; overflow:hidden; }
@@ -374,6 +372,7 @@
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
+        <a href="#" class="nav-link" onclick="openTab('download-tab', this); toggleNav()">⬇️ Download</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
 
@@ -393,9 +392,7 @@
 
     <!-- LIVE TICKER TAPE -->
     <div class="ticker-wrap" id="ticker-wrap">
-        <div class="ticker-track" id="ticker-track">
-            <!-- items injected by JS -->
-        </div>
+        <div class="ticker-inner" id="ticker-inner"></div>
     </div>
 
     <div class="content-container">
@@ -973,6 +970,73 @@
 
         </div></div>
 
+        <!-- ===== DOWNLOAD TAB ===== -->
+        <div id="download-tab" class="tab-content"><div class="inner-padding">
+            <h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0 0 16px;">⬇️ DOWNLOAD APLIKASI</h2>
+            <p style="font-size:10px; color:#6b7280; margin-bottom:20px;">Install aplikasi resmi Freedom Syndicate & tools trading yang direkomendasikan langsung ke perangkatmu.</p>
+
+            <!-- FS PWA Install -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid rgba(56,189,248,0.3); border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#0369a1,#38bdf8); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">🦅</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">FREEDOM SYNDICATE</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">freedomsyndicatecloud.github.io</div>
+                    <div style="font-size:8px; color:#6b7280;">Signal • Journal • Monitor</div>
+                </div>
+                <button id="pwa-install-btn" onclick="installPWA()" style="background:var(--blue); color:black; border:none; padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- MetaTrader 5 -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#1e3a5f,#0369a1); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">📊</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">METATRADER 5</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">MetaQuotes Ltd</div>
+                    <div style="font-size:8px; color:#6b7280;">Platform trading forex & emas</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5','_blank')" style="background:#111827; color:var(--green); border:1px solid var(--green); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- TradingView -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">📈</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">TRADINGVIEW</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">TradingView Inc.</div>
+                    <div style="font-size:8px; color:#6b7280;">Chart & analisa teknikal</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=com.tradingview.tradingviewapp','_blank')" style="background:#111827; color:var(--be); border:1px solid var(--be); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- Telegram -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#0088cc,#00aaff); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">✈️</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">TELEGRAM</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">Telegram FZ-LLC</div>
+                    <div style="font-size:8px; color:#6b7280;">Terima sinyal bot otomatis</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=org.telegram.messenger','_blank')" style="background:#111827; color:#00aaff; border:1px solid #00aaff; padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <!-- Investing.com -->
+            <div style="background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-radius:16px; padding:18px; margin-bottom:14px; display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg,#c0392b,#e74c3c); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">🌍</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-family:'Orbitron'; font-size:11px; color:white; font-weight:bold;">INVESTING.COM</div>
+                    <div style="font-size:9px; color:#38bdf8; margin:2px 0;">Fusion Media Ltd</div>
+                    <div style="font-size:8px; color:#6b7280;">Kalender ekonomi & berita</div>
+                </div>
+                <button onclick="window.open('https://play.google.com/store/apps/details?id=com.fusionmedia.investing','_blank')" style="background:#111827; color:var(--red); border:1px solid var(--red); padding:10px 14px; border-radius:10px; font-weight:900; font-family:'Orbitron'; font-size:9px; cursor:pointer; flex-shrink:0; white-space:nowrap;">INSTAL</button>
+            </div>
+
+            <div id="pwa-install-note" style="display:none; background:rgba(56,189,248,0.08); border:1px dashed rgba(56,189,248,0.3); border-radius:12px; padding:14px; text-align:center; margin-top:10px;">
+                <div style="font-size:20px; margin-bottom:6px;">📲</div>
+                <div style="font-family:'Orbitron'; font-size:9px; color:var(--blue); margin-bottom:4px;">CARA INSTALL FS APP</div>
+                <div style="font-size:9px; color:#9ca3af; line-height:1.7;">Di Chrome: ketuk menu <b style="color:white;">⋮</b> pojok kanan atas → <b style="color:white;">Tambahkan ke layar utama</b><br>Di Safari: ketuk ikon <b style="color:white;">Share ↑</b> → <b style="color:white;">Add to Home Screen</b></div>
+            </div>
+        </div></div>
+
         <div id="donasi-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
@@ -995,8 +1059,31 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
+        function login() {
+            const p = new firebase.auth.GoogleAuthProvider();
+            p.addScope('email');
+            p.addScope('profile');
+            // Langsung pakai redirect — lebih reliable di mobile & GitHub Pages
+            // Popup sering diblokir browser mobile & iframe security policy
+            const btn = document.getElementById('googleBtn');
+            if(btn) { btn.disabled = true; btn.innerText = '⏳ MENGALIHKAN...'; }
+            auth.signInWithRedirect(p).catch(e => {
+                if(btn) { btn.disabled = false; btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE'; }
+                alert('Login gagal: ' + e.message);
+            });
+        }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
+
+        // Handle redirect result (fallback dari popup-blocked)
+        auth.getRedirectResult().then(result => {
+            if(result && result.user) {
+                // onAuthStateChanged akan otomatis fire, tidak perlu handle manual
+            }
+        }).catch(e => {
+            if(e.code && e.code !== 'auth/no-auth-event') {
+                console.warn('Redirect error:', e.message);
+            }
+        });
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
@@ -1388,6 +1475,29 @@
             }
         }
 
+        // ===== PWA INSTALL HANDLER =====
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    deferredPrompt = null;
+                    const btn = document.getElementById('pwa-install-btn');
+                    if(choice.outcome === 'accepted') {
+                        if(btn) { btn.innerText = '✅ TERPASANG'; btn.disabled = true; btn.style.background = '#1f2937'; btn.style.color = 'var(--green)'; }
+                    }
+                });
+            } else {
+                // Browser tidak support PWA prompt — tampilkan petunjuk manual
+                document.getElementById('pwa-install-note').style.display = 'block';
+                document.getElementById('pwa-install-note').scrollIntoView({ behavior:'smooth' });
+            }
+        }
+
         // ===== MATRIX RAIN =====
         (function(){
             const canvas = document.getElementById('matrix-canvas');
@@ -1417,47 +1527,77 @@
             setInterval(draw, 55);
         })();
 
-        // ===== LIVE TICKER TAPE =====
-        const TICKER_PAIRS = [
-            {pair:'XAUUSD',base:2340},{pair:'EURUSD',base:1.0850},{pair:'GBPUSD',base:1.2700},
-            {pair:'USDJPY',base:154.50},{pair:'AUDUSD',base:0.6450},{pair:'USDCAD',base:1.3650},
-            {pair:'USDCHF',base:0.9020},{pair:'NZDUSD',base:0.5920},{pair:'EURJPY',base:167.50},
-            {pair:'GBPJPY',base:196.30},{pair:'EURGBP',base:0.8540},{pair:'XAGUSD',base:29.45},
-            {pair:'BTCUSD',base:65000},{pair:'ETHUSD',base:3200},{pair:'NAS100',base:18500},{pair:'US30',base:38500}
-        ];
-        let tickerPrices = {};
-        TICKER_PAIRS.forEach(p => {
-            tickerPrices[p.pair] = { price: p.base, prev: p.base, base: p.base };
-        });
+        // ===== LIVE TICKER TAPE (SMOOTH INFINITE SCROLL) =====
+        (function(){
+            const PAIRS = [
+                {pair:'XAUUSD',base:2340,d:2},{pair:'EURUSD',base:1.0850,d:5},{pair:'GBPUSD',base:1.2700,d:5},
+                {pair:'USDJPY',base:154.50,d:2},{pair:'AUDUSD',base:0.6450,d:5},{pair:'USDCAD',base:1.3650,d:5},
+                {pair:'USDCHF',base:0.9020,d:5},{pair:'NZDUSD',base:0.5920,d:5},{pair:'EURJPY',base:167.50,d:2},
+                {pair:'GBPJPY',base:196.30,d:2},{pair:'EURGBP',base:0.8540,d:5},{pair:'XAGUSD',base:29.45,d:2},
+                {pair:'BTCUSD',base:65000,d:2},{pair:'ETHUSD',base:3200,d:2},{pair:'NAS100',base:18500,d:2},{pair:'US30',base:38500,d:2}
+            ];
 
-        function updateTicker(){
-            const track = document.getElementById('ticker-track');
-            if(!track) return;
-            // randomize small price movement
-            TICKER_PAIRS.forEach(p => {
-                const t = tickerPrices[p.pair];
-                t.prev = t.price;
-                const move = (Math.random()-0.5) * p.base * 0.0004;
-                t.price = Math.max(p.base * 0.9, t.price + move);
+            // State per pair
+            const state = {};
+            PAIRS.forEach(p => { state[p.pair] = { price: p.base, prev: p.base, dir: 1 }; });
+
+            const inner = document.getElementById('ticker-inner');
+            if(!inner) return;
+
+            // Build DOM items — 3 full sets so loop is seamless
+            const allPairs = [...PAIRS, ...PAIRS, ...PAIRS];
+            inner.innerHTML = allPairs.map((p,i) =>
+                `<span class="ticker-item" data-pair="${p.pair}" data-idx="${i}">` +
+                `<span class="ticker-pair">${p.pair}</span> ` +
+                `<span class="ticker-price" id="tp-${i}">${p.base.toFixed(p.d)}</span> ` +
+                `<span class="ticker-chg up" id="tc-${i}">▲0.${'0'.repeat(p.d-1)}1</span>` +
+                `<span class="ticker-dot"></span>` +
+                `</span>`
+            ).join('');
+
+            // Wait one frame to measure real width
+            requestAnimationFrame(() => {
+                const totalW = inner.scrollWidth;
+                const oneSetW = totalW / 3;  // width of one full set of pairs
+                let x = 0;
+                const speed = 0.5; // px per frame — smooth & readable
+
+                // Price update every 2.5s — update DOM in-place, NO innerHTML rebuild
+                function updatePrices() {
+                    PAIRS.forEach(p => {
+                        const s = state[p.pair];
+                        s.prev = s.price;
+                        const move = (Math.random() - 0.48) * p.base * 0.00035;
+                        s.price = Math.max(p.base * 0.85, s.price + move);
+                        const chg = s.price - s.prev;
+                        const arrow = chg >= 0 ? '▲' : '▼';
+                        const cls   = chg >= 0 ? 'up' : 'down';
+                        // Update all 3 copies
+                        for(let copy = 0; copy < 3; copy++){
+                            const idx = copy * PAIRS.length + PAIRS.indexOf(p);
+                            const priceEl = document.getElementById('tp-' + idx);
+                            const chgEl   = document.getElementById('tc-' + idx);
+                            if(priceEl) priceEl.textContent = s.price.toFixed(p.d);
+                            if(chgEl) {
+                                chgEl.textContent = arrow + Math.abs(chg).toFixed(p.d);
+                                chgEl.className = 'ticker-chg ' + cls;
+                            }
+                        }
+                    });
+                }
+                setInterval(updatePrices, 2500);
+
+                // Scroll loop — rAF based, perfectly smooth
+                function tick() {
+                    x += speed;
+                    // When we've scrolled one full set, snap back seamlessly
+                    if(x >= oneSetW) x -= oneSetW;
+                    inner.style.transform = 'translateX(-' + x + 'px)';
+                    requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
             });
-            const decimals = (pair) => ['XAUUSD','XAGUSD','BTCUSD','ETHUSD','NAS100','US30','USDJPY','EURJPY','GBPJPY'].includes(pair) ? 2 : 5;
-            const items = [...TICKER_PAIRS, ...TICKER_PAIRS].map(p => {
-                const t = tickerPrices[p.pair];
-                const chg = t.price - t.prev;
-                const cls = chg >= 0 ? 'up' : 'down';
-                const arrow = chg >= 0 ? '▲' : '▼';
-                const d = decimals(p.pair);
-                return `<span class="ticker-item">
-                    <span class="ticker-pair">${p.pair}</span>
-                    <span class="ticker-price">${t.price.toFixed(d)}</span>
-                    <span class="ticker-chg ${cls}">${arrow}${Math.abs(chg).toFixed(d)}</span>
-                    <span class="ticker-sep">|</span>
-                </span>`;
-            }).join('');
-            track.innerHTML = items;
-        }
-        updateTicker();
-        setInterval(updateTicker, 3000);
+        })();
 
         // ===== MENU TOGGLE ICON ANIM =====
         const menuToggle = document.querySelector('.menu-toggle');
