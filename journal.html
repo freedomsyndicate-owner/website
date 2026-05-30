@@ -1016,8 +1016,10 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() { const p = new firebase.auth.GoogleAuthProvider(); auth.signInWithPopup(p).catch(e => { if(e.code === 'auth/popup-blocked') auth.signInWithRedirect(p); else alert(e.message); }); }
+        function login() { const p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' }); auth.signInWithRedirect(p); }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
+
+        auth.getRedirectResult().catch(e => { if(e.code && e.code !== 'auth/no-auth-event') console.warn('Redirect error:', e.message); });
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
