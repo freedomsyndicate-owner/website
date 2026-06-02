@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freedom Syndicate | Official Hub</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
     <style>
         :root {
             --primary: #38bdf8;
@@ -493,67 +494,72 @@
 
         footer { margin-top: 50px; text-align: center; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
 
-        /* --- TV CHANNEL TAB --- */
-        .tv-header {
-            text-align: center;
-            margin-bottom: 18px;
-        }
-        .tv-header h3 {
-            margin: 0 0 6px;
-            color: var(--primary);
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-        .tv-header p {
-            font-size: 0.8rem;
+        /* --- TV CHANNEL BRANDED --- */
+        .fs-cat-btn {
+            flex-shrink: 0;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(56,189,248,0.25);
+            background: transparent;
             color: #64748b;
-            margin: 0;
-        }
-        .tv-source-btns {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-        .tv-source-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(56,189,248,0.3);
-            background: rgba(56,189,248,0.05);
-            color: #94a3b8;
-            font-size: 0.82rem;
+            font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 0.5px;
+            transition: all 0.25s;
+            white-space: nowrap;
+            font-family: inherit;
         }
-        .tv-source-btn.active, .tv-source-btn:hover {
+        .fs-cat-btn.active, .fs-cat-btn:hover {
             background: rgba(56,189,248,0.15);
             border-color: var(--primary);
             color: #fff;
         }
-        .tv-frame-wrap {
-            position: relative;
-            width: 100%;
-            border-radius: 16px;
+        .fs-ch-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(56,189,248,0.12);
+            background: rgba(15,23,42,0.5);
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .fs-ch-item:hover, .fs-ch-item.playing {
+            border-color: var(--primary);
+            background: rgba(56,189,248,0.08);
+        }
+        .fs-ch-item.playing { border-color: #4ade80; }
+        .fs-ch-logo {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            background: rgba(56,189,248,0.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
             overflow: hidden;
-            border: 1px solid rgba(56,189,248,0.2);
-            background: #000;
         }
-        .tv-frame-wrap iframe {
-            width: 100%;
-            height: 520px;
-            border: none;
-            display: block;
+        .fs-ch-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .fs-ch-info { flex: 1; min-width: 0; }
+        .fs-ch-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .tv-note {
-            font-size: 0.72rem;
+        .fs-ch-cat {
+            font-size: 0.68rem;
             color: #475569;
-            text-align: center;
-            margin-top: 10px;
-            line-height: 1.5;
+            margin-top: 2px;
+        }
+        .fs-ch-live {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #4ade80;
+            letter-spacing: 1px;
+            flex-shrink: 0;
         }
         
         /* Overlay Gelap saat sidebar terbuka */
@@ -1210,23 +1216,45 @@
         </div>
 
         <div id="tvchannel" class="tab-content">
-            <div class="content-box" style="padding:20px;">
-                <div class="tv-header">
-                    <h3>📺 TV CHANNEL DUNIA</h3>
-                    <p>Nonton TV live dari seluruh dunia — Indonesia, US, UK, dan lainnya</p>
+            <div class="content-box" style="padding:16px;">
+
+                <!-- Branding -->
+                <div style="text-align:center;margin-bottom:14px;">
+                    <div style="font-size:0.65rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                    <div style="font-size:1.1rem;font-weight:900;letter-spacing:2px;color:#fff;margin-top:2px;">📺 LIVE TV</div>
                 </div>
-                <div class="tv-source-btns">
-                    <button class="tv-source-btn active" onclick="gantiTV('https://tvgarden.world/tv/id', this)">🇮🇩 Indonesia</button>
-                    <button class="tv-source-btn" onclick="gantiTV('https://tvgarden.world/tv/us', this)">🇺🇸 USA</button>
-                    <button class="tv-source-btn" onclick="gantiTV('https://tvgarden.world/tv/gb', this)">🇬🇧 UK</button>
-                    <button class="tv-source-btn" onclick="gantiTV('https://tvgarden.world/tv/spo', this)">⚽ Sports</button>
-                    <button class="tv-source-btn" onclick="gantiTV('https://tvgarden.world/tv', this)">🌍 Semua Negara</button>
+
+                <!-- Video Player -->
+                <div style="position:relative;width:100%;background:#000;border-radius:14px;overflow:hidden;border:1px solid rgba(56,189,248,0.25);margin-bottom:12px;">
+                    <video id="fsLivePlayer" controls autoplay muted playsinline
+                        style="width:100%;height:220px;display:block;background:#000;object-fit:contain;">
+                    </video>
+                    <div id="fsPlayerOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(2,6,23,0.85);pointer-events:none;">
+                        <div style="font-size:2rem;margin-bottom:6px;">📺</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;">PILIH CHANNEL</div>
+                    </div>
+                    <!-- Now Playing bar -->
+                    <div id="fsNowPlaying" style="display:none;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(2,6,23,0.9));padding:8px 12px;font-size:0.75rem;color:#fff;font-weight:700;letter-spacing:1px;">
+                        🔴 LIVE · <span id="fsChannelName">-</span>
+                    </div>
                 </div>
-                <div class="tv-frame-wrap">
-                    <iframe id="tvFrame" src="https://tvgarden.world/tv/id" allowfullscreen
-                        allow="autoplay; fullscreen" loading="lazy"></iframe>
+
+                <!-- Kategori Filter -->
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;">
+                    <button class="fs-cat-btn active" onclick="filterKategori('semua',this)">Semua</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('berita',this)">📰 Berita</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('hiburan',this)">🎬 Hiburan</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('olahraga',this)">⚽ Olahraga</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('religi',this)">🕌 Religi</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('lokal',this)">🏙️ Lokal</button>
                 </div>
-                <p class="tv-note">⚠️ Jika channel tidak mau load, coba buka langsung di <a href="https://tvgarden.world" target="_blank" style="color:var(--primary);">tvgarden.world</a> atau <a href="https://dens.tv/tv-local" target="_blank" style="color:var(--primary);">dens.tv</a></p>
+
+                <!-- Daftar Channel -->
+                <div id="fsChannelList" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:2px;"></div>
+
+                <p style="font-size:0.68rem;color:#334155;text-align:center;margin-top:12px;line-height:1.5;">
+                    © FREEDOM SYNDICATE LIVE TV · Stream publik bebas pakai
+                </p>
             </div>
         </div>
 
@@ -1239,12 +1267,101 @@
             window.location.href = 'garapan.html';
         }
 
-        // --- LOGIC GANTI SUMBER TV ---
-        function gantiTV(url, btn) {
-            document.getElementById('tvFrame').src = url;
-            document.querySelectorAll('.tv-source-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // =============================================
+        // FREEDOM SYNDICATE LIVE TV PLAYER
+        // =============================================
+        const fsChannels = [
+            // BERITA
+            { name:'MetroTV',        cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/metrotv/metrotv/playlist.m3u8' },
+            { name:'tvOne News',     cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/tvone/tvone/playlist.m3u8' },
+            { name:'Kompas TV',      cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/kompastv/kompastv/playlist.m3u8' },
+            { name:'CNN Indonesia',  cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/cnnindonesia/cnnindonesia/playlist.m3u8' },
+            { name:'CNBC Indonesia', cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/cnbc/cnbc/playlist.m3u8' },
+            { name:'iNews TV',       cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/inews/inews/playlist.m3u8' },
+            // HIBURAN
+            { name:'RCTI',           cat:'hiburan',  icon:'🎬', url:'https://rcti.online/live.m3u8' },
+            { name:'SCTV',           cat:'hiburan',  icon:'🎬', url:'https://cdn-id.sctv.co.id/sctv/smil:sctv.smil/playlist.m3u8' },
+            { name:'Indosiar',       cat:'hiburan',  icon:'🎬', url:'https://cdn-id.indosiar.com/indosiar/smil:indosiar.smil/playlist.m3u8' },
+            { name:'ANTV',           cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/antv/antv/playlist.m3u8' },
+            { name:'Trans TV',       cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/transtv/transtv/playlist.m3u8' },
+            { name:'Trans7',         cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/trans7/trans7/playlist.m3u8' },
+            { name:'GTV',            cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/gtv/gtv/playlist.m3u8' },
+            { name:'MNC TV',         cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/mnctv/mnctv/playlist.m3u8' },
+            { name:'RTV',            cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/rtv/rtv/playlist.m3u8' },
+            // OLAHRAGA
+            { name:'TVRI Sport',     cat:'olahraga', icon:'⚽', url:'https://5b66c6f44a27e.streamlock.net/tvrisport/tvrisport/playlist.m3u8' },
+            { name:'Moji',           cat:'olahraga', icon:'⚽', url:'https://5b66c6f44a27e.streamlock.net/moji/moji/playlist.m3u8' },
+            // RELIGI
+            { name:'TVRI',           cat:'religi',   icon:'🕌', url:'https://5b66c6f44a27e.streamlock.net/tvri/tvri/playlist.m3u8' },
+            { name:'Rodja TV',       cat:'religi',   icon:'🕌', url:'https://live.rodjatv.com/live/rodjatv/index.m3u8' },
+            { name:'Republika TV',   cat:'religi',   icon:'🕌', url:'https://5b66c6f44a27e.streamlock.net/republika/republika/playlist.m3u8' },
+            // LOKAL
+            { name:'JAK TV',         cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/jaktv/jaktv/playlist.m3u8' },
+            { name:'Berita Satu',    cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/beritasatu/beritasatu/playlist.m3u8' },
+            { name:'BTV',            cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/btv/btv/playlist.m3u8' },
+        ];
+
+        let fsHls = null;
+        let fsCurrentUrl = null;
+        let fsFilter = 'semua';
+
+        function renderChannels() {
+            const list = document.getElementById('fsChannelList');
+            if (!list) return;
+            const shown = fsFilter === 'semua' ? fsChannels : fsChannels.filter(c => c.cat === fsFilter);
+            list.innerHTML = shown.map((ch, i) => `
+                <div class="fs-ch-item${ch.url === fsCurrentUrl ? ' playing' : ''}" onclick="fsPlay('${ch.url}','${ch.name}')">
+                    <div class="fs-ch-logo">${ch.icon}</div>
+                    <div class="fs-ch-info">
+                        <div class="fs-ch-name">${ch.name}</div>
+                        <div class="fs-ch-cat">${ch.cat.charAt(0).toUpperCase()+ch.cat.slice(1)}</div>
+                    </div>
+                    <div class="fs-ch-live">● LIVE</div>
+                </div>
+            `).join('');
         }
+
+        function filterKategori(cat, btn) {
+            fsFilter = cat;
+            document.querySelectorAll('.fs-cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderChannels();
+        }
+
+        function fsPlay(url, name) {
+            fsCurrentUrl = url;
+            const video = document.getElementById('fsLivePlayer');
+            const overlay = document.getElementById('fsPlayerOverlay');
+            const nowPlaying = document.getElementById('fsNowPlaying');
+            const chName = document.getElementById('fsChannelName');
+
+            overlay.style.display = 'none';
+            nowPlaying.style.display = 'block';
+            chName.textContent = name;
+
+            if (fsHls) { fsHls.destroy(); fsHls = null; }
+
+            if (Hls.isSupported()) {
+                fsHls = new Hls({ enableWorker: true, lowLatencyMode: true });
+                fsHls.loadSource(url);
+                fsHls.attachMedia(video);
+                fsHls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+                fsHls.on(Hls.Events.ERROR, (e, data) => {
+                    if (data.fatal) {
+                        chName.textContent = name + ' (gagal load — coba channel lain)';
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.play().catch(()=>{});
+            }
+            renderChannels();
+        }
+
+        // Init TV tab
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChannels();
+        });
 
         // --- LOGIC SIDEBAR ---
         const sidebar = document.getElementById('sidebar');
