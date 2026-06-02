@@ -339,6 +339,26 @@
         }
         .promo-box strong { color: var(--yellow); }
 
+        /* ===== IMAGE FRAME ===== */
+        .img-frame { margin-bottom: 14px; border-radius: 12px; overflow: hidden; }
+        .img-frame img { margin-bottom: 0 !important; }
+        .img-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(56,189,248,0.05);
+            border: 1px dashed rgba(56,189,248,0.3);
+            border-radius: 12px;
+            padding: 24px 16px;
+            color: var(--primary);
+            font-size: 0.88rem;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .img-placeholder i { font-size: 2rem; opacity: 0.6; }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -397,7 +417,7 @@
         <div id="tab-airdrop" class="content-card tab-pane">
             <h2>🪂 Airdrop & Crypto</h2>
             <p class="content-desc">Semua garapan Airdrop, Testnet, Node, dan Cloud Mining dibagikan langsung di channel Telegram kami. Bergabung sekarang agar tidak ketinggalan update terbaru — hanya project dengan fundamental kuat yang kami pilihkan untuk anggota Syndicate.</p>
-            <a href="https://t.me/freedomsyndicate" target="_blank" class="visit-btn" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;">
+            <a href="https://t.me/freedomsyndicate" target="_blank" class="visit-btn" style="margin-top:16px;">
                 <i class="fab fa-telegram-plane"></i> Gabung Channel Telegram
             </a>
         </div>
@@ -412,6 +432,41 @@
         <div id="tab-gratisan" class="content-card tab-pane">
             <h2>🎁 Zona Gratisan</h2>
             <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang yang sudah terbukti membayar. Semua sudah difilter — hanya yang benar-benar bermanfaat, bukan scam.</p>
+
+            <div class="link-card">
+                <div class="img-frame" id="img1-frame">
+                    <img src="https://i.ibb.co/N29nQSMx/image.jpg" alt="Bansos eSIM XL"
+                        onerror="document.getElementById('img1-frame').innerHTML='<div class=\'img-placeholder\'><i class=\'fas fa-sim-card\'></i><span>📌 Bansos eSIM XL · 120GB / 1 Tahun</span></div>'"
+                        style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;display:block;">
+                </div>
+                <div class="site-name"><i class="fas fa-sim-card"></i> Bansos eSIM Gratis XL <span class="badge">120GB / 1 Tahun</span></div>
+                <div class="site-desc">
+                    📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis Bundling 120GB / 1 Tahun</strong><br><br>
+                    ➡️ <strong style="color:var(--primary);">Cara klaim:</strong><br>
+                    ➖ Klik link di bawah → masuk ke halaman XL<br>
+                    ➖ Masukkan EID perangkat kamu<br>
+                    ➖ eSIM akan dikirim ke email<br>
+                    ➖ Tinggal pasang eSIM → langsung aktif 🚀
+                </div>
+                <a href="https://www.xl.co.id/produk/bundling/apple-iphone" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim Sekarang</a>
+            </div>
+
+            <div class="link-card">
+                <div class="img-frame" id="img2-frame">
+                    <img src="https://i.ibb.co/8LVY2SnK/image.jpg" alt="Bansos eSIM Hyfe"
+                        onerror="document.getElementById('img2-frame').innerHTML='<div class=\'img-placeholder\'><i class=\'fas fa-wifi\'></i><span>📌 Bansos eSIM Hyfe.id · 5GB / 7 Hari</span></div>'"
+                        style="width:100%;border-radius:12px;margin-bottom:14px;object-fit:cover;display:block;">
+                </div>
+                <div class="site-name"><i class="fas fa-wifi"></i> Bansos eSIM Gratis Hyfe.id <span class="badge">5GB · 7 Hari</span></div>
+                <div class="site-desc">
+                    📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis 5GB 7 Hari — Hyfeid</strong><br><br>
+                    ➡️ <strong style="color:var(--primary);">Cara pasang:</strong><br>
+                    ➖ Buka <strong style="color:#e2e8f0;">Hyfe.id</strong><br>
+                    ➖ Klik <strong style="color:#e2e8f0;">Try Free eSIM</strong><br>
+                    ➖ Done! Gunakan HP yang support eSIM ✅
+                </div>
+                <a href="https://hyfe.id" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim di Hyfe.id</a>
+            </div>
         </div>
 
         <!-- Garapan Website -->
@@ -470,11 +525,11 @@
         <!-- Share -->
         <div id="tab-share" class="content-card tab-pane">
             <h2>🔗 Share Garapan</h2>
-            <p class="content-desc">Punya garapan menarik? Bagikan ke komunitas Freedom Syndicate! Isi form di bawah, klik kirim, dan pesanmu akan langsung dikirim ke bot Telegram kami.</p>
+            <p class="content-desc">Punya garapan menarik? Bagikan ke komunitas Freedom Syndicate! Isi form di bawah, klik kirim, dan pesanmu akan langsung masuk ke bot Telegram kami.</p>
             <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
                 <input id="shareNama" type="text" placeholder="Nama kamu (opsional)" style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);color:#fff;padding:12px 16px;border-radius:10px;font-size:0.95rem;outline:none;font-family:inherit;" />
                 <textarea id="shareMsg" rows="5" placeholder="Tulis garapanmu di sini... (link, deskripsi, dll)" style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);color:#fff;padding:12px 16px;border-radius:10px;font-size:0.95rem;outline:none;resize:vertical;font-family:inherit;"></textarea>
-                <button onclick="kirimShare()" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;color:#fff;padding:13px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                <button onclick="kirimShare()" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;color:#020617;padding:13px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                     📤 Kirim ke Komunitas
                 </button>
                 <p id="shareStatus" style="text-align:center;font-size:0.85rem;color:#38bdf8;min-height:20px;"></p>
@@ -539,25 +594,26 @@
             overlay.classList.remove('active');
         };
 
+        // init: show only utama
+        document.querySelectorAll('.tab-pane').forEach(p => {
+            p.style.display = p.id === 'tab-utama' ? 'block' : 'none';
+        });
+
         // ===== SHARE GARAPAN =====
         async function kirimShare() {
-            const nama = document.getElementById('shareNama').value.trim();
-            const pesan = document.getElementById('shareMsg').value.trim();
+            const nama   = document.getElementById('shareNama').value.trim();
+            const pesan  = document.getElementById('shareMsg').value.trim();
             const status = document.getElementById('shareStatus');
-
             if (!pesan) {
                 status.style.color = '#f87171';
                 status.textContent = '⚠️ Pesan tidak boleh kosong!';
                 return;
             }
-
             const BOT_TOKEN = 'GANTI_BOT_TOKEN';
             const CHAT_ID   = 'GANTI_CHAT_ID';
             const teks = `📢 *Share Garapan*\n👤 ${nama || 'Anonim'}\n\n${pesan}`;
-
             status.style.color = '#38bdf8';
             status.textContent = '⏳ Mengirim...';
-
             try {
                 const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -570,19 +626,12 @@
                     status.textContent = '✅ Berhasil dikirim! Terima kasih sudah berbagi.';
                     document.getElementById('shareMsg').value = '';
                     document.getElementById('shareNama').value = '';
-                } else {
-                    throw new Error(data.description);
-                }
+                } else { throw new Error(data.description); }
             } catch(e) {
                 status.style.color = '#f87171';
                 status.textContent = '❌ Gagal kirim. Cek koneksi atau config bot.';
             }
         }
-
-        // init: show only utama
-        document.querySelectorAll('.tab-pane').forEach(p => {
-            p.style.display = p.id === 'tab-utama' ? 'block' : 'none';
-        });
     </script>
 </body>
 </html>
