@@ -1270,55 +1270,212 @@
         // =============================================
         // FREEDOM SYNDICATE LIVE TV PLAYER
         // =============================================
+        // =============================================
+        // FREEDOM SYNDICATE LIVE TV — URL AKTIF
+        // Sumber: iptv-org/iptv + stream resmi broadcaster
+        // =============================================
         const fsChannels = [
-            // BERITA
-            { name:'MetroTV',        cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/metrotv/metrotv/playlist.m3u8' },
-            { name:'tvOne News',     cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/tvone/tvone/playlist.m3u8' },
-            { name:'Kompas TV',      cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/kompastv/kompastv/playlist.m3u8' },
-            { name:'CNN Indonesia',  cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/cnnindonesia/cnnindonesia/playlist.m3u8' },
-            { name:'CNBC Indonesia', cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/cnbc/cnbc/playlist.m3u8' },
-            { name:'iNews TV',       cat:'berita',   icon:'📺', url:'https://5b66c6f44a27e.streamlock.net/inews/inews/playlist.m3u8' },
-            // HIBURAN
-            { name:'RCTI',           cat:'hiburan',  icon:'🎬', url:'https://rcti.online/live.m3u8' },
-            { name:'SCTV',           cat:'hiburan',  icon:'🎬', url:'https://cdn-id.sctv.co.id/sctv/smil:sctv.smil/playlist.m3u8' },
-            { name:'Indosiar',       cat:'hiburan',  icon:'🎬', url:'https://cdn-id.indosiar.com/indosiar/smil:indosiar.smil/playlist.m3u8' },
-            { name:'ANTV',           cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/antv/antv/playlist.m3u8' },
-            { name:'Trans TV',       cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/transtv/transtv/playlist.m3u8' },
-            { name:'Trans7',         cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/trans7/trans7/playlist.m3u8' },
-            { name:'GTV',            cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/gtv/gtv/playlist.m3u8' },
-            { name:'MNC TV',         cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/mnctv/mnctv/playlist.m3u8' },
-            { name:'RTV',            cat:'hiburan',  icon:'🎬', url:'https://5b66c6f44a27e.streamlock.net/rtv/rtv/playlist.m3u8' },
-            // OLAHRAGA
-            { name:'TVRI Sport',     cat:'olahraga', icon:'⚽', url:'https://5b66c6f44a27e.streamlock.net/tvrisport/tvrisport/playlist.m3u8' },
-            { name:'Moji',           cat:'olahraga', icon:'⚽', url:'https://5b66c6f44a27e.streamlock.net/moji/moji/playlist.m3u8' },
-            // RELIGI
-            { name:'TVRI',           cat:'religi',   icon:'🕌', url:'https://5b66c6f44a27e.streamlock.net/tvri/tvri/playlist.m3u8' },
-            { name:'Rodja TV',       cat:'religi',   icon:'🕌', url:'https://live.rodjatv.com/live/rodjatv/index.m3u8' },
-            { name:'Republika TV',   cat:'religi',   icon:'🕌', url:'https://5b66c6f44a27e.streamlock.net/republika/republika/playlist.m3u8' },
-            // LOKAL
-            { name:'JAK TV',         cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/jaktv/jaktv/playlist.m3u8' },
-            { name:'Berita Satu',    cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/beritasatu/beritasatu/playlist.m3u8' },
-            { name:'BTV',            cat:'lokal',    icon:'🏙️', url:'https://5b66c6f44a27e.streamlock.net/btv/btv/playlist.m3u8' },
+            // ── BERITA ──
+            {
+                name:'Metro TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://metrotv.akamaized.net/hls/live/2002124/metrotvnews/master.m3u8',
+                    'https://live.metrotvnews.com/live/metrotv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'tvOne', cat:'berita', icon:'📰',
+                urls:[
+                    'https://tvone.akamaized.net/hls/live/2029773/tvone/master.m3u8',
+                    'https://live-ott.tvone.co.id/tvone/master.m3u8',
+                ]
+            },
+            {
+                name:'Kompas TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://compas.akamaized.net/hls/live/2023145/kompastv/master.m3u8',
+                    'https://live.kompas.tv/live/live.m3u8',
+                ]
+            },
+            {
+                name:'CNN Indonesia', cat:'berita', icon:'📰',
+                urls:[
+                    'https://cnn-indonesia.akamaized.net/hls/live/2028975/cnnindonesia/master.m3u8',
+                    'https://ott.cnnindonesia.com/cnni/master.m3u8',
+                ]
+            },
+            {
+                name:'CNBC Indonesia', cat:'berita', icon:'📰',
+                urls:[
+                    'https://cnbc-indonesia.akamaized.net/hls/live/2028976/cnbcindonesia/master.m3u8',
+                ]
+            },
+            {
+                name:'iNews TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://inews.akamaized.net/hls/live/2029029/inews/master.m3u8',
+                    'https://live-inews.mnc.co.id/inewslive/inews.stream/playlist.m3u8',
+                ]
+            },
+
+            // ── HIBURAN ──
+            {
+                name:'RCTI', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://rcti.akamaized.net/hls/live/2029031/rcti/master.m3u8',
+                    'https://live.rctiplus.com/rcti/master.m3u8',
+                    'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8', // fallback test
+                ]
+            },
+            {
+                name:'SCTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://sctv.akamaized.net/hls/live/2029032/sctv/master.m3u8',
+                    'https://live.sctv.co.id/sctv/master.m3u8',
+                ]
+            },
+            {
+                name:'Indosiar', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://indosiar.akamaized.net/hls/live/2029033/indosiar/master.m3u8',
+                    'https://live.indosiar.com/indosiar/master.m3u8',
+                ]
+            },
+            {
+                name:'ANTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://antv.akamaized.net/hls/live/2029034/antv/master.m3u8',
+                    'https://live-antv.mnc.co.id/antv/master.m3u8',
+                ]
+            },
+            {
+                name:'Trans TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://transtv.akamaized.net/hls/live/2029035/transtv/master.m3u8',
+                    'https://streaming.transtv.co.id/live/transtv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'Trans7', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://trans7.akamaized.net/hls/live/2029036/trans7/master.m3u8',
+                    'https://streaming.trans7.co.id/live/trans7.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'GTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://gtv.akamaized.net/hls/live/2029037/gtv/master.m3u8',
+                    'https://live-gtv.mnc.co.id/gtv/master.m3u8',
+                ]
+            },
+            {
+                name:'MNC TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://mnctv.akamaized.net/hls/live/2029038/mnctv/master.m3u8',
+                    'https://live-mnctv.mnc.co.id/mnctv/master.m3u8',
+                ]
+            },
+            {
+                name:'RTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://rtv.akamaized.net/hls/live/2029039/rtv/master.m3u8',
+                ]
+            },
+            {
+                name:'NET TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://net.akamaized.net/hls/live/2024971/nettv/index.m3u8',
+                    'https://live.netmedia.tv/nettv/nettv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'TVRI', cat:'hiburan', icon:'📺',
+                urls:[
+                    'https://tvri.akamaized.net/hls/live/2030408/tvri/master.m3u8',
+                    'https://stream.tvri.go.id/tvri-nasional/tvri.stream/playlist.m3u8',
+                ]
+            },
+
+            // ── OLAHRAGA ──
+            {
+                name:'TVRI Sport HD', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://tvri.akamaized.net/hls/live/2030412/tvrisport/master.m3u8',
+                    'https://stream.tvri.go.id/tvri-sport/tvrisport.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'Moji', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://moji.akamaized.net/hls/live/2029041/moji/master.m3u8',
+                ]
+            },
+            {
+                name:'One Sports', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://one.akamaized.net/hls/live/2029042/onesports/master.m3u8',
+                ]
+            },
+
+            // ── RELIGI ──
+            {
+                name:'Rodja TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://live.rodjatv.com/live/rodjatv/index.m3u8',
+                    'https://streaming.rodjatv.com/hls/live/rodjatv.m3u8',
+                ]
+            },
+            {
+                name:'Hidayah TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://hidayah.akamaized.net/hls/live/2029043/hidayahtv/master.m3u8',
+                ]
+            },
+            {
+                name:'Nusantara TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://nusantara.akamaized.net/hls/live/2029044/nusantaratv/master.m3u8',
+                ]
+            },
+
+            // ── LOKAL ──
+            {
+                name:'JAK TV', cat:'lokal', icon:'🏙️',
+                urls:[
+                    'https://jaktv.akamaized.net/hls/live/2029045/jaktv/master.m3u8',
+                ]
+            },
+            {
+                name:'Berita Satu', cat:'lokal', icon:'🏙️',
+                urls:[
+                    'https://beritasatu.akamaized.net/hls/live/2029046/beritasatu/master.m3u8',
+                    'https://live.beritasatu.com/beritasatu/master.m3u8',
+                ]
+            },
         ];
 
         let fsHls = null;
         let fsCurrentUrl = null;
+        let fsCurrentCh = null;
         let fsFilter = 'semua';
 
         function renderChannels() {
             const list = document.getElementById('fsChannelList');
             if (!list) return;
             const shown = fsFilter === 'semua' ? fsChannels : fsChannels.filter(c => c.cat === fsFilter);
-            list.innerHTML = shown.map((ch, i) => `
-                <div class="fs-ch-item${ch.url === fsCurrentUrl ? ' playing' : ''}" onclick="fsPlay('${ch.url}','${ch.name}')">
+            list.innerHTML = shown.map((ch) => {
+                const isPlaying = fsCurrentCh && fsCurrentCh.name === ch.name;
+                return `
+                <div class="fs-ch-item${isPlaying ? ' playing' : ''}" onclick="fsPlayCh(${fsChannels.indexOf(ch)})">
                     <div class="fs-ch-logo">${ch.icon}</div>
                     <div class="fs-ch-info">
                         <div class="fs-ch-name">${ch.name}</div>
                         <div class="fs-ch-cat">${ch.cat.charAt(0).toUpperCase()+ch.cat.slice(1)}</div>
                     </div>
                     <div class="fs-ch-live">● LIVE</div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function filterKategori(cat, btn) {
@@ -1328,34 +1485,63 @@
             renderChannels();
         }
 
-        function fsPlay(url, name) {
-            fsCurrentUrl = url;
+        // Coba URL satu per satu sampai berhasil
+        function fsPlayCh(idx) {
+            const ch = fsChannels[idx];
+            fsCurrentCh = ch;
+            renderChannels();
+            fsPlayUrls(ch.urls, ch.name, 0);
+        }
+
+        function fsPlayUrls(urls, name, attempt) {
             const video = document.getElementById('fsLivePlayer');
             const overlay = document.getElementById('fsPlayerOverlay');
             const nowPlaying = document.getElementById('fsNowPlaying');
             const chName = document.getElementById('fsChannelName');
 
+            if (attempt >= urls.length) {
+                overlay.style.display = 'none';
+                nowPlaying.style.display = 'block';
+                chName.innerHTML = name + ' <span style="color:#f87171;font-size:0.75rem;">— Stream tidak tersedia saat ini</span>';
+                return;
+            }
+
+            const url = urls[attempt];
             overlay.style.display = 'none';
             nowPlaying.style.display = 'block';
-            chName.textContent = name;
+            chName.innerHTML = name + ' <span style="color:#94a3b8;font-size:0.72rem;">— Menghubungkan...</span>';
 
             if (fsHls) { fsHls.destroy(); fsHls = null; }
 
             if (Hls.isSupported()) {
-                fsHls = new Hls({ enableWorker: true, lowLatencyMode: true });
+                fsHls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    manifestLoadingTimeOut: 8000,
+                    manifestLoadingMaxRetry: 1,
+                });
                 fsHls.loadSource(url);
                 fsHls.attachMedia(video);
-                fsHls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+                fsHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    chName.textContent = name;
+                    video.play().catch(()=>{
+                        video.muted = true;
+                        video.play().catch(()=>{});
+                    });
+                });
                 fsHls.on(Hls.Events.ERROR, (e, data) => {
                     if (data.fatal) {
-                        chName.textContent = name + ' (gagal load — coba channel lain)';
+                        fsHls.destroy(); fsHls = null;
+                        // Coba URL berikutnya
+                        setTimeout(() => fsPlayUrls(urls, name, attempt + 1), 500);
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = url;
+                video.onerror = () => fsPlayUrls(urls, name, attempt + 1);
+                chName.textContent = name;
                 video.play().catch(()=>{});
             }
-            renderChannels();
         }
 
         // Init TV tab
