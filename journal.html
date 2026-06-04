@@ -315,7 +315,7 @@
 
         /* ===== AUTH SCREEN UPGRADE ===== */
         .auth-card { position:relative; overflow:hidden; }
-        .auth-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(56,189,248,0.05),transparent 30%); animation:authRotate 6s linear infinite; pointer-events:none; }
+        .auth-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(56,189,248,0.05),transparent 30%); animation:authRotate 6s linear infinite; }
         @keyframes authRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
         /* ===== GLITCH TITLE EFFECT ===== */
@@ -378,38 +378,7 @@
     <div id="auth-screen">
         <div class="auth-card">
             <h1 style="font-family:'Orbitron'; color:white; font-size:1.1rem;">FREEDOM SYNDICATE</h1>
-
-            <!-- TOMBOL GOOGLE (original) -->
-            <button class="btn-google" id="googleBtn" onclick="loginGoogle()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE
-            </button>
-
-            <!-- DIVIDER -->
-            <div style="display:flex; align-items:center; gap:10px; margin-top:18px;">
-                <div style="flex:1; height:1px; background:#1f2937;"></div>
-                <span style="font-size:9px; color:#374151; font-family:'Orbitron'; letter-spacing:1px;">OR</span>
-                <div style="flex:1; height:1px; background:#1f2937;"></div>
-            </div>
-
-            <!-- TOGGLE EMAIL LOGIN -->
-            <button onclick="toggleEmailForm()" style="width:100%; background:transparent; border:1px solid #1f2937; color:#6b7280; padding:11px; border-radius:12px; font-size:10px; font-family:'Orbitron'; cursor:pointer; margin-top:14px; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">
-                &#x2709;&#xFE0F; LOGIN WITH EMAIL
-            </button>
-
-            <!-- FORM EMAIL (tersembunyi default) -->
-            <div id="email-form" style="display:none; flex-direction:column; gap:10px; margin-top:14px; position:relative; z-index:1000000;">
-                <input type="email" id="login-email" placeholder="Email" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
-                <input type="password" id="login-password" placeholder="Password" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
-                <input type="password" id="login-confirm" placeholder="Konfirmasi Password (untuk daftar)" style="display:none; background:#0a0e14; border:1px solid #374151; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
-                <div id="login-error" style="font-size:10px; color:#ef4444; min-height:12px; text-align:left;"></div>
-                <button id="btn-login-email" onclick="loginEmail()" style="background:var(--blue); color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:12px; padding:13px; border:none; cursor:pointer; width:100%; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">LOGIN</button>
-                <!-- Tombol DAFTAR — muncul hanya saat email belum terdaftar -->
-                <div id="register-prompt" style="display:none; background:rgba(234,179,8,0.07); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:12px; text-align:center; position:relative; z-index:1000000;">
-                    <div style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin-bottom:8px;">EMAIL BELUM TERDAFTAR</div>
-                    <div style="font-size:9px; color:#6b7280; margin-bottom:10px;">Buat akun baru dengan email &amp; password di atas</div>
-                    <button onclick="registerEmail()" style="background:#eab308; color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:10px; padding:11px; border:none; cursor:pointer; width:100%; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">✅ DAFTAR SEKARANG</button>
-                </div>
-            </div>
+            <button class="btn-google" id="googleBtn" onclick="login()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE</button>
         </div>
     </div>
 
@@ -1022,96 +991,34 @@
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function loginGoogle() {
+        function login() {
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
+            // Popup dulu (cepat), fallback redirect kalau blocked
             auth.signInWithPopup(p)
                 .then(result => { /* onAuthStateChanged akan handle */ })
                 .catch(e => {
                     if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+                        // Fallback ke redirect
                         auth.signInWithRedirect(p);
                     } else {
                         alert('Login gagal: ' + e.message);
                     }
                 });
         }
-
-        function loginEmail() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            const errEl = document.getElementById('login-error');
-            const regPrompt = document.getElementById('register-prompt');
-            errEl.innerText = '';
-            regPrompt.style.display = 'none';
-            if (!email || !password) { errEl.innerText = 'Email dan password wajib diisi.'; return; }
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => { /* onAuthStateChanged akan handle */ })
-                .catch(e => {
-                    if (e.code === 'auth/user-not-found') {
-                        // Email belum terdaftar — tampilkan opsi daftar
-                        regPrompt.style.display = 'block';
-                        errEl.innerText = '';
-                    } else if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
-                        errEl.innerText = 'Password salah. Coba lagi.';
-                    } else if (e.code === 'auth/invalid-email') {
-                        errEl.innerText = 'Format email tidak valid.';
-                    } else {
-                        errEl.innerText = 'Login gagal: ' + e.message;
-                    }
-                });
-        }
-
-        function registerEmail() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            const errEl = document.getElementById('login-error');
-            const regPrompt = document.getElementById('register-prompt');
-            errEl.innerText = '';
-            if (password.length < 6) { errEl.innerText = 'Password minimal 6 karakter.'; return; }
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    regPrompt.style.display = 'none';
-                    // onAuthStateChanged akan otomatis handle login
-                })
-                .catch(e => {
-                    if (e.code === 'auth/email-already-in-use') {
-                        regPrompt.style.display = 'none';
-                        errEl.innerText = 'Email sudah terdaftar. Silakan login.';
-                    } else if (e.code === 'auth/weak-password') {
-                        errEl.innerText = 'Password terlalu lemah. Minimal 6 karakter.';
-                    } else {
-                        errEl.innerText = 'Daftar gagal: ' + e.message;
-                    }
-                });
-        }
-
-        function toggleEmailForm() {
-            const form = document.getElementById('email-form');
-            const isHidden = form.style.display === 'none' || form.style.display === '';
-            form.style.display = isHidden ? 'flex' : 'none';
-            // Reset state saat toggle
-            if (isHidden) {
-                document.getElementById('login-error').innerText = '';
-                document.getElementById('register-prompt').style.display = 'none';
-            }
-        }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
         // Handle redirect result (fallback dari popup-blocked)
-        // Di WebView/APK, getRedirectResult bisa throw error — skip dengan aman
-        try {
-            auth.getRedirectResult().then(result => {
-                if(result && result.user) {
-                    // onAuthStateChanged akan otomatis fire
-                }
-            }).catch(e => {
-                // Abaikan semua error redirect di WebView
-                console.warn('Redirect result (ignored):', e.code || e.message);
-            });
-        } catch(e) {
-            console.warn('getRedirectResult not supported:', e.message);
-        }
+        auth.getRedirectResult().then(result => {
+            if(result && result.user) {
+                // onAuthStateChanged akan otomatis fire, tidak perlu handle manual
+            }
+        }).catch(e => {
+            if(e.code && e.code !== 'auth/no-auth-event') {
+                console.warn('Redirect error:', e.message);
+            }
+        });
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
