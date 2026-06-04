@@ -403,6 +403,7 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
+        <a href="index.html" style="color:#38bdf8; font-size:11px; letter-spacing:1px;">🏠 Kembali ke Beranda</a>
         <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News</a>
         <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal</a>
         <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
@@ -552,7 +553,39 @@
             </div>
         </div>
 
-        <div id="journal-tab" class="tab-content"><div class="inner-padding">
+        <div id="journal-tab" class="tab-content"><div class="inner-padding" style="position:relative; min-height:400px;">
+
+            <!-- VIP LOCK OVERLAY -->
+            <div id="journal-vip-lock" class="vip-lock-overlay" style="display:none;">
+                <div class="vip-lock-card">
+                    <div class="vip-lock-icon">🔐</div>
+                    <h2 class="vip-lock-title">VIP ONLY</h2>
+                    <p class="vip-lock-sub">Fitur <b>Trading Journal</b> hanya tersedia untuk member <b>VIP Freedom Syndicate</b>.</p>
+                    <div id="journal-trial-info"></div>
+                    <div class="vip-price-box">
+                        <div class="vip-price-label">BIAYA BERLANGGANAN</div>
+                        <div class="vip-price-amount">Rp 25.000</div>
+                        <div class="vip-price-period">/ bulan · bayar via QRIS / Transfer</div>
+                    </div>
+                    <div class="vip-benefits">
+                        <div class="vip-benefit-item">✅ Akses penuh Trading Journal</div>
+                        <div class="vip-benefit-item">✅ Akses Live Signal ICT Predator</div>
+                        <div class="vip-benefit-item">✅ Akses Monitor & Equity Tracker</div>
+                        <div class="vip-benefit-item">✅ Dukungan langsung dari owner</div>
+                    </div>
+                    <p style="font-size:10px;color:#eab308;font-family:'Orbitron';margin:0 0 10px;">📌 CARA DAFTAR VIP:</p>
+                    <p style="font-size:10px;color:#9ca3af;margin:0 0 14px;line-height:1.7;">1. Lakukan pembayaran <b style="color:#eab308">Rp 25.000</b><br>2. Kirim bukti bayar ke salah satu kontak di bawah<br>3. Tunggu konfirmasi aktivasi VIP dari owner</p>
+                    <div class="vip-contact-grid">
+                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
+                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
+                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
+                    </div>
+                    <p class="vip-note">⚠️ Akses diaktifkan manual oleh owner setelah bukti pembayaran terverifikasi.</p>
+                </div>
+            </div>
+
+            <!-- ACTUAL JOURNAL CONTENT -->
+            <div id="journal-content-inner">
             <!-- ... sama persis seperti sebelumnya (form journal) ... -->
             <div class="lot-calc-box">
                 <div class="lot-input-grid">
@@ -602,6 +635,7 @@
                 </div>
             </form>
             <div id="hist"></div>
+            </div><!-- end journal-content-inner -->
         </div></div>
 
         <!-- ... sisa kode HTML sama persis ... -->
@@ -1141,6 +1175,16 @@
                 <div id="vip-members-list">
                     <div style="text-align:center; padding:20px; font-size:10px; color:#374151;">Loading...</div>
                 </div>
+
+                <div class="vip-section-title" style="margin-top:24px;">⏳ TRIAL USERS</div>
+                <div style="background:#0a0e14; border:1px solid #1f2937; border-radius:12px; padding:14px; margin-bottom:10px;">
+                    <p style="font-size:9px; color:#6b7280; margin:0 0 10px;">Reset trial user agar bisa mulai trial 7 hari dari awal:</p>
+                    <div class="admin-input-row">
+                        <input type="email" id="trial-reset-input" class="admin-email-input" placeholder="email@gmail.com">
+                        <button onclick="resetTrial()" class="vip-action-btn" style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);">🔄 RESET</button>
+                    </div>
+                    <div id="trial-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px;"></div>
+                </div>
             </div>
 
         </div></div>
@@ -1189,52 +1233,113 @@
         });
 
         const OWNER_EMAIL = 'sanlana1903@gmail.com';
+        const TRIAL_DAYS  = 7;
         let isVip = false;
+        let trialDaysLeft = 0;
+        let trialExpired = false;
 
         auth.onAuthStateChanged(u => { 
             if(u){ 
                 curUser = u; 
                 document.getElementById('auth-screen').style.display='none'; 
                 document.getElementById('display-user').innerText="ACTIVE: "+u.email;
-                checkVipStatus(u.email).then(vip => {
-                    isVip = vip || (u.email === OWNER_EMAIL);
-                    applyVipGates();
-                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals();
-                    loadVipTab();
-                });
+                initUserAccess(u);
             } 
             else { document.getElementById('auth-screen').style.display='flex'; }
         });
 
-        async function checkVipStatus(email) {
-            try {
-                const snap = await rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value');
-                return snap.exists();
-            } catch(e) { return false; }
+        async function initUserAccess(u) {
+            // Owner always gets full access
+            if (u.email === OWNER_EMAIL) {
+                isVip = true; trialExpired = false; trialDaysLeft = 0;
+                applyVipGates();
+                loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); loadVipTab();
+                return;
+            }
+
+            // Check/set free trial registration date
+            const userRef = rtdb.ref('users_meta/' + u.uid);
+            const snap = await userRef.once('value');
+            const now = Date.now();
+
+            if (!snap.exists() || !snap.val().registeredAt) {
+                // First login — record timestamp
+                await userRef.set({ email: u.email, registeredAt: now });
+            }
+
+            const meta = (await userRef.once('value')).val();
+            const regAt = meta.registeredAt;
+            const elapsed = now - regAt;
+            const msPerDay = 86400000;
+            const daysUsed = Math.floor(elapsed / msPerDay);
+            trialDaysLeft = Math.max(0, TRIAL_DAYS - daysUsed);
+            trialExpired  = daysUsed >= TRIAL_DAYS;
+
+            // Check VIP status
+            const vipSnap = await rtdb.ref('vip_members').orderByChild('email').equalTo(u.email).once('value');
+            isVip = vipSnap.exists();
+
+            applyVipGates();
+            loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); loadVipTab();
         }
 
         function applyVipGates() {
-            const signalLock   = document.getElementById('signal-vip-lock');
-            const signalInner  = document.getElementById('signal-content-inner');
-            const monitorLock  = document.getElementById('monitor-vip-lock');
-            const monitorInner = document.getElementById('monitor-content-inner');
-            if (isVip) {
-                if(signalLock)   signalLock.style.display  = 'none';
-                if(signalInner)  signalInner.style.display = 'block';
-                if(monitorLock)  monitorLock.style.display  = 'none';
-                if(monitorInner) monitorInner.style.display = 'block';
-            } else {
-                if(signalLock)   signalLock.style.display  = 'flex';
-                if(signalInner)  signalInner.style.display = 'none';
-                if(monitorLock)  monitorLock.style.display  = 'flex';
-                if(monitorInner) monitorInner.style.display = 'none';
-            }
+            const gates = [
+                { lock: 'signal-vip-lock',  inner: 'signal-content-inner',  trial: null },
+                { lock: 'monitor-vip-lock', inner: 'monitor-content-inner', trial: null },
+                { lock: 'journal-vip-lock', inner: 'journal-content-inner', trial: 'journal-trial-info' },
+            ];
+            const hasAccess = isVip || !trialExpired; // trial still valid OR is VIP
+
+            gates.forEach(g => {
+                const lockEl  = document.getElementById(g.lock);
+                const innerEl = document.getElementById(g.inner);
+                if (!lockEl || !innerEl) return;
+
+                if (hasAccess) {
+                    lockEl.style.display  = 'none';
+                    innerEl.style.display = 'block';
+                    // Show trial countdown banner if trial is active (not VIP)
+                    if (!isVip && g.trial && trialDaysLeft > 0) {
+                        const b = document.createElement('div');
+                        b.style.cssText = 'background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:10px;color:#eab308;font-family:"Orbitron";text-align:center;';
+                        b.innerHTML = `⏳ FREE TRIAL · Sisa <b>${trialDaysLeft} hari</b> — Langganan VIP agar tidak terkunci`;
+                        const firstChild = innerEl.firstElementChild;
+                        if (!innerEl.querySelector('.trial-banner')) { b.classList.add('trial-banner'); innerEl.insertBefore(b, firstChild); }
+                    }
+                } else {
+                    // Expired & not VIP
+                    lockEl.style.display  = 'flex';
+                    innerEl.style.display = 'none';
+                    // Show expired message in lock overlay
+                    if (g.trial) {
+                        const ti = document.getElementById(g.trial);
+                        if (ti) ti.innerHTML = '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:10px;margin-bottom:14px;font-size:10px;color:#ef4444;font-family:\'Orbitron\';text-align:center;">⛔ FREE TRIAL HABIS · Silakan upgrade ke VIP</div>';
+                    }
+                }
+            });
+
+            // Signal & Monitor overlays also get trial expired notice
+            ['signal-vip-lock','monitor-vip-lock'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.style.display !== 'none' && !isVip && trialExpired) {
+                    const existing = el.querySelector('.trial-expired-note');
+                    if (!existing) {
+                        const note = document.createElement('div');
+                        note.className = 'trial-expired-note';
+                        note.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:9px;color:#ef4444;font-family:\'Orbitron\';text-align:center;width:100%;box-sizing:border-box;';
+                        note.textContent = '⛔ FREE TRIAL 7 HARI SUDAH HABIS';
+                        const card = el.querySelector('.vip-lock-card');
+                        if (card) card.insertBefore(note, card.firstChild);
+                    }
+                }
+            });
         }
 
         function loadVipTab() {
-            const statusBox       = document.getElementById('vip-my-status-box');
-            const ownerPanel      = document.getElementById('owner-panel');
-            const registerInfo    = document.getElementById('vip-register-info');
+            const statusBox    = document.getElementById('vip-my-status-box');
+            const ownerPanel   = document.getElementById('owner-panel');
+            const registerInfo = document.getElementById('vip-register-info');
             const isOwner = curUser && curUser.email === OWNER_EMAIL;
 
             if (isOwner) {
@@ -1247,9 +1352,14 @@
                 statusBox.style.cssText = 'background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3);color:#eab308;';
                 statusBox.innerHTML = '✅ STATUS: <b style="margin-left:6px;">VIP AKTIF</b>';
                 registerInfo.style.display = 'none';
+            } else if (!trialExpired) {
+                statusBox.style.cssText = 'background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;';
+                statusBox.innerHTML = `⏳ FREE TRIAL AKTIF · Sisa <b style="margin-left:4px;">${trialDaysLeft} hari</b>`;
+                ownerPanel.style.display   = 'none';
+                registerInfo.style.display = 'block';
             } else {
                 statusBox.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;';
-                statusBox.innerHTML = '🔒 STATUS: <b style="margin-left:6px;">BELUM VIP</b>';
+                statusBox.innerHTML = '⛔ FREE TRIAL HABIS · Upgrade ke VIP';
                 ownerPanel.style.display   = 'none';
                 registerInfo.style.display = 'block';
             }
@@ -1302,6 +1412,24 @@
         function revokeVipKey(key) {
             if (!confirm("Yakin revoke VIP member ini?")) return;
             rtdb.ref('vip_members/' + key).remove();
+        }
+
+        function resetTrial() {
+            const email = document.getElementById('trial-reset-input').value.trim().toLowerCase();
+            const msg   = document.getElementById('trial-admin-msg');
+            if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
+            // Find user by email in users_meta
+            rtdb.ref('users_meta').orderByChild('email').equalTo(email).once('value', snap => {
+                if (!snap.exists()) { msg.style.color='#ef4444'; msg.textContent = `❌ ${email} belum pernah login.`; return; }
+                const promises = [];
+                snap.forEach(child => {
+                    promises.push(rtdb.ref('users_meta/' + child.key + '/registeredAt').set(Date.now()));
+                });
+                Promise.all(promises).then(() => {
+                    msg.style.color='#38bdf8'; msg.textContent = `🔄 Trial ${email} berhasil direset ke 7 hari!`;
+                    document.getElementById('trial-reset-input').value='';
+                });
+            });
         }
 
         function setupTracker() { 
@@ -1607,6 +1735,7 @@
                 if(id==='chart-tab') updateChart();
                 if(id==='signal-tab') { applyVipGates(); renderIctSignals(); renderFundSignals(); }
                 if(id==='monitor-tab') { applyVipGates(); loadData(); }
+                if(id==='journal-tab') { applyVipGates(); }
                 if(id==='community-tab' || id==='announce-tab') loadData();
                 if(id==='vip-tab') loadVipTab();
             }, 150);
