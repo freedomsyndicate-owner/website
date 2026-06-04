@@ -40,7 +40,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -1248,7 +1247,7 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), rtdb = firebase.database(), storage = firebase.storage();
+        const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
 
         let sidebarOpen = false;
@@ -1428,7 +1427,8 @@
             if (pkgEl) pkgEl.innerHTML = 'Paket: <span style="color:#9ca3af">' + label + '</span>';
         }
 
-        // ===== PAYMENT PROOF SUBMIT =====
+        // ===== PAYMENT PROOF SUBMIT (ImgBB) =====
+        const IMGBB_API_KEY = 'c60d1a777000c2dbbb07be37a77ee194';
         let proofImageFile = null;
 
         function previewProof(input) {
@@ -1463,63 +1463,62 @@
             }
 
             btn.disabled = true;
-            btn.textContent = '⏳ MENGUNGGAH...';
+            btn.textContent = '⏳ MENGUPLOAD...';
             status.style.color = '#eab308';
-            status.textContent = 'Mengupload gambar ke server...';
+            status.textContent = 'Mengupload gambar...';
 
-            // Upload ke Firebase Storage
-            const ext       = proofImageFile.name.split('.').pop() || 'jpg';
-            const fileName  = 'payment_proofs/' + Date.now() + '_' + email.replace(/[^a-z0-9]/g,'_') + '.' + ext;
-            const storageRef = storage.ref(fileName);
-            const uploadTask = storageRef.put(proofImageFile);
+            // Upload ke ImgBB
+            const formData = new FormData();
+            formData.append('image', proofImageFile);
+            formData.append('key', IMGBB_API_KEY);
+            formData.append('name', 'proof_' + Date.now() + '_' + email.replace(/[^a-z0-9]/g,'_'));
 
-            uploadTask.on('state_changed',
-                snapshot => {
-                    const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                    status.textContent = 'Mengupload... ' + pct + '%';
-                    btn.textContent = '⏳ ' + pct + '%';
-                },
-                err => {
-                    status.style.color = '#ef4444';
-                    status.textContent = '❌ Upload gagal: ' + err.message;
+            fetch('https://api.imgbb.com/1/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) throw new Error(data.error?.message || 'Upload ImgBB gagal');
+
+                const imageUrl  = data.data.url;
+                const deleteUrl = data.data.delete_url;
+
+                status.textContent = 'Menyimpan data...';
+
+                const proofData = {
+                    email:       email,
+                    package:     selectedPlan.label,
+                    nominal:     selectedPlan.nominal,
+                    imageUrl:    imageUrl,
+                    deleteUrl:   deleteUrl,
+                    submittedAt: Date.now(),
+                    status:      'pending'
+                };
+
+                return rtdb.ref('payment_proofs').push(proofData);
+            })
+            .then(() => {
+                status.style.color = '#4ade80';
+                status.textContent = '✅ Bukti berhasil dikirim! Tunggu konfirmasi owner.';
+                btn.textContent = '✅ TERKIRIM';
+                setTimeout(() => {
                     btn.disabled = false;
                     btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
-                },
-                () => {
-                    // Upload done — get download URL
-                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-                        const proofData = {
-                            email:       email,
-                            package:     selectedPlan.label,
-                            nominal:     selectedPlan.nominal,
-                            imageUrl:    downloadURL,
-                            submittedAt: Date.now(),
-                            status:      'pending'
-                        };
-                        return rtdb.ref('payment_proofs').push(proofData);
-                    })
-                    .then(() => {
-                        status.style.color = '#4ade80';
-                        status.textContent = '✅ Bukti berhasil dikirim! Tunggu konfirmasi owner.';
-                        btn.textContent = '✅ TERKIRIM';
-                        setTimeout(() => {
-                            btn.disabled = false;
-                            btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
-                            proofImageFile = null;
-                            document.getElementById('proof-file-input').value = '';
-                            document.getElementById('proof-preview-img').style.display = 'none';
-                            document.getElementById('proof-upload-placeholder').style.display = 'block';
-                            document.getElementById('proof-email-input').value = '';
-                        }, 4000);
-                    })
-                    .catch(e => {
-                        status.style.color = '#ef4444';
-                        status.textContent = '❌ Gagal simpan data: ' + e.message;
-                        btn.disabled = false;
-                        btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
-                    });
-                }
-            );
+                    proofImageFile = null;
+                    document.getElementById('proof-file-input').value = '';
+                    document.getElementById('proof-preview-img').style.display = 'none';
+                    document.getElementById('proof-upload-placeholder').style.display = 'block';
+                    document.getElementById('proof-email-input').value = '';
+                    status.textContent = '';
+                }, 4000);
+            })
+            .catch(e => {
+                status.style.color = '#ef4444';
+                status.textContent = '❌ Gagal: ' + e.message;
+                btn.disabled = false;
+                btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
+            });
         }
 
         // ===== LOAD PAYMENT PROOFS (OWNER) =====
