@@ -348,6 +348,46 @@
         /* ===== BLINK CURSOR ===== */
         #display-user::after { content:'_'; animation:blink 1s step-end infinite; color:var(--blue); }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ===== VIP SYSTEM ===== */
+        .vip-badge { display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg,#92400e,#b45309,#d97706); color:#fef3c7; font-family:'Orbitron'; font-size:8px; padding:2px 8px; border-radius:4px; font-weight:bold; letter-spacing:1px; }
+        .vip-lock-overlay { position:absolute; inset:0; background:rgba(5,10,20,0.92); backdrop-filter:blur(6px); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 20px; border-radius:inherit; }
+        .vip-lock-card { background:linear-gradient(145deg,#0d1117,#161b22); border:1px solid rgba(234,179,8,0.4); border-radius:20px; padding:30px 24px; width:100%; max-width:340px; text-align:center; position:relative; overflow:hidden; box-shadow:0 0 40px rgba(234,179,8,0.1); }
+        .vip-lock-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(234,179,8,0.04),transparent 30%); animation:authRotate 8s linear infinite; }
+        .vip-lock-icon { font-size:48px; margin-bottom:12px; animation:lockPulse 2s ease-in-out infinite; }
+        @keyframes lockPulse { 0%,100%{transform:scale(1);filter:drop-shadow(0 0 6px rgba(234,179,8,0.5));} 50%{transform:scale(1.08);filter:drop-shadow(0 0 14px rgba(234,179,8,0.8));} }
+        .vip-lock-title { font-family:'Orbitron'; font-size:16px; color:#eab308; margin:0 0 6px; letter-spacing:2px; text-shadow:0 0 10px rgba(234,179,8,0.5); }
+        .vip-lock-sub { font-size:10px; color:#9ca3af; margin:0 0 20px; line-height:1.6; }
+        .vip-price-box { background:linear-gradient(135deg,rgba(234,179,8,0.12),rgba(234,179,8,0.05)); border:1px solid rgba(234,179,8,0.35); border-radius:12px; padding:14px; margin-bottom:18px; }
+        .vip-price-label { font-size:9px; color:#92400e; font-family:'Orbitron'; letter-spacing:1px; margin-bottom:4px; }
+        .vip-price-amount { font-family:'Orbitron'; font-size:24px; color:#eab308; font-weight:900; text-shadow:0 0 12px rgba(234,179,8,0.4); }
+        .vip-price-period { font-size:9px; color:#6b7280; margin-top:2px; }
+        .vip-benefits { text-align:left; margin-bottom:18px; }
+        .vip-benefit-item { display:flex; align-items:center; gap:8px; font-size:10px; color:#d1d5db; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+        .vip-benefit-item:last-child { border-bottom:none; }
+        .vip-contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+        .vip-contact-btn { padding:10px 6px; border-radius:10px; font-family:'Orbitron'; font-size:8px; font-weight:bold; cursor:pointer; border:1px solid; display:flex; align-items:center; justify-content:center; gap:5px; text-decoration:none; transition:all 0.2s; }
+        .vip-contact-btn:hover { transform:translateY(-1px); filter:brightness(1.1); }
+        .vip-btn-discord { background:rgba(88,101,242,0.15); border-color:rgba(88,101,242,0.5); color:#818cf8; }
+        .vip-btn-telegram { background:rgba(0,136,204,0.15); border-color:rgba(0,136,204,0.5); color:#38bdf8; }
+        .vip-btn-email { background:rgba(74,222,128,0.1); border-color:rgba(74,222,128,0.4); color:#4ade80; grid-column:1/-1; }
+        .vip-note { font-size:8px; color:#374151; line-height:1.5; }
+
+        /* VIP TAB */
+        .vip-tab-header { background:linear-gradient(135deg,rgba(234,179,8,0.1),rgba(180,83,9,0.1)); border:1px solid rgba(234,179,8,0.3); border-radius:16px; padding:20px; margin-bottom:20px; text-align:center; position:relative; overflow:hidden; }
+        .vip-section-title { font-family:'Orbitron'; font-size:9px; letter-spacing:2px; color:#b45309; margin:20px 0 10px; display:flex; align-items:center; gap:8px; text-transform:uppercase; }
+        .vip-section-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(234,179,8,0.3),transparent); }
+        .vip-member-card { background:#0a0e14; border:1px solid rgba(234,179,8,0.2); border-radius:12px; padding:12px 16px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+        .vip-member-email { font-size:10px; color:#d1d5db; }
+        .vip-member-since { font-size:8px; color:#4b5563; }
+        .vip-action-btn { padding:6px 12px; border-radius:8px; font-family:'Orbitron'; font-size:8px; cursor:pointer; border:none; font-weight:bold; }
+        .btn-revoke { background:rgba(239,68,68,0.2); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+        .btn-grant { background:rgba(234,179,8,0.2); color:var(--be); border:1px solid rgba(234,179,8,0.3); }
+        .admin-input-row { display:flex; gap:8px; margin-bottom:12px; }
+        .admin-email-input { flex:1; background:#0a0e14; border:1px solid #30363d; color:white; border-radius:10px; padding:10px 14px; font-size:11px; outline:none; }
+        .admin-email-input:focus { border-color:rgba(234,179,8,0.5); }
+        .sidebar a.vip-nav { color:#eab308 !important; }
+        .sidebar a.vip-nav:hover, .sidebar a.vip-nav.active { color:#fbbf24 !important; background:rgba(234,179,8,0.1) !important; }
     </style>
 </head>
 <body>
@@ -372,6 +412,7 @@
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
+        <a href="#" class="nav-link vip-nav" onclick="openTab('vip-tab', this); toggleNav()">👑 VIP</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
 
@@ -404,8 +445,38 @@
             </div></div>
 
         <!-- ===== SIGNAL TAB ===== -->
-        <div id="signal-tab" class="tab-content"><div class="inner-padding">
+        <div id="signal-tab" class="tab-content"><div class="inner-padding" style="position:relative; min-height:400px;">
 
+            <!-- VIP LOCK OVERLAY -->
+            <div id="signal-vip-lock" class="vip-lock-overlay" style="display:none;">
+                <div class="vip-lock-card">
+                    <div class="vip-lock-icon">🔐</div>
+                    <h2 class="vip-lock-title">VIP ONLY</h2>
+                    <p class="vip-lock-sub">Fitur <b>Live Signal ICT Predator</b> hanya tersedia untuk member <b>VIP Freedom Syndicate</b>.</p>
+                    <div class="vip-price-box">
+                        <div class="vip-price-label">BIAYA BERLANGGANAN</div>
+                        <div class="vip-price-amount">Rp 25.000</div>
+                        <div class="vip-price-period">/ bulan · bayar via QRIS / Transfer</div>
+                    </div>
+                    <div class="vip-benefits">
+                        <div class="vip-benefit-item">✅ Akses penuh Live Signal ICT Predator</div>
+                        <div class="vip-benefit-item">✅ Akses Monitor & Equity Tracker</div>
+                        <div class="vip-benefit-item">✅ Notifikasi sinyal real-time via Telegram</div>
+                        <div class="vip-benefit-item">✅ Dukungan langsung dari owner</div>
+                    </div>
+                    <p style="font-size:10px;color:#eab308;font-family:'Orbitron';margin:0 0 10px;">📌 CARA DAFTAR VIP:</p>
+                    <p style="font-size:10px;color:#9ca3af;margin:0 0 14px;line-height:1.7;">1. Lakukan pembayaran <b style="color:#eab308">Rp 25.000</b><br>2. Kirim bukti bayar ke salah satu kontak di bawah<br>3. Tunggu konfirmasi aktivasi VIP dari owner</p>
+                    <div class="vip-contact-grid">
+                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
+                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
+                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
+                    </div>
+                    <p class="vip-note">⚠️ Akses akan diaktifkan secara manual oleh owner setelah bukti pembayaran terverifikasi.</p>
+                </div>
+            </div>
+
+            <!-- ACTUAL SIGNAL CONTENT -->
+            <div id="signal-content-inner">
             <div class="signal-header">
                 <h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0;">📡 LIVE SIGNAL</h2>
                 <div class="signal-live-badge"><div class="signal-live-dot"></div>REAL-TIME</div>
@@ -435,6 +506,7 @@
                     <div class="sig-empty"><div class="sig-empty-icon">📰</div><p>MENUNGGU DATA FUNDAMENTAL...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Economic calendar & breaking news</p></div>
                 </div>
             </div>
+            </div><!-- end signal-content-inner -->
 
         </div></div>
 
@@ -533,7 +605,38 @@
         </div></div>
 
         <!-- ... sisa kode HTML sama persis ... -->
-        <div id="monitor-tab" class="tab-content"><div class="inner-padding">
+        <div id="monitor-tab" class="tab-content"><div class="inner-padding" style="position:relative; min-height:400px;">
+
+            <!-- VIP LOCK OVERLAY -->
+            <div id="monitor-vip-lock" class="vip-lock-overlay" style="display:none;">
+                <div class="vip-lock-card">
+                    <div class="vip-lock-icon">🔐</div>
+                    <h2 class="vip-lock-title">VIP ONLY</h2>
+                    <p class="vip-lock-sub">Fitur <b>Monitor & Equity Tracker</b> hanya tersedia untuk member <b>VIP Freedom Syndicate</b>.</p>
+                    <div class="vip-price-box">
+                        <div class="vip-price-label">BIAYA BERLANGGANAN</div>
+                        <div class="vip-price-amount">Rp 25.000</div>
+                        <div class="vip-price-period">/ bulan · bayar via QRIS / Transfer</div>
+                    </div>
+                    <div class="vip-benefits">
+                        <div class="vip-benefit-item">✅ Akses penuh Live Signal ICT Predator</div>
+                        <div class="vip-benefit-item">✅ Akses Monitor & Equity Tracker</div>
+                        <div class="vip-benefit-item">✅ Notifikasi sinyal real-time via Telegram</div>
+                        <div class="vip-benefit-item">✅ Dukungan langsung dari owner</div>
+                    </div>
+                    <p style="font-size:10px;color:#eab308;font-family:'Orbitron';margin:0 0 10px;">📌 CARA DAFTAR VIP:</p>
+                    <p style="font-size:10px;color:#9ca3af;margin:0 0 14px;line-height:1.7;">1. Lakukan pembayaran <b style="color:#eab308">Rp 25.000</b><br>2. Kirim bukti bayar ke salah satu kontak di bawah<br>3. Tunggu konfirmasi aktivasi VIP dari owner</p>
+                    <div class="vip-contact-grid">
+                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
+                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
+                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
+                    </div>
+                    <p class="vip-note">⚠️ Akses akan diaktifkan secara manual oleh owner setelah bukti pembayaran terverifikasi.</p>
+                </div>
+            </div>
+
+            <!-- ACTUAL MONITOR CONTENT -->
+            <div id="monitor-content-inner">
             <div class="mon-filters" style="display:flex; gap:10px; margin-bottom:15px;">
                 <select id="mon-pair" class="mon-select" onchange="loadData()">
                     <option value="ALL">ALL PAIRS</option>
@@ -550,6 +653,7 @@
             <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
             <div id="cal" class="calendar-grid"></div>
+            </div><!-- end monitor-content-inner -->
         </div></div>
 
         <div id="community-tab" class="tab-content"><div class="inner-padding">
@@ -976,7 +1080,71 @@
                 <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px;">SCAN DENGAN DANA / OVO / GOPAY / MOBILE BANKING</p>
             </div>
         </div></div>
-    </div>
+
+        <!-- ===== VIP TAB ===== -->
+        <div id="vip-tab" class="tab-content"><div class="inner-padding">
+
+            <!-- HEADER -->
+            <div class="vip-tab-header">
+                <div style="font-size:36px; margin-bottom:8px;">👑</div>
+                <h2 style="font-family:'Orbitron'; font-size:16px; color:#eab308; margin:0 0 4px; text-shadow:0 0 12px rgba(234,179,8,0.5);">FREEDOM SYNDICATE VIP</h2>
+                <p style="font-size:10px; color:#9ca3af; margin:0;">Kelola member VIP & akses premium</p>
+                <div id="vip-my-status-box" style="margin-top:14px; padding:10px 16px; border-radius:10px; font-family:'Orbitron'; font-size:10px; display:inline-flex; align-items:center; gap:8px;"></div>
+            </div>
+
+            <!-- CARA DAFTAR (for non-VIP non-owner) -->
+            <div id="vip-register-info">
+                <div class="vip-section-title">📋 CARA DAFTAR VIP</div>
+                <div style="background:#0a0e14; border:1px solid rgba(234,179,8,0.2); border-radius:16px; padding:20px;">
+                    <div class="vip-price-box" style="margin-bottom:16px;">
+                        <div class="vip-price-label">BIAYA BERLANGGANAN</div>
+                        <div class="vip-price-amount">Rp 25.000</div>
+                        <div class="vip-price-period">/ bulan · bayar via QRIS / Transfer</div>
+                    </div>
+                    <ol style="font-size:11px; color:#d1d5db; line-height:2; padding-left:18px; margin:0 0 16px;">
+                        <li>Scan QRIS atau transfer ke rekening owner</li>
+                        <li>Screenshot / foto bukti pembayaran</li>
+                        <li>Kirim bukti ke salah satu kontak di bawah ini</li>
+                        <li>Sebutkan email akun Google yang dipakai login</li>
+                        <li>Tunggu konfirmasi aktivasi VIP dari owner</li>
+                    </ol>
+                    <div class="vip-contact-grid">
+                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
+                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
+                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
+                    </div>
+                </div>
+
+                <!-- PAYMENT QRIS -->
+                <div class="vip-section-title">💳 PEMBAYARAN</div>
+                <div style="background:var(--card); border:1px solid #1f2937; border-radius:16px; padding:20px; text-align:center;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" style="width:180px; height:180px; border-radius:12px; border:2px solid rgba(234,179,8,0.4);" alt="QRIS VIP">
+                    <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px; font-family:'Orbitron';">SCAN · DANA / OVO / GOPAY / BANK</p>
+                    <p style="font-size:9px; color:#6b7280; margin:4px 0 0;">Nominal: <b style="color:#eab308">Rp 25.000</b></p>
+                </div>
+            </div>
+
+            <!-- OWNER PANEL (hanya owner) -->
+            <div id="owner-panel" style="display:none;">
+                <div class="vip-section-title">🔧 OWNER PANEL</div>
+                <div style="background:#0a0e14; border:1px solid rgba(234,179,8,0.3); border-radius:16px; padding:20px; margin-bottom:16px;">
+                    <p style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin:0 0 14px;">⚡ GRANT / REVOKE VIP</p>
+                    <div class="admin-input-row">
+                        <input type="email" id="vip-email-input" class="admin-email-input" placeholder="email@gmail.com">
+                        <button onclick="grantVip()" class="vip-action-btn btn-grant">✅ GRANT</button>
+                        <button onclick="revokeVip()" class="vip-action-btn btn-revoke">❌ REVOKE</button>
+                    </div>
+                    <div id="vip-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px; margin-top:4px;"></div>
+                </div>
+
+                <div class="vip-section-title">👑 DAFTAR VIP AKTIF</div>
+                <div id="vip-members-list">
+                    <div style="text-align:center; padding:20px; font-size:10px; color:#374151;">Loading...</div>
+                </div>
+            </div>
+
+        </div></div>
+    </div><!-- end content-container -->
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
@@ -1020,10 +1188,121 @@
             }
         });
 
+        const OWNER_EMAIL = 'sanlana1903@gmail.com';
+        let isVip = false;
+
         auth.onAuthStateChanged(u => { 
-            if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
+            if(u){ 
+                curUser = u; 
+                document.getElementById('auth-screen').style.display='none'; 
+                document.getElementById('display-user').innerText="ACTIVE: "+u.email;
+                checkVipStatus(u.email).then(vip => {
+                    isVip = vip || (u.email === OWNER_EMAIL);
+                    applyVipGates();
+                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals();
+                    loadVipTab();
+                });
+            } 
             else { document.getElementById('auth-screen').style.display='flex'; }
         });
+
+        async function checkVipStatus(email) {
+            try {
+                const snap = await rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value');
+                return snap.exists();
+            } catch(e) { return false; }
+        }
+
+        function applyVipGates() {
+            const signalLock   = document.getElementById('signal-vip-lock');
+            const signalInner  = document.getElementById('signal-content-inner');
+            const monitorLock  = document.getElementById('monitor-vip-lock');
+            const monitorInner = document.getElementById('monitor-content-inner');
+            if (isVip) {
+                if(signalLock)   signalLock.style.display  = 'none';
+                if(signalInner)  signalInner.style.display = 'block';
+                if(monitorLock)  monitorLock.style.display  = 'none';
+                if(monitorInner) monitorInner.style.display = 'block';
+            } else {
+                if(signalLock)   signalLock.style.display  = 'flex';
+                if(signalInner)  signalInner.style.display = 'none';
+                if(monitorLock)  monitorLock.style.display  = 'flex';
+                if(monitorInner) monitorInner.style.display = 'none';
+            }
+        }
+
+        function loadVipTab() {
+            const statusBox       = document.getElementById('vip-my-status-box');
+            const ownerPanel      = document.getElementById('owner-panel');
+            const registerInfo    = document.getElementById('vip-register-info');
+            const isOwner = curUser && curUser.email === OWNER_EMAIL;
+
+            if (isOwner) {
+                statusBox.style.cssText = 'background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.4);color:#eab308;';
+                statusBox.innerHTML = '👑 OWNER · Akses Penuh';
+                ownerPanel.style.display   = 'block';
+                registerInfo.style.display = 'none';
+                loadVipMembers();
+            } else if (isVip) {
+                statusBox.style.cssText = 'background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3);color:#eab308;';
+                statusBox.innerHTML = '✅ STATUS: <b style="margin-left:6px;">VIP AKTIF</b>';
+                registerInfo.style.display = 'none';
+            } else {
+                statusBox.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;';
+                statusBox.innerHTML = '🔒 STATUS: <b style="margin-left:6px;">BELUM VIP</b>';
+                ownerPanel.style.display   = 'none';
+                registerInfo.style.display = 'block';
+            }
+        }
+
+        function loadVipMembers() {
+            const list = document.getElementById('vip-members-list');
+            rtdb.ref('vip_members').on('value', snap => {
+                if (!snap.exists()) {
+                    list.innerHTML = '<div style="text-align:center;padding:20px;font-size:10px;color:#374151;">Belum ada member VIP</div>';
+                    return;
+                }
+                let html = '';
+                snap.forEach(child => {
+                    const d = child.val();
+                    const since = d.grantedAt ? new Date(d.grantedAt).toLocaleDateString('id-ID') : '-';
+                    html += `<div class="vip-member-card">
+                        <div>
+                            <div class="vip-member-email">👑 ${d.email}</div>
+                            <div class="vip-member-since">Aktif sejak: ${since}</div>
+                        </div>
+                        <button onclick="revokeVipKey('${child.key}')" class="vip-action-btn btn-revoke">REVOKE</button>
+                    </div>`;
+                });
+                list.innerHTML = html;
+            });
+        }
+
+        function grantVip() {
+            const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
+            const msg   = document.getElementById('vip-admin-msg');
+            if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
+            rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
+                .then(() => { msg.style.color='#4ade80'; msg.textContent = `✅ ${email} berhasil dijadikan VIP!`; document.getElementById('vip-email-input').value=''; })
+                .catch(e => { msg.style.color='#ef4444'; msg.textContent = '❌ Error: ' + e.message; });
+        }
+
+        function revokeVip() {
+            const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
+            const msg   = document.getElementById('vip-admin-msg');
+            if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
+            rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value', snap => {
+                if (!snap.exists()) { msg.style.color='#ef4444'; msg.textContent = `❌ ${email} tidak ditemukan di daftar VIP.`; return; }
+                const promises = [];
+                snap.forEach(child => promises.push(rtdb.ref('vip_members/' + child.key).remove()));
+                Promise.all(promises).then(() => { msg.style.color='#eab308'; msg.textContent = `⚠️ VIP ${email} telah direvoke.`; document.getElementById('vip-email-input').value=''; });
+            });
+        }
+
+        function revokeVipKey(key) {
+            if (!confirm("Yakin revoke VIP member ini?")) return;
+            rtdb.ref('vip_members/' + key).remove();
+        }
 
         function setupTracker() { 
             if(!curUser) return;
@@ -1326,8 +1605,10 @@
                 if(target) { target.classList.add('active'); }
                 if(el) el.classList.add('active');
                 if(id==='chart-tab') updateChart();
-                if(id==='signal-tab') { renderIctSignals(); renderFundSignals(); }
-                if(id==='monitor-tab' || id==='community-tab' || id==='announce-tab') loadData();
+                if(id==='signal-tab') { applyVipGates(); renderIctSignals(); renderFundSignals(); }
+                if(id==='monitor-tab') { applyVipGates(); loadData(); }
+                if(id==='community-tab' || id==='announce-tab') loadData();
+                if(id==='vip-tab') loadVipTab();
             }, 150);
         }
 
