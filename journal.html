@@ -40,6 +40,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -389,6 +390,7 @@
         .vip-price-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
         .vip-price-card { background:linear-gradient(145deg,rgba(234,179,8,0.08),rgba(180,83,9,0.05)); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.2s; position:relative; }
         .vip-price-card:hover { border-color:rgba(234,179,8,0.6); transform:translateY(-2px); box-shadow:0 4px 16px rgba(234,179,8,0.15); }
+        .vip-price-card.selected { border-color:#eab308; box-shadow:0 0 18px rgba(234,179,8,0.35); background:linear-gradient(145deg,rgba(234,179,8,0.18),rgba(180,83,9,0.12)); }
         .vip-price-card.popular { border-color:rgba(234,179,8,0.6); box-shadow:0 0 14px rgba(234,179,8,0.2); }
         .vip-price-card.popular::before { content:'POPULAR'; position:absolute; top:-8px; left:50%; transform:translateX(-50%); background:#eab308; color:#000; font-family:'Orbitron'; font-size:7px; padding:2px 8px; border-radius:4px; font-weight:900; }
         .vip-price-card.lifetime { grid-column:1/-1; background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(234,179,8,0.08)); border-color:rgba(168,85,247,0.4); }
@@ -399,6 +401,42 @@
         .vip-price-save { font-size:7px; color:#4ade80; margin-top:2px; }
         .sidebar a.vip-nav { color:#eab308 !important; }
         .sidebar a.vip-nav:hover, .sidebar a.vip-nav.active { color:#fbbf24 !important; background:rgba(234,179,8,0.1) !important; }
+
+        /* ===== PAYMENT PROOF UPLOAD ===== */
+        .payment-proof-section { background:#0a0e14; border:1px solid rgba(234,179,8,0.25); border-radius:16px; padding:20px; margin-top:16px; }
+        .proof-upload-box { border:2px dashed rgba(234,179,8,0.3); border-radius:12px; padding:20px; text-align:center; cursor:pointer; transition:all 0.2s; background:rgba(234,179,8,0.03); position:relative; }
+        .proof-upload-box:hover { border-color:rgba(234,179,8,0.6); background:rgba(234,179,8,0.07); }
+        .proof-upload-box input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+        .proof-preview { width:100%; max-height:200px; object-fit:contain; border-radius:10px; margin-top:12px; border:1px solid rgba(234,179,8,0.2); display:none; }
+        .proof-email-input { width:100%; background:#050a14; border:1px solid rgba(234,179,8,0.3); color:white; border-radius:10px; padding:12px 14px; font-size:12px; outline:none; box-sizing:border-box; margin-top:12px; font-family:'Poppins'; }
+        .proof-email-input:focus { border-color:rgba(234,179,8,0.7); }
+        .btn-send-proof { width:100%; background:linear-gradient(135deg,#b45309,#eab308); color:#000; border:none; padding:14px; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:14px; font-size:11px; letter-spacing:1px; transition:all 0.2s; }
+        .btn-send-proof:hover { box-shadow:0 0 20px rgba(234,179,8,0.4); transform:translateY(-1px); }
+        .btn-send-proof:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+        .proof-status { font-size:10px; margin-top:8px; min-height:16px; text-align:center; font-family:'Orbitron'; }
+
+        /* ===== OWNER PAYMENT PROOFS TAB ===== */
+        .proof-card { background:#0a0e14; border:1px solid rgba(234,179,8,0.2); border-radius:14px; padding:16px; margin-bottom:14px; }
+        .proof-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+        .proof-card-email { font-size:11px; color:var(--be); font-weight:600; }
+        .proof-card-time { font-size:8px; color:#4b5563; }
+        .proof-card-pkg { font-family:'Orbitron'; font-size:8px; padding:2px 8px; border-radius:4px; background:rgba(234,179,8,0.15); color:#eab308; border:1px solid rgba(234,179,8,0.3); }
+        .proof-card-img { width:100%; max-height:220px; object-fit:contain; border-radius:10px; border:1px solid rgba(234,179,8,0.2); cursor:pointer; margin-top:8px; }
+        .proof-card-status { display:flex; gap:8px; margin-top:10px; }
+        .btn-approve { flex:1; padding:8px; background:rgba(74,222,128,0.15); border:1px solid rgba(74,222,128,0.4); color:var(--green); border-radius:8px; font-family:'Orbitron'; font-size:8px; cursor:pointer; font-weight:bold; }
+        .btn-approve:hover { background:rgba(74,222,128,0.3); }
+        .btn-reject { flex:1; padding:8px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:var(--red); border-radius:8px; font-family:'Orbitron'; font-size:8px; cursor:pointer; font-weight:bold; }
+        .badge-pending { font-size:8px; padding:2px 8px; border-radius:4px; background:rgba(234,179,8,0.15); color:#eab308; font-family:'Orbitron'; }
+        .badge-approved { font-size:8px; padding:2px 8px; border-radius:4px; background:rgba(74,222,128,0.15); color:var(--green); font-family:'Orbitron'; }
+        .badge-rejected { font-size:8px; padding:2px 8px; border-radius:4px; background:rgba(239,68,68,0.15); color:var(--red); font-family:'Orbitron'; }
+
+        /* ===== TRIAL LOCK OVERLAY ===== */
+        .trial-lock-overlay { position:absolute; inset:0; background:rgba(5,10,20,0.95); backdrop-filter:blur(8px); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 20px; }
+        .trial-lock-card { background:linear-gradient(145deg,#0d1117,#161b22); border:1px solid rgba(239,68,68,0.4); border-radius:20px; padding:28px 22px; width:100%; max-width:300px; text-align:center; box-shadow:0 0 30px rgba(239,68,68,0.1); }
+        .trial-lock-icon { font-size:40px; margin-bottom:10px; }
+        .trial-lock-title { font-family:'Orbitron'; font-size:14px; color:#ef4444; margin:0 0 8px; letter-spacing:2px; }
+        .trial-lock-sub { font-size:10px; color:#9ca3af; margin:0 0 16px; line-height:1.6; }
+        .btn-trial-upgrade { background:linear-gradient(135deg,#b45309,#eab308); color:#000; border:none; padding:12px; border-radius:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; width:100%; }
     </style>
 </head>
 <body>
@@ -465,30 +503,11 @@
                     <h2 class="vip-lock-title">VIP ONLY</h2>
                     <p class="vip-lock-sub">Fitur <b>Live Signal ICT Predator</b> hanya tersedia untuk member <b>VIP Freedom Syndicate</b>.</p>
                     <div class="vip-price-grid">
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">1 BULAN</div>
-                            <div class="vip-price-val">Rp 9.000</div>
-                        </div>
-                        <div class="vip-price-card popular">
-                            <div class="vip-price-duration">3 BULAN</div>
-                            <div class="vip-price-val">Rp 27.000</div>
-                            <div class="vip-price-save">Hemat Rp 0</div>
-                        </div>
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">6 BULAN</div>
-                            <div class="vip-price-val">Rp 50.000</div>
-                            <div class="vip-price-save">Hemat Rp 4.000</div>
-                        </div>
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">12 BULAN</div>
-                            <div class="vip-price-val">$5</div>
-                            <div class="vip-price-save">Hemat lebih banyak</div>
-                        </div>
-                        <div class="vip-price-card lifetime">
-                            <div class="vip-price-duration">♾️ LIFETIME</div>
-                            <div class="vip-price-val lifetime-val">$10</div>
-                            <div class="vip-price-save" style="color:#c084fc;">Bayar sekali, akses selamanya</div>
-                        </div>
+                        <div class="vip-price-card"><div class="vip-price-duration">1 BULAN</div><div class="vip-price-val">Rp 9.000</div></div>
+                        <div class="vip-price-card popular"><div class="vip-price-duration">3 BULAN</div><div class="vip-price-val">Rp 27.000</div></div>
+                        <div class="vip-price-card"><div class="vip-price-duration">6 BULAN</div><div class="vip-price-val">Rp 50.000</div></div>
+                        <div class="vip-price-card"><div class="vip-price-duration">12 BULAN</div><div class="vip-price-val">$5</div></div>
+                        <div class="vip-price-card lifetime"><div class="vip-price-duration">♾️ LIFETIME</div><div class="vip-price-val lifetime-val">$10</div></div>
                     </div>
                     <div class="vip-benefits">
                         <div class="vip-benefit-item">✅ Akses penuh Live Signal ICT Predator</div>
@@ -496,14 +515,8 @@
                         <div class="vip-benefit-item">✅ Notifikasi sinyal real-time via Telegram</div>
                         <div class="vip-benefit-item">✅ Dukungan langsung dari owner</div>
                     </div>
-                    <p style="font-size:10px;color:#eab308;font-family:'Orbitron';margin:0 0 10px;">📌 CARA DAFTAR VIP:</p>
-                    <p style="font-size:10px;color:#9ca3af;margin:0 0 14px;line-height:1.7;">1. Pilih paket VIP di atas<br>2. Lakukan pembayaran sesuai paket<br>3. Kirim bukti bayar + email login ke kontak bawah<br>4. Tunggu konfirmasi aktivasi dari owner</p>
-                    <div class="vip-contact-grid">
-                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
-                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
-                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
-                    </div>
-                    <p class="vip-note">⚠️ Akses akan diaktifkan secara manual oleh owner setelah bukti pembayaran terverifikasi.</p>
+                    <button onclick="openTab('vip-tab', document.querySelector('.nav-link.vip-nav'))" style="width:100%;background:linear-gradient(135deg,#b45309,#eab308);color:#000;border:none;padding:13px;border-radius:10px;font-weight:900;font-family:'Orbitron';cursor:pointer;font-size:11px;margin-bottom:10px;">👑 DAFTAR VIP SEKARANG</button>
+                    <p class="vip-note">⚠️ Akses diaktifkan manual oleh owner setelah bukti pembayaran terverifikasi.</p>
                 </div>
             </div>
 
@@ -646,30 +659,11 @@
                     <h2 class="vip-lock-title">VIP ONLY</h2>
                     <p class="vip-lock-sub">Fitur <b>Monitor & Equity Tracker</b> hanya tersedia untuk member <b>VIP Freedom Syndicate</b>.</p>
                     <div class="vip-price-grid">
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">1 BULAN</div>
-                            <div class="vip-price-val">Rp 9.000</div>
-                        </div>
-                        <div class="vip-price-card popular">
-                            <div class="vip-price-duration">3 BULAN</div>
-                            <div class="vip-price-val">Rp 27.000</div>
-                            <div class="vip-price-save">Hemat Rp 0</div>
-                        </div>
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">6 BULAN</div>
-                            <div class="vip-price-val">Rp 50.000</div>
-                            <div class="vip-price-save">Hemat Rp 4.000</div>
-                        </div>
-                        <div class="vip-price-card">
-                            <div class="vip-price-duration">12 BULAN</div>
-                            <div class="vip-price-val">$5</div>
-                            <div class="vip-price-save">Hemat lebih banyak</div>
-                        </div>
-                        <div class="vip-price-card lifetime">
-                            <div class="vip-price-duration">♾️ LIFETIME</div>
-                            <div class="vip-price-val lifetime-val">$10</div>
-                            <div class="vip-price-save" style="color:#c084fc;">Bayar sekali, akses selamanya</div>
-                        </div>
+                        <div class="vip-price-card"><div class="vip-price-duration">1 BULAN</div><div class="vip-price-val">Rp 9.000</div></div>
+                        <div class="vip-price-card popular"><div class="vip-price-duration">3 BULAN</div><div class="vip-price-val">Rp 27.000</div></div>
+                        <div class="vip-price-card"><div class="vip-price-duration">6 BULAN</div><div class="vip-price-val">Rp 50.000</div></div>
+                        <div class="vip-price-card"><div class="vip-price-duration">12 BULAN</div><div class="vip-price-val">$5</div></div>
+                        <div class="vip-price-card lifetime"><div class="vip-price-duration">♾️ LIFETIME</div><div class="vip-price-val lifetime-val">$10</div></div>
                     </div>
                     <div class="vip-benefits">
                         <div class="vip-benefit-item">✅ Akses penuh Live Signal ICT Predator</div>
@@ -677,14 +671,8 @@
                         <div class="vip-benefit-item">✅ Notifikasi sinyal real-time via Telegram</div>
                         <div class="vip-benefit-item">✅ Dukungan langsung dari owner</div>
                     </div>
-                    <p style="font-size:10px;color:#eab308;font-family:'Orbitron';margin:0 0 10px;">📌 CARA DAFTAR VIP:</p>
-                    <p style="font-size:10px;color:#9ca3af;margin:0 0 14px;line-height:1.7;">1. Pilih paket VIP di atas<br>2. Lakukan pembayaran sesuai paket<br>3. Kirim bukti bayar + email login ke kontak bawah<br>4. Tunggu konfirmasi aktivasi dari owner</p>
-                    <div class="vip-contact-grid">
-                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
-                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
-                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
-                    </div>
-                    <p class="vip-note">⚠️ Akses akan diaktifkan secara manual oleh owner setelah bukti pembayaran terverifikasi.</p>
+                    <button onclick="openTab('vip-tab', document.querySelector('.nav-link.vip-nav'))" style="width:100%;background:linear-gradient(135deg,#b45309,#eab308);color:#000;border:none;padding:13px;border-radius:10px;font-weight:900;font-family:'Orbitron';cursor:pointer;font-size:11px;margin-bottom:10px;">👑 DAFTAR VIP SEKARANG</button>
+                    <p class="vip-note">⚠️ Akses diaktifkan manual oleh owner setelah bukti pembayaran terverifikasi.</p>
                 </div>
             </div>
 
@@ -1147,46 +1135,41 @@
 
             <!-- CARA DAFTAR (for non-VIP non-owner) -->
             <div id="vip-register-info">
-                <div class="vip-section-title">📋 CARA DAFTAR VIP</div>
+                <div class="vip-section-title">📋 PILIH PAKET VIP</div>
                 <div style="background:#0a0e14; border:1px solid rgba(234,179,8,0.2); border-radius:16px; padding:20px;">
-                    <div class="vip-price-grid">
-                        <div class="vip-price-card">
+                    <div class="vip-price-grid" id="vip-price-grid-select">
+                        <div class="vip-price-card" onclick="selectVipPlan(this,'1 BULAN','Rp 9.000','9000')">
                             <div class="vip-price-duration">1 BULAN</div>
                             <div class="vip-price-val">Rp 9.000</div>
                         </div>
-                        <div class="vip-price-card popular">
+                        <div class="vip-price-card popular selected" onclick="selectVipPlan(this,'3 BULAN','Rp 27.000','27000')">
                             <div class="vip-price-duration">3 BULAN</div>
                             <div class="vip-price-val">Rp 27.000</div>
                             <div class="vip-price-save">Hemat Rp 0</div>
                         </div>
-                        <div class="vip-price-card">
+                        <div class="vip-price-card" onclick="selectVipPlan(this,'6 BULAN','Rp 50.000','50000')">
                             <div class="vip-price-duration">6 BULAN</div>
                             <div class="vip-price-val">Rp 50.000</div>
                             <div class="vip-price-save">Hemat Rp 4.000</div>
                         </div>
-                        <div class="vip-price-card">
+                        <div class="vip-price-card" onclick="selectVipPlan(this,'12 BULAN','$5','5_USD')">
                             <div class="vip-price-duration">12 BULAN</div>
                             <div class="vip-price-val">$5</div>
                             <div class="vip-price-save">Hemat lebih banyak</div>
                         </div>
-                        <div class="vip-price-card lifetime">
+                        <div class="vip-price-card lifetime" onclick="selectVipPlan(this,'LIFETIME','$10','10_USD')">
                             <div class="vip-price-duration">♾️ LIFETIME</div>
                             <div class="vip-price-val lifetime-val">$10</div>
                             <div class="vip-price-save" style="color:#c084fc;">Bayar sekali, akses selamanya</div>
                         </div>
                     </div>
-                    <ol style="font-size:11px; color:#d1d5db; line-height:2; padding-left:18px; margin:0 0 16px;">
-                        <li>Scan QRIS atau transfer ke rekening owner</li>
+                    <ol style="font-size:11px; color:#d1d5db; line-height:2; padding-left:18px; margin:0;">
+                        <li>Pilih paket VIP di atas</li>
+                        <li>Scan QRIS sesuai nominal paket yang dipilih</li>
                         <li>Screenshot / foto bukti pembayaran</li>
-                        <li>Kirim bukti ke salah satu kontak di bawah ini</li>
-                        <li>Sebutkan email akun Google yang dipakai login</li>
+                        <li>Upload bukti + masukkan email login di bawah</li>
                         <li>Tunggu konfirmasi aktivasi VIP dari owner</li>
                     </ol>
-                    <div class="vip-contact-grid">
-                        <a href="https://discord.gg/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-discord">💬 Discord</a>
-                        <a href="https://t.me/freedomsyndicate" target="_blank" class="vip-contact-btn vip-btn-telegram">✈️ Telegram</a>
-                        <a href="mailto:officiallisan230717@gmail.com" class="vip-contact-btn vip-btn-email">📧 officiallisan230717@gmail.com</a>
-                    </div>
                 </div>
 
                 <!-- PAYMENT QRIS -->
@@ -1194,26 +1177,68 @@
                 <div style="background:var(--card); border:1px solid #1f2937; border-radius:16px; padding:20px; text-align:center;">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126570011ID.DANA.WWW011893600915309951702702090995170270303UMI51440014ID.CO.QRIS.WWW0215ID10200585900400303UMI5204549953033605802ID5912WARUNG%20LISAN6013Kab.%20Ponorogo6105634126304F35C" style="width:180px; height:180px; border-radius:12px; border:2px solid rgba(234,179,8,0.4);" alt="QRIS VIP">
                     <p style="font-size:9px; color:var(--be); font-weight:bold; margin-top:10px; font-family:'Orbitron';">SCAN · DANA / OVO / GOPAY / BANK</p>
-                    <p style="font-size:9px; color:#6b7280; margin:4px 0 0;">Nominal: <b style="color:#eab308">Rp 25.000</b></p>
+                    <p style="font-size:9px; color:#6b7280; margin:4px 0 0;">Nominal: <b id="qris-nominal" style="color:#eab308">Rp 27.000</b></p>
+                    <p style="font-size:8px; color:#374151; margin:4px 0 0;" id="qris-selected-pkg">Paket: <span style="color:#9ca3af">3 BULAN</span></p>
+                </div>
+
+                <!-- KIRIM BUKTI PEMBAYARAN -->
+                <div class="vip-section-title">📤 KIRIM BUKTI PEMBAYARAN</div>
+                <div class="payment-proof-section">
+                    <p style="font-size:10px;color:#9ca3af;margin:0 0 12px;line-height:1.6;">Upload foto/screenshot bukti pembayaran kamu, lalu masukkan email Google yang dipakai login.</p>
+                    <div class="proof-upload-box" id="proof-upload-box">
+                        <input type="file" accept="image/*" id="proof-file-input" onchange="previewProof(this)">
+                        <div id="proof-upload-placeholder">
+                            <div style="font-size:28px;margin-bottom:6px;">📸</div>
+                            <div style="font-size:10px;color:#9ca3af;font-family:'Orbitron';">TAP UNTUK UPLOAD BUKTI</div>
+                            <div style="font-size:8px;color:#374151;margin-top:4px;">JPG / PNG / Screenshot</div>
+                        </div>
+                        <img id="proof-preview-img" class="proof-preview" src="" alt="Preview">
+                    </div>
+                    <input type="email" id="proof-email-input" class="proof-email-input" placeholder="Email Google yang dipakai login (contoh: kamu@gmail.com)">
+                    <button class="btn-send-proof" id="btn-send-proof" onclick="submitPaymentProof()">📨 KIRIM BUKTI PEMBAYARAN</button>
+                    <div class="proof-status" id="proof-status"></div>
                 </div>
             </div>
 
             <!-- OWNER PANEL (hanya owner) -->
             <div id="owner-panel" style="display:none;">
-                <div class="vip-section-title">🔧 OWNER PANEL</div>
-                <div style="background:#0a0e14; border:1px solid rgba(234,179,8,0.3); border-radius:16px; padding:20px; margin-bottom:16px;">
-                    <p style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin:0 0 14px;">⚡ GRANT / REVOKE VIP</p>
-                    <div class="admin-input-row">
-                        <input type="email" id="vip-email-input" class="admin-email-input" placeholder="email@gmail.com">
-                        <button onclick="grantVip()" class="vip-action-btn btn-grant">✅ GRANT</button>
-                        <button onclick="revokeVip()" class="vip-action-btn btn-revoke">❌ REVOKE</button>
-                    </div>
-                    <div id="vip-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px; margin-top:4px;"></div>
+                <!-- OWNER SUB TAB NAV -->
+                <div class="sub-tab-nav" style="margin-bottom:16px;">
+                    <button class="sub-tab-btn active" onclick="showOwnerTab('owner-grant-tab', this)">⚡ GRANT/REVOKE</button>
+                    <button class="sub-tab-btn" onclick="showOwnerTab('owner-proofs-tab', this)">📥 BUKTI BAYAR</button>
+                    <button class="sub-tab-btn" onclick="showOwnerTab('owner-members-tab', this)">👑 MEMBER VIP</button>
                 </div>
 
-                <div class="vip-section-title">👑 DAFTAR VIP AKTIF</div>
-                <div id="vip-members-list">
-                    <div style="text-align:center; padding:20px; font-size:10px; color:#374151;">Loading...</div>
+                <!-- GRANT / REVOKE -->
+                <div id="owner-grant-tab">
+                    <div style="background:#0a0e14; border:1px solid rgba(234,179,8,0.3); border-radius:16px; padding:20px; margin-bottom:16px;">
+                        <p style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin:0 0 14px;">⚡ GRANT / REVOKE VIP</p>
+                        <div class="admin-input-row">
+                            <input type="email" id="vip-email-input" class="admin-email-input" placeholder="email@gmail.com">
+                            <button onclick="grantVip()" class="vip-action-btn btn-grant">✅ GRANT</button>
+                            <button onclick="revokeVip()" class="vip-action-btn btn-revoke">❌ REVOKE</button>
+                        </div>
+                        <div id="vip-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px; margin-top:4px;"></div>
+                    </div>
+                </div>
+
+                <!-- BUKTI PEMBAYARAN -->
+                <div id="owner-proofs-tab" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                        <p style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin:0;">📥 BUKTI PEMBAYARAN MASUK</p>
+                        <span id="proof-count-badge" style="background:rgba(239,68,68,0.2);color:var(--red);font-family:'Orbitron';font-size:8px;padding:2px 8px;border-radius:10px;"></span>
+                    </div>
+                    <div id="owner-proofs-list">
+                        <div style="text-align:center; padding:20px; font-size:10px; color:#374151; font-family:'Orbitron';">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- MEMBER VIP LIST -->
+                <div id="owner-members-tab" style="display:none;">
+                    <div class="vip-section-title">👑 DAFTAR VIP AKTIF</div>
+                    <div id="vip-members-list">
+                        <div style="text-align:center; padding:20px; font-size:10px; color:#374151;">Loading...</div>
+                    </div>
                 </div>
             </div>
 
@@ -1223,7 +1248,7 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), rtdb = firebase.database();
+        const auth = firebase.auth(), rtdb = firebase.database(), storage = firebase.storage();
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
 
         let sidebarOpen = false;
@@ -1275,6 +1300,7 @@
                     applyVipGates();
                     loadData(); updateChart(); loadChat(); setupTracker(); loadSignals();
                     loadVipTab();
+                    if (!isVip) checkTrialStatus(u.uid);
                 });
             } 
             else { document.getElementById('auth-screen').style.display='flex'; }
@@ -1376,6 +1402,305 @@
         function revokeVipKey(key) {
             if (!confirm("Yakin revoke VIP member ini?")) return;
             rtdb.ref('vip_members/' + key).remove();
+        }
+
+        // ===== OWNER SUB TABS =====
+        function showOwnerTab(tabId, btn) {
+            document.querySelectorAll('#owner-grant-tab, #owner-proofs-tab, #owner-members-tab').forEach(t => t.style.display = 'none');
+            btn.parentNode.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            btn.classList.add('active');
+            if (tabId === 'owner-proofs-tab') loadPaymentProofs();
+            if (tabId === 'owner-members-tab') loadVipMembers();
+        }
+
+        // ===== DYNAMIC VIP PLAN SELECTOR =====
+        let selectedPlan = { label: '3 BULAN', nominal: 'Rp 27.000', value: '27000' };
+
+        function selectVipPlan(card, label, nominal, value) {
+            document.querySelectorAll('#vip-price-grid-select .vip-price-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedPlan = { label, nominal, value };
+            // Update QRIS nominal display
+            const nominalEl = document.getElementById('qris-nominal');
+            const pkgEl     = document.getElementById('qris-selected-pkg');
+            if (nominalEl) nominalEl.textContent = nominal;
+            if (pkgEl) pkgEl.innerHTML = 'Paket: <span style="color:#9ca3af">' + label + '</span>';
+        }
+
+        // ===== PAYMENT PROOF SUBMIT =====
+        let proofImageFile = null;
+
+        function previewProof(input) {
+            const file = input.files[0];
+            if (!file) return;
+            proofImageFile = file;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.getElementById('proof-preview-img');
+                const placeholder = document.getElementById('proof-upload-placeholder');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function submitPaymentProof() {
+            const email  = (document.getElementById('proof-email-input').value || '').trim().toLowerCase();
+            const status = document.getElementById('proof-status');
+            const btn    = document.getElementById('btn-send-proof');
+
+            if (!proofImageFile) {
+                status.style.color = '#ef4444';
+                status.textContent = '❌ Upload foto bukti pembayaran dulu!';
+                return;
+            }
+            if (!email || !email.includes('@')) {
+                status.style.color = '#ef4444';
+                status.textContent = '❌ Email tidak valid!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ MENGUNGGAH...';
+            status.style.color = '#eab308';
+            status.textContent = 'Mengupload gambar ke server...';
+
+            // Upload ke Firebase Storage
+            const ext       = proofImageFile.name.split('.').pop() || 'jpg';
+            const fileName  = 'payment_proofs/' + Date.now() + '_' + email.replace(/[^a-z0-9]/g,'_') + '.' + ext;
+            const storageRef = storage.ref(fileName);
+            const uploadTask = storageRef.put(proofImageFile);
+
+            uploadTask.on('state_changed',
+                snapshot => {
+                    const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    status.textContent = 'Mengupload... ' + pct + '%';
+                    btn.textContent = '⏳ ' + pct + '%';
+                },
+                err => {
+                    status.style.color = '#ef4444';
+                    status.textContent = '❌ Upload gagal: ' + err.message;
+                    btn.disabled = false;
+                    btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
+                },
+                () => {
+                    // Upload done — get download URL
+                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                        const proofData = {
+                            email:       email,
+                            package:     selectedPlan.label,
+                            nominal:     selectedPlan.nominal,
+                            imageUrl:    downloadURL,
+                            submittedAt: Date.now(),
+                            status:      'pending'
+                        };
+                        return rtdb.ref('payment_proofs').push(proofData);
+                    })
+                    .then(() => {
+                        status.style.color = '#4ade80';
+                        status.textContent = '✅ Bukti berhasil dikirim! Tunggu konfirmasi owner.';
+                        btn.textContent = '✅ TERKIRIM';
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
+                            proofImageFile = null;
+                            document.getElementById('proof-file-input').value = '';
+                            document.getElementById('proof-preview-img').style.display = 'none';
+                            document.getElementById('proof-upload-placeholder').style.display = 'block';
+                            document.getElementById('proof-email-input').value = '';
+                        }, 4000);
+                    })
+                    .catch(e => {
+                        status.style.color = '#ef4444';
+                        status.textContent = '❌ Gagal simpan data: ' + e.message;
+                        btn.disabled = false;
+                        btn.textContent = '📨 KIRIM BUKTI PEMBAYARAN';
+                    });
+                }
+            );
+        }
+
+        // ===== LOAD PAYMENT PROOFS (OWNER) =====
+        function loadPaymentProofs() {
+            const list = document.getElementById('owner-proofs-list');
+            const badge = document.getElementById('proof-count-badge');
+            if (!list) return;
+            list.innerHTML = '<div style="text-align:center;padding:20px;font-size:10px;color:#374151;font-family:Orbitron">Loading...</div>';
+
+            rtdb.ref('payment_proofs').orderByChild('submittedAt').once('value', snap => {
+                if (!snap.exists()) {
+                    list.innerHTML = '<div style="text-align:center;padding:20px;font-size:10px;color:#374151;font-family:Orbitron">Belum ada bukti pembayaran masuk</div>';
+                    if (badge) badge.textContent = '';
+                    return;
+                }
+
+                let items = [];
+                snap.forEach(child => items.unshift({ key: child.key, ...child.val() }));
+
+                const pending = items.filter(i => i.status === 'pending').length;
+                if (badge) badge.textContent = pending > 0 ? pending + ' PENDING' : '';
+
+                list.innerHTML = items.map(item => {
+                    const time = item.submittedAt ? new Date(item.submittedAt).toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}) : '-';
+                    const statusBadge = item.status === 'approved' ? '<span class="badge-approved">✅ APPROVED</span>'
+                                      : item.status === 'rejected' ? '<span class="badge-rejected">❌ REJECTED</span>'
+                                      : '<span class="badge-pending">⏳ PENDING</span>';
+                    const actionBtns = item.status === 'pending' ? `
+                        <div class="proof-card-status">
+                            <button class="btn-approve" onclick="approveProof('${item.key}','${item.email || ''}')">✅ APPROVE + GRANT VIP</button>
+                            <button class="btn-reject"  onclick="rejectProof('${item.key}')">❌ REJECT</button>
+                        </div>` : '';
+                    return `
+                    <div class="proof-card">
+                        <div class="proof-card-header">
+                            <div>
+                                <div class="proof-card-email">📧 ${item.email || '-'}</div>
+                                <div class="proof-card-time">${time} WIB</div>
+                            </div>
+                            <div style="text-align:right">
+                                <div class="proof-card-pkg">${item.package || '-'} · ${item.nominal || '-'}</div>
+                                <div style="margin-top:4px">${statusBadge}</div>
+                            </div>
+                        </div>
+                        ${item.imageUrl ? `<img src="${item.imageUrl}" class="proof-card-img" onclick="openZoom('${item.imageUrl}')">` : '<div style="font-size:10px;color:#374151;padding:10px;text-align:center;">No image</div>'}
+                        ${actionBtns}
+                    </div>`;
+                }).join('');
+            });
+        }
+
+        function approveProof(proofKey, email) {
+            if (!email || !email.includes('@')) { alert('Email tidak valid'); return; }
+            if (!confirm('Approve & Grant VIP untuk ' + email + '?')) return;
+            // Grant VIP
+            rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
+                .then(() => {
+                    // Update proof status
+                    rtdb.ref('payment_proofs/' + proofKey).update({ status: 'approved', approvedAt: Date.now(), approvedBy: curUser.email });
+                    alert('✅ VIP granted untuk ' + email);
+                    loadPaymentProofs();
+                })
+                .catch(e => alert('Error: ' + e.message));
+        }
+
+        function rejectProof(proofKey) {
+            if (!confirm('Yakin reject bukti pembayaran ini?')) return;
+            rtdb.ref('payment_proofs/' + proofKey).update({ status: 'rejected', rejectedAt: Date.now() })
+                .then(() => loadPaymentProofs())
+                .catch(e => alert('Error: ' + e.message));
+        }
+
+        // ===== TRIAL LOCK SYSTEM =====
+        // Tabs yang TIDAK terkunci saat trial habis:
+        const ALWAYS_UNLOCKED_TABS = ['announce-tab','community-tab','broker-tab','donasi-tab'];
+        // Semua tab yang bisa di-lock:
+        const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab','vip-tab'];
+
+        let trialActive = false;
+        let trialEndTime = null;
+
+        function checkTrialStatus(uid) {
+            // Check trial expiry from Firebase
+            rtdb.ref('users/' + uid + '/trial').once('value', snap => {
+                const now = Date.now();
+                if (!snap.exists()) {
+                    // First time: set trial for 7 hari
+                    const endTime = now + (7 * 24 * 60 * 60 * 1000);
+                    rtdb.ref('users/' + uid + '/trial').set({ startedAt: now, endsAt: endTime });
+                    trialActive = true;
+                    trialEndTime = endTime;
+                } else {
+                    const data = snap.val();
+                    trialEndTime = data.endsAt;
+                    trialActive = now < trialEndTime;
+                }
+                applyTrialLocks();
+                if (trialActive) startTrialCountdown();
+            });
+        }
+
+        function applyTrialLocks() {
+            if (isVip) return; // VIP & Owner bypass trial lock
+
+            if (!trialActive) {
+                // Lock semua tab kecuali yang diizinkan
+                LOCKABLE_TABS.forEach(tabId => {
+                    const tab = document.getElementById(tabId);
+                    if (!tab) return;
+                    // Add trial lock overlay if not already there
+                    if (!tab.querySelector('.trial-lock-overlay')) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'trial-lock-overlay';
+                        overlay.innerHTML = `
+                            <div class="trial-lock-card">
+                                <div class="trial-lock-icon">🔒</div>
+                                <h2 class="trial-lock-title">TRIAL HABIS</h2>
+                                <p class="trial-lock-sub">Masa trial kamu sudah berakhir. Upgrade ke VIP untuk tetap mengakses fitur ini.</p>
+                                <button class="btn-trial-upgrade" onclick="openTab('vip-tab', document.querySelector('.nav-link.vip-nav'))">👑 UPGRADE VIP SEKARANG</button>
+                            </div>`;
+                        // Make tab position relative for overlay
+                        tab.style.position = 'relative';
+                        tab.insertBefore(overlay, tab.firstChild);
+                    }
+                });
+
+                // Also lock sidebar links for lockable tabs
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    const onclick = link.getAttribute('onclick') || '';
+                    const isLockable = LOCKABLE_TABS.some(t => onclick.includes(t));
+                    if (isLockable) {
+                        link.style.opacity = '0.4';
+                        link.style.pointerEvents = 'none';
+                        if (!link.querySelector('.lock-icon-inline')) {
+                            link.insertAdjacentHTML('beforeend', '<span class="lock-icon-inline" style="margin-left:auto;font-size:10px;">🔒</span>');
+                        }
+                    }
+                });
+
+                // Redirect to announce if currently on locked tab
+                const activeTab = document.querySelector('.tab-content.active');
+                if (activeTab && LOCKABLE_TABS.includes(activeTab.id)) {
+                    openTab('announce-tab', document.querySelector('.nav-link'));
+                }
+            }
+        }
+
+        let trialCountdownInterval = null;
+        function startTrialCountdown() {
+            // Show trial banner if not VIP
+            if (isVip) return;
+            const existing = document.getElementById('trial-banner');
+            if (existing) existing.remove();
+
+            const banner = document.createElement('div');
+            banner.id = 'trial-banner';
+            banner.style.cssText = 'background:linear-gradient(90deg,rgba(234,179,8,0.15),rgba(180,83,9,0.1));border-bottom:1px solid rgba(234,179,8,0.3);padding:6px 16px;text-align:center;font-family:Orbitron;font-size:8px;color:#eab308;flex-shrink:0;cursor:pointer;';
+            banner.innerHTML = '⏳ TRIAL: <span id="trial-countdown">--:--:--</span> &nbsp;·&nbsp; <span style="color:#fff;text-decoration:underline;">UPGRADE VIP</span>';
+            banner.onclick = () => openTab('vip-tab', document.querySelector('.nav-link.vip-nav'));
+
+            // Insert after ticker
+            const ticker = document.getElementById('ticker-wrap');
+            if (ticker && ticker.nextSibling) {
+                ticker.parentNode.insertBefore(banner, ticker.nextSibling);
+            }
+
+            trialCountdownInterval = setInterval(() => {
+                const remaining = trialEndTime - Date.now();
+                if (remaining <= 0) {
+                    clearInterval(trialCountdownInterval);
+                    banner.remove();
+                    trialActive = false;
+                    applyTrialLocks();
+                    return;
+                }
+                const h = Math.floor(remaining / 3600000);
+                const m = Math.floor((remaining % 3600000) / 60000);
+                const s = Math.floor((remaining % 60000) / 1000);
+                const el = document.getElementById('trial-countdown');
+                if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            }, 1000);
         }
 
         function setupTracker() { 
@@ -1669,6 +1994,12 @@
         }
 
         function openTab(id, el) {
+            // Check trial lock
+            if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
+                // Redirect to VIP tab instead
+                id = 'vip-tab';
+                el = document.querySelector('.nav-link.vip-nav');
+            }
             document.querySelectorAll('.tab-content.active').forEach(c => {
                 c.classList.add('tab-exit');
                 setTimeout(() => { c.classList.remove('active','tab-exit'); }, 180);
