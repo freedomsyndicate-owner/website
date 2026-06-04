@@ -315,7 +315,7 @@
 
         /* ===== AUTH SCREEN UPGRADE ===== */
         .auth-card { position:relative; overflow:hidden; }
-        .auth-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(56,189,248,0.05),transparent 30%); animation:authRotate 6s linear infinite; }
+        .auth-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:conic-gradient(transparent,rgba(56,189,248,0.05),transparent 30%); animation:authRotate 6s linear infinite; pointer-events:none; }
         @keyframes authRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
         /* ===== GLITCH TITLE EFFECT ===== */
@@ -392,22 +392,22 @@
             </div>
 
             <!-- TOGGLE EMAIL LOGIN -->
-            <button onclick="toggleEmailForm()" style="width:100%; background:transparent; border:1px solid #1f2937; color:#6b7280; padding:11px; border-radius:12px; font-size:10px; font-family:'Orbitron'; cursor:pointer; margin-top:14px; letter-spacing:1px;">
+            <button onclick="toggleEmailForm()" style="width:100%; background:transparent; border:1px solid #1f2937; color:#6b7280; padding:11px; border-radius:12px; font-size:10px; font-family:'Orbitron'; cursor:pointer; margin-top:14px; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">
                 &#x2709;&#xFE0F; LOGIN WITH EMAIL
             </button>
 
             <!-- FORM EMAIL (tersembunyi default) -->
-            <div id="email-form" style="display:none; flex-direction:column; gap:10px; margin-top:14px;">
-                <input type="email" id="login-email" placeholder="Email" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box;">
-                <input type="password" id="login-password" placeholder="Password" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box;">
-                <input type="password" id="login-confirm" placeholder="Konfirmasi Password (untuk daftar)" style="display:none; background:#0a0e14; border:1px solid #374151; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box;">
+            <div id="email-form" style="display:none; flex-direction:column; gap:10px; margin-top:14px; position:relative; z-index:1000000;">
+                <input type="email" id="login-email" placeholder="Email" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
+                <input type="password" id="login-password" placeholder="Password" style="background:#0a0e14; border:1px solid #1f2937; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
+                <input type="password" id="login-confirm" placeholder="Konfirmasi Password (untuk daftar)" style="display:none; background:#0a0e14; border:1px solid #374151; color:white; padding:13px; border-radius:12px; font-size:13px; outline:none; width:100%; box-sizing:border-box; position:relative; z-index:1000000;">
                 <div id="login-error" style="font-size:10px; color:#ef4444; min-height:12px; text-align:left;"></div>
-                <button id="btn-login-email" onclick="loginEmail()" style="background:var(--blue); color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:12px; padding:13px; border:none; cursor:pointer; width:100%; letter-spacing:1px;">LOGIN</button>
+                <button id="btn-login-email" onclick="loginEmail()" style="background:var(--blue); color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:12px; padding:13px; border:none; cursor:pointer; width:100%; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">LOGIN</button>
                 <!-- Tombol DAFTAR — muncul hanya saat email belum terdaftar -->
-                <div id="register-prompt" style="display:none; background:rgba(234,179,8,0.07); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:12px; text-align:center;">
+                <div id="register-prompt" style="display:none; background:rgba(234,179,8,0.07); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:12px; text-align:center; position:relative; z-index:1000000;">
                     <div style="font-size:10px; color:#eab308; font-family:'Orbitron'; margin-bottom:8px;">EMAIL BELUM TERDAFTAR</div>
                     <div style="font-size:9px; color:#6b7280; margin-bottom:10px;">Buat akun baru dengan email &amp; password di atas</div>
-                    <button onclick="registerEmail()" style="background:#eab308; color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:10px; padding:11px; border:none; cursor:pointer; width:100%; letter-spacing:1px;">✅ DAFTAR SEKARANG</button>
+                    <button onclick="registerEmail()" style="background:#eab308; color:black; font-family:'Orbitron'; font-weight:900; font-size:11px; border-radius:10px; padding:11px; border:none; cursor:pointer; width:100%; letter-spacing:1px; position:relative; z-index:1000000; touch-action:manipulation;">✅ DAFTAR SEKARANG</button>
                 </div>
             </div>
         </div>
@@ -1099,15 +1099,19 @@
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
         // Handle redirect result (fallback dari popup-blocked)
-        auth.getRedirectResult().then(result => {
-            if(result && result.user) {
-                // onAuthStateChanged akan otomatis fire, tidak perlu handle manual
-            }
-        }).catch(e => {
-            if(e.code && e.code !== 'auth/no-auth-event') {
-                console.warn('Redirect error:', e.message);
-            }
-        });
+        // Di WebView/APK, getRedirectResult bisa throw error — skip dengan aman
+        try {
+            auth.getRedirectResult().then(result => {
+                if(result && result.user) {
+                    // onAuthStateChanged akan otomatis fire
+                }
+            }).catch(e => {
+                // Abaikan semua error redirect di WebView
+                console.warn('Redirect result (ignored):', e.code || e.message);
+            });
+        } catch(e) {
+            console.warn('getRedirectResult not supported:', e.message);
+        }
 
         auth.onAuthStateChanged(u => { 
             if(u){ curUser = u; document.getElementById('auth-screen').style.display='none'; document.getElementById('display-user').innerText="ACTIVE: "+u.email; loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); } 
