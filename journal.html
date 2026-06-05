@@ -1261,30 +1261,18 @@
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
-            // Popup dulu (cepat), fallback redirect kalau blocked
+            p.setCustomParameters({ prompt: 'select_account' });
             auth.signInWithPopup(p)
                 .then(result => { /* onAuthStateChanged akan handle */ })
                 .catch(e => {
-                    if(e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
-                        // Fallback ke redirect
-                        auth.signInWithRedirect(p);
-                    } else {
+                    if(e.code !== 'auth/popup-closed-by-user') {
                         alert('Login gagal: ' + e.message);
                     }
                 });
         }
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
-        // Handle redirect result (fallback dari popup-blocked)
-        auth.getRedirectResult().then(result => {
-            if(result && result.user) {
-                // onAuthStateChanged akan otomatis fire, tidak perlu handle manual
-            }
-        }).catch(e => {
-            if(e.code && e.code !== 'auth/no-auth-event') {
-                console.warn('Redirect error:', e.message);
-            }
-        });
+        // Popup-only mode (no redirect fallback untuk kompatibilitas WebView)
 
         const OWNER_EMAIL = 'sanlana1903@gmail.com';
         let isVip = false;
