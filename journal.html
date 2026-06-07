@@ -632,8 +632,10 @@
                         <label class="check-item"><input type="checkbox" class="poi-check" value="SMT"> SMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SSMT"> SSMT</label><label class="check-item"><input type="checkbox" class="poi-check" value="SBR"> SBR</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="RBS"> RBS</label><label class="check-item"><input type="checkbox" class="poi-check" value="TS"> TS</label><label class="check-item"><input type="checkbox" class="poi-check" value="MSS"> MSS</label>
                         <label class="check-item"><input type="checkbox" class="poi-check" value="LIQ"> LIQ</label><label class="check-item"><input type="checkbox" class="poi-check" value="SUP"> SUP</label><label class="check-item"><input type="checkbox" class="poi-check" value="RES"> RES</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="AMDX"> AMDX</label><label class="check-item"><input type="checkbox" class="poi-check" value="XAMD"> XAMD</label><label class="check-item"><input type="checkbox" class="poi-check" value="CRT"> CRT</label>
+                        <label class="check-item"><input type="checkbox" class="poi-check" value="PDH"> PDH</label><label class="check-item"><input type="checkbox" class="poi-check" value="PDL"> PDL</label><label class="check-item"><input type="checkbox" class="poi-check" value="SB"> Silver Bullet</label>
                     </div></div>
-                    <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid" style="grid-template-columns:1fr 1fr;"><div class="chip" data-type="style" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" data-type="style" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div></div></div>
+                    <div class="form-item" style="border:none;"><label>⚡ Entry Model</label><div class="chip-grid"><div class="chip" data-type="style" onclick="setV('style', 'AGRESIF', this)">AGRESIF</div><div class="chip" data-type="style" onclick="setV('style', 'CONFIRMASI', this)">CONFIRMASI</div><div class="chip" data-type="style" onclick="setV('style', 'SB', this)">SILVER BULLET</div><div class="chip" data-type="style" onclick="setV('style', 'CRT', this)">CRT</div></div></div>
                     <div class="form-item"><label>📝 Reason / Analyse</label><textarea id="reason" placeholder="Ketik analisa..."></textarea></div>
                     <div class="form-item" style="border:none;"><label>📊 Result</label><div class="chip-grid" style="grid-template-columns:repeat(3, 1fr);"><div class="chip" data-type="res" data-res="TP" onclick="setV('res', 'TP', this)">💰 TP</div><div class="chip" data-type="res" data-res="SL" onclick="setV('res', 'SL', this)">💀 SL</div><div class="chip" data-type="res" onclick="setV('res', 'BE', this)">⚖️ BE</div></div></div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-item"><label>📈 RR</label><input type="text" id="rr" value="1:3"></div><div class="form-item"><label>💵 P&L ($)</label><input type="number" id="pnl" placeholder="0.00"></div></div>
@@ -1275,15 +1277,42 @@
         // Popup-only mode (no redirect fallback untuk kompatibilitas WebView)
 
         const OWNER_EMAIL = 'sanlana1903@gmail.com';
-        let isVip = false;
+        // Protect isVip from easy console manipulation
+        let _isVipInternal = false;
+        Object.defineProperty(window, 'isVip', {
+            get() { return _isVipInternal; },
+            set(v) {
+                // Only allow set if caller can prove Firebase auth
+                if (curUser) _isVipInternal = !!v;
+            },
+            configurable: false
+        });
+        // Internal setter — dipakai di dalam script ini
+        function _setVip(v) { _isVipInternal = !!v; }
 
         auth.onAuthStateChanged(u => { 
             if(u){ 
                 curUser = u; 
                 document.getElementById('auth-screen').style.display='none'; 
                 document.getElementById('display-user').innerText="ACTIVE: "+u.email;
+
+                // Daftarkan UID ↔ email ke registry (owner butuh ini untuk vip_index sync)
+                rtdb.ref('uid_registry/' + u.uid).set({ email: u.email.toLowerCase() });
+
+                // Auto-sync vip_index: jika email ada di vip_members tapi vip_index belum ada
+                rtdb.ref('vip_index/' + u.uid).once('value', idxSnap => {
+                    if (!idxSnap.exists()) {
+                        // Cek apakah email ada di vip_members
+                        rtdb.ref('vip_members').orderByChild('email').equalTo(u.email.toLowerCase()).once('value', vmSnap => {
+                            if (vmSnap.exists()) {
+                                rtdb.ref('vip_index/' + u.uid).set(true);
+                            }
+                        });
+                    }
+                });
+
                 checkVipStatus(u.email).then(vip => {
-                    isVip = vip || (u.email === OWNER_EMAIL);
+                    _setVip(vip || (u.email === OWNER_EMAIL));
                     applyVipGates();
                     loadData(); updateChart(); loadChat(); setupTracker(); loadSignals();
                     loadVipTab();
@@ -1293,10 +1322,12 @@
             else { document.getElementById('auth-screen').style.display='flex'; }
         });
 
+        // Cek VIP via /vip_index/{uid} — lebih aman, tidak perlu baca seluruh vip_members
         async function checkVipStatus(email) {
             try {
-                const snap = await rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value');
-                return snap.exists();
+                if (!curUser) return false;
+                const snap = await rtdb.ref('vip_index/' + curUser.uid).once('value');
+                return snap.val() === true;
             } catch(e) { return false; }
         }
 
@@ -1369,8 +1400,20 @@
             const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
             const msg   = document.getElementById('vip-admin-msg');
             if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
+            // Simpan ke vip_members (list lengkap untuk owner)
             rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
-                .then(() => { msg.style.color='#4ade80'; msg.textContent = `✅ ${email} berhasil dijadikan VIP!`; document.getElementById('vip-email-input').value=''; })
+                .then(() => {
+                    msg.style.color='#4ade80';
+                    msg.textContent = `✅ ${email} berhasil dijadikan VIP!`;
+                    document.getElementById('vip-email-input').value='';
+                    // Coba cari UID dari /uid_registry jika sudah pernah login
+                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap => {
+                        snap.forEach(child => {
+                            const uid = child.key;
+                            rtdb.ref('vip_index/' + uid).set(true);
+                        });
+                    });
+                })
                 .catch(e => { msg.style.color='#ef4444'; msg.textContent = '❌ Error: ' + e.message; });
         }
 
@@ -1382,13 +1425,30 @@
                 if (!snap.exists()) { msg.style.color='#ef4444'; msg.textContent = `❌ ${email} tidak ditemukan di daftar VIP.`; return; }
                 const promises = [];
                 snap.forEach(child => promises.push(rtdb.ref('vip_members/' + child.key).remove()));
-                Promise.all(promises).then(() => { msg.style.color='#eab308'; msg.textContent = `⚠️ VIP ${email} telah direvoke.`; document.getElementById('vip-email-input').value=''; });
+                Promise.all(promises).then(() => {
+                    msg.style.color='#eab308';
+                    msg.textContent = `⚠️ VIP ${email} telah direvoke.`;
+                    document.getElementById('vip-email-input').value='';
+                    // Hapus dari vip_index via uid_registry
+                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap2 => {
+                        snap2.forEach(child => rtdb.ref('vip_index/' + child.key).remove());
+                    });
+                });
             });
         }
 
         function revokeVipKey(key) {
             if (!confirm("Yakin revoke VIP member ini?")) return;
-            rtdb.ref('vip_members/' + key).remove();
+            // Ambil email dulu, lalu hapus dari vip_index juga
+            rtdb.ref('vip_members/' + key).once('value', snap => {
+                const email = snap.val() && snap.val().email;
+                rtdb.ref('vip_members/' + key).remove();
+                if (email) {
+                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap2 => {
+                        snap2.forEach(child => rtdb.ref('vip_index/' + child.key).remove());
+                    });
+                }
+            });
         }
 
         // ===== OWNER SUB TABS =====
@@ -1561,13 +1621,15 @@
         function approveProof(proofKey, email) {
             if (!email || !email.includes('@')) { alert('Email tidak valid'); return; }
             if (!confirm('Approve & Grant VIP untuk ' + email + '?')) return;
-            // Grant VIP
             rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
                 .then(() => {
-                    // Update proof status
                     rtdb.ref('payment_proofs/' + proofKey).update({ status: 'approved', approvedAt: Date.now(), approvedBy: curUser.email });
                     alert('✅ VIP granted untuk ' + email);
                     loadPaymentProofs();
+                    // Sync ke vip_index via uid_registry
+                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap => {
+                        snap.forEach(child => rtdb.ref('vip_index/' + child.key).set(true));
+                    });
                 })
                 .catch(e => alert('Error: ' + e.message));
         }
@@ -1983,9 +2045,15 @@
         function openTab(id, el) {
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
-                // Redirect to VIP tab instead
                 id = 'vip-tab';
                 el = document.querySelector('.nav-link.vip-nav');
+            }
+            // Re-verify VIP status from Firebase on every signal/monitor tab open
+            if ((id === 'signal-tab' || id === 'monitor-tab') && curUser) {
+                checkVipStatus(curUser.email).then(vip => {
+                    _setVip(vip || (curUser.email === OWNER_EMAIL));
+                    applyVipGates();
+                });
             }
             document.querySelectorAll('.tab-content.active').forEach(c => {
                 c.classList.add('tab-exit');
@@ -2083,33 +2151,36 @@
             }
         }
 
-        // ===== MATRIX RAIN =====
+        // ===== MATRIX RAIN (rAF throttled ~80ms — hemat CPU) =====
         (function(){
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
-            function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
-            resize();
-            window.addEventListener('resize', resize);
+            function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; cols=Math.floor(canvas.width/fontSize); drops=Array(cols).fill(1); }
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-*/=<>$£€¥@#%&?!アイウエオカキクケコ'.split('');
             const fontSize = 11;
-            let cols = Math.floor(canvas.width / fontSize);
-            let drops = Array(cols).fill(1);
-            function draw(){
+            let cols, drops;
+            resize();
+            window.addEventListener('resize', resize);
+            let lastT = 0;
+            const INTERVAL = 80; // ms per frame — less CPU than 55ms
+            function draw(ts){
+                requestAnimationFrame(draw);
+                if(ts - lastT < INTERVAL) return;
+                lastT = ts;
                 ctx.fillStyle = 'rgba(5,10,20,0.05)';
                 ctx.fillRect(0,0,canvas.width,canvas.height);
                 ctx.fillStyle = '#38bdf8';
                 ctx.font = fontSize + 'px monospace';
                 drops.forEach((y,i) => {
                     const ch = chars[Math.floor(Math.random()*chars.length)];
-                    const x = i * fontSize;
                     ctx.globalAlpha = Math.random() * 0.5 + 0.1;
-                    ctx.fillText(ch, x, y * fontSize);
+                    ctx.fillText(ch, i * fontSize, y * fontSize);
                     if(y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                     drops[i]++;
                 });
                 ctx.globalAlpha = 1;
             }
-            setInterval(draw, 55);
+            requestAnimationFrame(draw);
         })();
 
         // ===== LIVE TICKER TAPE (SMOOTH INFINITE SCROLL) =====
