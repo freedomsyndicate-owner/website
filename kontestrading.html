@@ -290,6 +290,10 @@ ul.rule-list{color:#7a9ab8;line-height:2.1;padding-left:1.3rem;font-size:0.88rem
   <button class="sidebar-btn" id="sb-dashboard" style="display:none" onclick="showPage('dashboard');closeSidebar()">📊 <span>Dashboard Saya</span></button>
   <button class="sidebar-btn admin-sb" id="sb-admin" style="display:none" onclick="showPage('admin');closeSidebar()">⚙️ <span>Admin Panel</span></button>
   <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">NAVIGASI LAIN</div>
+  <a href="journal.html" class="sidebar-btn" style="text-decoration:none;color:#38bdf8;">📓 <span>Journal Trading</span></a>
+  <a href="index.html" class="sidebar-btn" style="text-decoration:none;color:#4ade80;">🏠 <span>Halaman Utama</span></a>
+  <div class="sidebar-divider"></div>
   <button class="sidebar-btn logout-sb" id="sb-logout" style="display:none" onclick="doLogout();closeSidebar()">🚪 <span>Logout</span></button>
 </div>
 
@@ -333,7 +337,7 @@ ul.rule-list{color:#7a9ab8;line-height:2.1;padding-left:1.3rem;font-size:0.88rem
           <div class="detail-table">
             <div><span>Durasi</span><span>7 Hari</span></div>
             <div><span>Modal Demo</span><span>$100 per akun</span></div>
-            <div><span>Entry Fee</span><span>$1 (≈ Rp 16.000)</span></div>
+            <div><span>Entry Fee</span><span id="aboutEntryFee">$1 (≈ Rp ...)</span></div>
             <div><span>Platform</span><span>MetaTrader 5 (Exness)</span></div>
             <div><span>Kriteria Menang</span><span>% Pertumbuhan Tertinggi</span></div>
             <div><span>Distribusi Hadiah</span><span>3 hari setelah kontes</span></div>
@@ -464,7 +468,7 @@ ul.rule-list{color:#7a9ab8;line-height:2.1;padding-left:1.3rem;font-size:0.88rem
       <!-- <img id="qrisImg" src="qris.png" alt="QRIS"> -->
     </div>
     <div style="color:#8aaac8;font-size:0.85rem;line-height:2;text-align:center">
-      ✅ Scan QRIS di atas<br>✅ Nominal: <strong style="color:var(--gold)">Rp 16.000</strong> (equiv. $1)<br>✅ Screenshot bukti bayar<br>✅ Upload bukti di form Daftar
+      ✅ Scan QRIS di atas<br>✅ Nominal: <strong style="color:var(--gold)" id="qrisNominal">Rp ...</strong> (equiv. $1)<br>✅ Screenshot bukti bayar<br>✅ Upload bukti di form Daftar
     </div>
     <button class="btn-cyan" style="width:100%;margin-top:1.2rem" onclick="closeQRIS()">Tutup</button>
   </div>
@@ -1410,6 +1414,47 @@ if(uz){
 // ══════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+//  LIVE USD/IDR RATE FETCH
+// ══════════════════════════════════════════════════════
+let liveUSDR = 18100; // fallback
+
+async function fetchLiveRate() {
+  const ids = ['entryFeeIDR1','entryFeeIDR2','qrisNominal'];
+  function applyRate(rate) {
+    liveUSDR = rate;
+    const fmt = new Intl.NumberFormat('id-ID').format(Math.round(rate));
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = 'Rp ' + fmt;
+    });
+    // Update about page entry fee
+    const af = document.getElementById('aboutEntryFee');
+    if (af) af.textContent = '$1 (≈ Rp ' + fmt + ')';
+    // Update QRIS modal
+    const qn = document.getElementById('qrisNominal');
+    if (qn) qn.textContent = 'Rp ' + fmt;
+    // Also update stat display
+    renderHomeStats();
+  }
+  try {
+    const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const d = await r.json();
+    if (d.rates && d.rates.IDR) { applyRate(d.rates.IDR); return; }
+  } catch(e) {}
+  try {
+    const r2 = await fetch('https://open.er-api.com/v6/latest/USD');
+    const d2 = await r2.json();
+    if (d2.rates && d2.rates.IDR) { applyRate(d2.rates.IDR); return; }
+  } catch(e2) {}
+  // fallback: use hardcoded current estimate
+  applyRate(18100);
+}
+
+fetchLiveRate();
+// refresh every 10 minutes
+setInterval(fetchLiveRate, 600000);
+
 renderHomeStats();
 
 // ══════════════════════════════════════════════════════
