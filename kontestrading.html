@@ -290,10 +290,6 @@ ul.rule-list{color:#7a9ab8;line-height:2.1;padding-left:1.3rem;font-size:0.88rem
   <button class="sidebar-btn" id="sb-dashboard" style="display:none" onclick="showPage('dashboard');closeSidebar()">📊 <span>Dashboard Saya</span></button>
   <button class="sidebar-btn admin-sb" id="sb-admin" style="display:none" onclick="showPage('admin');closeSidebar()">⚙️ <span>Admin Panel</span></button>
   <div class="sidebar-divider"></div>
-  <div class="sidebar-section-label">NAVIGASI LAIN</div>
-  <a href="journal.html" class="sidebar-btn" style="text-decoration:none;color:#38bdf8;">📓 <span>Journal Trading</span></a>
-  <a href="index.html" class="sidebar-btn" style="text-decoration:none;color:#4ade80;">🏠 <span>Halaman Utama</span></a>
-  <div class="sidebar-divider"></div>
   <button class="sidebar-btn logout-sb" id="sb-logout" style="display:none" onclick="doLogout();closeSidebar()">🚪 <span>Logout</span></button>
 </div>
 
@@ -462,10 +458,9 @@ ul.rule-list{color:#7a9ab8;line-height:2.1;padding-left:1.3rem;font-size:0.88rem
   <div class="modal-box">
     <button class="modal-close" onclick="closeQRIS()">✕</button>
     <h3>Scan QRIS – Bayar $1</h3>
-    <div class="qris-placeholder" id="qrisImgWrap">
-      <div class="no-img">📷</div>
-      <div style="color:var(--muted);font-size:0.88rem">Gambar QRIS<br><span style="font-size:0.78rem;color:#334455">Ganti src gambar di kode (cari id qrisImg)</span></div>
-      <!-- <img id="qrisImg" src="qris.png" alt="QRIS"> -->
+    <div class="qris-placeholder" id="qrisImgWrap" style="padding:1rem;">
+      <img id="qrisImg" src="https://i.ibb.co.com/FbJ3qR56" alt="QRIS Freedom Syndicate" style="max-width:100%;border-radius:8px;display:block;margin:0 auto;" onerror="this.style.display='none';document.getElementById('qrisFallback').style.display='block'"/>
+      <div id="qrisFallback" style="display:none"><div style="font-size:3.5rem;margin-bottom:1rem">📷</div><div style="color:var(--muted);font-size:0.88rem">Gagal memuat QRIS</div></div>
     </div>
     <div style="color:#8aaac8;font-size:0.85rem;line-height:2;text-align:center">
       ✅ Scan QRIS di atas<br>✅ Nominal: <strong style="color:var(--gold)" id="qrisNominal">Rp ...</strong> (equiv. $1)<br>✅ Screenshot bukti bayar<br>✅ Upload bukti di form Daftar
