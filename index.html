@@ -114,13 +114,6 @@
             transition: opacity 0.3s;
         }
 
-        /* TV tab gets full width, no side padding */
-        #tvchannel.tab-content.active ~ * { padding: 0; }
-        .main-wrapper:has(#tvchannel.active) {
-            max-width: 100%;
-            padding: 50px 0 0;
-        }
-
         .tab-content {
             display: none;
             animation: fadeIn 0.8s ease-out;
@@ -567,130 +560,6 @@
             color: #4ade80;
             letter-spacing: 1px;
             flex-shrink: 0;
-        }
-
-        /* --- TV SUB-TABS --- */
-        .tv-subtab-bar {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 14px;
-            background: rgba(2,6,23,0.5);
-            border-radius: 14px;
-            padding: 5px;
-            border: 1px solid rgba(56,189,248,0.15);
-        }
-        .tv-subtab-btn {
-            flex: 1;
-            padding: 9px 6px;
-            border-radius: 10px;
-            border: none;
-            background: transparent;
-            color: #64748b;
-            font-size: 0.72rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-        .tv-subtab-btn.active {
-            background: linear-gradient(135deg,rgba(56,189,248,0.25),rgba(14,165,233,0.15));
-            color: #fff;
-            border: 1px solid rgba(56,189,248,0.4);
-            text-shadow: 0 0 8px rgba(56,189,248,0.6);
-        }
-        .tv-subtab-pane { display: none; }
-        .tv-subtab-pane.active { display: block; }
-
-        /* channel grid cards */
-        .tv-ch-grid {
-            display: grid;
-            grid-template-columns: repeat(2,1fr);
-            gap: 9px;
-        }
-        .tv-ch-card {
-            background: rgba(15,23,42,0.7);
-            border: 1px solid rgba(56,189,248,0.13);
-            border-radius: 13px;
-            padding: 13px 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 7px;
-            cursor: pointer;
-            transition: all 0.25s;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .tv-ch-card:hover {
-            border-color: var(--primary);
-            background: rgba(56,189,248,0.08);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(56,189,248,0.15);
-        }
-        .tv-ch-card.active-card {
-            border-color: #4ade80;
-            background: rgba(74,222,128,0.07);
-        }
-        .tv-ch-card .ch-icon { font-size: 1.8rem; line-height: 1; }
-        .tv-ch-card .ch-name {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: #cbd5e1;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            line-height: 1.2;
-        }
-        .tv-ch-card .ch-badge {
-            font-size: 0.55rem;
-            font-weight: 700;
-            color: #4ade80;
-            letter-spacing: 1px;
-            background: rgba(74,222,128,0.1);
-            border: 1px solid rgba(74,222,128,0.3);
-            border-radius: 20px;
-            padding: 2px 7px;
-        }
-
-        /* iframe player */
-        .tv-iframe-wrap {
-            position: relative;
-            width: 100%;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid rgba(56,189,248,0.25);
-            margin-bottom: 12px;
-            background: #000;
-            aspect-ratio: 16/9;
-        }
-        .tv-iframe-wrap iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-        .tv-iframe-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(2,6,23,0.88);
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .tv-iframe-overlay.hidden { opacity: 0; pointer-events: none; }
-        .tv-now-bar {
-            display: none;
-            background: linear-gradient(transparent, rgba(2,6,23,0.92));
-            padding: 7px 12px;
-            font-size: 0.74rem;
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 1px;
         }
         
         /* Overlay Gelap saat sidebar terbuka */
@@ -1193,6 +1062,7 @@
         <ul class="sidebar-menu">
             <li><button onclick="openTab('home', this)" class="active-tab">🏠 Beranda</button></li>
             <li><button onclick="openTab('trading', this)">📈 Trading</button></li>
+            <li><button onclick="openTab('kontes', this)">🏆 Kontes Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
             <li><button onclick="openTab('keluhkesah', this)">🗣️ Keluh Kesah</button></li>
             <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
@@ -1229,6 +1099,15 @@
                     <span class="journal-title">FREEDOM SYNDICATE</span>
                     <span class="journal-sub">Journal</span>
                 </a>
+            </div>
+        </div>
+
+        <div id="kontes" class="tab-content">
+            <div class="content-box">
+                <h3 style="margin-top:0; color: #FFD700;">🏆 KONTES TRADING</h3>
+                <p style="color:#94a3b8; font-size:0.9rem; line-height:1.7; margin-bottom:1.5rem;">Demo Forex Contest — Asah skill trading kamu tanpa risiko! Modal demo $100, entry fee hanya $1. Bersaing selama 7 hari dan raih hadiah dari pool prize peserta.</p>
+                <a href="kontestrading.html" style="display:block; background:linear-gradient(135deg,#FFD700,#FF8C00); color:#000; text-decoration:none; padding:16px 24px; border-radius:12px; font-weight:900; font-family:'Segoe UI',sans-serif; font-size:0.95rem; text-align:center; letter-spacing:1px; margin-bottom:12px; box-shadow:0 0 25px rgba(255,215,0,0.25); transition:transform .15s;">🚀 BUKA KONTES SEKARANG</a>
+                <a href="journal.html" style="display:block; background:rgba(56,189,248,0.1); color:#38bdf8; text-decoration:none; padding:12px 24px; border-radius:12px; font-weight:700; font-size:0.85rem; text-align:center; border:1px solid rgba(56,189,248,0.3);">📓 Kembali ke Journal</a>
             </div>
         </div>
 
@@ -1346,150 +1225,47 @@
             </div>
         </div>
 
-        <div id="tvchannel" class="tab-content" style="padding:0;margin:0;">
+        <div id="tvchannel" class="tab-content">
+            <div class="content-box" style="padding:16px;">
 
-            <!-- ===== SUB-TAB BAR (sticky) ===== -->
-            <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);backdrop-filter:blur(12px);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
-                <!-- Branding row -->
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                    <div>
-                        <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
-                        <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">📺 LIVE TV</div>
+                <!-- Branding -->
+                <div style="text-align:center;margin-bottom:14px;">
+                    <div style="font-size:0.65rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                    <div style="font-size:1.1rem;font-weight:900;letter-spacing:2px;color:#fff;margin-top:2px;">📺 LIVE TV</div>
+                </div>
+
+                <!-- Video Player -->
+                <div style="position:relative;width:100%;background:#000;border-radius:14px;overflow:hidden;border:1px solid rgba(56,189,248,0.25);margin-bottom:12px;">
+                    <video id="fsLivePlayer" controls autoplay muted playsinline
+                        style="width:100%;height:220px;display:block;background:#000;object-fit:contain;">
+                    </video>
+                    <div id="fsPlayerOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(2,6,23,0.85);pointer-events:none;">
+                        <div style="font-size:2rem;margin-bottom:6px;">📺</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;">PILIH CHANNEL</div>
                     </div>
-                    <div id="tvNowBadge" style="display:none;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);border-radius:20px;padding:4px 10px;font-size:0.6rem;font-weight:700;color:#4ade80;letter-spacing:1px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🔴 <span id="tvBadgeName">-</span></div>
+                    <!-- Now Playing bar -->
+                    <div id="fsNowPlaying" style="display:none;position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(2,6,23,0.9));padding:8px 12px;font-size:0.75rem;color:#fff;font-weight:700;letter-spacing:1px;">
+                        🔴 LIVE · <span id="fsChannelName">-</span>
+                    </div>
                 </div>
-                <!-- Sub-tab buttons -->
-                <div class="tv-subtab-bar" style="margin-bottom:0;">
-                    <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
-                    <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ SPORT</button>
-                    <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
+
+                <!-- Kategori Filter -->
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;">
+                    <button class="fs-cat-btn active" onclick="filterKategori('semua',this)">Semua</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('berita',this)">📰 Berita</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('hiburan',this)">🎬 Hiburan</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('olahraga',this)">⚽ Olahraga</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('religi',this)">🕌 Religi</button>
+                    <button class="fs-cat-btn" onclick="filterKategori('lokal',this)">🏙️ Lokal</button>
                 </div>
+
+                <!-- Daftar Channel -->
+                <div id="fsChannelList" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:2px;"></div>
+
+                <p style="font-size:0.68rem;color:#334155;text-align:center;margin-top:12px;line-height:1.5;">
+                    © FREEDOM SYNDICATE LIVE TV · Stream publik bebas pakai
+                </p>
             </div>
-
-            <!-- ===== PANE: TV 1 ===== -->
-            <div class="tv-subtab-pane active" id="pane-tv1" style="padding:14px 14px 24px;">
-
-                <!-- Player -->
-                <div class="tv-iframe-wrap" id="tvPlayerWrap">
-                    <iframe id="tvIframe" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no"></iframe>
-                    <div class="tv-iframe-overlay" id="tvOverlay">
-                        <div style="font-size:2.2rem;margin-bottom:8px;">📺</div>
-                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">PILIH CHANNEL</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Tap salah satu channel di bawah</div>
-                    </div>
-                </div>
-
-                <!-- Channel Grid — semua 12 link dari kamu -->
-                <div class="tv-ch-grid" style="margin-top:14px;">
-
-                    <div class="tv-ch-card" onclick="playTvCh('RCTI','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">📡</div>
-                        <div class="ch-name">RCTI</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('GTV','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==',this)">
-                        <div class="ch-icon">🎬</div>
-                        <div class="ch-name">GTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('iNEWS','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1',this)">
-                        <div class="ch-icon">📰</div>
-                        <div class="ch-name">iNEWS</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('MNCTV','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1',this)">
-                        <div class="ch-icon">📺</div>
-                        <div class="ch-name">MNCTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('IDX CHANNEL','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZpZHhjaGFubmVsLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">💹</div>
-                        <div class="ch-name">IDX CHANNEL</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('MNC NEWS','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZtbmNuZXdzLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">📡</div>
-                        <div class="ch-name">MNC NEWS</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('TRANS 7','https://20.detik.com/watch/livestreaming-trans7',this)">
-                        <div class="ch-icon">7️⃣</div>
-                        <div class="ch-name">TRANS 7</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('TRANS TV','https://20.detik.com/watch/livestreaming-transtv',this)">
-                        <div class="ch-icon">🎥</div>
-                        <div class="ch-name">TRANS TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('CNN INDONESIA','https://www.cnnindonesia.com/tv/embed?ref=transmedia',this)">
-                        <div class="ch-icon">🌐</div>
-                        <div class="ch-name">CNN INDONESIA</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('SCTV','https://m.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true&live_chat=false&mute=false&',this)">
-                        <div class="ch-icon">🌟</div>
-                        <div class="ch-name">SCTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('METRO TV','https://geo.dailymotion.com/player.html?video=k236ofBIxajxDiti8CY',this)">
-                        <div class="ch-icon">🗺️</div>
-                        <div class="ch-name">METRO TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('KOMPAS TV','https://geo.dailymotion.com/player.html?video=k46igSmSMGBIiWsXtWk',this)">
-                        <div class="ch-icon">🧭</div>
-                        <div class="ch-name">KOMPAS TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('BERITA SATU','https://beritasatu.tv/playstream.php',this)" style="grid-column:span 2;">
-                        <div class="ch-icon">🏙️</div>
-                        <div class="ch-name">BERITA SATU</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                </div>
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE LIVE TV</p>
-            </div>
-
-            <!-- ===== PANE: SPORT (full iframe) ===== -->
-            <div class="tv-subtab-pane" id="pane-tvSport" style="padding:0;">
-                <div style="position:relative;width:100%;height:calc(100vh - 130px);min-height:500px;background:#000;">
-                    <iframe
-                        src="https://idn274.tigoals232.com/basketball.html"
-                        allowfullscreen
-                        allow="autoplay; encrypted-media; fullscreen"
-                        scrolling="yes"
-                        style="width:100%;height:100%;border:none;display:block;"
-                    ></iframe>
-                </div>
-            </div>
-
-            <!-- ===== PANE: WORLD (full iframe) ===== -->
-            <div class="tv-subtab-pane" id="pane-tvWorld" style="padding:0;">
-                <div style="position:relative;width:100%;height:calc(100vh - 130px);min-height:500px;background:#000;">
-                    <iframe
-                        src="https://tvgarden.world/"
-                        allowfullscreen
-                        allow="autoplay; encrypted-media; fullscreen"
-                        scrolling="yes"
-                        style="width:100%;height:100%;border:none;display:block;"
-                    ></iframe>
-                </div>
-            </div>
-
         </div>
 
         <footer>BEYOND THE LIMITS &bull; 2026</footer>
@@ -1502,36 +1278,286 @@
         }
 
         // =============================================
-        // FREEDOM SYNDICATE LIVE TV — IFRAME EMBED
+        // FREEDOM SYNDICATE LIVE TV PLAYER
         // =============================================
-        let tvActiveCh = null;
+        // =============================================
+        // FREEDOM SYNDICATE LIVE TV — URL AKTIF
+        // Sumber: iptv-org/iptv + stream resmi broadcaster
+        // =============================================
+        const fsChannels = [
+            // ── BERITA ──
+            {
+                name:'Metro TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://metrotv.akamaized.net/hls/live/2002124/metrotvnews/master.m3u8',
+                    'https://live.metrotvnews.com/live/metrotv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'tvOne', cat:'berita', icon:'📰',
+                urls:[
+                    'https://tvone.akamaized.net/hls/live/2029773/tvone/master.m3u8',
+                    'https://live-ott.tvone.co.id/tvone/master.m3u8',
+                ]
+            },
+            {
+                name:'Kompas TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://compas.akamaized.net/hls/live/2023145/kompastv/master.m3u8',
+                    'https://live.kompas.tv/live/live.m3u8',
+                ]
+            },
+            {
+                name:'CNN Indonesia', cat:'berita', icon:'📰',
+                urls:[
+                    'https://cnn-indonesia.akamaized.net/hls/live/2028975/cnnindonesia/master.m3u8',
+                    'https://ott.cnnindonesia.com/cnni/master.m3u8',
+                ]
+            },
+            {
+                name:'CNBC Indonesia', cat:'berita', icon:'📰',
+                urls:[
+                    'https://cnbc-indonesia.akamaized.net/hls/live/2028976/cnbcindonesia/master.m3u8',
+                ]
+            },
+            {
+                name:'iNews TV', cat:'berita', icon:'📰',
+                urls:[
+                    'https://inews.akamaized.net/hls/live/2029029/inews/master.m3u8',
+                    'https://live-inews.mnc.co.id/inewslive/inews.stream/playlist.m3u8',
+                ]
+            },
 
-        function playTvCh(name, url, cardEl) {
-            const iframe = document.getElementById('tvIframe');
-            const overlay = document.getElementById('tvOverlay');
-            const badge = document.getElementById('tvNowBadge');
-            const badgeName = document.getElementById('tvBadgeName');
+            // ── HIBURAN ──
+            {
+                name:'RCTI', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://rcti.akamaized.net/hls/live/2029031/rcti/master.m3u8',
+                    'https://live.rctiplus.com/rcti/master.m3u8',
+                    'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8', // fallback test
+                ]
+            },
+            {
+                name:'SCTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://sctv.akamaized.net/hls/live/2029032/sctv/master.m3u8',
+                    'https://live.sctv.co.id/sctv/master.m3u8',
+                ]
+            },
+            {
+                name:'Indosiar', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://indosiar.akamaized.net/hls/live/2029033/indosiar/master.m3u8',
+                    'https://live.indosiar.com/indosiar/master.m3u8',
+                ]
+            },
+            {
+                name:'ANTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://antv.akamaized.net/hls/live/2029034/antv/master.m3u8',
+                    'https://live-antv.mnc.co.id/antv/master.m3u8',
+                ]
+            },
+            {
+                name:'Trans TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://transtv.akamaized.net/hls/live/2029035/transtv/master.m3u8',
+                    'https://streaming.transtv.co.id/live/transtv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'Trans7', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://trans7.akamaized.net/hls/live/2029036/trans7/master.m3u8',
+                    'https://streaming.trans7.co.id/live/trans7.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'GTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://gtv.akamaized.net/hls/live/2029037/gtv/master.m3u8',
+                    'https://live-gtv.mnc.co.id/gtv/master.m3u8',
+                ]
+            },
+            {
+                name:'MNC TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://mnctv.akamaized.net/hls/live/2029038/mnctv/master.m3u8',
+                    'https://live-mnctv.mnc.co.id/mnctv/master.m3u8',
+                ]
+            },
+            {
+                name:'RTV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://rtv.akamaized.net/hls/live/2029039/rtv/master.m3u8',
+                ]
+            },
+            {
+                name:'NET TV', cat:'hiburan', icon:'🎬',
+                urls:[
+                    'https://net.akamaized.net/hls/live/2024971/nettv/index.m3u8',
+                    'https://live.netmedia.tv/nettv/nettv.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'TVRI', cat:'hiburan', icon:'📺',
+                urls:[
+                    'https://tvri.akamaized.net/hls/live/2030408/tvri/master.m3u8',
+                    'https://stream.tvri.go.id/tvri-nasional/tvri.stream/playlist.m3u8',
+                ]
+            },
 
-            iframe.src = url;
-            overlay.classList.add('hidden');
-            if (badge) { badge.style.display = 'block'; }
-            if (badgeName) { badgeName.textContent = name; }
+            // ── OLAHRAGA ──
+            {
+                name:'TVRI Sport HD', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://tvri.akamaized.net/hls/live/2030412/tvrisport/master.m3u8',
+                    'https://stream.tvri.go.id/tvri-sport/tvrisport.stream/playlist.m3u8',
+                ]
+            },
+            {
+                name:'Moji', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://moji.akamaized.net/hls/live/2029041/moji/master.m3u8',
+                ]
+            },
+            {
+                name:'One Sports', cat:'olahraga', icon:'⚽',
+                urls:[
+                    'https://one.akamaized.net/hls/live/2029042/onesports/master.m3u8',
+                ]
+            },
 
-            document.querySelectorAll('.tv-ch-card').forEach(c => c.classList.remove('active-card'));
-            if (cardEl) cardEl.classList.add('active-card');
-            tvActiveCh = name;
+            // ── RELIGI ──
+            {
+                name:'Rodja TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://live.rodjatv.com/live/rodjatv/index.m3u8',
+                    'https://streaming.rodjatv.com/hls/live/rodjatv.m3u8',
+                ]
+            },
+            {
+                name:'Hidayah TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://hidayah.akamaized.net/hls/live/2029043/hidayahtv/master.m3u8',
+                ]
+            },
+            {
+                name:'Nusantara TV', cat:'religi', icon:'🕌',
+                urls:[
+                    'https://nusantara.akamaized.net/hls/live/2029044/nusantaratv/master.m3u8',
+                ]
+            },
+
+            // ── LOKAL ──
+            {
+                name:'JAK TV', cat:'lokal', icon:'🏙️',
+                urls:[
+                    'https://jaktv.akamaized.net/hls/live/2029045/jaktv/master.m3u8',
+                ]
+            },
+            {
+                name:'Berita Satu', cat:'lokal', icon:'🏙️',
+                urls:[
+                    'https://beritasatu.akamaized.net/hls/live/2029046/beritasatu/master.m3u8',
+                    'https://live.beritasatu.com/beritasatu/master.m3u8',
+                ]
+            },
+        ];
+
+        let fsHls = null;
+        let fsCurrentUrl = null;
+        let fsCurrentCh = null;
+        let fsFilter = 'semua';
+
+        function renderChannels() {
+            const list = document.getElementById('fsChannelList');
+            if (!list) return;
+            const shown = fsFilter === 'semua' ? fsChannels : fsChannels.filter(c => c.cat === fsFilter);
+            list.innerHTML = shown.map((ch) => {
+                const isPlaying = fsCurrentCh && fsCurrentCh.name === ch.name;
+                return `
+                <div class="fs-ch-item${isPlaying ? ' playing' : ''}" onclick="fsPlayCh(${fsChannels.indexOf(ch)})">
+                    <div class="fs-ch-logo">${ch.icon}</div>
+                    <div class="fs-ch-info">
+                        <div class="fs-ch-name">${ch.name}</div>
+                        <div class="fs-ch-cat">${ch.cat.charAt(0).toUpperCase()+ch.cat.slice(1)}</div>
+                    </div>
+                    <div class="fs-ch-live">● LIVE</div>
+                </div>`;
+            }).join('');
         }
 
-        function switchTvTab(paneId, btnEl) {
-            document.querySelectorAll('.tv-subtab-pane').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tv-subtab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('pane-' + paneId).classList.add('active');
-            btnEl.classList.add('active');
+        function filterKategori(cat, btn) {
+            fsFilter = cat;
+            document.querySelectorAll('.fs-cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderChannels();
         }
 
-        function renderChannels() {}
-        function filterKategori() {}
-        function fsPlayCh() {}
+        // Coba URL satu per satu sampai berhasil
+        function fsPlayCh(idx) {
+            const ch = fsChannels[idx];
+            fsCurrentCh = ch;
+            renderChannels();
+            fsPlayUrls(ch.urls, ch.name, 0);
+        }
+
+        function fsPlayUrls(urls, name, attempt) {
+            const video = document.getElementById('fsLivePlayer');
+            const overlay = document.getElementById('fsPlayerOverlay');
+            const nowPlaying = document.getElementById('fsNowPlaying');
+            const chName = document.getElementById('fsChannelName');
+
+            if (attempt >= urls.length) {
+                overlay.style.display = 'none';
+                nowPlaying.style.display = 'block';
+                chName.innerHTML = name + ' <span style="color:#f87171;font-size:0.75rem;">— Stream tidak tersedia saat ini</span>';
+                return;
+            }
+
+            const url = urls[attempt];
+            overlay.style.display = 'none';
+            nowPlaying.style.display = 'block';
+            chName.innerHTML = name + ' <span style="color:#94a3b8;font-size:0.72rem;">— Menghubungkan...</span>';
+
+            if (fsHls) { fsHls.destroy(); fsHls = null; }
+
+            if (Hls.isSupported()) {
+                fsHls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    manifestLoadingTimeOut: 8000,
+                    manifestLoadingMaxRetry: 1,
+                });
+                fsHls.loadSource(url);
+                fsHls.attachMedia(video);
+                fsHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    chName.textContent = name;
+                    video.play().catch(()=>{
+                        video.muted = true;
+                        video.play().catch(()=>{});
+                    });
+                });
+                fsHls.on(Hls.Events.ERROR, (e, data) => {
+                    if (data.fatal) {
+                        fsHls.destroy(); fsHls = null;
+                        // Coba URL berikutnya
+                        setTimeout(() => fsPlayUrls(urls, name, attempt + 1), 500);
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.onerror = () => fsPlayUrls(urls, name, attempt + 1);
+                chName.textContent = name;
+                video.play().catch(()=>{});
+            }
+        }
+
+        // Init TV tab
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChannels();
+        });
 
         // --- LOGIC SIDEBAR ---
         const sidebar = document.getElementById('sidebar');
