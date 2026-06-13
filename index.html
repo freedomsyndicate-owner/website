@@ -1401,7 +1401,8 @@
                 </div>
                 <!-- Sub-tab buttons -->
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
-                    <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
+                    <button class="tv-subtab-btn active" id="stvLive" onclick="switchTvTab('tvLive',this)">🔴 LIVE</button>
+                    <button class="tv-subtab-btn" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
                     <button class="tv-subtab-btn" id="stv2" onclick="switchTvTab('tv2',this)">🌐 TV 2</button>
                     <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ SPORT</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
@@ -1409,7 +1410,7 @@
             </div>
 
             <!-- ===== PANE: TV 1 ===== -->
-            <div class="tv-subtab-pane active" id="pane-tv1" style="padding:14px 14px 24px;">
+            <div class="tv-subtab-pane" id="pane-tv1" style="padding:14px 14px 24px;">
 
                 <!-- Player -->
                 <div class="tv-iframe-wrap" id="tvPlayerWrap">
@@ -1544,6 +1545,22 @@
                 <div id="tv2Groups" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
 
                 <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE × IPTV-ORG</p>
+            </div>
+
+            <!-- ===== PANE: LIVE (jadwal & siaran olahraga live saat ini) ===== -->
+            <div class="tv-subtab-pane active" id="pane-tvLive" style="padding:0;">
+                <div style="padding:10px 14px;background:rgba(2,6,23,0.6);border-bottom:1px solid rgba(56,189,248,0.12);">
+                    <div style="font-size:0.62rem;color:#64748b;letter-spacing:1px;">📅 Jadwal &amp; siaran langsung: Bola, MotoGP, F1, Voli, Badminton, dll — tap "Events" pada player untuk lihat semua jadwal hari ini.</div>
+                </div>
+                <div style="position:relative;width:100%;height:calc(100vh - 165px);min-height:500px;background:#000;">
+                    <iframe
+                        src="https://xoilacz.live/"
+                        allowfullscreen
+                        allow="autoplay; encrypted-media; fullscreen"
+                        scrolling="yes"
+                        style="width:100%;height:100%;border:none;display:block;"
+                    ></iframe>
+                </div>
             </div>
 
             <!-- ===== PANE: SPORT (full iframe) ===== -->
