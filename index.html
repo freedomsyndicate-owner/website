@@ -665,12 +665,53 @@
             background: #000;
             aspect-ratio: 16/9;
         }
-        .tv-iframe-wrap iframe {
+        .tv-iframe-wrap iframe,
+        .tv-iframe-wrap video {
             width: 100%;
             height: 100%;
             border: none;
             display: block;
         }
+
+        /* --- TV2 (IPTV-ORG) ACCORDION --- */
+        .tv2-acc {
+            border: 1px solid rgba(56,189,248,0.13);
+            border-radius: 13px;
+            background: rgba(15,23,42,0.5);
+            overflow: hidden;
+        }
+        .tv2-acc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #e2e8f0;
+        }
+        .tv2-acc-header .count {
+            font-size: 0.62rem;
+            color: #64748b;
+            font-weight: 700;
+            background: rgba(56,189,248,0.08);
+            border-radius: 10px;
+            padding: 2px 8px;
+        }
+        .tv2-acc-arrow {
+            color: var(--primary);
+            transition: transform 0.25s;
+            font-size: 0.7rem;
+        }
+        .tv2-acc.open .tv2-acc-arrow { transform: rotate(180deg); }
+        .tv2-acc-body {
+            display: none;
+            flex-direction: column;
+            gap: 7px;
+            padding: 0 10px 12px;
+        }
+        .tv2-acc.open .tv2-acc-body { display: flex; }
         .tv-iframe-overlay {
             position: absolute;
             inset: 0;
@@ -1361,6 +1402,7 @@
                 <!-- Sub-tab buttons -->
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
                     <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
+                    <button class="tv-subtab-btn" id="stv2" onclick="switchTvTab('tv2',this)">🌐 TV 2</button>
                     <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ SPORT</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
                 </div>
@@ -1464,6 +1506,46 @@
                 <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE LIVE TV</p>
             </div>
 
+            <!-- ===== PANE: TV2 (IPTV-ORG LIBRARY) ===== -->
+            <div class="tv-subtab-pane" id="pane-tv2" style="padding:14px 14px 24px;">
+
+                <!-- Player -->
+                <div class="tv-iframe-wrap" id="tv2PlayerWrap">
+                    <video id="tv2Video" controls playsinline></video>
+                    <div class="tv-iframe-overlay" id="tv2Overlay">
+                        <div style="font-size:2.2rem;margin-bottom:8px;">🌐</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">IPTV-ORG LIBRARY</div>
+                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Pilih kategori &amp; tap channel</div>
+                    </div>
+                </div>
+
+                <!-- Kategori / Negara Selector -->
+                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" id="tv2CatBar">
+                    <button class="fs-cat-btn active" onclick="loadTv2Playlist('id', this)">🇮🇩 Indonesia</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('news', this)">📰 News</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('sports', this)">⚽ Sport</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('movies', this)">🎬 Movies</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('entertainment', this)">🎭 Hiburan</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('music', this)">🎵 Music</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('kids', this)">🧸 Kids</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('documentary', this)">📚 Dokumenter</button>
+                    <button class="fs-cat-btn" onclick="loadTv2Playlist('general', this)">🌍 General</button>
+                </div>
+
+                <!-- Search -->
+                <div style="margin-top:10px;">
+                    <input type="text" id="tv2Search" placeholder="🔍 Cari nama channel..." oninput="filterTv2Channels()" style="width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1px solid rgba(56,189,248,0.2);background:rgba(15,23,42,0.6);color:#fff;font-size:0.8rem;font-family:inherit;outline:none;">
+                </div>
+
+                <!-- Status -->
+                <div id="tv2Status" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;">Memuat daftar channel...</div>
+
+                <!-- Groups -->
+                <div id="tv2Groups" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE × IPTV-ORG</p>
+            </div>
+
             <!-- ===== PANE: SPORT (full iframe) ===== -->
             <div class="tv-subtab-pane" id="pane-tvSport" style="padding:0;">
                 <div style="position:relative;width:100%;height:calc(100vh - 130px);min-height:500px;background:#000;">
@@ -1527,6 +1609,204 @@
             document.querySelectorAll('.tv-subtab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('pane-' + paneId).classList.add('active');
             btnEl.classList.add('active');
+
+            // Lazy-load IPTV-org library the first time TV2 is opened
+            if (paneId === 'tv2' && tv2AllChannels.length === 0) {
+                loadTv2Playlist('id');
+            }
+        }
+
+        // =============================================
+        // TV2 — IPTV-ORG LIBRARY (grouped by genre/category)
+        // =============================================
+        let tv2Hls = null;
+        let tv2AllChannels = [];
+
+        const TV2_PLAYLISTS = {
+            id:            'https://iptv-org.github.io/iptv/countries/id.m3u',
+            news:          'https://iptv-org.github.io/iptv/categories/news.m3u',
+            sports:        'https://iptv-org.github.io/iptv/categories/sports.m3u',
+            movies:        'https://iptv-org.github.io/iptv/categories/movies.m3u',
+            entertainment: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u',
+            music:         'https://iptv-org.github.io/iptv/categories/music.m3u',
+            kids:          'https://iptv-org.github.io/iptv/categories/kids.m3u',
+            documentary:   'https://iptv-org.github.io/iptv/categories/documentary.m3u',
+            general:       'https://iptv-org.github.io/iptv/categories/general.m3u'
+        };
+
+        // Parse raw M3U playlist text into a list of channel objects
+        function parseM3U(text) {
+            const lines = text.split('\n');
+            const channels = [];
+            let current = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('#EXTINF')) {
+                    const groupMatch = line.match(/group-title="([^"]*)"/);
+                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    const nameMatch = line.match(/,(.*)$/);
+                    current = {
+                        group: (groupMatch && groupMatch[1].trim()) ? groupMatch[1].trim() : 'Lainnya',
+                        logo: logoMatch ? logoMatch[1].trim() : '',
+                        name: nameMatch ? nameMatch[1].trim() : 'Unknown'
+                    };
+                } else if (line && !line.startsWith('#') && current) {
+                    current.url = line;
+                    channels.push(current);
+                    current = null;
+                }
+            }
+            return channels;
+        }
+
+        // Fetch & load an IPTV-org playlist by key (country/category)
+        async function loadTv2Playlist(key, btnEl) {
+            document.querySelectorAll('#tv2CatBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const status = document.getElementById('tv2Status');
+            const groupsEl = document.getElementById('tv2Groups');
+            const searchBox = document.getElementById('tv2Search');
+            if (searchBox) searchBox.value = '';
+
+            status.textContent = '⏳ Memuat daftar channel...';
+            groupsEl.innerHTML = '';
+
+            try {
+                const res = await fetch(TV2_PLAYLISTS[key]);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const text = await res.text();
+                tv2AllChannels = parseM3U(text);
+
+                if (tv2AllChannels.length === 0) {
+                    status.textContent = 'Tidak ada channel ditemukan untuk kategori ini.';
+                    return;
+                }
+
+                status.textContent = `✅ ${tv2AllChannels.length} channel ditemukan — tap untuk play`;
+                renderTv2Groups(tv2AllChannels);
+            } catch (e) {
+                status.textContent = '⚠️ Gagal memuat daftar channel. Coba kategori lain atau cek koneksi.';
+            }
+        }
+
+        // Render channels grouped into collapsible accordions by genre/group-title
+        function renderTv2Groups(channels) {
+            const groupsEl = document.getElementById('tv2Groups');
+            groupsEl.innerHTML = '';
+
+            const groups = {};
+            channels.forEach(ch => {
+                if (!groups[ch.group]) groups[ch.group] = [];
+                groups[ch.group].push(ch);
+            });
+
+            const sortedGroupNames = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+
+            sortedGroupNames.forEach((groupName, idx) => {
+                const acc = document.createElement('div');
+                acc.className = 'tv2-acc';
+                if (sortedGroupNames.length <= 3) acc.classList.add('open'); // auto-open if few groups (e.g. search results)
+
+                const header = document.createElement('div');
+                header.className = 'tv2-acc-header';
+                header.onclick = () => acc.classList.toggle('open');
+                header.innerHTML = `<span>${groupName}</span>
+                    <span style="display:flex;align-items:center;gap:8px;">
+                        <span class="count">${groups[groupName].length}</span>
+                        <span class="tv2-acc-arrow">▾</span>
+                    </span>`;
+
+                const body = document.createElement('div');
+                body.className = 'tv2-acc-body';
+
+                groups[groupName].forEach(ch => {
+                    const item = document.createElement('div');
+                    item.className = 'fs-ch-item';
+                    item.onclick = () => playTv2Channel(ch.url, ch.name, item);
+
+                    const logoHtml = ch.logo
+                        ? `<img src="${ch.logo}" loading="lazy" onerror="this.parentElement.innerHTML='📺'">`
+                        : '📺';
+
+                    item.innerHTML = `
+                        <div class="fs-ch-logo">${logoHtml}</div>
+                        <div class="fs-ch-info">
+                            <div class="fs-ch-name">${ch.name}</div>
+                            <div class="fs-ch-cat">${ch.group}</div>
+                        </div>
+                        <div class="fs-ch-live">▶ PLAY</div>
+                    `;
+                    body.appendChild(item);
+                });
+
+                acc.appendChild(header);
+                acc.appendChild(body);
+                groupsEl.appendChild(acc);
+            });
+        }
+
+        // Filter currently loaded channels by name/group as user types
+        function filterTv2Channels() {
+            const q = document.getElementById('tv2Search').value.toLowerCase().trim();
+            const status = document.getElementById('tv2Status');
+
+            if (!q) {
+                status.textContent = `✅ ${tv2AllChannels.length} channel ditemukan — tap untuk play`;
+                renderTv2Groups(tv2AllChannels);
+                return;
+            }
+
+            const filtered = tv2AllChannels.filter(ch =>
+                ch.name.toLowerCase().includes(q) || ch.group.toLowerCase().includes(q)
+            );
+
+            status.textContent = `🔎 ${filtered.length} hasil untuk "${q}"`;
+            renderTv2Groups(filtered);
+        }
+
+        // Play a channel stream using hls.js (for .m3u8) or native <video> playback
+        function playTv2Channel(url, name, itemEl) {
+            const video = document.getElementById('tv2Video');
+            const overlay = document.getElementById('tv2Overlay');
+            const badge = document.getElementById('tvNowBadge');
+            const badgeName = document.getElementById('tvBadgeName');
+
+            overlay.classList.add('hidden');
+            if (badge) badge.style.display = 'block';
+            if (badgeName) badgeName.textContent = name;
+
+            document.querySelectorAll('#tv2Groups .fs-ch-item').forEach(c => c.classList.remove('playing'));
+            if (itemEl) itemEl.classList.add('playing');
+
+            if (tv2Hls) {
+                tv2Hls.destroy();
+                tv2Hls = null;
+            }
+
+            if (url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
+                tv2Hls = new Hls();
+                tv2Hls.loadSource(url);
+                tv2Hls.attachMedia(video);
+                tv2Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                tv2Hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        const status = document.getElementById('tv2Status');
+                        status.textContent = `⚠️ "${name}" gagal diputar (stream offline/error). Coba channel lain.`;
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (e.g. Safari/iOS)
+                video.src = url;
+                video.play().catch(() => {});
+            } else {
+                video.src = url;
+                video.play().catch(() => {});
+            }
+
+            // Scroll player into view (helps on mobile when picking from a long list)
+            document.getElementById('tv2PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function renderChannels() {}
