@@ -1401,8 +1401,7 @@
                 </div>
                 <!-- Sub-tab buttons -->
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
-                    <button class="tv-subtab-btn active" id="stvLive" onclick="switchTvTab('tvLive',this)">🔴 LIVE</button>
-                    <button class="tv-subtab-btn" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
+                    <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
                     <button class="tv-subtab-btn" id="stv2" onclick="switchTvTab('tv2',this)">🌐 TV 2</button>
                     <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ SPORT</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
@@ -1410,7 +1409,7 @@
             </div>
 
             <!-- ===== PANE: TV 1 ===== -->
-            <div class="tv-subtab-pane" id="pane-tv1" style="padding:14px 14px 24px;">
+            <div class="tv-subtab-pane active" id="pane-tv1" style="padding:14px 14px 24px;">
 
                 <!-- Player -->
                 <div class="tv-iframe-wrap" id="tvPlayerWrap">
@@ -1547,57 +1546,6 @@
                 <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE × IPTV-ORG</p>
             </div>
 
-            <!-- ===== PANE: LIVE (jadwal & siaran olahraga live saat ini) ===== -->
-            <div class="tv-subtab-pane active" id="pane-tvLive" style="padding:14px 14px 24px;">
-
-                <div style="padding:10px 12px;background:rgba(2,6,23,0.6);border:1px solid rgba(56,189,248,0.12);border-radius:12px;margin-bottom:12px;">
-                    <div style="font-size:0.62rem;color:#64748b;letter-spacing:1px;">📅 Jadwal &amp; siaran langsung: Bola (termasuk Piala Dunia), MotoGP, F1, Voli, Badminton, dll. Tap salah satu sumber di bawah, lalu pilih "Events" di situsnya untuk lihat jadwal hari ini.</div>
-                </div>
-
-                <div style="font-size:0.62rem;color:#475569;letter-spacing:2px;font-weight:800;margin:4px 0 8px 2px;">⚠️ DIBUKA DI TAB BARU (situs pihak ke-3 tidak bisa di-embed)</div>
-
-                <div class="tv-ch-grid">
-
-                    <a href="https://xoilacz.live/" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">🔴</div>
-                        <div class="ch-name">XOILACZ LIVE</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                    <a href="https://www.sofascore.com/" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">📊</div>
-                        <div class="ch-name">SOFASCORE</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                    <a href="https://daddylivehd.sx/" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">🏟️</div>
-                        <div class="ch-name">DADDYLIVE</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                    <a href="https://streamed.su/" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">📡</div>
-                        <div class="ch-name">STREAMED</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                    <a href="https://www.motogp.com/en/video" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">🏁</div>
-                        <div class="ch-name">MOTOGP</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                    <a href="https://www.formula1.com/en/latest/all" target="_blank" class="tv-ch-card" style="text-decoration:none;color:inherit;">
-                        <div class="ch-icon">🏎️</div>
-                        <div class="ch-name">FORMULA 1</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </a>
-
-                </div>
-
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE LIVE</p>
-            </div>
 
             <!-- ===== PANE: SPORT (full iframe) ===== -->
             <div class="tv-subtab-pane" id="pane-tvSport" style="padding:0;">
