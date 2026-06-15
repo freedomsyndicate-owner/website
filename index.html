@@ -1752,17 +1752,33 @@
             </div>
 
 
-            <!-- ===== PANE: TV3 (World Cup 2026 Streaming) ===== -->
-            <div class="tv-subtab-pane" id="pane-tvSport" style="padding:0;">
-                <div style="position:relative;width:100%;height:calc(100vh - 130px);min-height:500px;background:#000;">
-                    <iframe
-                        src="https://world-cup-2026-streaming.blogspot.com"
-                        allowfullscreen
-                        allow="autoplay; encrypted-media; fullscreen"
-                        scrolling="yes"
-                        style="width:100%;height:100%;border:none;display:block;"
-                    ></iframe>
+            <!-- ===== PANE: TV3 (SPORT STREAMING) ===== -->
+            <div class="tv-subtab-pane" id="pane-tvSport" style="padding:14px 14px 24px;">
+
+                <!-- Player -->
+                <div class="tv-iframe-wrap" id="tv3PlayerWrap">
+                    <video id="tv3Video" controls playsinline style="width:100%;height:100%;background:#000;display:block;"></video>
+                    <div class="tv-iframe-overlay" id="tv3Overlay">
+                        <div style="font-size:2.2rem;margin-bottom:8px;">⚽</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">TV3 SPORT</div>
+                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Tap channel untuk mulai streaming</div>
+                    </div>
                 </div>
+
+                <!-- Now Playing Badge -->
+                <div id="tv3NowBadge" style="display:none;margin:8px 0;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);border-radius:20px;padding:4px 12px;font-size:0.62rem;font-weight:700;color:#4ade80;letter-spacing:1px;">🔴 <span id="tv3BadgeName">-</span></div>
+
+                <!-- Category Tabs -->
+                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-top:10px;" id="tv3CatBar">
+                    <button class="fs-cat-btn active" onclick="loadTv3Cat('live',this)">🔴 LIVE</button>
+                    <button class="fs-cat-btn" onclick="loadTv3Cat('sport',this)">⚽ Sport</button>
+                    <button class="fs-cat-btn" onclick="loadTv3Cat('entertainment',this)">🎭 Entertainment</button>
+                </div>
+
+                <!-- Channel List -->
+                <div id="tv3List" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
+
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV3 SPORT</p>
             </div>
 
             <!-- ===== PANE: WORLD (full iframe) ===== -->
@@ -1819,6 +1835,10 @@
             // Lazy-load IPTV-org library the first time TV2 is opened
             if (paneId === 'tv2' && tv2AllChannels.length === 0) {
                 loadTv2Playlist('id');
+            }
+            // Load TV3 channel list the first time TV3 is opened
+            if (paneId === 'tvSport' && document.getElementById('tv3List').children.length === 0) {
+                loadTv3Cat('live', document.querySelector('#tv3CatBar .fs-cat-btn'));
             }
         }
 
@@ -2018,6 +2038,128 @@
         function renderChannels() {}
         function filterKategori() {}
         function fsPlayCh() {}
+
+        // =============================================
+        // TV3 — SPORT STREAMING
+        // =============================================
+        let tv3Hls = null;
+        let tv3CurrentCat = 'live';
+
+        const tv3Data = {
+            live: [
+                { name: '🏆 FIFA WC – Spain vs Cabo Verde', url: 'https://world-cup-2026-streaming.blogspot.com/live-match-11070-fifa-world-cup-spain-vs-cabo-verde.html', type: 'page' },
+                { name: '🏆 FIFA WC – Belgium vs Egypt', url: 'https://world-cup-2026-streaming.blogspot.com/live-match-11071-fifa-world-cup-belgium-vs-egypt.html', type: 'page' },
+                { name: '🏆 FIFA WC – Saudi Arabia vs Uruguay', url: 'https://world-cup-2026-streaming.blogspot.com/live-match-11072-fifa-world-cup-saudi-arabia-vs-uruguay.html', type: 'page' },
+                { name: '🏆 FIFA WC – Iran vs New Zealand', url: 'https://world-cup-2026-streaming.blogspot.com/live-match-11073-fifa-world-cup-iran-vs-new-zealand.html', type: 'page' },
+                { name: '📺 World Cup Stream (Index)', url: 'https://world-cup-2026-streaming.blogspot.com', type: 'page' },
+            ],
+            sport: [
+                { name: '2 Sport Premium', url: 'https://iptv-org.github.io/iptv/channels/fr/france2.m3u8', type: 'm3u8' },
+                { name: 'beIN Sports 1', url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8', type: 'm3u8' },
+                { name: 'beIN Sports HD', url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', type: 'playlist' },
+                { name: 'Al Jazeera Sport', url: 'https://live-hls-web-ajl.getaj.net/AJL/index.m3u8', type: 'm3u8' },
+                { name: '⚽ IPTV Sport Playlist', url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', type: 'playlist' },
+            ],
+            entertainment: [
+                { name: 'Al Jazeera English', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8', type: 'm3u8' },
+                { name: 'France 24 English', url: 'https://static.france24.com/live/F24_EN_LO_HLS/live_web.m3u8', type: 'm3u8' },
+                { name: 'DW English', url: 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8', type: 'm3u8' },
+                { name: 'RT News', url: 'https://rt-glb.rttv.com/live/rtnews/playlist.m3u8', type: 'm3u8' },
+                { name: 'CGTN', url: 'https://news.cgtn.com/resource/live/english/cgtn-news.m3u8', type: 'm3u8' },
+            ]
+        };
+
+        function loadTv3Cat(cat, btnEl) {
+            tv3CurrentCat = cat;
+            document.querySelectorAll('#tv3CatBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const list = document.getElementById('tv3List');
+            const channels = tv3Data[cat] || [];
+            list.innerHTML = '';
+
+            channels.forEach(ch => {
+                const item = document.createElement('div');
+                item.className = 'fs-ch-item';
+                item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:10px;cursor:pointer;transition:all 0.2s;';
+                item.innerHTML = `
+                    <div style="width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">
+                        ${cat === 'live' ? '🔴' : cat === 'sport' ? '⚽' : '📺'}
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ch.name}</div>
+                        <div style="font-size:0.6rem;color:#475569;margin-top:2px;">${ch.type === 'page' ? '🌐 Web Page' : ch.type === 'playlist' ? '📋 Playlist' : '📡 HLS Stream'}</div>
+                    </div>
+                    <div style="font-size:0.6rem;color:#4ade80;font-weight:700;">▶</div>
+                `;
+                item.onclick = () => tv3PlayChannel(ch, item);
+                item.onmouseenter = () => item.style.borderColor = 'rgba(56,189,248,0.5)';
+                item.onmouseleave = () => { if (!item.classList.contains('playing')) item.style.borderColor = 'rgba(56,189,248,0.15)'; };
+                list.appendChild(item);
+            });
+        }
+
+        function tv3PlayChannel(ch, itemEl) {
+            const video = document.getElementById('tv3Video');
+            const overlay = document.getElementById('tv3Overlay');
+            const badge = document.getElementById('tv3NowBadge');
+            const badgeName = document.getElementById('tv3BadgeName');
+
+            // Highlight active item
+            document.querySelectorAll('#tv3List .fs-ch-item').forEach(c => {
+                c.classList.remove('playing');
+                c.style.borderColor = 'rgba(56,189,248,0.15)';
+                c.style.background = 'rgba(15,23,42,0.7)';
+            });
+            itemEl.classList.add('playing');
+            itemEl.style.borderColor = 'rgba(56,189,248,0.6)';
+            itemEl.style.background = 'rgba(56,189,248,0.08)';
+
+            if (overlay) overlay.style.display = 'none';
+            if (badge) { badge.style.display = 'inline-block'; }
+            if (badgeName) badgeName.textContent = ch.name;
+
+            if (tv3Hls) { tv3Hls.destroy(); tv3Hls = null; }
+
+            // Web page type — open in new tab (can't embed due to X-Frame-Options)
+            if (ch.type === 'page' || ch.type === 'playlist') {
+                video.style.display = 'none';
+                if (overlay) {
+                    overlay.style.display = 'flex';
+                    overlay.innerHTML = `
+                        <div style="font-size:1.8rem;margin-bottom:10px;">🌐</div>
+                        <div style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:6px;">${ch.name}</div>
+                        <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:12px;">Tap tombol untuk buka streaming</div>
+                        <button onclick="window.open('${ch.url}','_blank')" style="background:var(--primary);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;">▶ Buka Streaming</button>
+                    `;
+                }
+                document.getElementById('tv3PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
+            // HLS stream
+            video.style.display = 'block';
+            if (ch.url.includes('.m3u8') && window.Hls && Hls.isSupported()) {
+                tv3Hls = new Hls();
+                tv3Hls.loadSource(ch.url);
+                tv3Hls.attachMedia(video);
+                tv3Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                tv3Hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal && overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.innerHTML = `<div style="font-size:0.75rem;color:#f87171;">⚠️ Stream "${ch.name}" offline/error.<br>Coba channel lain.</div>`;
+                    }
+                });
+            } else {
+                video.src = ch.url;
+                video.play().catch(() => {});
+            }
+            document.getElementById('tv3PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Auto-load TV3 live category on tab switch
+        const _origSwitchTvTab = window.switchTvTab;
+
 
         // --- LOGIC MOVIE SUB-TABS ---
         function switchMovieTab(paneId, btnEl) {
