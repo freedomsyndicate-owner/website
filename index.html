@@ -1609,6 +1609,7 @@
                     <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
                     <button class="tv-subtab-btn" id="stv2" onclick="switchTvTab('tv2',this)">🌐 TV 2</button>
                     <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ TV3</button>
+                    <button class="tv-subtab-btn" id="stv4" onclick="switchTvTab('tv4',this)">🎯 TV4</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
                 </div>
             </div>
@@ -1798,6 +1799,57 @@
                 </div>
             </div>
 
+            <!-- ===== PANE: TV4 — M3U PLAYLIST LOADER ===== -->
+            <div class="tv-subtab-pane" id="pane-tv4" style="padding:14px 14px 24px;">
+
+                <!-- Player -->
+                <div class="tv-iframe-wrap" id="tv4PlayerWrap" style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;margin-bottom:10px;aspect-ratio:16/9;">
+                    <video id="tv4Video" controls playsinline style="width:100%;height:100%;background:#000;display:block;"></video>
+                    <div class="tv-iframe-overlay" id="tv4Overlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:absolute;inset:0;background:rgba(2,6,23,0.85);border-radius:12px;">
+                        <div style="font-size:2rem;margin-bottom:8px;">📡</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">TV4 PLAYLIST</div>
+                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Pilih channel dari daftar di bawah</div>
+                    </div>
+                </div>
+
+                <!-- Now playing badge -->
+                <div id="tv4NowBadge" style="display:none;margin:6px 0 10px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);border-radius:20px;padding:4px 12px;font-size:0.62rem;font-weight:700;color:#4ade80;letter-spacing:1px;">🔴 <span id="tv4BadgeName">-</span></div>
+
+                <!-- Source bar -->
+                <div style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px;margin-bottom:10px;">
+                    <div style="font-size:0.65rem;color:var(--primary);font-weight:700;letter-spacing:2px;margin-bottom:8px;">📂 SUMBER PLAYLIST</div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;" id="tv4SrcBtns">
+                        <button class="fs-cat-btn active" onclick="tv4LoadSource('iptv_id',this)">🇮🇩 IPTV-ORG Indonesia</button>
+                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_eldbert',this)">⚡ IPTV Eldbert</button>
+                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_sport',this)">⚽ IPTV Sport</button>
+                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_news',this)">📰 IPTV News</button>
+                    </div>
+                    <!-- Custom URL loader -->
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <input id="tv4CustomUrl" type="text" placeholder="Masukkan URL .m3u/.m3u8 custom..." style="flex:1;background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.25);border-radius:8px;padding:8px 10px;font-size:0.72rem;color:#e2e8f0;outline:none;min-width:0;" />
+                        <button onclick="tv4LoadCustomUrl()" style="background:var(--primary);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:0.72rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">▶ Load</button>
+                    </div>
+                </div>
+
+                <!-- Status bar -->
+                <div id="tv4StatusBar" style="font-size:0.65rem;color:#64748b;margin-bottom:8px;padding:6px 10px;background:rgba(15,23,42,0.5);border-radius:8px;border:1px solid rgba(56,189,248,0.1);">
+                    ⏳ Klik sumber untuk mulai load playlist...
+                </div>
+
+                <!-- Search bar -->
+                <div style="position:relative;margin-bottom:8px;" id="tv4SearchWrap" style="display:none;">
+                    <input id="tv4Search" type="text" placeholder="🔍 Cari channel..." oninput="tv4FilterChannels()" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:9px 12px;font-size:0.75rem;color:#e2e8f0;outline:none;" />
+                </div>
+
+                <!-- Channel count -->
+                <div id="tv4Count" style="font-size:0.6rem;color:#475569;margin-bottom:6px;"></div>
+
+                <!-- Channel List -->
+                <div id="tv4List" style="display:flex;flex-direction:column;gap:6px;"></div>
+
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV4</p>
+            </div>
+
         </div>
 
         <footer>BEYOND THE LIMITS &bull; 2026</footer>
@@ -1844,11 +1896,218 @@
             if (paneId === 'tvSport' && document.getElementById('tv3List').children.length === 0) {
                 loadTv3Cat('event', document.querySelector('#tv3CatBar .fs-cat-btn'));
             }
+            // Auto-load TV4 the first time it's opened
+            if (paneId === 'tv4' && tv4AllChannels.length === 0) {
+                tv4LoadSource('iptv_id', document.querySelector('#tv4SrcBtns .fs-cat-btn'));
+            }
         }
 
         // =============================================
-        // TV2 — IPTV-ORG LIBRARY (grouped by genre/category)
+        // TV4 — LIVE M3U PLAYLIST LOADER
         // =============================================
+        let tv4Hls = null;
+        let tv4AllChannels = [];
+        let tv4FilteredChannels = [];
+
+        const TV4_SOURCES = {
+            iptv_id:      'https://iptv-org.github.io/iptv/countries/id.m3u',
+            iptv_eldbert: 'https://iptv-eldbert.xyz/iptv/',
+            iptv_sport:   'https://iptv-org.github.io/iptv/categories/sports.m3u',
+            iptv_news:    'https://iptv-org.github.io/iptv/categories/news.m3u',
+        };
+
+        // CORS proxy options (tried in order)
+        const TV4_PROXIES = [
+            u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+            u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+            u => `https://cors-anywhere.herokuapp.com/${u}`,
+        ];
+
+        async function tv4FetchWithProxy(url) {
+            // Try direct first
+            try {
+                const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
+                if (r.ok) return await r.text();
+            } catch(e) {}
+            // Try each proxy
+            for (const proxy of TV4_PROXIES) {
+                try {
+                    const r = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
+                    if (r.ok) return await r.text();
+                } catch(e) {}
+            }
+            throw new Error('Semua proxy gagal. Coba gunakan VPN atau URL lain.');
+        }
+
+        function tv4ParseM3U(text) {
+            const lines = text.split('\n');
+            const channels = [];
+            let current = {};
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line.startsWith('#EXTINF')) {
+                    const nameMatch = line.match(/,\s*(.+)$/);
+                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    const groupMatch = line.match(/group-title="([^"]*)"/);
+                    current = {
+                        name: nameMatch ? nameMatch[1].trim() : 'Unknown',
+                        logo: logoMatch ? logoMatch[1] : '',
+                        group: groupMatch ? groupMatch[1] : 'General',
+                    };
+                } else if (line && !line.startsWith('#') && !line.startsWith('<') && current.name) {
+                    current.url = line.trim();
+                    if (current.url) channels.push({ ...current });
+                    current = {};
+                }
+            }
+            return channels;
+        }
+
+        async function tv4LoadSource(key, btnEl) {
+            // Update button active state
+            document.querySelectorAll('#tv4SrcBtns .fs-cat-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            const url = TV4_SOURCES[key];
+            const statusBar = document.getElementById('tv4StatusBar');
+            statusBar.innerHTML = `⏳ Loading dari <b>${url}</b>...`;
+            document.getElementById('tv4List').innerHTML = '';
+            document.getElementById('tv4Count').textContent = '';
+            document.getElementById('tv4SearchWrap') && (document.getElementById('tv4Search').value = '');
+
+            try {
+                const text = await tv4FetchWithProxy(url);
+                if (!text.includes('#EXTM3U') && !text.includes('#EXTINF')) {
+                    throw new Error('Bukan file M3U valid. Mungkin URL tidak tersedia atau berisi konten lain.');
+                }
+                tv4AllChannels = tv4ParseM3U(text);
+                tv4FilteredChannels = [...tv4AllChannels];
+                statusBar.innerHTML = `✅ Berhasil load <b>${tv4AllChannels.length} channel</b> dari <code style="font-size:0.6rem;color:#38bdf8;">${url}</code>`;
+                document.getElementById('tv4SearchWrap').style.display = 'block';
+                tv4RenderList(tv4FilteredChannels);
+            } catch(err) {
+                statusBar.innerHTML = `❌ <b>Gagal:</b> ${err.message}`;
+                document.getElementById('tv4List').innerHTML = `
+                    <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px;text-align:center;">
+                        <div style="font-size:1.5rem;margin-bottom:8px;">⚠️</div>
+                        <div style="font-size:0.75rem;color:#f87171;font-weight:700;margin-bottom:6px;">Playlist tidak dapat dimuat</div>
+                        <div style="font-size:0.65rem;color:#94a3b8;">Kemungkinan penyebab:<br>• CORS block dari browser<br>• URL tidak tersedia (404)<br>• Memerlukan VPN<br><br>Coba gunakan URL custom di atas, atau coba sumber lain.</div>
+                    </div>`;
+            }
+        }
+
+        async function tv4LoadCustomUrl() {
+            const urlInput = document.getElementById('tv4CustomUrl');
+            const url = urlInput.value.trim();
+            if (!url) return;
+
+            const statusBar = document.getElementById('tv4StatusBar');
+            statusBar.innerHTML = `⏳ Loading dari <b>${url}</b>...`;
+            document.getElementById('tv4List').innerHTML = '';
+            document.getElementById('tv4Count').textContent = '';
+
+            try {
+                const text = await tv4FetchWithProxy(url);
+                if (!text.includes('#EXTM3U') && !text.includes('#EXTINF')) {
+                    throw new Error('Bukan file M3U valid.');
+                }
+                tv4AllChannels = tv4ParseM3U(text);
+                tv4FilteredChannels = [...tv4AllChannels];
+                statusBar.innerHTML = `✅ Berhasil load <b>${tv4AllChannels.length} channel</b> dari URL custom`;
+                document.getElementById('tv4SearchWrap').style.display = 'block';
+                tv4RenderList(tv4FilteredChannels);
+            } catch(err) {
+                statusBar.innerHTML = `❌ <b>Gagal:</b> ${err.message}`;
+            }
+        }
+
+        function tv4FilterChannels() {
+            const q = document.getElementById('tv4Search').value.toLowerCase();
+            tv4FilteredChannels = q
+                ? tv4AllChannels.filter(ch => ch.name.toLowerCase().includes(q) || (ch.group||'').toLowerCase().includes(q))
+                : [...tv4AllChannels];
+            tv4RenderList(tv4FilteredChannels);
+        }
+
+        function tv4RenderList(channels) {
+            const list = document.getElementById('tv4List');
+            const countEl = document.getElementById('tv4Count');
+            list.innerHTML = '';
+            countEl.textContent = `Menampilkan ${channels.length} dari ${tv4AllChannels.length} channel`;
+
+            if (channels.length === 0) {
+                list.innerHTML = `<div style="text-align:center;color:#475569;font-size:0.75rem;padding:20px;">Tidak ada channel ditemukan.</div>`;
+                return;
+            }
+
+            channels.forEach(ch => {
+                const item = document.createElement('div');
+                item.className = 'fs-ch-item';
+                item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:10px;cursor:pointer;transition:all 0.2s;';
+                const logoHtml = ch.logo
+                    ? `<img src="${ch.logo}" style="width:38px;height:38px;border-radius:8px;object-fit:contain;background:rgba(15,23,42,0.9);" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div style="display:none;width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📺</div>`
+                    : `<div style="width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📺</div>`;
+                item.innerHTML = `
+                    ${logoHtml}
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ch.name}</div>
+                        <div style="font-size:0.6rem;color:#475569;margin-top:2px;">${ch.group || 'General'}</div>
+                    </div>
+                    <div style="font-size:0.6rem;color:#4ade80;font-weight:700;">▶</div>
+                `;
+                item.onclick = () => tv4PlayChannel(ch, item);
+                item.onmouseenter = () => item.style.borderColor = 'rgba(56,189,248,0.5)';
+                item.onmouseleave = () => { if (!item.classList.contains('playing')) item.style.borderColor = 'rgba(56,189,248,0.15)'; };
+                list.appendChild(item);
+            });
+        }
+
+        function tv4PlayChannel(ch, itemEl) {
+            const video = document.getElementById('tv4Video');
+            const overlay = document.getElementById('tv4Overlay');
+            const badge = document.getElementById('tv4NowBadge');
+            const badgeName = document.getElementById('tv4BadgeName');
+
+            document.querySelectorAll('#tv4List .fs-ch-item').forEach(c => {
+                c.classList.remove('playing');
+                c.style.borderColor = 'rgba(56,189,248,0.15)';
+                c.style.background = 'rgba(15,23,42,0.7)';
+            });
+            itemEl.classList.add('playing');
+            itemEl.style.borderColor = 'rgba(56,189,248,0.6)';
+            itemEl.style.background = 'rgba(56,189,248,0.08)';
+
+            if (overlay) overlay.style.display = 'none';
+            if (badge) badge.style.display = 'inline-block';
+            if (badgeName) badgeName.textContent = ch.name;
+
+            if (tv4Hls) { tv4Hls.destroy(); tv4Hls = null; }
+
+            video.style.display = 'block';
+            const url = ch.url;
+
+            if ((url.includes('.m3u8') || url.includes('.m3u')) && window.Hls && Hls.isSupported()) {
+                tv4Hls = new Hls({ enableWorker: false });
+                tv4Hls.loadSource(url);
+                tv4Hls.attachMedia(video);
+                tv4Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                tv4Hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal && overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.innerHTML = `<div style="font-size:0.75rem;color:#f87171;text-align:center;padding:10px;">⚠️ Stream "<b>${ch.name}</b>" tidak bisa diputar.<br><span style="font-size:0.6rem;color:#64748b;">Mungkin offline atau CORS block.</span></div>`;
+                    }
+                });
+            } else {
+                video.src = url;
+                video.play().catch(() => {});
+            }
+            document.getElementById('tv4PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Auto-load TV4 when tab is opened
+        // (patching switchTvTab to handle tv4)
+        const _origSwitchTvTabForTv4 = switchTvTab;
+        // Override handled inline via paneId check addition below
         let tv2Hls = null;
         let tv2AllChannels = [];
 
