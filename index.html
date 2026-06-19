@@ -1606,184 +1606,65 @@
                 </div>
                 <!-- Sub-tab buttons -->
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
-                    <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV 1</button>
-                    <button class="tv-subtab-btn" id="stv2" onclick="switchTvTab('tv2',this)">🌐 TV 2</button>
-                    <button class="tv-subtab-btn" id="stvSport" onclick="switchTvTab('tvSport',this)">⚽ TV3</button>
-                    <button class="tv-subtab-btn" id="stv4" onclick="switchTvTab('tv4',this)">🎯 TV4</button>
+                    <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV1</button>
+                    <button class="tv-subtab-btn" id="stv4" onclick="switchTvTab('tv4',this)">⚽ SPORT</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
                 </div>
             </div>
 
-            <!-- ===== PANE: TV 1 ===== -->
+                        <!-- ===== PANE: TV1 (GABUNGAN NASIONAL + IPTV-ORG + SPORT + URL SAYA) ===== -->
             <div class="tv-subtab-pane active" id="pane-tv1" style="padding:14px 14px 24px;">
 
                 <!-- Player -->
                 <div class="tv-iframe-wrap" id="tvPlayerWrap">
-                    <iframe id="tvIframe" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no"></iframe>
+                    <iframe id="tvIframe" src="" allowfullscreen allow="autoplay; encrypted-media; fullscreen" scrolling="no" style="display:none;"></iframe>
+                    <video id="tv1Video" controls playsinline style="width:100%;height:100%;background:#000;display:none;"></video>
                     <div class="tv-iframe-overlay" id="tvOverlay">
                         <div style="font-size:2.2rem;margin-bottom:8px;">📺</div>
                         <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">PILIH CHANNEL</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Tap salah satu channel di bawah</div>
+                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Pilih genre &amp; tap salah satu channel di bawah</div>
                     </div>
                 </div>
 
-                <!-- Channel Grid — semua 12 link dari kamu -->
-                <div class="tv-ch-grid" style="margin-top:14px;">
-
-                    <div class="tv-ch-card" onclick="playTvCh('RCTI','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">📡</div>
-                        <div class="ch-name">RCTI</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('GTV','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==',this)">
-                        <div class="ch-icon">🎬</div>
-                        <div class="ch-name">GTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('iNEWS','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1',this)">
-                        <div class="ch-icon">📰</div>
-                        <div class="ch-name">iNEWS</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('MNCTV','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1',this)">
-                        <div class="ch-icon">📺</div>
-                        <div class="ch-name">MNCTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('IDX CHANNEL','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZpZHhjaGFubmVsLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">💹</div>
-                        <div class="ch-name">IDX CHANNEL</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('MNC NEWS','https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZtbmNuZXdzLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=',this)">
-                        <div class="ch-icon">📡</div>
-                        <div class="ch-name">MNC NEWS</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('TRANS 7','https://20.detik.com/watch/livestreaming-trans7',this)">
-                        <div class="ch-icon">7️⃣</div>
-                        <div class="ch-name">TRANS 7</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('TRANS TV','https://20.detik.com/watch/livestreaming-transtv',this)">
-                        <div class="ch-icon">🎥</div>
-                        <div class="ch-name">TRANS TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('CNN INDONESIA','https://www.cnnindonesia.com/tv/embed?ref=transmedia',this)">
-                        <div class="ch-icon">🌐</div>
-                        <div class="ch-name">CNN INDONESIA</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('SCTV','https://m.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true&live_chat=false&mute=false&',this)">
-                        <div class="ch-icon">🌟</div>
-                        <div class="ch-name">SCTV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('METRO TV','https://geo.dailymotion.com/player.html?video=k236ofBIxajxDiti8CY',this)">
-                        <div class="ch-icon">🗺️</div>
-                        <div class="ch-name">METRO TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('KOMPAS TV','https://geo.dailymotion.com/player.html?video=k46igSmSMGBIiWsXtWk',this)">
-                        <div class="ch-icon">🧭</div>
-                        <div class="ch-name">KOMPAS TV</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                    <div class="tv-ch-card" onclick="playTvCh('BERITA SATU','https://beritasatu.tv/playstream.php',this)" style="grid-column:span 2;">
-                        <div class="ch-icon">🏙️</div>
-                        <div class="ch-name">BERITA SATU</div>
-                        <div class="ch-badge">● LIVE</div>
-                    </div>
-
-                </div>
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE LIVE TV</p>
-            </div>
-
-            <!-- ===== PANE: TV2 (IPTV-ORG LIBRARY) ===== -->
-            <div class="tv-subtab-pane" id="pane-tv2" style="padding:14px 14px 24px;">
-
-                <!-- Player -->
-                <div class="tv-iframe-wrap" id="tv2PlayerWrap">
-                    <video id="tv2Video" controls playsinline></video>
-                    <div class="tv-iframe-overlay" id="tv2Overlay">
-                        <div style="font-size:2.2rem;margin-bottom:8px;">🌐</div>
-                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">IPTV-ORG LIBRARY</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Pilih kategori &amp; tap channel</div>
-                    </div>
-                </div>
-
-                <!-- Kategori / Negara Selector -->
-                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;" id="tv2CatBar">
-                    <button class="fs-cat-btn active" onclick="loadTv2Playlist('id', this)">🇮🇩 Indonesia</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('news', this)">📰 News</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('sports', this)">⚽ Sport</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('movies', this)">🎬 Movies</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('entertainment', this)">🎭 Hiburan</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('music', this)">🎵 Music</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('kids', this)">🧸 Kids</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('documentary', this)">📚 Dokumenter</button>
-                    <button class="fs-cat-btn" onclick="loadTv2Playlist('general', this)">🌍 General</button>
+                <!-- Genre Selector -->
+                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-top:12px;scrollbar-width:none;" id="tv1GenreBar">
+                    <button class="fs-cat-btn active" onclick="loadTv1Genre('nasional', this)">📡 Nasional</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('indonesia', this)">🇮🇩 Indonesia</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('sport', this)">⚽ Sport</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('movies', this)">🎬 Movies</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('news', this)">📰 News</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('entertainment', this)">🎭 Hiburan</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('music', this)">🎵 Music</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('kids', this)">🧸 Kids</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('documentary', this)">📚 Dokumenter</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('general', this)">🌍 General</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('asia', this)">🌏 Asia</button>
+                    <button class="fs-cat-btn" onclick="loadTv1Genre('other', this)">📺 Lainnya</button>
+                    <button class="fs-cat-btn" id="tv1CustomBtn" onclick="loadTv1Genre('custom', this)" style="background:rgba(241,196,15,0.12);border-color:rgba(241,196,15,0.4);color:#f1c40f;">✏️ URL Saya</button>
                 </div>
 
                 <!-- Search -->
-                <div style="margin-top:10px;">
-                    <input type="text" id="tv2Search" placeholder="🔍 Cari nama channel..." oninput="filterTv2Channels()" style="width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1px solid rgba(56,189,248,0.2);background:rgba(15,23,42,0.6);color:#fff;font-size:0.8rem;font-family:inherit;outline:none;">
+                <div style="margin-top:10px;" id="tv1SearchWrap">
+                    <input type="text" id="tv1Search" placeholder="🔍 Cari nama channel..." oninput="filterTv1Channels()" style="width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1px solid rgba(56,189,248,0.2);background:rgba(15,23,42,0.6);color:#fff;font-size:0.8rem;font-family:inherit;outline:none;">
+                </div>
+
+                <!-- Custom URL form -->
+                <div id="tv1CustomForm" style="display:none;margin-top:14px;background:rgba(241,196,15,0.06);border:1px solid rgba(241,196,15,0.25);border-radius:14px;padding:16px;">
+                    <div style="font-size:0.78rem;font-weight:800;color:#f1c40f;margin-bottom:4px;">✏️ MASUKKAN LINK STREAMING SENDIRI</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:12px;">Tempel link embed / .m3u8 / .mp4 milikmu sendiri, lalu tonton langsung di sini. Link disimpan hanya di perangkatmu.</div>
+                    <input type="text" id="tv1CustomName" placeholder="Nama channel (opsional)" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid rgba(241,196,15,0.25);background:rgba(15,23,42,0.7);color:#fff;font-size:0.78rem;font-family:inherit;outline:none;margin-bottom:8px;">
+                    <input type="text" id="tv1CustomUrl" placeholder="https://contoh.com/stream.m3u8" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid rgba(241,196,15,0.25);background:rgba(15,23,42,0.7);color:#fff;font-size:0.78rem;font-family:inherit;outline:none;margin-bottom:10px;">
+                    <button onclick="tv1PlayCustomUrl()" style="width:100%;background:#f1c40f;color:#0f172a;border:none;padding:11px;border-radius:10px;font-weight:900;font-size:0.78rem;cursor:pointer;letter-spacing:1px;">▶ TONTON SEKARANG</button>
+                    <div id="tv1CustomHistory" style="margin-top:12px;display:flex;flex-direction:column;gap:6px;"></div>
                 </div>
 
                 <!-- Status -->
-                <div id="tv2Status" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;">Memuat daftar channel...</div>
+                <div id="tv1Status" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;"></div>
 
                 <!-- Groups -->
-                <div id="tv2Groups" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+                <div id="tv1Groups" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
 
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE × IPTV-ORG</p>
-            </div>
-
-
-            <!-- ===== PANE: TV3 (SPORT STREAMING) ===== -->
-            <div class="tv-subtab-pane" id="pane-tvSport" style="padding:14px 14px 24px;">
-
-                <!-- Player -->
-                <div class="tv-iframe-wrap" id="tv3PlayerWrap">
-                    <video id="tv3Video" controls playsinline style="width:100%;height:100%;background:#000;display:block;"></video>
-                    <div class="tv-iframe-overlay" id="tv3Overlay">
-                        <div style="font-size:2.2rem;margin-bottom:8px;">⚽</div>
-                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">TV3 SPORT</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Tap channel untuk mulai streaming</div>
-                    </div>
-                </div>
-
-                <!-- Now Playing Badge -->
-                <div id="tv3NowBadge" style="display:none;margin:8px 0;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);border-radius:20px;padding:4px 12px;font-size:0.62rem;font-weight:700;color:#4ade80;letter-spacing:1px;">🔴 <span id="tv3BadgeName">-</span></div>
-
-                <!-- Category Tabs -->
-                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-top:10px;" id="tv3CatBar">
-                    <button class="fs-cat-btn active" onclick="loadTv3Cat('event',this)">🔴 Event</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('indonesia',this)">🇮🇩 Indonesia</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('sport',this)">⚽ Sports</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('asia',this)">🌏 Asia</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('movies',this)">🎬 Movies</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('news',this)">📰 News</button>
-                    <button class="fs-cat-btn" onclick="loadTv3Cat('other',this)">📺 Lainnya</button>
-                </div>
-
-                <!-- Channel List -->
-                <div id="tv3List" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;"></div>
-
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV3 SPORT</p>
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV1</p>
             </div>
 
             <!-- ===== PANE: WORLD (full iframe) ===== -->
@@ -1799,52 +1680,39 @@
                 </div>
             </div>
 
-            <!-- ===== PANE: TV4 — BOLA DONG LIVE (FIFA World Cup 2026) ===== -->
-            <div class="tv-subtab-pane" id="pane-tv4" style="padding:0 14px 24px;">
+                        <!-- ===== PANE: TV4 — SPORT (BOLA DONG LIVE + LIVESCORE) ===== -->
+            <div class="tv-subtab-pane" id="pane-tv4" style="padding:0;">
 
-                <!-- Header -->
-                <div style="background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(15,23,42,0.95));border-bottom:1px solid rgba(239,68,68,0.25);padding:12px 16px;margin:0 -14px 14px;display:flex;align-items:center;gap:10px;">
-                    <div style="font-size:1.6rem;">⚽</div>
-                    <div>
-                        <div style="font-size:0.6rem;letter-spacing:3px;color:#f87171;font-weight:700;text-transform:uppercase;">FIFA WORLD CUP 2026</div>
-                        <div style="font-size:0.9rem;font-weight:900;color:#fff;letter-spacing:1px;">JADWAL & LIVE STREAMING</div>
-                    </div>
-                    <div id="tv4LiveDot" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:0.6rem;color:#4ade80;font-weight:700;">
-                        <span style="width:7px;height:7px;background:#4ade80;border-radius:50%;animation:tv4pulse 1.5s infinite;"></span>LIVE UPDATE
-                    </div>
+                <!-- Internal sub-tabs: Live Streaming vs Livescore -->
+                <div style="display:flex;gap:6px;padding:12px 14px 8px;background:rgba(2,6,23,0.6);">
+                    <button class="fs-cat-btn active" id="tv4SubLive" onclick="tv4ShowSub('live', this)" style="flex:1;text-align:center;">📡 Live Streaming</button>
+                    <button class="fs-cat-btn" id="tv4SubScore" onclick="tv4ShowSub('score', this)" style="flex:1;text-align:center;">📊 Livescore</button>
                 </div>
 
-                <!-- Filter Tabs -->
-                <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none;" id="tv4FilterBar">
-                    <button class="fs-cat-btn active" onclick="tv4Filter('all',this)">🌍 Semua</button>
-                    <button class="fs-cat-btn" onclick="tv4Filter('live',this)">🔴 Live</button>
-                    <button class="fs-cat-btn" onclick="tv4Filter('today',this)">📅 Hari Ini</button>
-                    <button class="fs-cat-btn" onclick="tv4Filter('upcoming',this)">⏳ Mendatang</button>
-                    <button class="fs-cat-btn" onclick="tv4Filter('finished',this)">✅ Selesai</button>
+                <!-- Live Streaming iframe (boladong) -->
+                <div id="tv4PaneLive" style="position:relative;width:100%;height:calc(100vh - 175px);min-height:480px;background:#000;">
+                    <iframe
+                        id="tv4LiveIframe"
+                        src="https://wv7cg5hp.boladong.live/"
+                        allowfullscreen
+                        allow="autoplay; encrypted-media; fullscreen"
+                        scrolling="yes"
+                        style="width:100%;height:100%;border:none;display:block;"
+                    ></iframe>
                 </div>
 
-                <!-- Last updated -->
-                <div style="font-size:0.58rem;color:#334155;margin-bottom:10px;text-align:right;" id="tv4UpdateTime"></div>
-
-                <!-- Match list -->
-                <div id="tv4MatchList" style="display:flex;flex-direction:column;gap:8px;"></div>
-
-                <!-- Streaming modal backdrop -->
-                <div id="tv4Modal" onclick="tv4CloseModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;"></div>
-                <!-- Streaming modal box -->
-                <div id="tv4ModalBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:rgba(10,15,28,0.98);border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:18px;width:92vw;max-width:480px;max-height:85vh;overflow-y:auto;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                        <div id="tv4ModalTitle" style="font-size:0.85rem;font-weight:900;color:#fff;"></div>
-                        <button onclick="tv4CloseModal()" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.75rem;">✕ Tutup</button>
-                    </div>
-                    <div id="tv4ModalLinks" style="display:flex;flex-direction:column;gap:8px;"></div>
-                    <p style="font-size:0.55rem;color:#334155;margin-top:12px;text-align:center;">Link streaming mungkin memerlukan verifikasi atau VPN</p>
+                <!-- Livescore iframe (lazy-loaded, updates every day automatically) -->
+                <div id="tv4PaneScore" style="display:none;position:relative;width:100%;height:calc(100vh - 175px);min-height:480px;background:#000;">
+                    <iframe
+                        id="tv4ScoreIframe"
+                        src=""
+                        allowfullscreen
+                        allow="autoplay; encrypted-media; fullscreen"
+                        scrolling="yes"
+                        style="width:100%;height:100%;border:none;display:block;"
+                    ></iframe>
                 </div>
 
-                <div id="tv4RefreshBar" style="margin-top:18px;text-align:center;">
-                    <button onclick="tv4Init()" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:20px;padding:8px 20px;font-size:0.7rem;cursor:pointer;font-weight:700;">🔄 Refresh Data</button>
-                </div>
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV4 · PIALA DUNIA 2026</p>
             </div>
 
         </div>
@@ -1884,364 +1752,16 @@
             document.querySelectorAll('.tv-subtab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('pane-' + paneId).classList.add('active');
             btnEl.classList.add('active');
-
-            // Lazy-load IPTV-org library the first time TV2 is opened
-            if (paneId === 'tv2' && tv2AllChannels.length === 0) {
-                loadTv2Playlist('id');
-            }
-            // Load TV3 channel list the first time TV3 is opened
-            if (paneId === 'tvSport' && document.getElementById('tv3List').children.length === 0) {
-                loadTv3Cat('event', document.querySelector('#tv3CatBar .fs-cat-btn'));
-            }
-            // Auto-load TV4 the first time it's opened
-            if (paneId === 'tv4') { tv4Init(); }
         }
 
+                // =============================================
+        // FREEDOM SYNDICATE TV1 — GABUNGAN NASIONAL + IPTV-ORG + SPORT + URL SAYA
         // =============================================
-        // TV4 — BOLA DONG / FIFA WORLD CUP 2026
-        // =============================================
+        let tv1AllChannels = [];
+        let tv1Hls = null;
+        let tv1CurrentGenre = 'nasional';
 
-        // Full WC 2026 schedule (WIB, UTC+7). iso = "YYYY-MM-DDTHH:MM" WIB
-        const TV4_MATCHES = [
-          // ── GRUP A ──────────────────────────────────
-          {id:"a1", grup:"A", iso:"2026-06-12T13:00", home:"Meksiko",      away:"Afrika Selatan",     score:"1-0",  status:"done"},
-          {id:"a2", grup:"A", iso:"2026-06-12T16:00", home:"Korea Selatan",away:"Rep. Ceko",           score:"1-2",  status:"done"},
-          {id:"a3", grup:"A", iso:"2026-06-18T23:00", home:"Rep. Ceko",    away:"Afrika Selatan",     score:"",     status:"sched"},
-          {id:"a4", grup:"A", iso:"2026-06-19T08:00", home:"Meksiko",      away:"Korea Selatan",       score:"",     status:"sched"},
-          {id:"a5", grup:"A", iso:"2026-06-25T08:00", home:"Rep. Ceko",    away:"Meksiko",             score:"",     status:"sched"},
-          {id:"a6", grup:"A", iso:"2026-06-25T08:00", home:"Afrika Selatan",away:"Korea Selatan",      score:"",     status:"sched"},
-          // ── GRUP B ──────────────────────────────────
-          {id:"b1", grup:"B", iso:"2026-06-13T02:00", home:"Kanada",       away:"Bosnia-Herzegovina",  score:"1-1",  status:"done"},
-          {id:"b2", grup:"B", iso:"2026-06-14T??:??", home:"Qatar",        away:"Swiss",               score:"1-1",  status:"done"},
-          {id:"b3", grup:"B", iso:"2026-06-19T02:00", home:"Swiss",        away:"Bosnia-Herzegovina",  score:"",     status:"sched"},
-          {id:"b4", grup:"B", iso:"2026-06-19T05:00", home:"Kanada",       away:"Qatar",               score:"",     status:"sched"},
-          {id:"b5", grup:"B", iso:"2026-06-25T02:00", home:"Swiss",        away:"Kanada",              score:"",     status:"sched"},
-          {id:"b6", grup:"B", iso:"2026-06-25T02:00", home:"Bosnia-Herzegovina",away:"Qatar",          score:"",     status:"sched"},
-          // ── GRUP C ──────────────────────────────────
-          {id:"c1", grup:"C", iso:"2026-06-14T02:00", home:"Brasil",       away:"Maroko",              score:"1-1",  status:"done"},
-          {id:"c2", grup:"C", iso:"2026-06-14T05:00", home:"Haiti",        away:"Skotlandia",          score:"0-1",  status:"done"},
-          {id:"c3", grup:"C", iso:"2026-06-20T05:00", home:"Skotlandia",   away:"Maroko",              score:"",     status:"sched"},
-          {id:"c4", grup:"C", iso:"2026-06-20T08:00", home:"Brasil",       away:"Haiti",               score:"",     status:"sched"},
-          {id:"c5", grup:"C", iso:"2026-06-25T05:00", home:"Skotlandia",   away:"Brasil",              score:"",     status:"sched"},
-          {id:"c6", grup:"C", iso:"2026-06-25T05:00", home:"Maroko",       away:"Haiti",               score:"",     status:"sched"},
-          // ── GRUP D ──────────────────────────────────
-          {id:"d1", grup:"D", iso:"2026-06-13T??:??", home:"Amerika Serikat",away:"Paraguay",          score:"4-1",  status:"done"},
-          {id:"d2", grup:"D", iso:"2026-06-14T??:??", home:"Australia",    away:"Turki",               score:"2-0",  status:"done"},
-          {id:"d3", grup:"D", iso:"2026-06-20T02:00", home:"Amerika Serikat",away:"Australia",         score:"",     status:"sched"},
-          {id:"d4", grup:"D", iso:"2026-06-20T11:00", home:"Turki",        away:"Paraguay",            score:"",     status:"sched"},
-          {id:"d5", grup:"D", iso:"2026-06-26T09:00", home:"Turki",        away:"Amerika Serikat",     score:"",     status:"sched"},
-          {id:"d6", grup:"D", iso:"2026-06-26T09:00", home:"Paraguay",     away:"Australia",           score:"",     status:"sched"},
-          // ── GRUP E ──────────────────────────────────
-          {id:"e1", grup:"E", iso:"2026-06-14T??:??", home:"Jerman",       away:"Curacao",             score:"7-1",  status:"done"},
-          {id:"e2", grup:"E", iso:"2026-06-14T06:00", home:"Pantai Gading",away:"Ekuador",             score:"",     status:"done"},
-          {id:"e3", grup:"E", iso:"2026-06-21T03:00", home:"Jerman",       away:"Pantai Gading",       score:"",     status:"sched"},
-          {id:"e4", grup:"E", iso:"2026-06-21T07:00", home:"Ekuador",      away:"Curaçao",             score:"",     status:"sched"},
-          {id:"e5", grup:"E", iso:"2026-06-26T03:00", home:"Curaçao",      away:"Pantai Gading",       score:"",     status:"sched"},
-          {id:"e6", grup:"E", iso:"2026-06-26T03:00", home:"Ekuador",      away:"Jerman",              score:"",     status:"sched"},
-          // ── GRUP F ──────────────────────────────────
-          {id:"f1", grup:"F", iso:"2026-06-14T??:??", home:"Belanda",      away:"Jepang",              score:"2-2",  status:"done"},
-          {id:"f2", grup:"F", iso:"2026-06-14T09:00", home:"Swedia",       away:"Tunisia",             score:"",     status:"done"},
-          {id:"f3", grup:"F", iso:"2026-06-21T01:00", home:"Belanda",      away:"Swedia",              score:"",     status:"sched"},
-          {id:"f4", grup:"F", iso:"2026-06-21T11:00", home:"Tunisia",      away:"Jepang",              score:"",     status:"sched"},
-          {id:"f5", grup:"F", iso:"2026-06-26T06:00", home:"Jepang",       away:"Swedia",              score:"",     status:"sched"},
-          {id:"f6", grup:"F", iso:"2026-06-26T06:00", home:"Tunisia",      away:"Belanda",             score:"",     status:"sched"},
-          // ── GRUP G ──────────────────────────────────
-          {id:"g1", grup:"G", iso:"2026-06-16T02:00", home:"Belgia",       away:"Mesir",               score:"",     status:"done"},
-          {id:"g2", grup:"G", iso:"2026-06-16T08:00", home:"Iran",         away:"Selandia Baru",       score:"",     status:"done"},
-          {id:"g3", grup:"G", iso:"2026-06-22T02:00", home:"Belgia",       away:"Iran",                score:"",     status:"sched"},
-          {id:"g4", grup:"G", iso:"2026-06-22T08:00", home:"Selandia Baru",away:"Mesir",              score:"",     status:"sched"},
-          {id:"g5", grup:"G", iso:"2026-06-27T10:00", home:"Mesir",        away:"Iran",                score:"",     status:"sched"},
-          {id:"g6", grup:"G", iso:"2026-06-27T10:00", home:"Selandia Baru",away:"Belgia",             score:"",     status:"sched"},
-          // ── GRUP H ──────────────────────────────────
-          {id:"h1", grup:"H", iso:"2026-06-15T23:00", home:"Spanyol",      away:"Tanjung Verde",       score:"",     status:"done"},
-          {id:"h2", grup:"H", iso:"2026-06-16T05:00", home:"Arab Saudi",   away:"Uruguay",             score:"",     status:"done"},
-          {id:"h3", grup:"H", iso:"2026-06-22T23:00", home:"Spanyol",      away:"Arab Saudi",          score:"",     status:"sched"},
-          {id:"h4", grup:"H", iso:"2026-06-23T05:00", home:"Uruguay",      away:"Tanjung Verde",       score:"",     status:"sched"},
-          {id:"h5", grup:"H", iso:"2026-06-27T07:00", home:"Tanjung Verde",away:"Arab Saudi",          score:"",     status:"sched"},
-          {id:"h6", grup:"H", iso:"2026-06-27T07:00", home:"Uruguay",      away:"Spanyol",             score:"",     status:"sched"},
-          // ── GRUP I ──────────────────────────────────
-          {id:"i1", grup:"I", iso:"2026-06-17T02:00", home:"Prancis",      away:"Senegal",             score:"",     status:"done"},
-          {id:"i2", grup:"I", iso:"2026-06-17T05:00", home:"Irak",         away:"Norwegia",            score:"",     status:"done"},
-          {id:"i3", grup:"I", iso:"2026-06-23T04:00", home:"Prancis",      away:"Irak",                score:"",     status:"sched"},
-          {id:"i4", grup:"I", iso:"2026-06-23T07:00", home:"Norwegia",     away:"Senegal",             score:"",     status:"sched"},
-          {id:"i5", grup:"I", iso:"2026-06-27T02:00", home:"Norwegia",     away:"Prancis",             score:"",     status:"sched"},
-          {id:"i6", grup:"I", iso:"2026-06-27T02:00", home:"Senegal",      away:"Irak",                score:"",     status:"sched"},
-          // ── GRUP J ──────────────────────────────────
-          {id:"j1", grup:"J", iso:"2026-06-17T08:00", home:"Argentina",    away:"Aljazair",            score:"",     status:"done"},
-          {id:"j2", grup:"J", iso:"2026-06-17T11:00", home:"Austria",      away:"Yordania",            score:"",     status:"done"},
-          {id:"j3", grup:"J", iso:"2026-06-22T01:00", home:"Argentina",    away:"Austria",             score:"",     status:"sched"},
-          {id:"j4", grup:"J", iso:"2026-06-22T10:00", home:"Yordania",     away:"Aljazair",            score:"",     status:"sched"},
-          {id:"j5", grup:"J", iso:"2026-06-28T09:00", home:"Aljazair",     away:"Austria",             score:"",     status:"sched"},
-          {id:"j6", grup:"J", iso:"2026-06-28T09:00", home:"Yordania",     away:"Argentina",           score:"",     status:"sched"},
-          // ── GRUP K ──────────────────────────────────
-          {id:"k1", grup:"K", iso:"2026-06-18T00:00", home:"Portugal",     away:"Kongo",               score:"",     status:"done"},
-          {id:"k2", grup:"K", iso:"2026-06-18T10:00", home:"Uzbekistan",   away:"Kolombia",            score:"",     status:"done"},
-          {id:"k3", grup:"K", iso:"2026-06-24T00:00", home:"Portugal",     away:"Uzbekistan",          score:"",     status:"sched"},
-          {id:"k4", grup:"K", iso:"2026-06-24T10:00", home:"Kolombia",     away:"Kongo",               score:"",     status:"sched"},
-          {id:"k5", grup:"K", iso:"2026-06-28T06:30", home:"Kolombia",     away:"Portugal",            score:"",     status:"sched"},
-          {id:"k6", grup:"K", iso:"2026-06-28T06:30", home:"Kongo",        away:"Uzbekistan",          score:"",     status:"sched"},
-          // ── GRUP L ──────────────────────────────────
-          {id:"l1", grup:"L", iso:"2026-06-18T03:00", home:"Inggris",      away:"Kroasia",             score:"4-2",  status:"done"},
-          {id:"l2", grup:"L", iso:"2026-06-18T06:00", home:"Ghana",        away:"Panama",              score:"",     status:"done"},
-          {id:"l3", grup:"L", iso:"2026-06-24T03:00", home:"Inggris",      away:"Ghana",               score:"",     status:"sched"},
-          {id:"l4", grup:"L", iso:"2026-06-24T06:00", home:"Panama",       away:"Kroasia",             score:"",     status:"sched"},
-          {id:"l5", grup:"L", iso:"2026-06-28T04:00", home:"Kroasia",      away:"Ghana",               score:"",     status:"sched"},
-          {id:"l6", grup:"L", iso:"2026-06-28T04:00", home:"Panama",       away:"Inggris",             score:"",     status:"sched"},
-        ];
-
-        // Streaming sources for each match
-        const TV4_STREAMS = {
-          default: [
-            { label:"📺 TVRI Sport (Official)", url:"https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8", type:"hls" },
-            { label:"🌐 BolaDong Live", url:"https://wv7cg5hp.boladong.live/", type:"web" },
-            { label:"📡 TVRI Nasional HLS", url:"https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8", type:"hls" },
-            { label:"🎯 Trans TV", url:"https://video.detik.com/transtv/smil:transtv.smil/playlist.m3u8", type:"hls" },
-            { label:"📻 CNN Indonesia", url:"https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/playlist.m3u8", type:"hls" },
-          ]
-        };
-
-        // Emoji flags
-        const TV4_FLAGS = {
-          "Meksiko":"🇲🇽","Afrika Selatan":"🇿🇦","Korea Selatan":"🇰🇷","Rep. Ceko":"🇨🇿",
-          "Kanada":"🇨🇦","Bosnia-Herzegovina":"🇧🇦","Qatar":"🇶🇦","Swiss":"🇨🇭",
-          "Brasil":"🇧🇷","Maroko":"🇲🇦","Haiti":"🇭🇹","Skotlandia":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-          "Amerika Serikat":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turki":"🇹🇷",
-          "Jerman":"🇩🇪","Curacao":"🇨🇼","Curaçao":"🇨🇼","Pantai Gading":"🇨🇮","Ekuador":"🇪🇨",
-          "Belanda":"🇳🇱","Jepang":"🇯🇵","Swedia":"🇸🇪","Tunisia":"🇹🇳",
-          "Belgia":"🇧🇪","Mesir":"🇪🇬","Iran":"🇮🇷","Selandia Baru":"🇳🇿",
-          "Spanyol":"🇪🇸","Tanjung Verde":"🇨🇻","Arab Saudi":"🇸🇦","Uruguay":"🇺🇾",
-          "Prancis":"🇫🇷","Senegal":"🇸🇳","Irak":"🇮🇶","Norwegia":"🇳🇴",
-          "Argentina":"🇦🇷","Aljazair":"🇩🇿","Austria":"🇦🇹","Yordania":"🇯🇴",
-          "Portugal":"🇵🇹","Kongo":"🇨🇩","Uzbekistan":"🇺🇿","Kolombia":"🇨🇴",
-          "Inggris":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Kroasia":"🇭🇷","Ghana":"🇬🇭","Panama":"🇵🇦",
-        };
-
-        let tv4CurrentFilter = 'all';
-        let tv4HlsPlayer = null;
-
-        function tv4GetStatus(m) {
-            const now = new Date();
-            // Parse iso as WIB (UTC+7)
-            if (m.status === 'done') return 'done';
-            if (!m.iso.includes('?')) {
-                const [datePart, timePart] = m.iso.split('T');
-                const [h, min] = timePart.split(':').map(Number);
-                // Build WIB date → convert to UTC
-                const [y, mo, d] = datePart.split('-').map(Number);
-                const utcMs = Date.UTC(y, mo-1, d, h-7, min, 0);
-                const diff = now.getTime() - utcMs;
-                if (diff > 0 && diff < 115*60*1000) return 'live';   // 115 min window
-                if (diff >= 115*60*1000) return 'done';
-                return 'sched';
-            }
-            return m.status || 'sched';
-        }
-
-        function tv4FormatDate(iso) {
-            if (iso.includes('?')) return '—';
-            const [datePart, timePart] = iso.split('T');
-            const [y, mo, d] = datePart.split('-').map(Number);
-            const [h, min] = timePart.split(':');
-            const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-            // WIB date object
-            const wibDate = new Date(Date.UTC(y, mo-1, d, parseInt(h)-7, parseInt(min)));
-            const dayName = days[wibDate.getUTCDay()];
-            const dayNum = String(wibDate.getUTCDate()).padStart(2,'0');
-            const monName = months[wibDate.getUTCMonth()];
-            return `${dayName} ${dayNum} ${monName} · ${h}:${min} WIB`;
-        }
-
-        function tv4IsToday(iso) {
-            if (iso.includes('?')) return false;
-            const [datePart, timePart] = iso.split('T');
-            const [y, mo, d] = datePart.split('-').map(Number);
-            const [h] = timePart.split(':').map(Number);
-            const utcMs = Date.UTC(y, mo-1, d, h-7, 0);
-            const wibNow = new Date(Date.now() + 7*3600*1000);
-            const wibMatch = new Date(utcMs + 7*3600*1000);
-            return wibNow.getUTCFullYear() === wibMatch.getUTCFullYear() &&
-                   wibNow.getUTCMonth() === wibMatch.getUTCMonth() &&
-                   wibNow.getUTCDate() === wibMatch.getUTCDate();
-        }
-
-        function tv4Filter(mode, btnEl) {
-            tv4CurrentFilter = mode;
-            document.querySelectorAll('#tv4FilterBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            tv4Render();
-        }
-
-        function tv4Render() {
-            const list = document.getElementById('tv4MatchList');
-            list.innerHTML = '';
-
-            let filtered = TV4_MATCHES.map(m => ({...m, _status: tv4GetStatus(m)}));
-
-            if (tv4CurrentFilter === 'live') filtered = filtered.filter(m => m._status === 'live');
-            else if (tv4CurrentFilter === 'today') filtered = filtered.filter(m => tv4IsToday(m.iso));
-            else if (tv4CurrentFilter === 'upcoming') filtered = filtered.filter(m => m._status === 'sched');
-            else if (tv4CurrentFilter === 'finished') filtered = filtered.filter(m => m._status === 'done');
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<div style="text-align:center;padding:40px 0;color:#475569;font-size:0.8rem;">Tidak ada pertandingan untuk filter ini.</div>`;
-                return;
-            }
-
-            // Group by date
-            const byDate = {};
-            filtered.forEach(m => {
-                const dateKey = m.iso.split('T')[0];
-                if (!byDate[dateKey]) byDate[dateKey] = [];
-                byDate[dateKey].push(m);
-            });
-
-            const dateKeys = Object.keys(byDate).sort();
-            dateKeys.forEach(dk => {
-                // Date header
-                const [y,mo,d] = dk.split('-').map(Number);
-                const dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-                const months  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                const dateObj = new Date(Date.UTC(y, mo-1, d));
-                const headerEl = document.createElement('div');
-                headerEl.style.cssText = 'font-size:0.65rem;font-weight:800;letter-spacing:2px;color:var(--primary);padding:6px 0 4px;text-transform:uppercase;border-bottom:1px solid rgba(56,189,248,0.15);margin-bottom:6px;';
-                headerEl.textContent = `${dayNames[dateObj.getUTCDay()]}, ${d} ${months[mo-1]} ${y}`;
-                list.appendChild(headerEl);
-
-                byDate[dk].forEach(m => {
-                    const st = m._status;
-                    const f_home = TV4_FLAGS[m.home] || '🏳️';
-                    const f_away = TV4_FLAGS[m.away] || '🏳️';
-                    const timePart = m.iso.includes('?') ? '—' : m.iso.split('T')[1].substring(0,5) + ' WIB';
-
-                    let statusBadge = '';
-                    if (st === 'live') {
-                        statusBadge = `<span style="background:#ef4444;color:#fff;font-size:0.5rem;font-weight:900;padding:2px 7px;border-radius:20px;letter-spacing:1px;animation:tv4pulse 1s infinite;">● LIVE</span>`;
-                    } else if (st === 'done') {
-                        statusBadge = `<span style="background:rgba(74,222,128,0.1);color:#4ade80;font-size:0.5rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(74,222,128,0.3);">✓ SELESAI</span>`;
-                    } else {
-                        statusBadge = `<span style="background:rgba(56,189,248,0.08);color:#38bdf8;font-size:0.5rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(56,189,248,0.2);">⏳ ${timePart}</span>`;
-                    }
-
-                    const scoreHTML = st === 'done' && m.score
-                        ? `<div style="font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:2px;">${m.score}</div>`
-                        : st === 'live'
-                        ? `<div style="font-size:1.1rem;font-weight:900;color:#ef4444;">${m.score||'•-•'}</div>`
-                        : `<div style="font-size:0.7rem;color:#475569;font-weight:700;">VS</div>`;
-
-                    const card = document.createElement('div');
-                    card.style.cssText = 'background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.12);border-radius:12px;padding:12px;margin-bottom:2px;transition:all 0.2s;cursor:pointer;';
-                    if (st === 'live') card.style.borderColor = 'rgba(239,68,68,0.45)';
-                    if (st === 'live') card.style.background = 'rgba(239,68,68,0.05)';
-
-                    card.innerHTML = `
-                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                        <span style="font-size:0.55rem;color:#475569;font-weight:700;letter-spacing:1px;">GRUP ${m.grup} · FIFA WORLD CUP 2026</span>
-                        ${statusBadge}
-                      </div>
-                      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
-                        <div style="flex:1;text-align:right;">
-                          <div style="font-size:1.4rem;">${f_home}</div>
-                          <div style="font-size:0.7rem;font-weight:700;color:#e2e8f0;margin-top:2px;line-height:1.2;">${m.home}</div>
-                        </div>
-                        <div style="flex-shrink:0;text-align:center;min-width:54px;">${scoreHTML}</div>
-                        <div style="flex:1;text-align:left;">
-                          <div style="font-size:1.4rem;">${f_away}</div>
-                          <div style="font-size:0.7rem;font-weight:700;color:#e2e8f0;margin-top:2px;line-height:1.2;">${m.away}</div>
-                        </div>
-                      </div>
-                      <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;">
-                        <button onclick="tv4OpenStream(event,'${m.id}','${m.home.replace(/'/g,"\\'")} vs ${m.away.replace(/'/g,"\\'")}','${st}')" style="background:${st==='live'?'rgba(239,68,68,0.18)':'rgba(56,189,248,0.1)'};border:1px solid ${st==='live'?'rgba(239,68,68,0.4)':'rgba(56,189,248,0.25)'};color:${st==='live'?'#f87171':'var(--primary)'};border-radius:20px;padding:6px 16px;font-size:0.65rem;font-weight:700;cursor:pointer;">
-                          ${st==='live'?'🔴 Tonton Live':'📺 Link Streaming'}
-                        </button>
-                      </div>`;
-
-                    card.onmouseenter = () => { card.style.borderColor = st==='live'?'rgba(239,68,68,0.7)':'rgba(56,189,248,0.4)'; card.style.transform='translateY(-1px)'; };
-                    card.onmouseleave = () => { card.style.borderColor = st==='live'?'rgba(239,68,68,0.45)':'rgba(56,189,248,0.12)'; card.style.transform=''; };
-                    list.appendChild(card);
-                });
-            });
-
-            // Update time
-            const now = new Date();
-            const wib = new Date(now.getTime() + 7*3600000);
-            document.getElementById('tv4UpdateTime').textContent =
-                `Update: ${String(wib.getUTCHours()).padStart(2,'0')}:${String(wib.getUTCMinutes()).padStart(2,'0')} WIB`;
-        }
-
-        function tv4OpenStream(e, matchId, title, status) {
-            e.stopPropagation();
-            document.getElementById('tv4ModalTitle').innerHTML = `⚽ ${title}`;
-            const streams = TV4_STREAMS[matchId] || TV4_STREAMS['default'];
-            const linksDiv = document.getElementById('tv4ModalLinks');
-            linksDiv.innerHTML = '';
-            streams.forEach(s => {
-                const btn = document.createElement('button');
-                btn.style.cssText = 'display:flex;align-items:center;gap:10px;width:100%;background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;text-align:left;';
-                btn.innerHTML = `<div style="flex:1;"><div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;">${s.label}</div><div style="font-size:0.6rem;color:#475569;margin-top:2px;">${s.type==='hls'?'📡 HLS Stream':'🌐 Web Page'}</div></div><div style="color:var(--primary);font-size:0.8rem;">▶</div>`;
-                btn.onmouseenter = () => btn.style.borderColor = 'rgba(56,189,248,0.5)';
-                btn.onmouseleave = () => btn.style.borderColor = 'rgba(56,189,248,0.2)';
-                if (s.type === 'hls') {
-                    btn.onclick = () => { tv4PlayHls(s.url, title, s.label); tv4CloseModal(); };
-                } else {
-                    btn.onclick = () => window.open(s.url, '_blank');
-                }
-                linksDiv.appendChild(btn);
-            });
-            document.getElementById('tv4Modal').style.display = 'flex';
-            document.getElementById('tv4ModalBox').style.display = 'block';
-        }
-
-        function tv4CloseModal() {
-            document.getElementById('tv4Modal').style.display = 'none';
-            document.getElementById('tv4ModalBox').style.display = 'none';
-        }
-
-        // Inject mini player at top of TV4 for HLS
-        function tv4PlayHls(url, matchTitle, sourceLabel) {
-            // Create or reuse mini player
-            let playerWrap = document.getElementById('tv4MiniPlayer');
-            if (!playerWrap) {
-                playerWrap = document.createElement('div');
-                playerWrap.id = 'tv4MiniPlayer';
-                playerWrap.style.cssText = 'position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px;';
-                const pane = document.getElementById('pane-tv4');
-                pane.insertBefore(playerWrap, pane.querySelector('#tv4MatchList').previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling);
-            }
-            playerWrap.innerHTML = `
-              <video id="tv4HlsVid" controls playsinline style="width:100%;height:100%;background:#000;"></video>
-              <div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.7);border-radius:8px;padding:4px 10px;font-size:0.6rem;color:#fff;font-weight:700;">⚽ ${matchTitle}</div>
-              <div style="position:absolute;top:8px;right:8px;font-size:0.55rem;color:#94a3b8;background:rgba(0,0,0,0.6);border-radius:6px;padding:3px 8px;">${sourceLabel}</div>
-              <button onclick="document.getElementById('tv4MiniPlayer').remove()" style="position:absolute;bottom:8px;right:8px;background:rgba(239,68,68,0.8);border:none;border-radius:6px;color:#fff;font-size:0.6rem;padding:4px 8px;cursor:pointer;">✕ Tutup</button>`;
-            const video = document.getElementById('tv4HlsVid');
-            if (tv4HlsPlayer) { tv4HlsPlayer.destroy(); tv4HlsPlayer = null; }
-            if (window.Hls && Hls.isSupported()) {
-                tv4HlsPlayer = new Hls();
-                tv4HlsPlayer.loadSource(url);
-                tv4HlsPlayer.attachMedia(video);
-                tv4HlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
-            } else {
-                video.src = url;
-                video.play().catch(()=>{});
-            }
-            playerWrap.scrollIntoView({behavior:'smooth', block:'start'});
-        }
-
-        function tv4Init() {
-            tv4Render();
-            // Auto-refresh every 60 sec to update live status
-            clearInterval(window._tv4RefreshTimer);
-            window._tv4RefreshTimer = setInterval(() => {
-                if (document.getElementById('pane-tv4').classList.contains('active')) tv4Render();
-            }, 60000);
-        }
-
-        // Inject pulse animation
-        const _tv4Style = document.createElement('style');
-        _tv4Style.textContent = '@keyframes tv4pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.3)}}';
-        document.head.appendChild(_tv4Style);
-        let tv2Hls = null;
-        let tv2AllChannels = [];
+        const TV1_NASIONAL = [{"name": "RCTI", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=", "group": "📡 TV Nasional"}, {"name": "GTV", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==", "group": "📡 TV Nasional"}, {"name": "iNEWS", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1", "group": "📡 TV Nasional"}, {"name": "MNCTV", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1", "group": "📡 TV Nasional"}, {"name": "IDX CHANNEL", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZpZHhjaGFubmVsLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=", "group": "📡 TV Nasional"}, {"name": "MNC NEWS", "url": "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZjZG4tbGl2ZXR2LXN0dWRpby5tZXR1YmUuaWQlMkZtbmNuZXdzLm0zdTgmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=", "group": "📡 TV Nasional"}, {"name": "TRANS 7", "url": "https://20.detik.com/watch/livestreaming-trans7", "group": "📡 TV Nasional"}, {"name": "TRANS TV", "url": "https://20.detik.com/watch/livestreaming-transtv", "group": "📡 TV Nasional"}, {"name": "CNN INDONESIA", "url": "https://www.cnnindonesia.com/tv/embed?ref=transmedia", "group": "📡 TV Nasional"}, {"name": "SCTV", "url": "https://m.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true&live_chat=false&mute=false&", "group": "📡 TV Nasional"}, {"name": "METRO TV", "url": "https://geo.dailymotion.com/player.html?video=k236ofBIxajxDiti8CY", "group": "📡 TV Nasional"}, {"name": "KOMPAS TV", "url": "https://geo.dailymotion.com/player.html?video=k46igSmSMGBIiWsXtWk", "group": "📡 TV Nasional"}, {"name": "BERITA SATU", "url": "https://beritasatu.tv/playstream.php", "group": "📡 TV Nasional"}];
 
         const TV2_PLAYLISTS = {
             id:            'https://iptv-org.github.io/iptv/countries/id.m3u',
@@ -2253,6 +1773,39 @@
             kids:          'https://iptv-org.github.io/iptv/categories/kids.m3u',
             documentary:   'https://iptv-org.github.io/iptv/categories/documentary.m3u',
             general:       'https://iptv-org.github.io/iptv/categories/general.m3u'
+        };
+
+        // genre -> IPTV-org playlist key(s)
+        const TV1_TV2_MAP = {
+            indonesia: ['id'],
+            sport: ['sports'],
+            movies: ['movies'],
+            news: ['news'],
+            entertainment: ['entertainment'],
+            music: ['music'],
+            kids: ['kids'],
+            documentary: ['documentary'],
+            general: ['general']
+        };
+
+        // genre -> tv3Data key(s)
+        const TV1_TV3_MAP = {
+            indonesia: ['indonesia'],
+            sport: ['sport', 'event'],
+            movies: ['movies'],
+            news: ['news'],
+            asia: ['asia'],
+            other: ['other']
+        };
+
+        const TV1_TV3_LABELS = {
+            event: '🔴 Event Live',
+            sport: '⚽ Sport',
+            indonesia: '🇮🇩 Indonesia (Sport)',
+            asia: '🌏 Asia',
+            movies: '🎬 Movies (Sport)',
+            news: '📰 News (Sport)',
+            other: '📺 Lainnya'
         };
 
         // Parse raw M3U playlist text into a list of channel objects
@@ -2281,54 +1834,87 @@
             return channels;
         }
 
-        // Fetch & load an IPTV-org playlist by key (country/category)
-        async function loadTv2Playlist(key, btnEl) {
-            document.querySelectorAll('#tv2CatBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
+        // Load a genre: combines TV1-nasional / IPTV-org / TV3-sport data sources into one unified list
+        async function loadTv1Genre(genre, btnEl) {
+            tv1CurrentGenre = genre;
+            document.querySelectorAll('#tv1GenreBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
 
-            const status = document.getElementById('tv2Status');
-            const groupsEl = document.getElementById('tv2Groups');
-            const searchBox = document.getElementById('tv2Search');
+            const searchWrap = document.getElementById('tv1SearchWrap');
+            const customForm = document.getElementById('tv1CustomForm');
+            const status = document.getElementById('tv1Status');
+            const groupsEl = document.getElementById('tv1Groups');
+            const searchBox = document.getElementById('tv1Search');
             if (searchBox) searchBox.value = '';
+
+            if (genre === 'custom') {
+                searchWrap.style.display = 'none';
+                customForm.style.display = 'block';
+                status.textContent = '';
+                groupsEl.innerHTML = '';
+                tv1RenderCustomHistory();
+                return;
+            }
+            customForm.style.display = 'none';
+            searchWrap.style.display = 'block';
 
             status.textContent = '⏳ Memuat daftar channel...';
             groupsEl.innerHTML = '';
+            tv1AllChannels = [];
 
-            try {
-                const res = await fetch(TV2_PLAYLISTS[key]);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const text = await res.text();
-                tv2AllChannels = parseM3U(text);
-
-                if (tv2AllChannels.length === 0) {
-                    status.textContent = 'Tidak ada channel ditemukan untuk kategori ini.';
-                    return;
-                }
-
-                status.textContent = `✅ ${tv2AllChannels.length} channel ditemukan — tap untuk play`;
-                renderTv2Groups(tv2AllChannels);
-            } catch (e) {
-                status.textContent = '⚠️ Gagal memuat daftar channel. Coba kategori lain atau cek koneksi.';
+            if (genre === 'nasional') {
+                tv1AllChannels = TV1_NASIONAL.map(ch => ({ name: ch.name, url: ch.url, group: ch.group, type: 'iframe' }));
+                status.textContent = `✅ ${tv1AllChannels.length} channel — tap untuk tonton`;
+                renderTv1Groups(tv1AllChannels);
+                return;
             }
+
+            // 1) Ambil dari data TV3 (statis, instan)
+            const tv3Keys = TV1_TV3_MAP[genre] || [];
+            tv3Keys.forEach(k => {
+                (tv3Data[k] || []).forEach(ch => {
+                    tv1AllChannels.push({ name: ch.name, url: ch.url, group: TV1_TV3_LABELS[k] || genre, type: ch.type === 'page' ? 'page' : 'hls' });
+                });
+            });
+
+            // 2) Ambil dari IPTV-org (fetch m3u)
+            const tv2Keys = TV1_TV2_MAP[genre] || [];
+            for (const key of tv2Keys) {
+                try {
+                    const res = await fetch(TV2_PLAYLISTS[key]);
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const text = await res.text();
+                    const parsed = parseM3U(text);
+                    parsed.forEach(ch => tv1AllChannels.push({ name: ch.name, url: ch.url, group: ch.group, logo: ch.logo, type: 'hls' }));
+                } catch (e) { /* lewati sumber yang gagal, lanjut sumber lain */ }
+            }
+
+            if (tv1AllChannels.length === 0) {
+                status.textContent = '⚠️ Tidak ada channel untuk genre ini. Coba genre lain atau cek koneksi.';
+                return;
+            }
+            status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan — tap untuk play`;
+            renderTv1Groups(tv1AllChannels);
         }
 
-        // Render channels grouped into collapsible accordions by genre/group-title
-        function renderTv2Groups(channels) {
-            const groupsEl = document.getElementById('tv2Groups');
+        // Render channels grouped into collapsible accordions
+        function renderTv1Groups(channels) {
+            const groupsEl = document.getElementById('tv1Groups');
             groupsEl.innerHTML = '';
 
             const groups = {};
             channels.forEach(ch => {
-                if (!groups[ch.group]) groups[ch.group] = [];
-                groups[ch.group].push(ch);
+                const g = ch.group || 'Lainnya';
+                if (!groups[g]) groups[g] = [];
+                groups[g].push(ch);
             });
 
             const sortedGroupNames = Object.keys(groups).sort((a, b) => a.localeCompare(b));
 
-            sortedGroupNames.forEach((groupName, idx) => {
+            sortedGroupNames.forEach(groupName => {
                 const acc = document.createElement('div');
                 acc.className = 'tv2-acc';
-                if (sortedGroupNames.length <= 3) acc.classList.add('open'); // auto-open if few groups (e.g. search results)
+                if (sortedGroupNames.length <= 4) acc.classList.add('open');
 
                 const header = document.createElement('div');
                 header.className = 'tv2-acc-header';
@@ -2345,7 +1931,7 @@
                 groups[groupName].forEach(ch => {
                     const item = document.createElement('div');
                     item.className = 'fs-ch-item';
-                    item.onclick = () => playTv2Channel(ch.url, ch.name, item);
+                    item.onclick = () => playTv1Channel(ch, item);
 
                     const logoHtml = ch.logo
                         ? `<img src="${ch.logo}" loading="lazy" onerror="this.parentElement.innerHTML='📺'">`
@@ -2355,7 +1941,7 @@
                         <div class="fs-ch-logo">${logoHtml}</div>
                         <div class="fs-ch-info">
                             <div class="fs-ch-name">${ch.name}</div>
-                            <div class="fs-ch-cat">${ch.group}</div>
+                            <div class="fs-ch-cat">${groupName}</div>
                         </div>
                         <div class="fs-ch-live">▶ PLAY</div>
                     `;
@@ -2369,75 +1955,155 @@
         }
 
         // Filter currently loaded channels by name/group as user types
-        function filterTv2Channels() {
-            const q = document.getElementById('tv2Search').value.toLowerCase().trim();
-            const status = document.getElementById('tv2Status');
+        function filterTv1Channels() {
+            const q = document.getElementById('tv1Search').value.toLowerCase().trim();
+            const status = document.getElementById('tv1Status');
 
             if (!q) {
-                status.textContent = `✅ ${tv2AllChannels.length} channel ditemukan — tap untuk play`;
-                renderTv2Groups(tv2AllChannels);
+                status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan — tap untuk play`;
+                renderTv1Groups(tv1AllChannels);
                 return;
             }
 
-            const filtered = tv2AllChannels.filter(ch =>
-                ch.name.toLowerCase().includes(q) || ch.group.toLowerCase().includes(q)
+            const filtered = tv1AllChannels.filter(ch =>
+                ch.name.toLowerCase().includes(q) || (ch.group || '').toLowerCase().includes(q)
             );
 
             status.textContent = `🔎 ${filtered.length} hasil untuk "${q}"`;
-            renderTv2Groups(filtered);
+            renderTv1Groups(filtered);
         }
 
-        // Play a channel stream using hls.js (for .m3u8) or native <video> playback
-        function playTv2Channel(url, name, itemEl) {
-            const video = document.getElementById('tv2Video');
-            const overlay = document.getElementById('tv2Overlay');
+        // Mainkan channel: iframe (embed page), hls (.m3u8 via hls.js/video), atau page (buka tab baru sbg fallback)
+        function playTv1Channel(ch, itemEl) {
+            const iframe = document.getElementById('tvIframe');
+            const video = document.getElementById('tv1Video');
+            const overlay = document.getElementById('tvOverlay');
             const badge = document.getElementById('tvNowBadge');
             const badgeName = document.getElementById('tvBadgeName');
 
             overlay.classList.add('hidden');
             if (badge) badge.style.display = 'block';
-            if (badgeName) badgeName.textContent = name;
+            if (badgeName) badgeName.textContent = ch.name;
 
-            document.querySelectorAll('#tv2Groups .fs-ch-item').forEach(c => c.classList.remove('playing'));
+            document.querySelectorAll('#tv1Groups .fs-ch-item').forEach(c => c.classList.remove('playing'));
             if (itemEl) itemEl.classList.add('playing');
 
-            if (tv2Hls) {
-                tv2Hls.destroy();
-                tv2Hls = null;
+            if (tv1Hls) { tv1Hls.destroy(); tv1Hls = null; }
+
+            if (ch.type === 'page') {
+                video.style.display = 'none';
+                iframe.style.display = 'none';
+                overlay.classList.remove('hidden');
+                overlay.innerHTML = `
+                    <div style="font-size:1.8rem;margin-bottom:10px;">🌐</div>
+                    <div style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:6px;">${ch.name}</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:12px;">Channel ini tidak bisa di-embed langsung</div>
+                    <button onclick="window.open('${ch.url}','_blank')" style="background:var(--primary);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;">▶ Buka Streaming</button>
+                `;
+                document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
             }
 
-            if (url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
-                tv2Hls = new Hls();
-                tv2Hls.loadSource(url);
-                tv2Hls.attachMedia(video);
-                tv2Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                tv2Hls.on(Hls.Events.ERROR, (event, data) => {
+            if (ch.type === 'iframe') {
+                video.style.display = 'none';
+                if (video.pause) video.pause();
+                iframe.style.display = 'block';
+                iframe.src = ch.url;
+                document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
+            // hls / direct video stream
+            iframe.style.display = 'none';
+            iframe.src = '';
+            video.style.display = 'block';
+
+            if (ch.url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
+                tv1Hls = new Hls();
+                tv1Hls.loadSource(ch.url);
+                tv1Hls.attachMedia(video);
+                tv1Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                tv1Hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        const status = document.getElementById('tv2Status');
-                        status.textContent = `⚠️ "${name}" gagal diputar (stream offline/error). Coba channel lain.`;
+                        document.getElementById('tv1Status').textContent = `⚠️ "${ch.name}" gagal diputar (stream offline/error). Coba channel lain.`;
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native HLS support (e.g. Safari/iOS)
-                video.src = url;
+                video.src = ch.url;
                 video.play().catch(() => {});
             } else {
-                video.src = url;
+                video.src = ch.url;
                 video.play().catch(() => {});
             }
 
-            // Scroll player into view (helps on mobile when picking from a long list)
-            document.getElementById('tv2PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        function renderChannels() {}
-        function filterKategori() {}
-        function fsPlayCh() {}
+        // --- Tab "URL Saya": pengunjung input link sendiri lalu langsung ditonton ---
+        function tv1GetCustomHistory() {
+            try { return JSON.parse(localStorage.getItem('fs_tv1_custom_urls') || '[]'); } catch (e) { return []; }
+        }
+        function tv1SaveCustomHistory(list) {
+            try { localStorage.setItem('fs_tv1_custom_urls', JSON.stringify(list.slice(0, 10))); } catch (e) {}
+        }
+        function tv1PlayCustomUrl() {
+            const urlInput = document.getElementById('tv1CustomUrl');
+            const nameInput = document.getElementById('tv1CustomName');
+            let url = urlInput.value.trim();
+            let name = nameInput.value.trim();
+            if (!url) { alert('Masukkan link URL terlebih dahulu ya.'); return; }
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            if (!name) name = 'Channel Saya';
+
+            const isHls = /\.m3u8(\?|$)/i.test(url);
+            playTv1Channel({ name, url, type: isHls ? 'hls' : 'iframe' }, null);
+
+            const history = tv1GetCustomHistory().filter(h => h.url !== url);
+            history.unshift({ name, url });
+            tv1SaveCustomHistory(history);
+            tv1RenderCustomHistory();
+
+            urlInput.value = '';
+            nameInput.value = '';
+        }
+        function tv1RenderCustomHistory() {
+            const wrap = document.getElementById('tv1CustomHistory');
+            wrap.innerHTML = '';
+            const history = tv1GetCustomHistory();
+            if (!history.length) return;
+
+            const label = document.createElement('div');
+            label.style.cssText = 'font-size:0.6rem;color:#64748b;margin-bottom:2px;';
+            label.textContent = 'RIWAYAT URL DI PERANGKAT INI';
+            wrap.appendChild(label);
+
+            history.forEach(h => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(15,23,42,0.6);border:1px solid rgba(241,196,15,0.15);border-radius:8px;cursor:pointer;';
+                const nameDiv = document.createElement('div');
+                nameDiv.style.cssText = 'flex:1;min-width:0;';
+                const nameLine = document.createElement('div');
+                nameLine.style.cssText = 'font-size:0.72rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+                nameLine.textContent = h.name;
+                const urlLine = document.createElement('div');
+                urlLine.style.cssText = 'font-size:0.55rem;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+                urlLine.textContent = h.url;
+                nameDiv.appendChild(nameLine);
+                nameDiv.appendChild(urlLine);
+                const playIcon = document.createElement('div');
+                playIcon.style.cssText = 'font-size:0.6rem;color:#f1c40f;font-weight:700;';
+                playIcon.textContent = '▶';
+                item.appendChild(nameDiv);
+                item.appendChild(playIcon);
+                item.onclick = () => playTv1Channel({ name: h.name, url: h.url, type: /\.m3u8(\?|$)/i.test(h.url) ? 'hls' : 'iframe' }, null);
+                wrap.appendChild(item);
+            });
+        }
 
         // =============================================
-        // TV3 — SPORT STREAMING
+        // TV3 — DATA SUMBER SPORT (dipakai genre Sport/Indonesia/Movies/News/Asia/Lainnya di TV1)
         // =============================================
-        let tv3Hls = null;
+let tv3Hls = null;
         let tv3CurrentCat = 'live';
 
         const tv3Data = {
@@ -2450,99 +2116,29 @@
             other: [{"name": "Earth Touch tv", "url": "https://autentic-adventure-earth-1-gb.lg.wurl.tv/playlist.m3u8"}, {"name": "Outdoor Channel", "url": "https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg00718-outdoorchannela-outdoortvnz-samsungnz/playlist.m3u8"}, {"name": "Dens Learning", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h236/02.m3u8"}, {"name": "MEKKAH HD", "url": "http://op-group1-swiftservesd-1.dens.tv/s/s28/index.m3u8"}, {"name": "FOX WEATHER", "url": "https://247wlive.foxweather.com/stream/index.m3u8"}, {"name": "RT DOCUMENTARY", "url": "https://rt-rtd.rttv.com/live/rtdoc/playlist.m3u8"}, {"name": "MOONBUG", "url": "https://moonbug-rokuus.amagi.tv/playlist.m3u8"}, {"name": "VTV", "url": "https://flv.intechmedia.net/live/ch107.m3u8"}, {"name": "4K Travel", "url": "https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/4k-travel-tv/82473a17-8b1c-4e67-9bcc-ca869209c26e/2.m3u8"}, {"name": "Dens Food Channel", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h221/02.m3u8"}, {"name": "Dens ShowBiz", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h244/01.m3u8"}, {"name": "Dens Life & Style", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h222/02.m3u8"}, {"name": "TV5 Monde Style", "url": "https://ott.tv5monde.com/Content/HLS/Live/channel(style1)/index.m3u8"}, {"name": "ABC AUSTRALIA TRV", "url": "https://abc-news-dmd-streams-1.akamaized.net/out/v1/abc83881886746b0802dc3e7ca2bc792/index.m3u8"}, {"name": "ARIRANG", "url": "https://amdlive-ch01-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/chunklist_b2256000_sleng.m3u8"}, {"name": "TV5 MONDE STYLE DENS", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h312/index.m3u8?app_type=web&userid=lite&chname=TV5MONDE_ASIE"}, {"name": "Catholic TV", "url": "https://catholictvhd-lh.akamaized.net/hls/live/2043390/CTVLiveHD/playlist_4.m3u8"}, {"name": "BAHANA RADIO MUSIC", "url": "https://5bf7b725107e5.streamlock.net/bahanaradio/bahanaradio/playlist.m3u8"}, {"name": "IMTV", "url": "https://5bf7b725107e5.streamlock.net/imtv/imtv/playlist.m3u8"}, {"name": "SPIRIT TV", "url": "https://cdnlive.myspirit.tv/LS-ATL-43240-2/index.m3u8"}, {"name": "24H K-POP TV", "url": "https://live.24hrkpop.com/hls/3/stream.m3u8"}, {"name": "RELOAD MUSIC", "url": "http://web.onair-radio.eu:1935/video/video/chunklist_w1235825277.m3u8"}, {"name": "DEEP BLUE", "url": "https://rocket-tv.online/redtube/randomyt.m3u8?id=UCO0QmlhBypNZ62weotFyjig"}, {"name": "MTV BIGGEST POP", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d14fd1a252d35decbc4080c/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV SPANKIN NEW", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d14fdb8ca91eedee1633117/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV ROCKS", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/624303598e45140007d765c1/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV FLOW LATINO", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d3609cd6a6c78d7672f2a81/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "NOW ROCK", "url": "https://lightning-now90s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "NEW KPOP", "url": "https://8fd4e0b07d96480eb52382739cc8acce.mediatailor.us-east-1.amazonaws.com/v1/manifest/44f73ba4d03e9607dcd9bebdcb8494d86964f1d8/Samsung_NewKID/76da8a34-9b9c-4920-b86f-934fbdaa2fcf/2.m3u8"}, {"name": "DANCE TV", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h250/02.m3u8"}, {"name": "K-PopTV", "url": "https://wahyu1ptv.pages.dev/kPopTV.m3u8"}, {"name": "K-ContentsVoyage", "url": "https://wahyu1ptv.pages.dev/K-ContentsVoyage.m3u8"}, {"name": "K-PopShowChampion", "url": "https://wahyu1ptv.pages.dev/kPopCV.m3u8"}, {"name": "K-PopByCjENM", "url": "https://wahyu1ptv.pages.dev/kPopCjENM.m3u8"}, {"name": "IbizaTV", "url": "https://wahyu1ptv.pages.dev/Ibiza.m3u8"}, {"name": "FreshDance", "url": "https://wahyu1ptv.pages.dev/FreshDance.m3u8"}, {"name": "MetalTV", "url": "https://wahyu1ptv.pages.dev/MetalTV.m3u8"}, {"name": "NOW 70s", "url": "https://lightning-now70s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "NOW 80s", "url": "https://lightning-now80s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "101 Jak FM", "url": "https://wz.mari.co.id:1936/web_jakfm/jakfm/chunklist_w1610616570.m3u8"}, {"name": "Suara Surabaya FM", "url": "https://ssfm.siar.us/ssfm/live/playlist.m3u8"}]
         };
 
-        function loadTv3Cat(cat, btnEl) {
-            tv3CurrentCat = cat;
-            document.querySelectorAll('#tv3CatBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
+                // Toggle between Live Streaming and Livescore inside the Sport (TV4) tab
+        function tv4ShowSub(view, btnEl) {
+            document.querySelectorAll('#tv4SubLive, #tv4SubScore').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
 
-            const list = document.getElementById('tv3List');
-            const channels = tv3Data[cat] || [];
-            list.innerHTML = '';
+            const paneLive = document.getElementById('tv4PaneLive');
+            const paneScore = document.getElementById('tv4PaneScore');
 
-            channels.forEach(ch => {
-                const item = document.createElement('div');
-                item.className = 'fs-ch-item';
-                item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:10px;cursor:pointer;transition:all 0.2s;';
-                item.innerHTML = `
-                    <div style="width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">
-                        ${cat === 'event' ? '🔴' : cat === 'sport' ? '⚽' : cat === 'indonesia' ? '🇮🇩' : cat === 'asia' ? '🌏' : cat === 'movies' ? '🎬' : cat === 'news' ? '📰' : '📺'}
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ch.name}</div>
-                        <div style="font-size:0.6rem;color:#475569;margin-top:2px;">${ch.type === 'page' ? '🌐 Web Page' : ch.type === 'playlist' ? '📋 Playlist' : '📡 HLS Stream'}</div>
-                    </div>
-                    <div style="font-size:0.6rem;color:#4ade80;font-weight:700;">▶</div>
-                `;
-                item.onclick = () => tv3PlayChannel(ch, item);
-                item.onmouseenter = () => item.style.borderColor = 'rgba(56,189,248,0.5)';
-                item.onmouseleave = () => { if (!item.classList.contains('playing')) item.style.borderColor = 'rgba(56,189,248,0.15)'; };
-                list.appendChild(item);
-            });
-        }
-
-        function tv3PlayChannel(ch, itemEl) {
-            const video = document.getElementById('tv3Video');
-            const overlay = document.getElementById('tv3Overlay');
-            const badge = document.getElementById('tv3NowBadge');
-            const badgeName = document.getElementById('tv3BadgeName');
-
-            // Highlight active item
-            document.querySelectorAll('#tv3List .fs-ch-item').forEach(c => {
-                c.classList.remove('playing');
-                c.style.borderColor = 'rgba(56,189,248,0.15)';
-                c.style.background = 'rgba(15,23,42,0.7)';
-            });
-            itemEl.classList.add('playing');
-            itemEl.style.borderColor = 'rgba(56,189,248,0.6)';
-            itemEl.style.background = 'rgba(56,189,248,0.08)';
-
-            if (overlay) overlay.style.display = 'none';
-            if (badge) { badge.style.display = 'inline-block'; }
-            if (badgeName) badgeName.textContent = ch.name;
-
-            if (tv3Hls) { tv3Hls.destroy(); tv3Hls = null; }
-
-            // Web page type — open in new tab (can't embed due to X-Frame-Options)
-            if (ch.type === 'page' || ch.type === 'playlist') {
-                video.style.display = 'none';
-                if (overlay) {
-                    overlay.style.display = 'flex';
-                    overlay.innerHTML = `
-                        <div style="font-size:1.8rem;margin-bottom:10px;">🌐</div>
-                        <div style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:6px;">${ch.name}</div>
-                        <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:12px;">Tap tombol untuk buka streaming</div>
-                        <button onclick="window.open('${ch.url}','_blank')" style="background:var(--primary);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;">▶ Buka Streaming</button>
-                    `;
+            if (view === 'score') {
+                paneLive.style.display = 'none';
+                paneScore.style.display = 'block';
+                // Lazy-load livescore iframe the first time it's opened (auto-updates daily/live on its own)
+                const scoreIframe = document.getElementById('tv4ScoreIframe');
+                if (!scoreIframe.src) {
+                    scoreIframe.src = 'https://www.livescore.com/en/';
                 }
-                document.getElementById('tv3PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return;
-            }
-
-            // HLS stream
-            video.style.display = 'block';
-            if (ch.url.includes('.m3u8') && window.Hls && Hls.isSupported()) {
-                tv3Hls = new Hls();
-                tv3Hls.loadSource(ch.url);
-                tv3Hls.attachMedia(video);
-                tv3Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                tv3Hls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal && overlay) {
-                        overlay.style.display = 'flex';
-                        overlay.innerHTML = `<div style="font-size:0.75rem;color:#f87171;">⚠️ Stream "${ch.name}" offline/error.<br>Coba channel lain.</div>`;
-                    }
-                });
             } else {
-                video.src = ch.url;
-                video.play().catch(() => {});
+                paneScore.style.display = 'none';
+                paneLive.style.display = 'block';
             }
-            document.getElementById('tv3PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Auto-load TV3 live category on tab switch
-        const _origSwitchTvTab = window.switchTvTab;
-
-
-        // --- LOGIC MOVIE SUB-TABS ---
+// --- LOGIC MOVIE SUB-TABS ---
         function switchMovieTab(paneId, btnEl) {
             document.querySelectorAll('.movie-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('#movie .tv-subtab-btn').forEach(b => b.classList.remove('active'));
@@ -2664,6 +2260,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             createIntroStars();
             createIntroParticles();
+
+            // Muat genre "Nasional" secara default saat tab TV1 pertama kali dibuka
+            const tv1DefaultBtn = document.querySelector('#tv1GenreBar .fs-cat-btn');
+            if (tv1DefaultBtn) loadTv1Genre('nasional', tv1DefaultBtn);
 
             // Auto hide intro after 12 seconds if user doesn't click
             setTimeout(() => {
