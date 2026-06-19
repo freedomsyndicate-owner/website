@@ -1799,55 +1799,52 @@
                 </div>
             </div>
 
-            <!-- ===== PANE: TV4 — M3U PLAYLIST LOADER ===== -->
-            <div class="tv-subtab-pane" id="pane-tv4" style="padding:14px 14px 24px;">
+            <!-- ===== PANE: TV4 — BOLA DONG LIVE (FIFA World Cup 2026) ===== -->
+            <div class="tv-subtab-pane" id="pane-tv4" style="padding:0 14px 24px;">
 
-                <!-- Player -->
-                <div class="tv-iframe-wrap" id="tv4PlayerWrap" style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;margin-bottom:10px;aspect-ratio:16/9;">
-                    <video id="tv4Video" controls playsinline style="width:100%;height:100%;background:#000;display:block;"></video>
-                    <div class="tv-iframe-overlay" id="tv4Overlay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:absolute;inset:0;background:rgba(2,6,23,0.85);border-radius:12px;">
-                        <div style="font-size:2rem;margin-bottom:8px;">📡</div>
-                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">TV4 PLAYLIST</div>
-                        <div style="font-size:0.65rem;color:#64748b;margin-top:4px;">Pilih channel dari daftar di bawah</div>
+                <!-- Header -->
+                <div style="background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(15,23,42,0.95));border-bottom:1px solid rgba(239,68,68,0.25);padding:12px 16px;margin:0 -14px 14px;display:flex;align-items:center;gap:10px;">
+                    <div style="font-size:1.6rem;">⚽</div>
+                    <div>
+                        <div style="font-size:0.6rem;letter-spacing:3px;color:#f87171;font-weight:700;text-transform:uppercase;">FIFA WORLD CUP 2026</div>
+                        <div style="font-size:0.9rem;font-weight:900;color:#fff;letter-spacing:1px;">JADWAL & LIVE STREAMING</div>
+                    </div>
+                    <div id="tv4LiveDot" style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:0.6rem;color:#4ade80;font-weight:700;">
+                        <span style="width:7px;height:7px;background:#4ade80;border-radius:50%;animation:tv4pulse 1.5s infinite;"></span>LIVE UPDATE
                     </div>
                 </div>
 
-                <!-- Now playing badge -->
-                <div id="tv4NowBadge" style="display:none;margin:6px 0 10px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);border-radius:20px;padding:4px 12px;font-size:0.62rem;font-weight:700;color:#4ade80;letter-spacing:1px;">🔴 <span id="tv4BadgeName">-</span></div>
+                <!-- Filter Tabs -->
+                <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none;" id="tv4FilterBar">
+                    <button class="fs-cat-btn active" onclick="tv4Filter('all',this)">🌍 Semua</button>
+                    <button class="fs-cat-btn" onclick="tv4Filter('live',this)">🔴 Live</button>
+                    <button class="fs-cat-btn" onclick="tv4Filter('today',this)">📅 Hari Ini</button>
+                    <button class="fs-cat-btn" onclick="tv4Filter('upcoming',this)">⏳ Mendatang</button>
+                    <button class="fs-cat-btn" onclick="tv4Filter('finished',this)">✅ Selesai</button>
+                </div>
 
-                <!-- Source bar -->
-                <div style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px;margin-bottom:10px;">
-                    <div style="font-size:0.65rem;color:var(--primary);font-weight:700;letter-spacing:2px;margin-bottom:8px;">📂 SUMBER PLAYLIST</div>
-                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;" id="tv4SrcBtns">
-                        <button class="fs-cat-btn active" onclick="tv4LoadSource('iptv_id',this)">🇮🇩 IPTV-ORG Indonesia</button>
-                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_eldbert',this)">⚡ IPTV Eldbert</button>
-                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_sport',this)">⚽ IPTV Sport</button>
-                        <button class="fs-cat-btn" onclick="tv4LoadSource('iptv_news',this)">📰 IPTV News</button>
+                <!-- Last updated -->
+                <div style="font-size:0.58rem;color:#334155;margin-bottom:10px;text-align:right;" id="tv4UpdateTime"></div>
+
+                <!-- Match list -->
+                <div id="tv4MatchList" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+                <!-- Streaming modal backdrop -->
+                <div id="tv4Modal" onclick="tv4CloseModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;align-items:center;justify-content:center;"></div>
+                <!-- Streaming modal box -->
+                <div id="tv4ModalBox" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9001;background:rgba(10,15,28,0.98);border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:18px;width:92vw;max-width:480px;max-height:85vh;overflow-y:auto;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                        <div id="tv4ModalTitle" style="font-size:0.85rem;font-weight:900;color:#fff;"></div>
+                        <button onclick="tv4CloseModal()" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:0.75rem;">✕ Tutup</button>
                     </div>
-                    <!-- Custom URL loader -->
-                    <div style="display:flex;gap:6px;align-items:center;">
-                        <input id="tv4CustomUrl" type="text" placeholder="Masukkan URL .m3u/.m3u8 custom..." style="flex:1;background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.25);border-radius:8px;padding:8px 10px;font-size:0.72rem;color:#e2e8f0;outline:none;min-width:0;" />
-                        <button onclick="tv4LoadCustomUrl()" style="background:var(--primary);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:0.72rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">▶ Load</button>
-                    </div>
+                    <div id="tv4ModalLinks" style="display:flex;flex-direction:column;gap:8px;"></div>
+                    <p style="font-size:0.55rem;color:#334155;margin-top:12px;text-align:center;">Link streaming mungkin memerlukan verifikasi atau VPN</p>
                 </div>
 
-                <!-- Status bar -->
-                <div id="tv4StatusBar" style="font-size:0.65rem;color:#64748b;margin-bottom:8px;padding:6px 10px;background:rgba(15,23,42,0.5);border-radius:8px;border:1px solid rgba(56,189,248,0.1);">
-                    ⏳ Klik sumber untuk mulai load playlist...
+                <div id="tv4RefreshBar" style="margin-top:18px;text-align:center;">
+                    <button onclick="tv4Init()" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:20px;padding:8px 20px;font-size:0.7rem;cursor:pointer;font-weight:700;">🔄 Refresh Data</button>
                 </div>
-
-                <!-- Search bar -->
-                <div style="position:relative;margin-bottom:8px;" id="tv4SearchWrap" style="display:none;">
-                    <input id="tv4Search" type="text" placeholder="🔍 Cari channel..." oninput="tv4FilterChannels()" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:9px 12px;font-size:0.75rem;color:#e2e8f0;outline:none;" />
-                </div>
-
-                <!-- Channel count -->
-                <div id="tv4Count" style="font-size:0.6rem;color:#475569;margin-bottom:6px;"></div>
-
-                <!-- Channel List -->
-                <div id="tv4List" style="display:flex;flex-direction:column;gap:6px;"></div>
-
-                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV4</p>
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV4 · PIALA DUNIA 2026</p>
             </div>
 
         </div>
@@ -1897,217 +1894,352 @@
                 loadTv3Cat('event', document.querySelector('#tv3CatBar .fs-cat-btn'));
             }
             // Auto-load TV4 the first time it's opened
-            if (paneId === 'tv4' && tv4AllChannels.length === 0) {
-                tv4LoadSource('iptv_id', document.querySelector('#tv4SrcBtns .fs-cat-btn'));
-            }
+            if (paneId === 'tv4') { tv4Init(); }
         }
 
         // =============================================
-        // TV4 — LIVE M3U PLAYLIST LOADER
+        // TV4 — BOLA DONG / FIFA WORLD CUP 2026
         // =============================================
-        let tv4Hls = null;
-        let tv4AllChannels = [];
-        let tv4FilteredChannels = [];
 
-        const TV4_SOURCES = {
-            iptv_id:      'https://iptv-org.github.io/iptv/countries/id.m3u',
-            iptv_eldbert: 'https://iptv-eldbert.xyz/iptv/',
-            iptv_sport:   'https://iptv-org.github.io/iptv/categories/sports.m3u',
-            iptv_news:    'https://iptv-org.github.io/iptv/categories/news.m3u',
-        };
-
-        // CORS proxy options (tried in order)
-        const TV4_PROXIES = [
-            u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-            u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-            u => `https://cors-anywhere.herokuapp.com/${u}`,
+        // Full WC 2026 schedule (WIB, UTC+7). iso = "YYYY-MM-DDTHH:MM" WIB
+        const TV4_MATCHES = [
+          // ── GRUP A ──────────────────────────────────
+          {id:"a1", grup:"A", iso:"2026-06-12T13:00", home:"Meksiko",      away:"Afrika Selatan",     score:"1-0",  status:"done"},
+          {id:"a2", grup:"A", iso:"2026-06-12T16:00", home:"Korea Selatan",away:"Rep. Ceko",           score:"1-2",  status:"done"},
+          {id:"a3", grup:"A", iso:"2026-06-18T23:00", home:"Rep. Ceko",    away:"Afrika Selatan",     score:"",     status:"sched"},
+          {id:"a4", grup:"A", iso:"2026-06-19T08:00", home:"Meksiko",      away:"Korea Selatan",       score:"",     status:"sched"},
+          {id:"a5", grup:"A", iso:"2026-06-25T08:00", home:"Rep. Ceko",    away:"Meksiko",             score:"",     status:"sched"},
+          {id:"a6", grup:"A", iso:"2026-06-25T08:00", home:"Afrika Selatan",away:"Korea Selatan",      score:"",     status:"sched"},
+          // ── GRUP B ──────────────────────────────────
+          {id:"b1", grup:"B", iso:"2026-06-13T02:00", home:"Kanada",       away:"Bosnia-Herzegovina",  score:"1-1",  status:"done"},
+          {id:"b2", grup:"B", iso:"2026-06-14T??:??", home:"Qatar",        away:"Swiss",               score:"1-1",  status:"done"},
+          {id:"b3", grup:"B", iso:"2026-06-19T02:00", home:"Swiss",        away:"Bosnia-Herzegovina",  score:"",     status:"sched"},
+          {id:"b4", grup:"B", iso:"2026-06-19T05:00", home:"Kanada",       away:"Qatar",               score:"",     status:"sched"},
+          {id:"b5", grup:"B", iso:"2026-06-25T02:00", home:"Swiss",        away:"Kanada",              score:"",     status:"sched"},
+          {id:"b6", grup:"B", iso:"2026-06-25T02:00", home:"Bosnia-Herzegovina",away:"Qatar",          score:"",     status:"sched"},
+          // ── GRUP C ──────────────────────────────────
+          {id:"c1", grup:"C", iso:"2026-06-14T02:00", home:"Brasil",       away:"Maroko",              score:"1-1",  status:"done"},
+          {id:"c2", grup:"C", iso:"2026-06-14T05:00", home:"Haiti",        away:"Skotlandia",          score:"0-1",  status:"done"},
+          {id:"c3", grup:"C", iso:"2026-06-20T05:00", home:"Skotlandia",   away:"Maroko",              score:"",     status:"sched"},
+          {id:"c4", grup:"C", iso:"2026-06-20T08:00", home:"Brasil",       away:"Haiti",               score:"",     status:"sched"},
+          {id:"c5", grup:"C", iso:"2026-06-25T05:00", home:"Skotlandia",   away:"Brasil",              score:"",     status:"sched"},
+          {id:"c6", grup:"C", iso:"2026-06-25T05:00", home:"Maroko",       away:"Haiti",               score:"",     status:"sched"},
+          // ── GRUP D ──────────────────────────────────
+          {id:"d1", grup:"D", iso:"2026-06-13T??:??", home:"Amerika Serikat",away:"Paraguay",          score:"4-1",  status:"done"},
+          {id:"d2", grup:"D", iso:"2026-06-14T??:??", home:"Australia",    away:"Turki",               score:"2-0",  status:"done"},
+          {id:"d3", grup:"D", iso:"2026-06-20T02:00", home:"Amerika Serikat",away:"Australia",         score:"",     status:"sched"},
+          {id:"d4", grup:"D", iso:"2026-06-20T11:00", home:"Turki",        away:"Paraguay",            score:"",     status:"sched"},
+          {id:"d5", grup:"D", iso:"2026-06-26T09:00", home:"Turki",        away:"Amerika Serikat",     score:"",     status:"sched"},
+          {id:"d6", grup:"D", iso:"2026-06-26T09:00", home:"Paraguay",     away:"Australia",           score:"",     status:"sched"},
+          // ── GRUP E ──────────────────────────────────
+          {id:"e1", grup:"E", iso:"2026-06-14T??:??", home:"Jerman",       away:"Curacao",             score:"7-1",  status:"done"},
+          {id:"e2", grup:"E", iso:"2026-06-14T06:00", home:"Pantai Gading",away:"Ekuador",             score:"",     status:"done"},
+          {id:"e3", grup:"E", iso:"2026-06-21T03:00", home:"Jerman",       away:"Pantai Gading",       score:"",     status:"sched"},
+          {id:"e4", grup:"E", iso:"2026-06-21T07:00", home:"Ekuador",      away:"Curaçao",             score:"",     status:"sched"},
+          {id:"e5", grup:"E", iso:"2026-06-26T03:00", home:"Curaçao",      away:"Pantai Gading",       score:"",     status:"sched"},
+          {id:"e6", grup:"E", iso:"2026-06-26T03:00", home:"Ekuador",      away:"Jerman",              score:"",     status:"sched"},
+          // ── GRUP F ──────────────────────────────────
+          {id:"f1", grup:"F", iso:"2026-06-14T??:??", home:"Belanda",      away:"Jepang",              score:"2-2",  status:"done"},
+          {id:"f2", grup:"F", iso:"2026-06-14T09:00", home:"Swedia",       away:"Tunisia",             score:"",     status:"done"},
+          {id:"f3", grup:"F", iso:"2026-06-21T01:00", home:"Belanda",      away:"Swedia",              score:"",     status:"sched"},
+          {id:"f4", grup:"F", iso:"2026-06-21T11:00", home:"Tunisia",      away:"Jepang",              score:"",     status:"sched"},
+          {id:"f5", grup:"F", iso:"2026-06-26T06:00", home:"Jepang",       away:"Swedia",              score:"",     status:"sched"},
+          {id:"f6", grup:"F", iso:"2026-06-26T06:00", home:"Tunisia",      away:"Belanda",             score:"",     status:"sched"},
+          // ── GRUP G ──────────────────────────────────
+          {id:"g1", grup:"G", iso:"2026-06-16T02:00", home:"Belgia",       away:"Mesir",               score:"",     status:"done"},
+          {id:"g2", grup:"G", iso:"2026-06-16T08:00", home:"Iran",         away:"Selandia Baru",       score:"",     status:"done"},
+          {id:"g3", grup:"G", iso:"2026-06-22T02:00", home:"Belgia",       away:"Iran",                score:"",     status:"sched"},
+          {id:"g4", grup:"G", iso:"2026-06-22T08:00", home:"Selandia Baru",away:"Mesir",              score:"",     status:"sched"},
+          {id:"g5", grup:"G", iso:"2026-06-27T10:00", home:"Mesir",        away:"Iran",                score:"",     status:"sched"},
+          {id:"g6", grup:"G", iso:"2026-06-27T10:00", home:"Selandia Baru",away:"Belgia",             score:"",     status:"sched"},
+          // ── GRUP H ──────────────────────────────────
+          {id:"h1", grup:"H", iso:"2026-06-15T23:00", home:"Spanyol",      away:"Tanjung Verde",       score:"",     status:"done"},
+          {id:"h2", grup:"H", iso:"2026-06-16T05:00", home:"Arab Saudi",   away:"Uruguay",             score:"",     status:"done"},
+          {id:"h3", grup:"H", iso:"2026-06-22T23:00", home:"Spanyol",      away:"Arab Saudi",          score:"",     status:"sched"},
+          {id:"h4", grup:"H", iso:"2026-06-23T05:00", home:"Uruguay",      away:"Tanjung Verde",       score:"",     status:"sched"},
+          {id:"h5", grup:"H", iso:"2026-06-27T07:00", home:"Tanjung Verde",away:"Arab Saudi",          score:"",     status:"sched"},
+          {id:"h6", grup:"H", iso:"2026-06-27T07:00", home:"Uruguay",      away:"Spanyol",             score:"",     status:"sched"},
+          // ── GRUP I ──────────────────────────────────
+          {id:"i1", grup:"I", iso:"2026-06-17T02:00", home:"Prancis",      away:"Senegal",             score:"",     status:"done"},
+          {id:"i2", grup:"I", iso:"2026-06-17T05:00", home:"Irak",         away:"Norwegia",            score:"",     status:"done"},
+          {id:"i3", grup:"I", iso:"2026-06-23T04:00", home:"Prancis",      away:"Irak",                score:"",     status:"sched"},
+          {id:"i4", grup:"I", iso:"2026-06-23T07:00", home:"Norwegia",     away:"Senegal",             score:"",     status:"sched"},
+          {id:"i5", grup:"I", iso:"2026-06-27T02:00", home:"Norwegia",     away:"Prancis",             score:"",     status:"sched"},
+          {id:"i6", grup:"I", iso:"2026-06-27T02:00", home:"Senegal",      away:"Irak",                score:"",     status:"sched"},
+          // ── GRUP J ──────────────────────────────────
+          {id:"j1", grup:"J", iso:"2026-06-17T08:00", home:"Argentina",    away:"Aljazair",            score:"",     status:"done"},
+          {id:"j2", grup:"J", iso:"2026-06-17T11:00", home:"Austria",      away:"Yordania",            score:"",     status:"done"},
+          {id:"j3", grup:"J", iso:"2026-06-22T01:00", home:"Argentina",    away:"Austria",             score:"",     status:"sched"},
+          {id:"j4", grup:"J", iso:"2026-06-22T10:00", home:"Yordania",     away:"Aljazair",            score:"",     status:"sched"},
+          {id:"j5", grup:"J", iso:"2026-06-28T09:00", home:"Aljazair",     away:"Austria",             score:"",     status:"sched"},
+          {id:"j6", grup:"J", iso:"2026-06-28T09:00", home:"Yordania",     away:"Argentina",           score:"",     status:"sched"},
+          // ── GRUP K ──────────────────────────────────
+          {id:"k1", grup:"K", iso:"2026-06-18T00:00", home:"Portugal",     away:"Kongo",               score:"",     status:"done"},
+          {id:"k2", grup:"K", iso:"2026-06-18T10:00", home:"Uzbekistan",   away:"Kolombia",            score:"",     status:"done"},
+          {id:"k3", grup:"K", iso:"2026-06-24T00:00", home:"Portugal",     away:"Uzbekistan",          score:"",     status:"sched"},
+          {id:"k4", grup:"K", iso:"2026-06-24T10:00", home:"Kolombia",     away:"Kongo",               score:"",     status:"sched"},
+          {id:"k5", grup:"K", iso:"2026-06-28T06:30", home:"Kolombia",     away:"Portugal",            score:"",     status:"sched"},
+          {id:"k6", grup:"K", iso:"2026-06-28T06:30", home:"Kongo",        away:"Uzbekistan",          score:"",     status:"sched"},
+          // ── GRUP L ──────────────────────────────────
+          {id:"l1", grup:"L", iso:"2026-06-18T03:00", home:"Inggris",      away:"Kroasia",             score:"4-2",  status:"done"},
+          {id:"l2", grup:"L", iso:"2026-06-18T06:00", home:"Ghana",        away:"Panama",              score:"",     status:"done"},
+          {id:"l3", grup:"L", iso:"2026-06-24T03:00", home:"Inggris",      away:"Ghana",               score:"",     status:"sched"},
+          {id:"l4", grup:"L", iso:"2026-06-24T06:00", home:"Panama",       away:"Kroasia",             score:"",     status:"sched"},
+          {id:"l5", grup:"L", iso:"2026-06-28T04:00", home:"Kroasia",      away:"Ghana",               score:"",     status:"sched"},
+          {id:"l6", grup:"L", iso:"2026-06-28T04:00", home:"Panama",       away:"Inggris",             score:"",     status:"sched"},
         ];
 
-        async function tv4FetchWithProxy(url) {
-            // Try direct first
-            try {
-                const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
-                if (r.ok) return await r.text();
-            } catch(e) {}
-            // Try each proxy
-            for (const proxy of TV4_PROXIES) {
-                try {
-                    const r = await fetch(proxy(url), { signal: AbortSignal.timeout(8000) });
-                    if (r.ok) return await r.text();
-                } catch(e) {}
+        // Streaming sources for each match
+        const TV4_STREAMS = {
+          default: [
+            { label:"📺 TVRI Sport (Official)", url:"https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8", type:"hls" },
+            { label:"🌐 BolaDong Live", url:"https://wv7cg5hp.boladong.live/", type:"web" },
+            { label:"📡 TVRI Nasional HLS", url:"https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8", type:"hls" },
+            { label:"🎯 Trans TV", url:"https://video.detik.com/transtv/smil:transtv.smil/playlist.m3u8", type:"hls" },
+            { label:"📻 CNN Indonesia", url:"https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/playlist.m3u8", type:"hls" },
+          ]
+        };
+
+        // Emoji flags
+        const TV4_FLAGS = {
+          "Meksiko":"🇲🇽","Afrika Selatan":"🇿🇦","Korea Selatan":"🇰🇷","Rep. Ceko":"🇨🇿",
+          "Kanada":"🇨🇦","Bosnia-Herzegovina":"🇧🇦","Qatar":"🇶🇦","Swiss":"🇨🇭",
+          "Brasil":"🇧🇷","Maroko":"🇲🇦","Haiti":"🇭🇹","Skotlandia":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+          "Amerika Serikat":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turki":"🇹🇷",
+          "Jerman":"🇩🇪","Curacao":"🇨🇼","Curaçao":"🇨🇼","Pantai Gading":"🇨🇮","Ekuador":"🇪🇨",
+          "Belanda":"🇳🇱","Jepang":"🇯🇵","Swedia":"🇸🇪","Tunisia":"🇹🇳",
+          "Belgia":"🇧🇪","Mesir":"🇪🇬","Iran":"🇮🇷","Selandia Baru":"🇳🇿",
+          "Spanyol":"🇪🇸","Tanjung Verde":"🇨🇻","Arab Saudi":"🇸🇦","Uruguay":"🇺🇾",
+          "Prancis":"🇫🇷","Senegal":"🇸🇳","Irak":"🇮🇶","Norwegia":"🇳🇴",
+          "Argentina":"🇦🇷","Aljazair":"🇩🇿","Austria":"🇦🇹","Yordania":"🇯🇴",
+          "Portugal":"🇵🇹","Kongo":"🇨🇩","Uzbekistan":"🇺🇿","Kolombia":"🇨🇴",
+          "Inggris":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Kroasia":"🇭🇷","Ghana":"🇬🇭","Panama":"🇵🇦",
+        };
+
+        let tv4CurrentFilter = 'all';
+        let tv4HlsPlayer = null;
+
+        function tv4GetStatus(m) {
+            const now = new Date();
+            // Parse iso as WIB (UTC+7)
+            if (m.status === 'done') return 'done';
+            if (!m.iso.includes('?')) {
+                const [datePart, timePart] = m.iso.split('T');
+                const [h, min] = timePart.split(':').map(Number);
+                // Build WIB date → convert to UTC
+                const [y, mo, d] = datePart.split('-').map(Number);
+                const utcMs = Date.UTC(y, mo-1, d, h-7, min, 0);
+                const diff = now.getTime() - utcMs;
+                if (diff > 0 && diff < 115*60*1000) return 'live';   // 115 min window
+                if (diff >= 115*60*1000) return 'done';
+                return 'sched';
             }
-            throw new Error('Semua proxy gagal. Coba gunakan VPN atau URL lain.');
+            return m.status || 'sched';
         }
 
-        function tv4ParseM3U(text) {
-            const lines = text.split('\n');
-            const channels = [];
-            let current = {};
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (line.startsWith('#EXTINF')) {
-                    const nameMatch = line.match(/,\s*(.+)$/);
-                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
-                    const groupMatch = line.match(/group-title="([^"]*)"/);
-                    current = {
-                        name: nameMatch ? nameMatch[1].trim() : 'Unknown',
-                        logo: logoMatch ? logoMatch[1] : '',
-                        group: groupMatch ? groupMatch[1] : 'General',
-                    };
-                } else if (line && !line.startsWith('#') && !line.startsWith('<') && current.name) {
-                    current.url = line.trim();
-                    if (current.url) channels.push({ ...current });
-                    current = {};
-                }
-            }
-            return channels;
+        function tv4FormatDate(iso) {
+            if (iso.includes('?')) return '—';
+            const [datePart, timePart] = iso.split('T');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h, min] = timePart.split(':');
+            const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+            // WIB date object
+            const wibDate = new Date(Date.UTC(y, mo-1, d, parseInt(h)-7, parseInt(min)));
+            const dayName = days[wibDate.getUTCDay()];
+            const dayNum = String(wibDate.getUTCDate()).padStart(2,'0');
+            const monName = months[wibDate.getUTCMonth()];
+            return `${dayName} ${dayNum} ${monName} · ${h}:${min} WIB`;
         }
 
-        async function tv4LoadSource(key, btnEl) {
-            // Update button active state
-            document.querySelectorAll('#tv4SrcBtns .fs-cat-btn').forEach(b => b.classList.remove('active'));
+        function tv4IsToday(iso) {
+            if (iso.includes('?')) return false;
+            const [datePart, timePart] = iso.split('T');
+            const [y, mo, d] = datePart.split('-').map(Number);
+            const [h] = timePart.split(':').map(Number);
+            const utcMs = Date.UTC(y, mo-1, d, h-7, 0);
+            const wibNow = new Date(Date.now() + 7*3600*1000);
+            const wibMatch = new Date(utcMs + 7*3600*1000);
+            return wibNow.getUTCFullYear() === wibMatch.getUTCFullYear() &&
+                   wibNow.getUTCMonth() === wibMatch.getUTCMonth() &&
+                   wibNow.getUTCDate() === wibMatch.getUTCDate();
+        }
+
+        function tv4Filter(mode, btnEl) {
+            tv4CurrentFilter = mode;
+            document.querySelectorAll('#tv4FilterBar .fs-cat-btn').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
-
-            const url = TV4_SOURCES[key];
-            const statusBar = document.getElementById('tv4StatusBar');
-            statusBar.innerHTML = `⏳ Loading dari <b>${url}</b>...`;
-            document.getElementById('tv4List').innerHTML = '';
-            document.getElementById('tv4Count').textContent = '';
-            document.getElementById('tv4SearchWrap') && (document.getElementById('tv4Search').value = '');
-
-            try {
-                const text = await tv4FetchWithProxy(url);
-                if (!text.includes('#EXTM3U') && !text.includes('#EXTINF')) {
-                    throw new Error('Bukan file M3U valid. Mungkin URL tidak tersedia atau berisi konten lain.');
-                }
-                tv4AllChannels = tv4ParseM3U(text);
-                tv4FilteredChannels = [...tv4AllChannels];
-                statusBar.innerHTML = `✅ Berhasil load <b>${tv4AllChannels.length} channel</b> dari <code style="font-size:0.6rem;color:#38bdf8;">${url}</code>`;
-                document.getElementById('tv4SearchWrap').style.display = 'block';
-                tv4RenderList(tv4FilteredChannels);
-            } catch(err) {
-                statusBar.innerHTML = `❌ <b>Gagal:</b> ${err.message}`;
-                document.getElementById('tv4List').innerHTML = `
-                    <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px;text-align:center;">
-                        <div style="font-size:1.5rem;margin-bottom:8px;">⚠️</div>
-                        <div style="font-size:0.75rem;color:#f87171;font-weight:700;margin-bottom:6px;">Playlist tidak dapat dimuat</div>
-                        <div style="font-size:0.65rem;color:#94a3b8;">Kemungkinan penyebab:<br>• CORS block dari browser<br>• URL tidak tersedia (404)<br>• Memerlukan VPN<br><br>Coba gunakan URL custom di atas, atau coba sumber lain.</div>
-                    </div>`;
-            }
+            tv4Render();
         }
 
-        async function tv4LoadCustomUrl() {
-            const urlInput = document.getElementById('tv4CustomUrl');
-            const url = urlInput.value.trim();
-            if (!url) return;
-
-            const statusBar = document.getElementById('tv4StatusBar');
-            statusBar.innerHTML = `⏳ Loading dari <b>${url}</b>...`;
-            document.getElementById('tv4List').innerHTML = '';
-            document.getElementById('tv4Count').textContent = '';
-
-            try {
-                const text = await tv4FetchWithProxy(url);
-                if (!text.includes('#EXTM3U') && !text.includes('#EXTINF')) {
-                    throw new Error('Bukan file M3U valid.');
-                }
-                tv4AllChannels = tv4ParseM3U(text);
-                tv4FilteredChannels = [...tv4AllChannels];
-                statusBar.innerHTML = `✅ Berhasil load <b>${tv4AllChannels.length} channel</b> dari URL custom`;
-                document.getElementById('tv4SearchWrap').style.display = 'block';
-                tv4RenderList(tv4FilteredChannels);
-            } catch(err) {
-                statusBar.innerHTML = `❌ <b>Gagal:</b> ${err.message}`;
-            }
-        }
-
-        function tv4FilterChannels() {
-            const q = document.getElementById('tv4Search').value.toLowerCase();
-            tv4FilteredChannels = q
-                ? tv4AllChannels.filter(ch => ch.name.toLowerCase().includes(q) || (ch.group||'').toLowerCase().includes(q))
-                : [...tv4AllChannels];
-            tv4RenderList(tv4FilteredChannels);
-        }
-
-        function tv4RenderList(channels) {
-            const list = document.getElementById('tv4List');
-            const countEl = document.getElementById('tv4Count');
+        function tv4Render() {
+            const list = document.getElementById('tv4MatchList');
             list.innerHTML = '';
-            countEl.textContent = `Menampilkan ${channels.length} dari ${tv4AllChannels.length} channel`;
 
-            if (channels.length === 0) {
-                list.innerHTML = `<div style="text-align:center;color:#475569;font-size:0.75rem;padding:20px;">Tidak ada channel ditemukan.</div>`;
+            let filtered = TV4_MATCHES.map(m => ({...m, _status: tv4GetStatus(m)}));
+
+            if (tv4CurrentFilter === 'live') filtered = filtered.filter(m => m._status === 'live');
+            else if (tv4CurrentFilter === 'today') filtered = filtered.filter(m => tv4IsToday(m.iso));
+            else if (tv4CurrentFilter === 'upcoming') filtered = filtered.filter(m => m._status === 'sched');
+            else if (tv4CurrentFilter === 'finished') filtered = filtered.filter(m => m._status === 'done');
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div style="text-align:center;padding:40px 0;color:#475569;font-size:0.8rem;">Tidak ada pertandingan untuk filter ini.</div>`;
                 return;
             }
 
-            channels.forEach(ch => {
-                const item = document.createElement('div');
-                item.className = 'fs-ch-item';
-                item.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:10px;cursor:pointer;transition:all 0.2s;';
-                const logoHtml = ch.logo
-                    ? `<img src="${ch.logo}" style="width:38px;height:38px;border-radius:8px;object-fit:contain;background:rgba(15,23,42,0.9);" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div style="display:none;width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📺</div>`
-                    : `<div style="width:38px;height:38px;border-radius:8px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">📺</div>`;
-                item.innerHTML = `
-                    ${logoHtml}
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ch.name}</div>
-                        <div style="font-size:0.6rem;color:#475569;margin-top:2px;">${ch.group || 'General'}</div>
-                    </div>
-                    <div style="font-size:0.6rem;color:#4ade80;font-weight:700;">▶</div>
-                `;
-                item.onclick = () => tv4PlayChannel(ch, item);
-                item.onmouseenter = () => item.style.borderColor = 'rgba(56,189,248,0.5)';
-                item.onmouseleave = () => { if (!item.classList.contains('playing')) item.style.borderColor = 'rgba(56,189,248,0.15)'; };
-                list.appendChild(item);
+            // Group by date
+            const byDate = {};
+            filtered.forEach(m => {
+                const dateKey = m.iso.split('T')[0];
+                if (!byDate[dateKey]) byDate[dateKey] = [];
+                byDate[dateKey].push(m);
             });
+
+            const dateKeys = Object.keys(byDate).sort();
+            dateKeys.forEach(dk => {
+                // Date header
+                const [y,mo,d] = dk.split('-').map(Number);
+                const dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                const months  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                const dateObj = new Date(Date.UTC(y, mo-1, d));
+                const headerEl = document.createElement('div');
+                headerEl.style.cssText = 'font-size:0.65rem;font-weight:800;letter-spacing:2px;color:var(--primary);padding:6px 0 4px;text-transform:uppercase;border-bottom:1px solid rgba(56,189,248,0.15);margin-bottom:6px;';
+                headerEl.textContent = `${dayNames[dateObj.getUTCDay()]}, ${d} ${months[mo-1]} ${y}`;
+                list.appendChild(headerEl);
+
+                byDate[dk].forEach(m => {
+                    const st = m._status;
+                    const f_home = TV4_FLAGS[m.home] || '🏳️';
+                    const f_away = TV4_FLAGS[m.away] || '🏳️';
+                    const timePart = m.iso.includes('?') ? '—' : m.iso.split('T')[1].substring(0,5) + ' WIB';
+
+                    let statusBadge = '';
+                    if (st === 'live') {
+                        statusBadge = `<span style="background:#ef4444;color:#fff;font-size:0.5rem;font-weight:900;padding:2px 7px;border-radius:20px;letter-spacing:1px;animation:tv4pulse 1s infinite;">● LIVE</span>`;
+                    } else if (st === 'done') {
+                        statusBadge = `<span style="background:rgba(74,222,128,0.1);color:#4ade80;font-size:0.5rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(74,222,128,0.3);">✓ SELESAI</span>`;
+                    } else {
+                        statusBadge = `<span style="background:rgba(56,189,248,0.08);color:#38bdf8;font-size:0.5rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(56,189,248,0.2);">⏳ ${timePart}</span>`;
+                    }
+
+                    const scoreHTML = st === 'done' && m.score
+                        ? `<div style="font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:2px;">${m.score}</div>`
+                        : st === 'live'
+                        ? `<div style="font-size:1.1rem;font-weight:900;color:#ef4444;">${m.score||'•-•'}</div>`
+                        : `<div style="font-size:0.7rem;color:#475569;font-weight:700;">VS</div>`;
+
+                    const card = document.createElement('div');
+                    card.style.cssText = 'background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.12);border-radius:12px;padding:12px;margin-bottom:2px;transition:all 0.2s;cursor:pointer;';
+                    if (st === 'live') card.style.borderColor = 'rgba(239,68,68,0.45)';
+                    if (st === 'live') card.style.background = 'rgba(239,68,68,0.05)';
+
+                    card.innerHTML = `
+                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <span style="font-size:0.55rem;color:#475569;font-weight:700;letter-spacing:1px;">GRUP ${m.grup} · FIFA WORLD CUP 2026</span>
+                        ${statusBadge}
+                      </div>
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                        <div style="flex:1;text-align:right;">
+                          <div style="font-size:1.4rem;">${f_home}</div>
+                          <div style="font-size:0.7rem;font-weight:700;color:#e2e8f0;margin-top:2px;line-height:1.2;">${m.home}</div>
+                        </div>
+                        <div style="flex-shrink:0;text-align:center;min-width:54px;">${scoreHTML}</div>
+                        <div style="flex:1;text-align:left;">
+                          <div style="font-size:1.4rem;">${f_away}</div>
+                          <div style="font-size:0.7rem;font-weight:700;color:#e2e8f0;margin-top:2px;line-height:1.2;">${m.away}</div>
+                        </div>
+                      </div>
+                      <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;">
+                        <button onclick="tv4OpenStream(event,'${m.id}','${m.home.replace(/'/g,"\\'")} vs ${m.away.replace(/'/g,"\\'")}','${st}')" style="background:${st==='live'?'rgba(239,68,68,0.18)':'rgba(56,189,248,0.1)'};border:1px solid ${st==='live'?'rgba(239,68,68,0.4)':'rgba(56,189,248,0.25)'};color:${st==='live'?'#f87171':'var(--primary)'};border-radius:20px;padding:6px 16px;font-size:0.65rem;font-weight:700;cursor:pointer;">
+                          ${st==='live'?'🔴 Tonton Live':'📺 Link Streaming'}
+                        </button>
+                      </div>`;
+
+                    card.onmouseenter = () => { card.style.borderColor = st==='live'?'rgba(239,68,68,0.7)':'rgba(56,189,248,0.4)'; card.style.transform='translateY(-1px)'; };
+                    card.onmouseleave = () => { card.style.borderColor = st==='live'?'rgba(239,68,68,0.45)':'rgba(56,189,248,0.12)'; card.style.transform=''; };
+                    list.appendChild(card);
+                });
+            });
+
+            // Update time
+            const now = new Date();
+            const wib = new Date(now.getTime() + 7*3600000);
+            document.getElementById('tv4UpdateTime').textContent =
+                `Update: ${String(wib.getUTCHours()).padStart(2,'0')}:${String(wib.getUTCMinutes()).padStart(2,'0')} WIB`;
         }
 
-        function tv4PlayChannel(ch, itemEl) {
-            const video = document.getElementById('tv4Video');
-            const overlay = document.getElementById('tv4Overlay');
-            const badge = document.getElementById('tv4NowBadge');
-            const badgeName = document.getElementById('tv4BadgeName');
-
-            document.querySelectorAll('#tv4List .fs-ch-item').forEach(c => {
-                c.classList.remove('playing');
-                c.style.borderColor = 'rgba(56,189,248,0.15)';
-                c.style.background = 'rgba(15,23,42,0.7)';
+        function tv4OpenStream(e, matchId, title, status) {
+            e.stopPropagation();
+            document.getElementById('tv4ModalTitle').innerHTML = `⚽ ${title}`;
+            const streams = TV4_STREAMS[matchId] || TV4_STREAMS['default'];
+            const linksDiv = document.getElementById('tv4ModalLinks');
+            linksDiv.innerHTML = '';
+            streams.forEach(s => {
+                const btn = document.createElement('button');
+                btn.style.cssText = 'display:flex;align-items:center;gap:10px;width:100%;background:rgba(15,23,42,0.9);border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.2s;text-align:left;';
+                btn.innerHTML = `<div style="flex:1;"><div style="font-size:0.78rem;font-weight:700;color:#e2e8f0;">${s.label}</div><div style="font-size:0.6rem;color:#475569;margin-top:2px;">${s.type==='hls'?'📡 HLS Stream':'🌐 Web Page'}</div></div><div style="color:var(--primary);font-size:0.8rem;">▶</div>`;
+                btn.onmouseenter = () => btn.style.borderColor = 'rgba(56,189,248,0.5)';
+                btn.onmouseleave = () => btn.style.borderColor = 'rgba(56,189,248,0.2)';
+                if (s.type === 'hls') {
+                    btn.onclick = () => { tv4PlayHls(s.url, title, s.label); tv4CloseModal(); };
+                } else {
+                    btn.onclick = () => window.open(s.url, '_blank');
+                }
+                linksDiv.appendChild(btn);
             });
-            itemEl.classList.add('playing');
-            itemEl.style.borderColor = 'rgba(56,189,248,0.6)';
-            itemEl.style.background = 'rgba(56,189,248,0.08)';
+            document.getElementById('tv4Modal').style.display = 'flex';
+            document.getElementById('tv4ModalBox').style.display = 'block';
+        }
 
-            if (overlay) overlay.style.display = 'none';
-            if (badge) badge.style.display = 'inline-block';
-            if (badgeName) badgeName.textContent = ch.name;
+        function tv4CloseModal() {
+            document.getElementById('tv4Modal').style.display = 'none';
+            document.getElementById('tv4ModalBox').style.display = 'none';
+        }
 
-            if (tv4Hls) { tv4Hls.destroy(); tv4Hls = null; }
-
-            video.style.display = 'block';
-            const url = ch.url;
-
-            if ((url.includes('.m3u8') || url.includes('.m3u')) && window.Hls && Hls.isSupported()) {
-                tv4Hls = new Hls({ enableWorker: false });
-                tv4Hls.loadSource(url);
-                tv4Hls.attachMedia(video);
-                tv4Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                tv4Hls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal && overlay) {
-                        overlay.style.display = 'flex';
-                        overlay.innerHTML = `<div style="font-size:0.75rem;color:#f87171;text-align:center;padding:10px;">⚠️ Stream "<b>${ch.name}</b>" tidak bisa diputar.<br><span style="font-size:0.6rem;color:#64748b;">Mungkin offline atau CORS block.</span></div>`;
-                    }
-                });
+        // Inject mini player at top of TV4 for HLS
+        function tv4PlayHls(url, matchTitle, sourceLabel) {
+            // Create or reuse mini player
+            let playerWrap = document.getElementById('tv4MiniPlayer');
+            if (!playerWrap) {
+                playerWrap = document.createElement('div');
+                playerWrap.id = 'tv4MiniPlayer';
+                playerWrap.style.cssText = 'position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px;';
+                const pane = document.getElementById('pane-tv4');
+                pane.insertBefore(playerWrap, pane.querySelector('#tv4MatchList').previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling);
+            }
+            playerWrap.innerHTML = `
+              <video id="tv4HlsVid" controls playsinline style="width:100%;height:100%;background:#000;"></video>
+              <div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.7);border-radius:8px;padding:4px 10px;font-size:0.6rem;color:#fff;font-weight:700;">⚽ ${matchTitle}</div>
+              <div style="position:absolute;top:8px;right:8px;font-size:0.55rem;color:#94a3b8;background:rgba(0,0,0,0.6);border-radius:6px;padding:3px 8px;">${sourceLabel}</div>
+              <button onclick="document.getElementById('tv4MiniPlayer').remove()" style="position:absolute;bottom:8px;right:8px;background:rgba(239,68,68,0.8);border:none;border-radius:6px;color:#fff;font-size:0.6rem;padding:4px 8px;cursor:pointer;">✕ Tutup</button>`;
+            const video = document.getElementById('tv4HlsVid');
+            if (tv4HlsPlayer) { tv4HlsPlayer.destroy(); tv4HlsPlayer = null; }
+            if (window.Hls && Hls.isSupported()) {
+                tv4HlsPlayer = new Hls();
+                tv4HlsPlayer.loadSource(url);
+                tv4HlsPlayer.attachMedia(video);
+                tv4HlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
             } else {
                 video.src = url;
-                video.play().catch(() => {});
+                video.play().catch(()=>{});
             }
-            document.getElementById('tv4PlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            playerWrap.scrollIntoView({behavior:'smooth', block:'start'});
         }
 
-        // Auto-load TV4 when tab is opened
-        // (patching switchTvTab to handle tv4)
-        const _origSwitchTvTabForTv4 = switchTvTab;
-        // Override handled inline via paneId check addition below
+        function tv4Init() {
+            tv4Render();
+            // Auto-refresh every 60 sec to update live status
+            clearInterval(window._tv4RefreshTimer);
+            window._tv4RefreshTimer = setInterval(() => {
+                if (document.getElementById('pane-tv4').classList.contains('active')) tv4Render();
+            }, 60000);
+        }
+
+        // Inject pulse animation
+        const _tv4Style = document.createElement('style');
+        _tv4Style.textContent = '@keyframes tv4pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.3)}}';
+        document.head.appendChild(_tv4Style);
         let tv2Hls = null;
         let tv2AllChannels = [];
 
