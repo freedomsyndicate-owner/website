@@ -1243,6 +1243,7 @@
             <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
             <li><button onclick="openTab('tvchannel', this)">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
+            <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
             <li><button onclick="openTab('dewasa', this)">🔞 Konten 18+</button></li>
             <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
         </ul>
@@ -1334,6 +1335,35 @@
                     <span class="mod-btn-arrow">→</span>
                 </a>
             </div>
+        </div>
+
+        <div id="komik" class="tab-content" style="padding:0;margin:0;">
+            <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);backdrop-filter:blur(12px);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
+                <div style="margin-bottom:8px;">
+                    <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                    <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">📖 KOMIK</div>
+                </div>
+                <div class="tv-subtab-bar" style="margin-bottom:0;">
+                    <button class="tv-subtab-btn active" id="skomik1" onclick="switchKomikTab('rosy',this)">📚 ROSYSCANS</button>
+                    <button class="tv-subtab-btn" id="skomik2" onclick="switchKomikTab('ryzu',this)">📗 RYZUKOMIK</button>
+                </div>
+            </div>
+
+            <div class="komik-pane active" id="pane-rosy" style="height:calc(100vh - 140px);min-height:500px;">
+                <iframe src="https://rosyscans.id/" title="RosyScans" loading="lazy"
+                    style="width:100%;height:100%;border:none;display:block;background:#000;"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                ></iframe>
+            </div>
+
+            <div class="komik-pane" id="pane-ryzu" style="display:none;height:calc(100vh - 140px);min-height:500px;">
+                <iframe src="https://ryzukomik.my.id/" title="RyzuKomik" loading="lazy"
+                    style="width:100%;height:100%;border:none;display:block;background:#000;"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                ></iframe>
+            </div>
+
+            <p style="font-size:0.6rem;color:#334155;text-align:center;padding:10px 14px 18px;">⚠️ Jika halaman tidak muncul, situs sumber mungkin memblokir tampilan iframe — buka di tab baru sebagai alternatif.</p>
         </div>
 
         <div id="dewasa" class="tab-content">
@@ -2221,36 +2251,59 @@ let tv3Hls = null;
                     .then(r => r.ok ? r.json() : { events: [] })
                     .catch(() => ({ events: [] }));
 
-                // Ambil jadwal hari ini per liga top (lebih reliable daripada eventsday global)
-                const leagueReqs = tv4Leagues.map(lg =>
+                // Ambil jadwal MENDATANG per liga top
+                const nextReqs = tv4Leagues.map(lg =>
                     fetch(`https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id=${lg.id}`)
                         .then(r => r.ok ? r.json() : { events: [] })
                         .then(data => ({ league: lg.name, events: (data && data.events) || [] }))
                         .catch(() => ({ league: lg.name, events: [] }))
                 );
 
-                const [liveData, ...leagueResults] = await Promise.all([liveReq, ...leagueReqs]);
+                // Ambil hasil pertandingan TERAKHIR per liga top (untuk hasil yang baru saja selesai / liga lagi jeda)
+                const pastReqs = tv4Leagues.map(lg =>
+                    fetch(`https://www.thesportsdb.com/api/v1/json/123/eventspastleague.php?id=${lg.id}`)
+                        .then(r => r.ok ? r.json() : { events: [] })
+                        .then(data => ({ league: lg.name, events: (data && data.results) || (data && data.events) || [] }))
+                        .catch(() => ({ league: lg.name, events: [] }))
+                );
+
+                const [liveData, ...rest] = await Promise.all([liveReq, ...nextReqs, ...pastReqs]);
+                const nextResults = rest.slice(0, tv4Leagues.length);
+                const pastResults = rest.slice(tv4Leagues.length);
 
                 const liveEvents = (liveData && liveData.events) || [];
 
                 // Gabungkan: live events dulu (sumber kebenaran utama untuk skor real-time),
-                // lalu jadwal hari ini/besok dari tiap liga top sebagai pelengkap
+                // lalu jadwal mendatang dalam 7 hari ke depan, lalu hasil terbaru (3 hari terakhir)
+                // sebagai pelengkap kalau liga sedang jeda dan tidak ada pertandingan baru
                 const merged = new Map();
 
                 liveEvents.forEach(ev => {
                     if (ev.idEvent) merged.set(ev.idEvent, ev);
                 });
 
-                leagueResults.forEach(res => {
+                const inNextDays = (dateStr, days) => {
+                    if (!dateStr) return false;
+                    const target = new Date(dateStr + 'T00:00:00');
+                    const diffDays = (target - new Date(todayISO + 'T00:00:00')) / 86400000;
+                    return diffDays >= 0 && diffDays <= days;
+                };
+                const inLastDays = (dateStr, days) => {
+                    if (!dateStr) return false;
+                    const target = new Date(dateStr + 'T00:00:00');
+                    const diffDays = (new Date(todayISO + 'T00:00:00') - target) / 86400000;
+                    return diffDays >= 0 && diffDays <= days;
+                };
+
+                nextResults.forEach(res => {
                     res.events.forEach(ev => {
-                        if (!ev.dateEvent) return;
-                        // Hanya tampilkan pertandingan hari ini atau besok biar relevan
-                        const evDate = ev.dateEvent;
-                        const tomorrow = new Date(Date.now() + 86400000);
-                        const tomorrowISO = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
-                        if (evDate === todayISO || evDate === tomorrowISO) {
-                            if (!merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
-                        }
+                        if (inNextDays(ev.dateEvent, 7) && !merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
+                    });
+                });
+
+                pastResults.forEach(res => {
+                    res.events.forEach(ev => {
+                        if (inLastDays(ev.dateEvent, 3) && !merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
                     });
                 });
 
@@ -2260,7 +2313,7 @@ let tv3Hls = null;
 
                 if (events.length === 0) {
                     status.style.display = 'block';
-                    status.textContent = 'Tidak ada pertandingan terjadwal hari ini di liga-liga yang dipantau.';
+                    status.textContent = 'Tidak ada pertandingan terjadwal dalam waktu dekat di liga-liga yang dipantau.';
                     list.innerHTML = '';
                     return;
                 }
@@ -2318,7 +2371,13 @@ let tv3Hls = null;
                 const isLive = liveStatuses.includes(ev.strStatus || '');
                 const isFinished = finishedStatuses.includes(ev.strStatus || '');
                 const hasScore = ev.intHomeScore !== null && ev.intHomeScore !== undefined && ev.intHomeScore !== '';
-                const isTomorrow = ev.dateEvent && ev.dateEvent !== tv4TodayISO();
+                const evDateObj = ev.dateEvent ? new Date(ev.dateEvent + 'T00:00:00') : null;
+                const todayObj = new Date(tv4TodayISO() + 'T00:00:00');
+                const dayDiff = evDateObj ? Math.round((evDateObj - todayObj) / 86400000) : 0;
+                let dateLabelTxt = '';
+                if (dayDiff === 1) dateLabelTxt = 'Besok ';
+                else if (dayDiff > 1) dateLabelTxt = evDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ';
+                else if (dayDiff < 0) dateLabelTxt = evDateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ';
 
                 const card = document.createElement('div');
                 card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid ' + (isLive ? 'rgba(74,222,128,0.4)' : 'rgba(56,189,248,0.15)') + ';border-radius:12px;padding:12px 14px;';
@@ -2326,8 +2385,8 @@ let tv3Hls = null;
                 const statusBadge = isLive
                     ? `<span style="color:#4ade80;font-weight:700;">🔴 LIVE ${ev.strProgress ? '· ' + ev.strProgress : ''}</span>`
                     : isFinished
-                        ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI</span>`
-                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${isTomorrow ? 'Besok ' : ''}${(ev.strTime || '').slice(0, 5)} WIB</span>`;
+                        ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI ${dayDiff !== 0 ? '· ' + dateLabelTxt.trim() : ''}</span>`
+                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${dateLabelTxt}${(ev.strTime || '').slice(0, 5)} WIB</span>`;
 
                 card.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -2351,6 +2410,16 @@ let tv3Hls = null;
             document.querySelectorAll('.movie-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('#movie .tv-subtab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('pane-' + paneId).classList.add('active');
+            btnEl.classList.add('active');
+        }
+
+        // --- LOGIC KOMIK SUB-TABS ---
+        function switchKomikTab(paneId, btnEl) {
+            document.querySelectorAll('#komik .komik-pane').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+            document.querySelectorAll('#komik .tv-subtab-btn').forEach(b => b.classList.remove('active'));
+            const pane = document.getElementById('pane-' + paneId);
+            pane.classList.add('active');
+            pane.style.display = 'block';
             btnEl.classList.add('active');
         }
 
