@@ -1714,9 +1714,10 @@
                         </div>
                         <button onclick="tv4LoadLivescore(true)" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 14px;font-size:0.65rem;cursor:pointer;font-weight:700;">🔄 Refresh</button>
                     </div>
-                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal & skor hari ini...</div>
+                    <div id="tv4ScoreLeagueFilter" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none;"></div>
+                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal & skor semua liga...</div>
                     <div id="tv4ScoreList" style="display:flex;flex-direction:column;gap:8px;"></div>
-                    <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:16px;">Data oleh TheSportsDB · Diperbarui otomatis setiap hari</p>
+                    <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:16px;">Data oleh TheSportsDB · Diperbarui otomatis setiap 60 detik</p>
                 </div>
 
             </div>
@@ -2142,10 +2143,26 @@ let tv3Hls = null;
         }
 
         // =============================================
-        // LIVESCORE — dirender sendiri dari data API TheSportsDB (gratis, tidak diblokir iframe)
+        // LIVESCORE — dirender sendiri dari data API TheSportsDB, gabungan banyak liga top sekaligus
         // =============================================
-        let tv4ScoreLoadedDate = null;
+        let tv4ScoreLoadedAt = 0;
         let tv4ScoreRefreshTimer = null;
+        let tv4ScoreLeagueActive = 'semua';
+        let tv4ScoreAllEvents = [];
+
+        // Liga-liga top yang digabung jadi satu livescore (ID resmi TheSportsDB)
+        const tv4Leagues = [
+            { id: '4328', name: 'Premier League',     tag: 'epl'   },
+            { id: '4335', name: 'La Liga',            tag: 'laliga'},
+            { id: '4332', name: 'Serie A',            tag: 'seriea'},
+            { id: '4331', name: 'Bundesliga',         tag: 'bundes'},
+            { id: '4334', name: 'Ligue 1',            tag: 'ligue1'},
+            { id: '4480', name: 'Champions League',   tag: 'ucl'   },
+            { id: '4481', name: 'Europa League',      tag: 'uel'   },
+            { id: '4346', name: 'MLS',                tag: 'mls'   },
+            { id: '4391', name: 'Liga 1 Indonesia',   tag: 'liga1' },
+            { id: '4429', name: 'FIFA World Cup',     tag: 'wc'    },
+        ];
 
         function tv4TodayISO() {
             const d = new Date();
@@ -2155,45 +2172,112 @@ let tv3Hls = null;
             return `${y}-${m}-${day}`;
         }
 
+        function tv4RenderLeagueFilter() {
+            const wrap = document.getElementById('tv4ScoreLeagueFilter');
+            if (!wrap || wrap.children.length > 0) return;
+            const allBtn = document.createElement('button');
+            allBtn.className = 'fs-cat-btn active';
+            allBtn.textContent = 'Semua';
+            allBtn.onclick = () => tv4FilterLeague('semua', allBtn);
+            wrap.appendChild(allBtn);
+            tv4Leagues.forEach(lg => {
+                const btn = document.createElement('button');
+                btn.className = 'fs-cat-btn';
+                btn.textContent = lg.name;
+                btn.onclick = () => tv4FilterLeague(lg.name, btn);
+                wrap.appendChild(btn);
+            });
+        }
+
+        function tv4FilterLeague(name, btnEl) {
+            tv4ScoreLeagueActive = name;
+            document.querySelectorAll('#tv4ScoreLeagueFilter .fs-cat-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            tv4RenderLivescore(tv4ScoreAllEvents);
+        }
+
         async function tv4LoadLivescore(forceReload) {
             const status = document.getElementById('tv4ScoreStatus');
             const list = document.getElementById('tv4ScoreList');
             const dateLabel = document.getElementById('tv4ScoreDate');
-            const todayISO = tv4TodayISO();
+            const now = Date.now();
 
-            if (!forceReload && tv4ScoreLoadedDate === todayISO && list.children.length > 0) return;
+            if (!forceReload && tv4ScoreLoadedAt && (now - tv4ScoreLoadedAt) < 55000 && list.children.length > 0) return;
+
+            tv4RenderLeagueFilter();
 
             status.style.display = 'block';
-            status.textContent = '⏳ Memuat jadwal & skor hari ini...';
-            list.innerHTML = '';
+            status.textContent = '⏳ Memuat jadwal & skor semua liga...';
+            if (!forceReload) list.innerHTML = '';
 
             const todayLabel = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             if (dateLabel) dateLabel.textContent = todayLabel;
 
             try {
-                const res = await fetch(`https://www.thesportsdb.com/api/v1/json/123/eventsday.php?d=${todayISO}&s=Soccer`);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
-                const events = data && data.events ? data.events : [];
+                const todayISO = tv4TodayISO();
 
-                tv4ScoreLoadedDate = todayISO;
+                // Ambil livescore real-time global (pertandingan yang sedang LIVE sekarang, semua liga)
+                const liveReq = fetch('https://www.thesportsdb.com/api/v1/json/123/livescore.php?s=Soccer')
+                    .then(r => r.ok ? r.json() : { events: [] })
+                    .catch(() => ({ events: [] }));
+
+                // Ambil jadwal hari ini per liga top (lebih reliable daripada eventsday global)
+                const leagueReqs = tv4Leagues.map(lg =>
+                    fetch(`https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id=${lg.id}`)
+                        .then(r => r.ok ? r.json() : { events: [] })
+                        .then(data => ({ league: lg.name, events: (data && data.events) || [] }))
+                        .catch(() => ({ league: lg.name, events: [] }))
+                );
+
+                const [liveData, ...leagueResults] = await Promise.all([liveReq, ...leagueReqs]);
+
+                const liveEvents = (liveData && liveData.events) || [];
+
+                // Gabungkan: live events dulu (sumber kebenaran utama untuk skor real-time),
+                // lalu jadwal hari ini/besok dari tiap liga top sebagai pelengkap
+                const merged = new Map();
+
+                liveEvents.forEach(ev => {
+                    if (ev.idEvent) merged.set(ev.idEvent, ev);
+                });
+
+                leagueResults.forEach(res => {
+                    res.events.forEach(ev => {
+                        if (!ev.dateEvent) return;
+                        // Hanya tampilkan pertandingan hari ini atau besok biar relevan
+                        const evDate = ev.dateEvent;
+                        const tomorrow = new Date(Date.now() + 86400000);
+                        const tomorrowISO = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
+                        if (evDate === todayISO || evDate === tomorrowISO) {
+                            if (!merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
+                        }
+                    });
+                });
+
+                const events = Array.from(merged.values());
+                tv4ScoreAllEvents = events;
+                tv4ScoreLoadedAt = now;
 
                 if (events.length === 0) {
-                    status.textContent = 'Tidak ada pertandingan sepak bola terjadwal hari ini.';
+                    status.style.display = 'block';
+                    status.textContent = 'Tidak ada pertandingan terjadwal hari ini di liga-liga yang dipantau.';
+                    list.innerHTML = '';
                     return;
                 }
 
                 status.style.display = 'none';
                 tv4RenderLivescore(events);
 
-                // Auto-refresh tiap 60 detik selama tab livescore sedang aktif (skor & status pertandingan ter-update)
+                // Auto-refresh tiap 45 detik selama tab livescore sedang aktif (skor live ter-update terus)
                 clearInterval(tv4ScoreRefreshTimer);
                 tv4ScoreRefreshTimer = setInterval(() => {
-                    if (document.getElementById('pane-tv4').classList.contains('active') &&
-                        document.getElementById('tv4PaneScore').style.display !== 'none') {
+                    const tv4Pane = document.getElementById('pane-tv4');
+                    const scorePane = document.getElementById('tv4PaneScore');
+                    if (tv4Pane && tv4Pane.classList.contains('active') &&
+                        scorePane && scorePane.style.display !== 'none') {
                         tv4LoadLivescore(true);
                     }
-                }, 60000);
+                }, 45000);
             } catch (e) {
                 status.style.display = 'block';
                 status.textContent = '⚠️ Gagal memuat data livescore. Coba refresh atau cek koneksi.';
@@ -2204,24 +2288,37 @@ let tv3Hls = null;
             const list = document.getElementById('tv4ScoreList');
             list.innerHTML = '';
 
-            // Urutkan: live duluan, lalu belum mulai, lalu yang sudah selesai
+            const filtered = tv4ScoreLeagueActive === 'semua'
+                ? events
+                : events.filter(ev => (ev.strLeague || '').toLowerCase().includes(tv4ScoreLeagueActive.toLowerCase()) ||
+                                       tv4ScoreLeagueActive.toLowerCase().includes((ev.strLeague || '').toLowerCase().split(' ')[0]));
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div style="font-size:0.65rem;color:#475569;text-align:center;padding:20px 0;">Tidak ada pertandingan untuk liga ini hari ini.</div>';
+                return;
+            }
+
+            // Urutkan: live duluan, lalu belum mulai (terdekat), lalu yang sudah selesai
             const finishedStatuses = ['FT', 'AET', 'PEN', 'Match Finished'];
             const liveStatuses = ['1H', '2H', 'HT', 'ET', 'P', 'LIVE', 'In Play'];
 
-            const sorted = [...events].sort((a, b) => {
+            const sorted = [...filtered].sort((a, b) => {
                 const score = (ev) => {
                     const s = ev.strStatus || '';
                     if (liveStatuses.includes(s)) return 0;
                     if (finishedStatuses.includes(s)) return 2;
                     return 1;
                 };
-                return score(a) - score(b);
+                const sa = score(a), sb = score(b);
+                if (sa !== sb) return sa - sb;
+                return (a.strTime || '').localeCompare(b.strTime || '');
             });
 
             sorted.forEach(ev => {
                 const isLive = liveStatuses.includes(ev.strStatus || '');
                 const isFinished = finishedStatuses.includes(ev.strStatus || '');
                 const hasScore = ev.intHomeScore !== null && ev.intHomeScore !== undefined && ev.intHomeScore !== '';
+                const isTomorrow = ev.dateEvent && ev.dateEvent !== tv4TodayISO();
 
                 const card = document.createElement('div');
                 card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid ' + (isLive ? 'rgba(74,222,128,0.4)' : 'rgba(56,189,248,0.15)') + ';border-radius:12px;padding:12px 14px;';
@@ -2230,7 +2327,7 @@ let tv3Hls = null;
                     ? `<span style="color:#4ade80;font-weight:700;">🔴 LIVE ${ev.strProgress ? '· ' + ev.strProgress : ''}</span>`
                     : isFinished
                         ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI</span>`
-                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${(ev.strTime || '').slice(0, 5)} WIB</span>`;
+                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${isTomorrow ? 'Besok ' : ''}${(ev.strTime || '').slice(0, 5)} WIB</span>`;
 
                 card.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
