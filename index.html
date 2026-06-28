@@ -4,6 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freedom Syndicate | Official Hub</title>
+    <!-- ======================================================
+         FREEDOM SYNDICATE — SECURITY SHIELD v2.0
+         Anti Inspect · Anti Copy · Anti DevTools
+    ====================================================== -->
+    <script>
+    (function(){
+        'use strict';
+
+        // --- 1. DISABLE KLIK KANAN ---
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+
+        // --- 2. DISABLE TEXT SELECT ---
+        document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; });
+
+        // --- 3. DISABLE DRAG ---
+        document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; });
+
+        // --- 4. DISABLE KEYBOARD SHORTCUTS BERBAHAYA ---
+        document.addEventListener('keydown', function(e){
+            // F12
+            if(e.key === 'F12') { e.preventDefault(); return false; }
+            // Ctrl+U (view source)
+            if(e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+            // Ctrl+S (save)
+            if(e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
+            // Ctrl+Shift+I (inspect)
+            if(e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+            // Ctrl+Shift+J (console)
+            if(e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+            // Ctrl+Shift+C (elements)
+            if(e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
+            // Ctrl+Shift+K (firefox console)
+            if(e.ctrlKey && e.shiftKey && e.key === 'K') { e.preventDefault(); return false; }
+            // Ctrl+A (select all)
+            if(e.ctrlKey && e.key === 'a') { e.preventDefault(); return false; }
+            // Ctrl+P (print)
+            if(e.ctrlKey && e.key === 'p') { e.preventDefault(); return false; }
+        }, true);
+
+        // --- 5. DEVTOOLS DETECTOR (size method) ---
+        var _devOpen = false;
+        var _devThreshold = 160;
+        function _checkDevTools(){
+            var w = window.outerWidth - window.innerWidth;
+            var h = window.outerHeight - window.innerHeight;
+            if(w > _devThreshold || h > _devThreshold){
+                if(!_devOpen){
+                    _devOpen = true;
+                    _onDevToolsOpen();
+                }
+            } else {
+                _devOpen = false;
+            }
+        }
+
+        function _onDevToolsOpen(){
+            // Kosongkan halaman & redirect ke halaman blank
+            document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#020617;color:#f87171;font-family:monospace;text-align:center;gap:16px;"><div style="font-size:3rem;">🚫</div><div style="font-size:1.2rem;font-weight:900;letter-spacing:3px;">AKSES DITOLAK</div><div style="font-size:0.8rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD</div><div style="font-size:0.7rem;color:#334155;margin-top:8px;">Tutup Developer Tools untuk melanjutkan.</div></div>';
+        }
+
+        setInterval(_checkDevTools, 1000);
+
+        // --- 6. DEBUGGER TRAP (memperlambat reverse engineering) ---
+        // Hanya aktif jika ada indikasi inspect
+        var _dbgInterval = setInterval(function(){
+            var _t = new Date();
+            (function(){ return false; }['constructor']('debugger')());
+            if(new Date() - _t > 100){
+                _onDevToolsOpen();
+                clearInterval(_dbgInterval);
+            }
+        }, 3000);
+
+        // --- 7. DISABLE PRINT ---
+        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); return false; });
+
+        // --- 8. CSS ANTI SELECT (backup) ---
+        var _s = document.createElement('style');
+        _s.textContent = '* { -webkit-user-select:none!important; -moz-user-select:none!important; -ms-user-select:none!important; user-select:none!important; } input, textarea { -webkit-user-select:text!important; user-select:text!important; }';
+        document.head.appendChild(_s);
+
+    })();
+    </script>
+    <!-- END SECURITY SHIELD -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
     <style>
         :root {
@@ -2665,10 +2750,18 @@ let tv3Hls = null;
             }, 12000);
         });
 
-        // --- LOGIC PIN DEWASA ---
-        const PIN_CORRECT = '2169';
+        // --- LOGIC PIN DEWASA (SHA-256 HASHED) ---
+        // PIN asli tidak tersimpan di source — hanya hash-nya
+        // SHA-256 dari PIN yang benar
+        const _PIN_HASH = 'e2135c76ca7863e51154829de3d9cb0a8f6398d31518c7581d370ed9cc521811';
         let pinCurrent = '';
         let pinLocked = false;
+
+        // Fungsi hash SHA-256 via Web Crypto API (async)
+        async function _sha256(str) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
 
         function pinUpdateDots() {
             for (let i = 1; i <= 4; i++) {
@@ -2695,9 +2788,11 @@ let tv3Hls = null;
             document.getElementById('pinStatusMsg').style.color = '';
         }
 
-        function pinSubmit() {
+        async function pinSubmit() {
             if (pinCurrent.length === 0) return;
-            if (pinCurrent === PIN_CORRECT) {
+            // Hash input user lalu bandingkan dengan stored hash
+            const inputHash = await _sha256(pinCurrent);
+            if (inputHash === _PIN_HASH) {
                 // Benar
                 document.getElementById('pinStatusMsg').textContent = '✅ Akses diberikan...';
                 document.getElementById('pinStatusMsg').style.color = '#4ade80';
