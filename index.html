@@ -1995,50 +1995,38 @@
                         src=""
                         allowfullscreen
                         allow="autoplay; encrypted-media; fullscreen"
-                        scrolling="yes"
-                        style="width:100%;height:100%;border:none;display:block;"
-                    ></iframe>
-                </div>
-            </div>
-
-                        <!-- ===== PANE: TV4 — SPORT (BOLA DONG LIVE + LIVESCORE) ===== -->
-            <div class="tv-subtab-pane" id="pane-tv4" style="padding:0;">
-
-                <!-- Internal sub-tabs: Live Streaming vs Livescore -->
-                <div style="display:flex;gap:6px;padding:12px 14px 8px;background:rgba(2,6,23,0.6);">
-                    <button class="fs-cat-btn active" id="tv4SubLive" onclick="tv4ShowSub('live', this)" style="flex:1;text-align:center;">📡 Live Streaming</button>
-                    <button class="fs-cat-btn" id="tv4SubScore" onclick="tv4ShowSub('score', this)" style="flex:1;text-align:center;">📊 Livescore</button>
-                </div>
-
-                <!-- Live Streaming iframe (boladong) -->
-                <div id="tv4PaneLive" style="position:relative;width:100%;height:calc(100vh - 175px);min-height:480px;background:#000;">
-                    <iframe
-                        id="tv4LiveIframe"
-                        src="https://wv7cg5hp.boladong.live/"
-                        allowfullscreen
-                        allow="autoplay; encrypted-media; fullscreen"
                         referrerpolicy="no-referrer-when-downgrade"
                         scrolling="yes"
                         style="width:100%;height:100%;border:none;display:block;"
+                        onload="tvWorldOnLoad()"
                     ></iframe>
+                    <div id="tvWorldLoading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#020617;gap:10px;">
+                        <div style="font-size:2rem;">🌍</div>
+                        <div style="font-size:0.7rem;color:var(--primary);letter-spacing:2px;font-weight:700;">MEMUAT TV WORLD...</div>
+                        <div style="font-size:0.6rem;color:#475569;">Jika gambar tidak muncul, koneksi mungkin lambat</div>
+                    </div>
                     <div style="position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:linear-gradient(0deg,rgba(0,0,0,0.85),transparent);text-align:center;">
-                        <a href="https://wv7cg5hp.boladong.live/" target="_blank" rel="noopener" style="font-size:0.62rem;color:#94a3b8;text-decoration:underline;">Verifikasi terus muncul / video tidak mau jalan? Buka Boladong di tab baru</a>
+                        <a href="https://tvgarden.world" target="_blank" rel="noopener" style="font-size:0.62rem;color:#94a3b8;text-decoration:underline;">Tidak muncul / blank? Buka TV World di tab baru</a>
                     </div>
                 </div>
+            </div>
 
-                <!-- Livescore — dirender sendiri pakai data API (bukan iframe, jadi tidak bisa diblokir situs lain) -->
-                <div id="tv4PaneScore" style="display:none;padding:14px 14px 24px;">
+                        <!-- ===== PANE: TV4 — SPORT (JADWAL & SKOR PERTANDINGAN MENDATANG) ===== -->
+            <div class="tv-subtab-pane" id="pane-tv4" style="padding:0;">
+
+                <!-- Jadwal & skor — dirender sendiri pakai data API (bukan iframe, jadi tidak bisa diblokir situs lain) -->
+                <div id="tv4PaneScore" style="padding:14px 14px 24px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                         <div>
-                            <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">JADWAL & SKOR HARI INI</div>
+                            <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">⚽ PERTANDINGAN MENDATANG</div>
                             <div id="tv4ScoreDate" style="font-size:0.65rem;color:#64748b;margin-top:2px;"></div>
                         </div>
                         <button onclick="tv4LoadLivescore(true)" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 14px;font-size:0.65rem;cursor:pointer;font-weight:700;">🔄 Refresh</button>
                     </div>
                     <div id="tv4ScoreLeagueFilter" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none;"></div>
-                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal & skor semua liga...</div>
+                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal pertandingan mendatang...</div>
                     <div id="tv4ScoreList" style="display:flex;flex-direction:column;gap:8px;"></div>
-                    <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:16px;">Data oleh TheSportsDB · Diperbarui otomatis setiap 60 detik</p>
+                    <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:16px;">Data oleh TheSportsDB · Skor live diperbarui tiap 90 detik · Jadwal diperbarui otomatis setiap hari</p>
                 </div>
 
             </div>
@@ -2082,6 +2070,15 @@
             btnEl.classList.add('active');
             // PANGGIL FUNGSINYA DI SINI — lazy load iframe tvWorld
             if (paneId === 'tvWorld') _lazyLoadIframe('tvWorld');
+            // Muat jadwal & skor pertandingan mendatang saat tab Sport pertama kali dibuka
+            if (paneId === 'tv4') tv4LoadLivescore(false);
+        }
+
+        // Sembunyikan overlay loading TV World begitu iframe berhasil dimuat
+        function tvWorldOnLoad() {
+            const iframe = document.getElementById('iframeTvWorld');
+            const loading = document.getElementById('tvWorldLoading');
+            if (loading && iframe && iframe.src) loading.style.display = 'none';
         }
 
                 // =============================================
@@ -2482,25 +2479,6 @@ let tv3Hls = null;
             other: [{"name": "Earth Touch tv", "url": "https://autentic-adventure-earth-1-gb.lg.wurl.tv/playlist.m3u8"}, {"name": "Outdoor Channel", "url": "https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg00718-outdoorchannela-outdoortvnz-samsungnz/playlist.m3u8"}, {"name": "Dens Learning", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h236/02.m3u8"}, {"name": "MEKKAH HD", "url": "http://op-group1-swiftservesd-1.dens.tv/s/s28/index.m3u8"}, {"name": "FOX WEATHER", "url": "https://247wlive.foxweather.com/stream/index.m3u8"}, {"name": "RT DOCUMENTARY", "url": "https://rt-rtd.rttv.com/live/rtdoc/playlist.m3u8"}, {"name": "MOONBUG", "url": "https://moonbug-rokuus.amagi.tv/playlist.m3u8"}, {"name": "VTV", "url": "https://flv.intechmedia.net/live/ch107.m3u8"}, {"name": "4K Travel", "url": "https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/4k-travel-tv/82473a17-8b1c-4e67-9bcc-ca869209c26e/2.m3u8"}, {"name": "Dens Food Channel", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h221/02.m3u8"}, {"name": "Dens ShowBiz", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h244/01.m3u8"}, {"name": "Dens Life & Style", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h222/02.m3u8"}, {"name": "TV5 Monde Style", "url": "https://ott.tv5monde.com/Content/HLS/Live/channel(style1)/index.m3u8"}, {"name": "ABC AUSTRALIA TRV", "url": "https://abc-news-dmd-streams-1.akamaized.net/out/v1/abc83881886746b0802dc3e7ca2bc792/index.m3u8"}, {"name": "ARIRANG", "url": "https://amdlive-ch01-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/chunklist_b2256000_sleng.m3u8"}, {"name": "TV5 MONDE STYLE DENS", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h312/index.m3u8?app_type=web&userid=lite&chname=TV5MONDE_ASIE"}, {"name": "Catholic TV", "url": "https://catholictvhd-lh.akamaized.net/hls/live/2043390/CTVLiveHD/playlist_4.m3u8"}, {"name": "BAHANA RADIO MUSIC", "url": "https://5bf7b725107e5.streamlock.net/bahanaradio/bahanaradio/playlist.m3u8"}, {"name": "IMTV", "url": "https://5bf7b725107e5.streamlock.net/imtv/imtv/playlist.m3u8"}, {"name": "SPIRIT TV", "url": "https://cdnlive.myspirit.tv/LS-ATL-43240-2/index.m3u8"}, {"name": "24H K-POP TV", "url": "https://live.24hrkpop.com/hls/3/stream.m3u8"}, {"name": "RELOAD MUSIC", "url": "http://web.onair-radio.eu:1935/video/video/chunklist_w1235825277.m3u8"}, {"name": "DEEP BLUE", "url": "https://rocket-tv.online/redtube/randomyt.m3u8?id=UCO0QmlhBypNZ62weotFyjig"}, {"name": "MTV BIGGEST POP", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d14fd1a252d35decbc4080c/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV SPANKIN NEW", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d14fdb8ca91eedee1633117/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV ROCKS", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/624303598e45140007d765c1/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "MTV FLOW LATINO", "url": "http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5d3609cd6a6c78d7672f2a81/master.m3u8?deviceType=samsung-tvplus&deviceMake=samsung&deviceModel=samsung&deviceVersion=unknown&appVersion=unknown&deviceLat=0&deviceLon=0&deviceDNT=%7BTARGETOPT%7D&deviceId=%7BPSID%7D&advertisingId=%7BPSID%7D&us_privacy=1YNY&samsung_app_domain=%7BAPP_DOMAIN%7D&samsung_app_name=%7BAPP_NAME%7D&profileLimit=&profileFloor=&embedPartner=samsung-tvplus"}, {"name": "NOW ROCK", "url": "https://lightning-now90s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "NEW KPOP", "url": "https://8fd4e0b07d96480eb52382739cc8acce.mediatailor.us-east-1.amazonaws.com/v1/manifest/44f73ba4d03e9607dcd9bebdcb8494d86964f1d8/Samsung_NewKID/76da8a34-9b9c-4920-b86f-934fbdaa2fcf/2.m3u8"}, {"name": "DANCE TV", "url": "https://op-group1-swiftservehd-1.dens.tv/h/h250/02.m3u8"}, {"name": "K-PopTV", "url": "https://wahyu1ptv.pages.dev/kPopTV.m3u8"}, {"name": "K-ContentsVoyage", "url": "https://wahyu1ptv.pages.dev/K-ContentsVoyage.m3u8"}, {"name": "K-PopShowChampion", "url": "https://wahyu1ptv.pages.dev/kPopCV.m3u8"}, {"name": "K-PopByCjENM", "url": "https://wahyu1ptv.pages.dev/kPopCjENM.m3u8"}, {"name": "IbizaTV", "url": "https://wahyu1ptv.pages.dev/Ibiza.m3u8"}, {"name": "FreshDance", "url": "https://wahyu1ptv.pages.dev/FreshDance.m3u8"}, {"name": "MetalTV", "url": "https://wahyu1ptv.pages.dev/MetalTV.m3u8"}, {"name": "NOW 70s", "url": "https://lightning-now70s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "NOW 80s", "url": "https://lightning-now80s-samsungnz.amagi.tv/playlist.m3u8"}, {"name": "101 Jak FM", "url": "https://wz.mari.co.id:1936/web_jakfm/jakfm/chunklist_w1610616570.m3u8"}, {"name": "Suara Surabaya FM", "url": "https://ssfm.siar.us/ssfm/live/playlist.m3u8"}]
         };
 
-                // Toggle between Live Streaming and Livescore inside the Sport (TV4) tab
-        function tv4ShowSub(view, btnEl) {
-            document.querySelectorAll('#tv4SubLive, #tv4SubScore').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-
-            const paneLive = document.getElementById('tv4PaneLive');
-            const paneScore = document.getElementById('tv4PaneScore');
-
-            if (view === 'score') {
-                paneLive.style.display = 'none';
-                paneScore.style.display = 'block';
-                // Muat livescore (data API, bukan iframe) saat pertama kali dibuka
-                tv4LoadLivescore(false);
-            } else {
-                paneScore.style.display = 'none';
-                paneLive.style.display = 'block';
-            }
-        }
-
         // =============================================
         // LIVESCORE — dirender sendiri dari data API TheSportsDB, gabungan banyak liga top sekaligus
         // =============================================
@@ -2508,6 +2486,7 @@ let tv3Hls = null;
         let tv4ScoreRefreshTimer = null;
         let tv4ScoreLeagueActive = 'semua';
         let tv4ScoreAllEvents = [];
+        let tv4ScoreLastDateISO = '';
 
         // Liga-liga top yang digabung jadi satu livescore (ID resmi TheSportsDB)
         const tv4Leagues = [
@@ -2561,16 +2540,19 @@ let tv3Hls = null;
             const dateLabel = document.getElementById('tv4ScoreDate');
             const now = Date.now();
 
-            if (!forceReload && tv4ScoreLoadedAt && (now - tv4ScoreLoadedAt) < 55000 && list.children.length > 0) return;
+            const todayISOCheck = tv4TodayISO();
+            const dateChanged = tv4ScoreLastDateISO && tv4ScoreLastDateISO !== todayISOCheck;
+            if (!forceReload && !dateChanged && tv4ScoreLoadedAt && (now - tv4ScoreLoadedAt) < 55000 && list.children.length > 0) return;
 
             tv4RenderLeagueFilter();
 
             status.style.display = 'block';
-            status.textContent = '⏳ Memuat jadwal & skor semua liga...';
+            status.textContent = '⏳ Memuat jadwal pertandingan mendatang...';
             if (!forceReload) list.innerHTML = '';
 
             const todayLabel = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            if (dateLabel) dateLabel.textContent = todayLabel;
+            if (dateLabel) dateLabel.textContent = 'Diperbarui: ' + todayLabel;
+            tv4ScoreLastDateISO = tv4TodayISO();
 
             try {
                 const todayISO = tv4TodayISO();
@@ -2603,7 +2585,8 @@ let tv3Hls = null;
                 const liveEvents = (liveData && liveData.events) || [];
 
                 // Gabungkan: live events dulu (sumber kebenaran utama untuk skor real-time),
-                // lalu jadwal mendatang dalam 7 hari ke depan, lalu hasil terbaru (3 hari terakhir)
+                // lalu jadwal mendatang dalam 21 hari ke depan (supaya semua pertandingan yang akan
+                // datang ikut tampil, bukan cuma hari ini), lalu hasil terbaru (3 hari terakhir)
                 // sebagai pelengkap kalau liga sedang jeda dan tidak ada pertandingan baru
                 const merged = new Map();
 
@@ -2626,7 +2609,7 @@ let tv3Hls = null;
 
                 nextResults.forEach(res => {
                     res.events.forEach(ev => {
-                        if (inNextDays(ev.dateEvent, 7) && !merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
+                        if (inNextDays(ev.dateEvent, 21) && !merged.has(ev.idEvent)) merged.set(ev.idEvent, ev);
                     });
                 });
 
@@ -2642,7 +2625,7 @@ let tv3Hls = null;
 
                 if (events.length === 0) {
                     status.style.display = 'block';
-                    status.textContent = 'Tidak ada pertandingan terjadwal dalam waktu dekat di liga-liga yang dipantau.';
+                    status.textContent = 'Tidak ada pertandingan mendatang yang terjadwal di liga-liga yang dipantau.';
                     list.innerHTML = '';
                     return;
                 }
@@ -2650,13 +2633,12 @@ let tv3Hls = null;
                 status.style.display = 'none';
                 tv4RenderLivescore(events);
 
-                // Auto-refresh tiap 90 detik (dikurangi dari 45s untuk menghindari rate limit TheSportsDB)
+                // Auto-refresh tiap 90 detik untuk skor live, dan otomatis refresh penuh
+                // begitu tanggal berganti (refresh harian) selama tab Sport masih terbuka
                 clearInterval(tv4ScoreRefreshTimer);
                 tv4ScoreRefreshTimer = setInterval(() => {
                     const tv4Pane = document.getElementById('pane-tv4');
-                    const scorePane = document.getElementById('tv4PaneScore');
-                    if (tv4Pane && tv4Pane.classList.contains('active') &&
-                        scorePane && scorePane.style.display !== 'none') {
+                    if (tv4Pane && tv4Pane.classList.contains('active')) {
                         tv4LoadLivescore(true);
                     }
                 }, 90000);
@@ -2676,7 +2658,7 @@ let tv3Hls = null;
                                        tv4ScoreLeagueActive.toLowerCase().includes((ev.strLeague || '').toLowerCase().split(' ')[0]));
 
             if (filtered.length === 0) {
-                list.innerHTML = '<div style="font-size:0.65rem;color:#475569;text-align:center;padding:20px 0;">Tidak ada pertandingan untuk liga ini hari ini.</div>';
+                list.innerHTML = '<div style="font-size:0.65rem;color:#475569;text-align:center;padding:20px 0;">Tidak ada pertandingan mendatang untuk liga ini.</div>';
                 return;
             }
 
