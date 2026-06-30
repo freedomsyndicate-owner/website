@@ -5,89 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freedom Syndicate | Official Hub</title>
     <!-- ======================================================
-         FREEDOM SYNDICATE — SECURITY SHIELD v2.0
-         Anti Inspect · Anti Copy · Anti DevTools
+         FREEDOM SYNDICATE — SECURITY SHIELD v3.0
+         Anti Inspect · Anti Copy · Anti DevTools · Stable
     ====================================================== -->
     <script>
     (function(){
         'use strict';
 
         // --- 1. DISABLE KLIK KANAN ---
-        document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
 
         // --- 2. DISABLE TEXT SELECT ---
-        document.addEventListener('selectstart', function(e){ e.preventDefault(); return false; });
+        document.addEventListener('selectstart', function(e){
+            // Izinkan select di input & textarea
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        }, true);
 
         // --- 3. DISABLE DRAG ---
-        document.addEventListener('dragstart', function(e){ e.preventDefault(); return false; });
+        document.addEventListener('dragstart', function(e){ e.preventDefault(); }, true);
 
         // --- 4. DISABLE KEYBOARD SHORTCUTS BERBAHAYA ---
         document.addEventListener('keydown', function(e){
+            var k = e.key ? e.key.toLowerCase() : '';
+            var ctrl = e.ctrlKey || e.metaKey;
+            var shift = e.shiftKey;
+
             // F12
-            if(e.key === 'F12') { e.preventDefault(); return false; }
-            // Ctrl+U (view source)
-            if(e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+            if(e.key === 'F12'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+U (view-source)
+            if(ctrl && k === 'u'){ e.preventDefault(); e.stopPropagation(); return false; }
             // Ctrl+S (save)
-            if(e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
-            // Ctrl+Shift+I (inspect)
-            if(e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
-            // Ctrl+Shift+J (console)
-            if(e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
-            // Ctrl+Shift+C (elements)
-            if(e.ctrlKey && e.shiftKey && e.key === 'C') { e.preventDefault(); return false; }
-            // Ctrl+Shift+K (firefox console)
-            if(e.ctrlKey && e.shiftKey && e.key === 'K') { e.preventDefault(); return false; }
-            // Ctrl+A (select all)
-            if(e.ctrlKey && e.key === 'a') { e.preventDefault(); return false; }
+            if(ctrl && k === 's'){ e.preventDefault(); e.stopPropagation(); return false; }
             // Ctrl+P (print)
-            if(e.ctrlKey && e.key === 'p') { e.preventDefault(); return false; }
+            if(ctrl && k === 'p'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C / Ctrl+Shift+K
+            if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
+                e.preventDefault(); e.stopPropagation(); return false;
+            }
+            // Ctrl+A — blokir hanya di luar input/textarea
+            if(ctrl && k === 'a'){
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+                    e.preventDefault(); e.stopPropagation(); return false;
+                }
+            }
         }, true);
 
-        // --- 5. DEVTOOLS DETECTOR (size method) ---
+        // --- 5. DEVTOOLS DETECTOR ---
+        // Metode: bandingkan window size. Threshold 200px agar tidak false-positive di mobile.
         var _devOpen = false;
-        var _devThreshold = 160;
-        function _checkDevTools(){
-            var w = window.outerWidth - window.innerWidth;
-            var h = window.outerHeight - window.innerHeight;
-            if(w > _devThreshold || h > _devThreshold){
-                if(!_devOpen){
-                    _devOpen = true;
-                    _onDevToolsOpen();
-                }
+        var _devCheckActive = true;
+
+        function _onDevToolsOpen(){
+            if(!_devCheckActive) return;
+            _devCheckActive = false; // jalankan sekali saja
+            document.addEventListener('DOMContentLoaded', function(){
+                _showBlocked();
+            });
+            // Jika DOM sudah ready, langsung tampilkan
+            if(document.body) _showBlocked();
+        }
+
+        function _showBlocked(){
+            document.body.innerHTML = [
+                '<div style="display:flex;flex-direction:column;align-items:center;',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
+                'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.0</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools & refresh halaman.</div>',
+                '</div>'
+            ].join('');
+        }
+
+        // Cek setiap 1.5 detik — hanya aktif di desktop (skip mobile kecil)
+        setInterval(function(){
+            if(!_devCheckActive) return;
+            // Mobile: outerWidth biasanya sama dengan innerWidth, skip
+            if(window.outerWidth < 500) return;
+            var wDiff = window.outerWidth - window.innerWidth;
+            var hDiff = window.outerHeight - window.innerHeight;
+            if(wDiff > 200 || hDiff > 200){
+                if(!_devOpen){ _devOpen = true; _onDevToolsOpen(); }
             } else {
                 _devOpen = false;
             }
-        }
+        }, 1500);
 
-        function _onDevToolsOpen(){
-            // Kosongkan halaman & redirect ke halaman blank
-            document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#020617;color:#f87171;font-family:monospace;text-align:center;gap:16px;"><div style="font-size:3rem;">🚫</div><div style="font-size:1.2rem;font-weight:900;letter-spacing:3px;">AKSES DITOLAK</div><div style="font-size:0.8rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD</div><div style="font-size:0.7rem;color:#334155;margin-top:8px;">Tutup Developer Tools untuk melanjutkan.</div></div>';
-        }
+        // --- 6. DISABLE PRINT ---
+        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        setInterval(_checkDevTools, 1000);
-
-        // --- 6. DEBUGGER TRAP (memperlambat reverse engineering) ---
-        // Hanya aktif jika ada indikasi inspect
-        var _dbgInterval = setInterval(function(){
-            var _t = new Date();
-            (function(){ return false; }['constructor']('debugger')());
-            if(new Date() - _t > 100){
-                _onDevToolsOpen();
-                clearInterval(_dbgInterval);
-            }
-        }, 3000);
-
-        // --- 7. DISABLE PRINT ---
-        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); return false; });
-
-        // --- 8. CSS ANTI SELECT (backup) ---
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
         var _s = document.createElement('style');
-        _s.textContent = '* { -webkit-user-select:none!important; -moz-user-select:none!important; -ms-user-select:none!important; user-select:none!important; } input, textarea { -webkit-user-select:text!important; user-select:text!important; }';
+        _s.textContent = [
+            '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
+            '-ms-user-select:none!important; user-select:none!important;',
+            '-webkit-touch-callout:none!important; }',
+            'input, textarea, [contenteditable] {',
+            '-webkit-user-select:text!important; user-select:text!important; }'
+        ].join('');
         document.head.appendChild(_s);
 
     })();
     </script>
-    <!-- END SECURITY SHIELD -->
+    <!-- END SECURITY SHIELD v3.0 -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
     <style>
@@ -1457,8 +1479,9 @@
                 <div class="form-group">
                     <textarea id="pesanAnonim" placeholder="Ketik pesanmu di sini..."></textarea>
                     <span id="alertPesan" class="alert-msg">Peringatan: Link/URL dilarang di ruang ini!</span>
-                    <span id="suksesPesan" class="alert-msg" style="color: #4ade80;">Pesan berhasil dikirim!</span>
-                    <button class="btn-submit" onclick="kirimPesan()">Kirim Pesan</button>
+                    <span id="loadingPesan" class="alert-msg" style="display:none; color:#38bdf8;">⏳ Mengirim pesan ke Owner...</span>
+                    <span id="suksesPesan" class="alert-msg" style="color: #4ade80;">✅ Pesan berhasil dikirim ke Owner!</span>
+                    <button id="btnKirimPesan" class="btn-submit" onclick="kirimPesan()">Kirim Pesan</button>
                 </div>
             </div>
         </div>
@@ -1505,14 +1528,14 @@
             </div>
 
             <div class="komik-pane active" id="pane-rosy" style="height:calc(100vh - 140px);min-height:500px;">
-                <iframe src="https://rosyscans.id/" title="RosyScans" loading="lazy"
+                <iframe id="iframeRosy" src="" title="RosyScans" loading="lazy"
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
             </div>
 
             <div class="komik-pane" id="pane-ryzu" style="display:none;height:calc(100vh - 140px);min-height:500px;">
-                <iframe src="https://ryzukomik.my.id/" title="RyzuKomik" loading="lazy"
+                <iframe id="iframeRyzu" src="" title="RyzuKomik" loading="lazy"
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
@@ -1587,7 +1610,7 @@
                 </div>
             </div>
 
-            <!-- ===== KONTEN DEWASA (muncul setelah PIN benar) ===== -->
+            <!-- ===== KONTEN DEWASA (muncul setelah PIN benar, diisi via JS) ===== -->
             <div id="dewasaContent" style="display:none;">
                 <div class="content-box" style="text-align:center;">
                     <div class="adult-fire">🔥</div>
@@ -1602,21 +1625,8 @@
                         Bergabunglah sekarang dan dapatkan akses penuh ke konten yang tak akan kamu temukan di tempat lain — <span style="color:#f87171; font-weight:700;">tanpa sensor, tanpa batas.</span>
                     </p>
                     <p class="adult-cta">👇 Pilih platform favoritmu & langsung gabung 👇</p>
-                    <a href="https://t.me/+PFV6bP6F8k5hMTNl" target="_blank" class="adult-join-btn btn-join-tg">
-                        <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg></span>
-                        <span class="ajb-text"><span class="ajb-title">TELEGRAM</span><span class="ajb-sub">Gabung Channel Sekarang</span></span>
-                        <span class="ajb-arrow">→</span>
-                    </a>
-                    <a href="https://discord.gg/fAvemWFdm" target="_blank" class="adult-join-btn btn-join-dc">
-                        <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></span>
-                        <span class="ajb-text"><span class="ajb-title">DISCORD</span><span class="ajb-sub">Masuk ke Server Rahasia</span></span>
-                        <span class="ajb-arrow">→</span>
-                    </a>
-                    <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" target="_blank" class="adult-join-btn btn-join-wa">
-                        <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span>
-                        <span class="ajb-text"><span class="ajb-title">WHATSAPP</span><span class="ajb-sub">Ikuti Channel Eksklusif</span></span>
-                        <span class="ajb-arrow">→</span>
-                    </a>
+                    <!-- Link diisi dinamis oleh JS setelah PIN terverifikasi -->
+                    <div id="dewasaLinks"></div>
                     <p class="adult-note">⚠️ Dengan bergabung, kamu menyatakan bahwa kamu berusia <b>18 tahun ke atas</b>.</p>
                 </div>
             </div>
@@ -1738,7 +1748,8 @@
 
                 <script>
                 var fsMediaType = 'movie';
-                var fsTmdbKey = '4ef0d7355d9ffb5151e987764708ce96'; // TMDB public demo key
+                // API key dipecah agar tidak terbaca utuh di source
+                var _k = ['4ef0d', '7355d9', 'ffb515', '1e9877', '64708c', 'e96'].join('');
 
                 function fsSetType(type, btn) {
                     fsMediaType = type;
@@ -1751,7 +1762,7 @@
                 async function fsSearch() {
                     var q = document.getElementById('fsSearchInput').value.trim();
                     if (!q) return;
-                    var res = await fetch('https://api.themoviedb.org/3/search/'+fsMediaType+'?api_key='+fsTmdbKey+'&query='+encodeURIComponent(q)+'&language=en-US&page=1');
+                    var res = await fetch('https://api.themoviedb.org/3/search/'+fsMediaType+'?api_key='+_k+'&query='+encodeURIComponent(q)+'&language=en-US&page=1');
                     var data = await res.json();
                     var grid = document.getElementById('fsResultsGrid');
                     grid.innerHTML = '';
@@ -1897,11 +1908,12 @@
                 <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV1</p>
             </div>
 
-            <!-- ===== PANE: WORLD (full iframe) ===== -->
+            <!-- ===== PANE: WORLD (full iframe, lazy load) ===== -->
             <div class="tv-subtab-pane" id="pane-tvWorld" style="padding:0;">
                 <div style="position:relative;width:100%;height:calc(100vh - 130px);min-height:500px;background:#000;">
                     <iframe
-                        src="https://tvgarden.world/"
+                        id="iframeTvWorld"
+                        src=""
                         allowfullscreen
                         allow="autoplay; encrypted-media; fullscreen"
                         scrolling="yes"
@@ -1989,6 +2001,8 @@
             document.querySelectorAll('.tv-subtab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('pane-' + paneId).classList.add('active');
             btnEl.classList.add('active');
+            // PANGGIL FUNGSINYA DI SINI — lazy load iframe tvWorld
+            if (paneId === 'tvWorld') _lazyLoadIframe('tvWorld');
         }
 
                 // =============================================
@@ -2256,15 +2270,38 @@
             video.style.display = 'block';
 
             if (ch.url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
-                tv1Hls = new Hls();
-                tv1Hls.loadSource(ch.url);
-                tv1Hls.attachMedia(video);
-                tv1Hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                tv1Hls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal) {
-                        document.getElementById('tv1Status').textContent = `⚠️ "${ch.name}" gagal diputar (stream offline/error). Coba channel lain.`;
-                    }
-                });
+                let _hlsRetry = 0;
+                const _maxRetry = 3;
+
+                function _hlsLoad(url) {
+                    if (tv1Hls) { tv1Hls.destroy(); tv1Hls = null; }
+                    tv1Hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+                    tv1Hls.loadSource(url);
+                    tv1Hls.attachMedia(video);
+                    tv1Hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        _hlsRetry = 0;
+                        document.getElementById('tv1Status').textContent = `▶ Memutar: ${ch.name}`;
+                        video.play().catch(() => {});
+                    });
+                    tv1Hls.on(Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) {
+                            _hlsRetry++;
+                            if (_hlsRetry <= _maxRetry) {
+                                document.getElementById('tv1Status').textContent =
+                                    `🔄 Retry ${_hlsRetry}/${_maxRetry} untuk "${ch.name}"...`;
+                                setTimeout(() => _hlsLoad(url), 2000 * _hlsRetry);
+                            } else {
+                                document.getElementById('tv1Status').innerHTML =
+                                    `⚠️ <b>"${ch.name}"</b> gagal setelah ${_maxRetry}x retry. Stream offline / link mati.` +
+                                    ` <button onclick="laporkanChannelMati('${ch.name.replace(/'/g,"\\'")}','${url}')" ` +
+                                    `style="margin-left:8px;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.4);` +
+                                    `color:#f87171;font-size:0.68rem;padding:4px 10px;border-radius:8px;cursor:pointer;font-family:inherit;">` +
+                                    `📢 Laporkan Channel Mati</button>`;
+                            }
+                        }
+                    });
+                }
+                _hlsLoad(ch.url);
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = ch.url;
                 video.play().catch(() => {});
@@ -2621,6 +2658,8 @@ let tv3Hls = null;
             pane.classList.add('active');
             pane.style.display = 'block';
             btnEl.classList.add('active');
+            // PANGGIL FUNGSINYA DI SINI — lazy load iframe komik
+            _lazyLoadIframe(paneId);
         }
 
         // --- LOGIC SIDEBAR ---
@@ -2650,42 +2689,123 @@ let tv3Hls = null;
             toggleSidebar();
         }
 
-        // --- LOGIC KELUH KESAH (BLOCK LINK) ---
-        function kirimPesan() {
-            const textarea = document.getElementById('pesanAnonim');
-            const teks = textarea.value;
-            const alertBox = document.getElementById('alertPesan');
+        // --- LOGIC KELUH KESAH (REAL TELEGRAM WEBHOOK) ---
+        async function kirimPesan() {
+            const textarea  = document.getElementById('pesanAnonim');
+            const btn       = document.getElementById('btnKirimPesan');
+            const alertBox  = document.getElementById('alertPesan');
             const suksesBox = document.getElementById('suksesPesan');
-            
-            // Regex untuk mendeteksi http, https, atau www
-            const urlRegex = /(https?:\/\/|www\.)/i;
+            const loadBox   = document.getElementById('loadingPesan');
+            const teks      = textarea.value.trim();
 
-            alertBox.style.display = 'none';
+            alertBox.style.display  = 'none';
             suksesBox.style.display = 'none';
+            loadBox.style.display   = 'none';
 
-            if(teks.trim() === '') return;
+            if (!teks) return;
 
+            // Cek link/URL
+            const urlRegex = /(https?:\/\/|www\.)/i;
             if (urlRegex.test(teks)) {
-                alertBox.style.display = 'block'; // Tampilkan error
-            } else {
-                suksesBox.style.display = 'block'; // Tampilkan sukses
-                textarea.value = ''; // Kosongkan text area setelah sukses
-                setTimeout(() => { suksesBox.style.display = 'none'; }, 3000);
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            // Loading state
+            btn.disabled       = true;
+            btn.textContent    = '⏳ Mengirim...';
+            loadBox.style.display = 'block';
+
+            // Pecah token & chat ID supaya tidak kelihatan utuh di source
+            const _t = ['7577956698', 'AAHNYeNd', 'bxkLl4o-', 'TN2NJG_', 'QlzKfL2', 'ZUhN4No'].join('');
+            const _c = '-1002848757645';
+            const pesan = `🗣️ *KELUH KESAH ANONIM*\n\n${teks}\n\n⏰ ${new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})} WIB`;
+
+            try {
+                const res = await fetch(
+                    `https://api.telegram.org/bot${_t}/sendMessage`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: _c, text: pesan, parse_mode: 'Markdown' })
+                    }
+                );
+                const data = await res.json();
+                if (data.ok) {
+                    loadBox.style.display   = 'none';
+                    suksesBox.style.display = 'block';
+                    textarea.value = '';
+                    setTimeout(() => { suksesBox.style.display = 'none'; }, 3500);
+                } else {
+                    throw new Error(data.description || 'Gagal');
+                }
+            } catch (err) {
+                loadBox.style.display  = 'none';
+                alertBox.textContent   = '⚠️ Gagal mengirim pesan. Cek koneksi & coba lagi.';
+                alertBox.style.display = 'block';
+            } finally {
+                btn.disabled    = false;
+                btn.textContent = 'Kirim Pesan';
             }
         }
 
-        // --- LOGIC BUKA KONTEN 18+ ---
-        function bukaKontenDewasa() {
-            // Simulasi loading sebentar agar terasa seperti login
-            const btn = document.querySelector('.btn-google');
-            btn.innerHTML = 'Memverifikasi Umur...';
-            
-            setTimeout(() => {
-                document.getElementById('adultOverlay').style.display = 'none';
-                document.getElementById('adultContent').style.filter = 'none';
-                document.getElementById('adultContent').style.pointerEvents = 'auto';
-                document.getElementById('adultContent').style.userSelect = 'auto';
-            }, 1000);
+        // --- LAPORAN CHANNEL MATI (kirim ke Telegram) ---
+        async function laporkanChannelMati(nama, url) {
+            const _t = ['7577956698', 'AAHNYeNd', 'bxkLl4o-', 'TN2NJG_', 'QlzKfL2', 'ZUhN4No'].join('');
+            const _c = '-1002848757645';
+            const pesan = `📢 *LAPORAN CHANNEL MATI*\n\n📺 Channel: ${nama}\n🔗 URL: ${url}\n⏰ ${new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})} WIB`;
+            try {
+                await fetch(`https://api.telegram.org/bot${_t}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: _c, text: pesan, parse_mode: 'Markdown' })
+                });
+                document.getElementById('tv1Status').textContent = `✅ Laporan "${nama}" berhasil dikirim ke admin. Terima kasih!`;
+            } catch(e) {
+                document.getElementById('tv1Status').textContent = `⚠️ Gagal kirim laporan. Cek koneksi.`;
+            }
+        }
+
+        // --- LAZY LOAD IFRAMES (komik & TV World) ---
+        const _iframeSrcs = {
+            rosy:    'https://rosyscans.id/',
+            ryzu:    'https://ryzukomik.my.id/',
+            tvWorld: 'https://tvgarden.world/'
+        };
+        const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false };
+
+        function _lazyLoadIframe(key) {
+            if (_iframeLoaded[key]) return;
+            const idMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', tvWorld: 'iframeTvWorld' };
+            const el = document.getElementById(idMap[key]);
+            if (el && !el.src) { el.src = _iframeSrcs[key]; }
+            _iframeLoaded[key] = true;
+        }
+
+        // --- INJECT LINK DEWASA SETELAH PIN BENAR ---
+        function _injectDewasaLinks() {
+            const wrap = document.getElementById('dewasaLinks');
+            if (!wrap || wrap.innerHTML.trim()) return; // sudah diisi
+            // Link dibangun dari potongan string, tidak ada URL utuh di HTML
+            const _tgBase  = ['https://t.me/', '+PFV6bP6', 'F8k5hMTNl'].join('');
+            const _dcBase  = ['https://discord', '.gg/', 'fAvemWFdm'].join('');
+            const _waBase  = ['https://whatsapp.com/channel/', '0029VanKWrx7oQhdS7iEh43l'].join('');
+            wrap.innerHTML = `
+                <a href="${_tgBase}" target="_blank" class="adult-join-btn btn-join-tg">
+                    <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg></span>
+                    <span class="ajb-text"><span class="ajb-title">TELEGRAM</span><span class="ajb-sub">Gabung Channel Sekarang</span></span>
+                    <span class="ajb-arrow">→</span>
+                </a>
+                <a href="${_dcBase}" target="_blank" class="adult-join-btn btn-join-dc">
+                    <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></span>
+                    <span class="ajb-text"><span class="ajb-title">DISCORD</span><span class="ajb-sub">Masuk ke Server Rahasia</span></span>
+                    <span class="ajb-arrow">→</span>
+                </a>
+                <a href="${_waBase}" target="_blank" class="adult-join-btn btn-join-wa">
+                    <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span>
+                    <span class="ajb-text"><span class="ajb-title">WHATSAPP</span><span class="ajb-sub">Ikuti Channel Eksklusif</span></span>
+                    <span class="ajb-arrow">→</span>
+                </a>`;
         }
 
         // === INTRO SPLASH SCREEN FUNCTIONS ===
@@ -2803,6 +2923,8 @@ let tv3Hls = null;
                     dot.style.boxShadow = '0 0 10px rgba(74,222,128,0.7)';
                 }
                 pinLocked = true;
+                // PANGGIL FUNGSINYA DI SINI — inject link setelah PIN benar
+                _injectDewasaLinks();
                 setTimeout(() => {
                     document.getElementById('dewasaPinScreen').style.display = 'none';
                     document.getElementById('dewasaContent').style.display = 'block';
@@ -2854,15 +2976,27 @@ let tv3Hls = null;
             };
         });
 
-        // Keyboard support untuk PIN
+        // Keyboard support untuk PIN (bubble phase — setelah security capture layer)
         document.addEventListener('keydown', (e) => {
             const dewasaActive = document.getElementById('dewasa').classList.contains('active');
             if (!dewasaActive) return;
             if (document.getElementById('dewasaContent').style.display === 'block') return;
-            if (e.key >= '0' && e.key <= '9') pinPress(e.key);
-            else if (e.key === 'Backspace') pinClear();
-            else if (e.key === 'Enter') pinSubmit();
-        });
+            // Angka 0-9
+            if (e.key >= '0' && e.key <= '9') {
+                e.stopPropagation();
+                pinPress(e.key);
+            }
+            // Hapus digit terakhir
+            else if (e.key === 'Backspace') {
+                e.stopPropagation();
+                pinClear();
+            }
+            // Submit
+            else if (e.key === 'Enter') {
+                e.stopPropagation();
+                pinSubmit();
+            }
+        }, false); // false = bubble phase, jalan setelah capture
     </script>
 </body>
 </html>
