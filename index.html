@@ -111,7 +111,30 @@
     </script>
     <!-- END SECURITY SHIELD v3.0 -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" 
+        onerror="window._hlsJsFailed=true;console.warn('HLS.js gagal dimuat dari CDN.');"></script>
+    <script>
+    // HLS.js fallback detector — jika CDN Cloudflare down/diblokir
+    window.addEventListener('DOMContentLoaded', function(){
+        if (window._hlsJsFailed || typeof Hls === 'undefined') {
+            window._hlsJsFailed = true;
+            // Inject warning banner di TV tab jika HLS.js tidak tersedia
+            var _hlsWarnShown = false;
+            var _origPlayTv = window.playTv1Channel;
+            window._showHlsWarning = function(name) {
+                if (_hlsWarnShown) return;
+                _hlsWarnShown = true;
+                var statusEl = document.getElementById('tv1Status');
+                if (statusEl) {
+                    statusEl.innerHTML = '⚠️ <b>HLS.js gagal dimuat</b> — streaming .m3u8 tidak tersedia. ' +
+                        'Coba matikan ekstensi pemblokir (AdBlock/VPN), atau gunakan channel tipe embed. ' +
+                        '<a href="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" target="_blank" ' +
+                        'style="color:var(--primary);text-decoration:underline;">Cek CDN</a>';
+                }
+            };
+        }
+    });
+    </script>
     <style>
         :root {
             --primary: #38bdf8;
@@ -1712,8 +1735,9 @@
                 </div>
 
                 <!-- Results grid -->
-                <div id="fsResults" style="display:none;padding:10px 14px;overflow-y:auto;max-height:280px;background:rgba(5,10,20,0.98);">
+                <div id="fsResults" style="display:none;padding:10px 14px;overflow-y:auto;max-height:340px;background:rgba(5,10,20,0.98);">
                     <div id="fsResultsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+                    <div id="fsPaginationNav"></div>
                 </div>
 
                 <!-- Player -->
@@ -1759,14 +1783,41 @@
                     document.getElementById('fsBtnTV').style.color = type==='tv' ? '#000' : 'var(--primary)';
                 }
 
+                var _fsCurrentResults = [];
+                var _fsCurrentPage = 0;
+                var _fsPageSize = 12;
+
                 async function fsSearch() {
                     var q = document.getElementById('fsSearchInput').value.trim();
                     if (!q) return;
-                    var res = await fetch('https://api.themoviedb.org/3/search/'+fsMediaType+'?api_key='+_k+'&query='+encodeURIComponent(q)+'&language=en-US&page=1');
-                    var data = await res.json();
                     var grid = document.getElementById('fsResultsGrid');
+                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:0.75rem;">🔍 Mencari...</div>';
+                    document.getElementById('fsResults').style.display = 'block';
+                    // Ambil sampai 3 halaman sekaligus untuk hasil lebih banyak
+                    var allResults = [];
+                    try {
+                        for (var p = 1; p <= 3; p++) {
+                            var res = await fetch('https://api.themoviedb.org/3/search/'+fsMediaType+'?api_key='+_k+'&query='+encodeURIComponent(q)+'&language=en-US&page='+p);
+                            var data = await res.json();
+                            var batch = data.results || [];
+                            allResults = allResults.concat(batch);
+                            if (batch.length < 20) break; // halaman terakhir
+                        }
+                    } catch(e) {
+                        grid.innerHTML = '<div style="text-align:center;padding:20px;color:#f87171;font-size:0.75rem;">⚠️ Gagal mencari. Cek koneksi.</div>';
+                        return;
+                    }
+                    _fsCurrentResults = allResults;
+                    _fsCurrentPage = 0;
                     grid.innerHTML = '';
-                    (data.results||[]).slice(0,12).forEach(function(item){
+                    _fsRenderPage();
+                }
+
+                function _fsRenderPage() {
+                    var grid = document.getElementById('fsResultsGrid');
+                    var start = _fsCurrentPage * _fsPageSize;
+                    var batch = _fsCurrentResults.slice(start, start + _fsPageSize);
+                    batch.forEach(function(item){
                         var title = item.title || item.name || '-';
                         var poster = item.poster_path ? 'https://image.tmdb.org/t/p/w200'+item.poster_path : '';
                         var year = (item.release_date||item.first_air_date||'').slice(0,4);
@@ -1780,6 +1831,34 @@
                             : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+title+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+year+'</div>';
                         grid.appendChild(card);
                     });
+                    // Tombol Load More / Prev
+                    var navWrap = document.getElementById('fsPaginationNav');
+                    var total = _fsCurrentResults.length;
+                    var totalPages = Math.ceil(total / _fsPageSize);
+                    if (navWrap) {
+                        navWrap.innerHTML = '';
+                        var info = document.createElement('div');
+                        info.style.cssText = 'font-size:0.65rem;color:#64748b;text-align:center;margin:8px 0 4px;';
+                        info.textContent = 'Menampilkan '+(start+1)+'-'+Math.min(start+_fsPageSize, total)+' dari '+total+' hasil';
+                        navWrap.appendChild(info);
+                        var btnRow = document.createElement('div');
+                        btnRow.style.cssText = 'display:flex;gap:8px;justify-content:center;margin-bottom:8px;';
+                        if (_fsCurrentPage > 0) {
+                            var btnPrev = document.createElement('button');
+                            btnPrev.textContent = '← Sebelumnya';
+                            btnPrev.style.cssText = 'background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);font-size:0.7rem;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;';
+                            btnPrev.onclick = function(){ _fsCurrentPage--; grid.innerHTML=''; _fsRenderPage(); grid.scrollIntoView({behavior:'smooth',block:'start'}); };
+                            btnRow.appendChild(btnPrev);
+                        }
+                        if (_fsCurrentPage < totalPages - 1) {
+                            var btnNext = document.createElement('button');
+                            btnNext.textContent = 'Selanjutnya →';
+                            btnNext.style.cssText = 'background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--primary);font-size:0.7rem;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;';
+                            btnNext.onclick = function(){ _fsCurrentPage++; grid.innerHTML=''; _fsRenderPage(); grid.scrollIntoView({behavior:'smooth',block:'start'}); };
+                            btnRow.appendChild(btnNext);
+                        }
+                        if (btnRow.children.length) navWrap.appendChild(btnRow);
+                    }
                     document.getElementById('fsResults').style.display = 'block';
                 }
 
@@ -2269,6 +2348,19 @@
             iframe.src = '';
             video.style.display = 'block';
 
+            // Cek apakah HLS.js berhasil dimuat
+            if (ch.url.toLowerCase().includes('.m3u8') && window._hlsJsFailed) {
+                if (window._showHlsWarning) window._showHlsWarning(ch.name);
+                overlay.classList.remove('hidden');
+                overlay.innerHTML = '<div style="font-size:1.5rem;margin-bottom:8px;">⚠️</div>' +
+                    '<div style="font-size:0.75rem;color:#fca5a5;font-weight:700;margin-bottom:6px;">HLS.js Tidak Tersedia</div>' +
+                    '<div style="font-size:0.62rem;color:#94a3b8;line-height:1.6;margin-bottom:10px;">Library streaming gagal dimuat dari CDN.<br>Coba matikan AdBlock / VPN, lalu refresh.</div>' +
+                    '<button onclick="location.reload()" style="background:rgba(248,113,113,0.2);border:1px solid rgba(248,113,113,0.4);color:#fca5a5;padding:8px 16px;border-radius:8px;font-size:0.72rem;cursor:pointer;font-weight:700;">🔄 Refresh Halaman</button>';
+                video.style.display = 'none';
+                document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
             if (ch.url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
                 let _hlsRetry = 0;
                 const _maxRetry = 3;
@@ -2558,7 +2650,7 @@ let tv3Hls = null;
                 status.style.display = 'none';
                 tv4RenderLivescore(events);
 
-                // Auto-refresh tiap 45 detik selama tab livescore sedang aktif (skor live ter-update terus)
+                // Auto-refresh tiap 90 detik (dikurangi dari 45s untuk menghindari rate limit TheSportsDB)
                 clearInterval(tv4ScoreRefreshTimer);
                 tv4ScoreRefreshTimer = setInterval(() => {
                     const tv4Pane = document.getElementById('pane-tv4');
@@ -2567,7 +2659,7 @@ let tv3Hls = null;
                         scorePane && scorePane.style.display !== 'none') {
                         tv4LoadLivescore(true);
                     }
-                }, 45000);
+                }, 90000);
             } catch (e) {
                 status.style.display = 'block';
                 status.textContent = '⚠️ Gagal memuat data livescore. Coba refresh atau cek koneksi.';
@@ -2783,9 +2875,14 @@ let tv3Hls = null;
         }
 
         // --- INJECT LINK DEWASA SETELAH PIN BENAR ---
-        function _injectDewasaLinks() {
-            const wrap = document.getElementById('dewasaLinks');
-            if (!wrap || wrap.innerHTML.trim()) return; // sudah diisi
+        // Nama fungsi di-obfuscate agar tidak bisa di-call via address bar javascript:
+        var _0x4f2a = (function() {
+            var _rendered = false;
+            return function() {
+                if (_rendered) return;
+                const wrap = document.getElementById('dewasaLinks');
+                if (!wrap) return;
+                _rendered = true;
             // Link dibangun dari potongan string, tidak ada URL utuh di HTML
             const _tgBase  = ['https://t.me/', '+PFV6bP6', 'F8k5hMTNl'].join('');
             const _dcBase  = ['https://discord', '.gg/', 'fAvemWFdm'].join('');
@@ -2806,7 +2903,11 @@ let tv3Hls = null;
                     <span class="ajb-text"><span class="ajb-title">WHATSAPP</span><span class="ajb-sub">Ikuti Channel Eksklusif</span></span>
                     <span class="ajb-arrow">→</span>
                 </a>`;
-        }
+            };
+        })();
+
+        // Alias internal — tidak di-expose ke window global
+        function _injectDewasaLinks() { _0x4f2a(); }
 
         // === INTRO SPLASH SCREEN FUNCTIONS ===
         function createIntroStars() {
