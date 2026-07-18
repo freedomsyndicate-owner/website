@@ -1081,18 +1081,16 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-transform: uppercase;
-            animation: introTitleGlitch 4s ease-in-out infinite;
-        }
-
-        @keyframes introTitleGlitch {
-            0%, 90%, 100% { transform: translateX(0); }
-            92% { transform: translateX(-3px); }
-            94% { transform: translateX(3px); }
-            96% { transform: translateX(-2px); }
+            /* animasi transform dihapus: kombinasi dengan background-clip:text
+               inilah yang bikin teks tampak dobel/berantakan (ghosting) di Android WebView */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: opacity;
         }
 
         .intro-title-word {
-            display: inline-block;
+            display: block;
+            line-height: 1.15;
             animation: introWordReveal 1s ease-out forwards;
             opacity: 0;
             transform: translateY(30px);
@@ -1550,21 +1548,19 @@
                 </div>
             </div>
 
-            <div class="komik-pane active" id="pane-rosy" style="height:calc(100vh - 140px);min-height:500px;">
+            <div class="komik-pane active" id="pane-rosy" style="position:relative;height:calc(100vh - 140px);min-height:500px;">
                 <iframe id="iframeRosy" src="" title="RosyScans" loading="lazy"
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
             </div>
 
-            <div class="komik-pane" id="pane-ryzu" style="display:none;height:calc(100vh - 140px);min-height:500px;">
+            <div class="komik-pane" id="pane-ryzu" style="display:none;position:relative;height:calc(100vh - 140px);min-height:500px;">
                 <iframe id="iframeRyzu" src="" title="RyzuKomik" loading="lazy"
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
             </div>
-
-            <p style="font-size:0.6rem;color:#334155;text-align:center;padding:10px 14px 18px;">⚠️ Jika halaman tidak muncul, situs sumber mungkin memblokir tampilan iframe — buka di tab baru sebagai alternatif.</p>
         </div>
 
         <div id="dewasa" class="tab-content">
@@ -1999,9 +1995,6 @@
                         scrolling="yes"
                         style="width:100%;height:100%;border:none;display:block;"
                     ></iframe>
-                    <div style="position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:linear-gradient(0deg,rgba(0,0,0,0.85),transparent);text-align:center;">
-                        <a href="https://tvgarden.world" target="_blank" rel="noopener" style="font-size:0.62rem;color:#94a3b8;text-decoration:underline;">Tidak muncul / blank? Buka TV World di tab baru</a>
-                    </div>
                 </div>
             </div>
 
@@ -2746,6 +2739,10 @@ let tv3Hls = null;
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active-tab');
 
+            // Bug fix: pane ROSYSCANS sudah "active" dari awal jadi iframe-nya
+            // tidak pernah dimuat kalau cuma nunggu klik sub-tab — muat sekarang
+            if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
+
             // Tutup sidebar setelah memilih (khusus mobile friendly)
             toggleSidebar();
         }
@@ -2831,7 +2828,9 @@ let tv3Hls = null;
         const _iframeSrcs = {
             rosy:    'https://rosyscans.id/',
             ryzu:    'https://ryzukomik.my.id/',
-            tvWorld: 'https://tvgarden.world/'
+            // /id langsung ke daftar channel Indonesia, skip globe 3D pembuka
+            // yang sering gagal render (layar hitam) di beberapa WebView Android
+            tvWorld: 'https://tvgarden.world/id'
         };
         const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false };
 
