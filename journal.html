@@ -461,7 +461,6 @@
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
-        <a href="#" class="nav-link" id="kontes-nav-link" onclick="openKontesTab(); toggleNav()">🏆 Kontes Trading</a>
         <a href="#" class="nav-link vip-nav" onclick="openTab('vip-tab', this); toggleNav()">👑 VIP</a>
         <a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
     </div>
@@ -694,9 +693,68 @@
                     <option value="01">JANUARI</option><option value="02">FEBRUARI</option><option value="03">MARET</option><option value="04">APRIL</option><option value="05">MEI</option><option value="06">JUNI</option><option value="07">JULI</option><option value="08">AGUSTUS</option><option value="09">SEPTEMBER</option><option value="10">OKTOBER</option><option value="11">NOVEMBER</option><option value="12">DESEMBER</option>
                 </select>
             </div>
-            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px; height:220px;"><canvas id="equityChart"></canvas></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;"><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>TOTAL P&L</small><br><b id="st-pnl">$ 0.00</b></div><div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;text-align:center;"><small>WIN RATE</small><br><b id="st-wr">0%</b></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;"><small style="color:#9ca3af;">NET P&L</small><br><b id="st-pnl" style="font-size:18px;">$ 0.00</b></div>
+                <div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;"><small style="color:#9ca3af;">TRADE WIN %</small><br><b id="st-wr" style="font-size:18px;">0%</b></div>
+                <div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;"><small style="color:#9ca3af;">PROFIT FACTOR</small><br><b id="st-pf" style="font-size:18px;">0.00</b></div>
+                <div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;"><small style="color:#9ca3af;">DAY WIN %</small><br><b id="st-dw" style="font-size:18px;">0%</b></div>
+            </div>
+            <div class="stat-card" style="background:var(--card);padding:15px;border-radius:15px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;">
+                <div><small style="color:#9ca3af;">AVG WIN/LOSS TRADE</small><br><b id="st-avgwl" style="font-size:18px;">0.00</b></div>
+                <div style="text-align:right;font-size:10px;"><span style="color:var(--green);" id="st-avgwin">$0.00</span><br><span style="color:var(--red);" id="st-avgloss">-$0.00</span></div>
+            </div>
+
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:0 5px 8px;"><small style="color:#9ca3af;">EQUITY CURVE</small><small id="st-maxdd" style="color:var(--red);">Max DD: $0.00</small></div>
+                <div style="height:200px;"><canvas id="equityChart"></canvas></div>
+            </div>
+
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:10px; margin-bottom:15px;">
+                <small style="color:#9ca3af;padding:0 5px;">NET DAILY P&L (last 5 hari trading)</small>
+                <div style="height:150px;margin-top:8px;"><canvas id="dailyPnlChart"></canvas></div>
+            </div>
+
             <div id="cal" class="calendar-grid"></div>
+
+            <!-- WIN/LOSS STREAKS -->
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:15px; margin-top:15px;">
+                <div style="font-weight:700;font-size:12px;">🔥 Win/Loss Streaks</div>
+                <div style="font-size:10px;color:#9ca3af;margin-bottom:12px;" id="st-current-streak">Current: 0</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                    <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:12px;text-align:center;"><small style="color:var(--green);">🏆 Best Win Streak</small><br><b style="font-size:20px;color:var(--green);" id="st-best-streak">0</b></div>
+                    <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:12px;text-align:center;"><small style="color:var(--red);">💀 Worst Loss Streak</small><br><b style="font-size:20px;color:var(--red);" id="st-worst-streak">0</b></div>
+                </div>
+                <small style="color:#9ca3af;letter-spacing:1px;">RECENT RESULTS</small>
+                <div id="st-recent-results" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+            </div>
+
+            <!-- HOURLY PERFORMANCE -->
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:15px; margin-top:15px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div><div style="font-weight:700;font-size:12px;">🕐 Hourly Performance</div><small style="color:#9ca3af;">Jam trading terbaikmu</small></div>
+                    <div style="text-align:right;font-size:9px;"><span style="color:#9ca3af;">Best Hour</span><br><b style="color:var(--green);" id="st-best-hour">--</b><br><span style="color:#9ca3af;">Worst Hour</span><br><b style="color:var(--red);" id="st-worst-hour">--</b></div>
+                </div>
+                <div id="st-hourly-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:12px;"></div>
+                <div style="display:flex;gap:14px;margin-top:10px;font-size:9px;color:#9ca3af;">
+                    <span><span style="display:inline-block;width:9px;height:9px;background:var(--green);border-radius:2px;margin-right:4px;"></span>Profitable</span>
+                    <span><span style="display:inline-block;width:9px;height:9px;background:var(--red);border-radius:2px;margin-right:4px;"></span>Loss</span>
+                    <span><span style="display:inline-block;width:9px;height:9px;background:#1f2937;border-radius:2px;margin-right:4px;"></span>No Trades</span>
+                </div>
+            </div>
+
+            <!-- TRADER SCORE -->
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:15px; padding:15px; margin-top:15px;margin-bottom:10px;">
+                <div style="font-weight:700;font-size:12px;margin-bottom:8px;">Trader Score</div>
+                <div style="height:220px;"><canvas id="traderScoreChart"></canvas></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+                    <small style="color:#9ca3af;">Your Trader Score</small>
+                    <b id="st-trader-score" style="font-size:22px;color:#a855f7;">0.00</b>
+                </div>
+                <div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#ef4444,#eab308,#4ade80,#22d3ee);margin-top:6px;position:relative;">
+                    <div id="st-score-marker" style="position:absolute;top:-4px;width:2px;height:16px;background:#fff;left:0%;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:8px;color:#4b5563;margin-top:2px;"><span>0</span><span>100</span></div>
+            </div>
             </div><!-- end monitor-content-inner -->
         </div></div>
 
@@ -1117,22 +1175,6 @@
 
         </div></div>
 
-        <!-- ===== KONTES TRADING TAB ===== -->
-        <div id="kontes-tab" class="tab-content">
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:30px 20px;text-align:center;">
-                <div style="font-size:3.5rem;margin-bottom:12px;">🏆</div>
-                <div style="font-family:'Orbitron';font-size:13px;color:#38bdf8;letter-spacing:3px;margin-bottom:8px;">KONTES TRADING</div>
-                <div style="font-family:'Orbitron';font-size:10px;color:#eab308;letter-spacing:2px;margin-bottom:16px;">FREEDOM SYNDICATE 2026</div>
-                <p style="font-size:11px;color:#9ca3af;line-height:1.7;max-width:280px;margin-bottom:24px;">Demo Forex Contest dengan modal $100. Asah skill, bersaing, dan raih hadiah tunai!</p>
-                <div id="kontes-usd-info" style="background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px 20px;margin-bottom:20px;font-size:10px;color:#9ca3af;">
-                    <span id="kontes-rate-text">Memuat kurs USD/IDR...</span>
-                </div>
-                <a href="kontestrading.html" style="display:block;background:linear-gradient(135deg,#eab308,#f97316);color:#000;text-decoration:none;padding:16px 32px;border-radius:14px;font-weight:900;font-family:'Orbitron';font-size:11px;letter-spacing:1px;box-shadow:0 0 20px rgba(234,179,8,0.3);width:100%;max-width:300px;margin-bottom:10px;box-sizing:border-box;text-align:center;">🚀 BUKA KONTES SEKARANG</a>
-                <p style="font-size:9px;color:#374151;">Entry fee: $1 &nbsp;•&nbsp; <span id="entry-fee-idr">~Rp ...</span> &nbsp;•&nbsp; Durasi: 7 hari</p>
-                <a href="index.html" style="display:block;background:rgba(56,189,248,0.06);color:#38bdf8;text-decoration:none;padding:8px 20px;border-radius:8px;font-size:9px;font-family:'Orbitron';border:1px solid rgba(56,189,248,0.15);margin-top:8px;text-align:center;">🏠 Halaman Utama</a>
-            </div>
-        </div>
-
         <div id="donasi-tab" class="tab-content"><div class="inner-padding">
             <div class="broker-card" style="text-align:center;">
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">DONASI / SUPPORT</h2>
@@ -1268,7 +1310,7 @@
         const firebaseConfig = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
-        let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [];
+        let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [], dailyChart = null, traderScoreChart = null;
 
         let sidebarOpen = false;
         function toggleNav() {
@@ -2143,23 +2185,70 @@
         function render(trades) {
             const h = document.getElementById('hist'); h.innerHTML = ''; 
             let totalP = 0, win = 0, filteredCount = 0, eqData = [0], labels = ['Start'];
+            let grossProfit = 0, grossLoss = 0, sumWin = 0, sumLoss = 0, cntWin = 0, cntLoss = 0;
+            let peak = 0, maxDD = 0;
+            let curStreak = 0, curStreakType = '', bestWinStreak = 0, worstLossStreak = 0, runWin = 0, runLoss = 0;
+            const recentResults = [];
+            const hourlyData = {}; // hour -> {pnl, count}
             const fP = document.getElementById('mon-pair').value, fM = document.getElementById('mon-month').value;
             const sorted = trades.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
             const daysData = {};
             sorted.forEach(t => { 
                 const tM = t.date ? t.date.split('-')[1] : ''; 
-                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { totalP += t.pnl; if(t.res === 'TP') win++; filteredCount++; eqData.push(totalP); labels.push(t.date); if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += t.pnl; } 
+                if((fP==='ALL'||t.pair===fP) && (fM==='ALL'||tM===fM)) { 
+                    const pnl = Number(t.pnl) || 0;
+                    totalP += pnl; if(t.res === 'TP') win++; filteredCount++; eqData.push(totalP); labels.push(t.date);
+                    if(!daysData[t.date]) daysData[t.date] = 0; daysData[t.date] += pnl;
+
+                    if(pnl > 0) { grossProfit += pnl; sumWin += pnl; cntWin++; }
+                    else if(pnl < 0) { grossLoss += Math.abs(pnl); sumLoss += pnl; cntLoss++; }
+
+                    if(totalP > peak) peak = totalP;
+                    const dd = peak - totalP; if(dd > maxDD) maxDD = dd;
+
+                    // streaks (TP = win, SL = loss, BE = neutral/reset)
+                    if(t.res === 'TP') { runWin++; runLoss = 0; if(runWin > bestWinStreak) bestWinStreak = runWin; curStreakType = 'win'; curStreak = runWin; }
+                    else if(t.res === 'SL') { runLoss++; runWin = 0; if(runLoss > worstLossStreak) worstLossStreak = runLoss; curStreakType = 'loss'; curStreak = runLoss; }
+                    else { runWin = 0; runLoss = 0; curStreakType = ''; curStreak = 0; }
+                    recentResults.push(t.res);
+
+                    // hourly
+                    const hr = t.time ? parseInt(t.time.split(':')[0]) : null;
+                    if(hr !== null && !isNaN(hr)) { if(!hourlyData[hr]) hourlyData[hr] = { pnl: 0, count: 0 }; hourlyData[hr].pnl += pnl; hourlyData[hr].count++; }
+                } 
             });
             sorted.slice().reverse().forEach(t => { 
                 const card = document.createElement('div'); card.className = 'history-card'; 
                 card.innerHTML = `<div class="btn-del" onclick="del('${t.id}')">✕</div><div class="h-header">${t.date} | ${t.time} | ${t.pair} (${t.res})</div><div class="h-detail"><b>Session:</b> ${t.session} | <b>Model:</b> ${t.entry_style}<br><b>POI:</b> ${t.poi && t.poi.length > 0 ? t.poi.join(', ') : '-'}<br><b>Margin:</b> $${t.margin} | <b>RR:</b> ${t.rr} | <b>P&L:</b> $${t.pnl}</div><div class="tracker-display">${t.bef ? `<img src="${t.bef}" class="tracker-img" onclick="openZoom('${t.bef}')">` : ''}${t.aft ? `<img src="${t.aft}" class="tracker-img" onclick="openZoom('${t.aft}')">` : ''}</div>`; 
                 h.appendChild(card);
             });
+
+            // ===== BASIC STATS =====
             document.getElementById('st-pnl').innerText = `$ ${totalP.toFixed(2)}`; 
             document.getElementById('st-wr').innerText = filteredCount > 0 ? Math.round((win / filteredCount) * 100) + "%" : "0%";
+            const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? grossProfit : 0);
+            document.getElementById('st-pf').innerText = profitFactor.toFixed(2);
+            const tradingDays = Object.keys(daysData).length;
+            const winDays = Object.values(daysData).filter(v => v > 0).length;
+            document.getElementById('st-dw').innerText = tradingDays > 0 ? Math.round((winDays / tradingDays) * 100) + "%" : "0%";
+            const avgWin = cntWin > 0 ? sumWin / cntWin : 0, avgLoss = cntLoss > 0 ? sumLoss / cntLoss : 0;
+            document.getElementById('st-avgwl').innerText = (filteredCount > 0 ? (totalP / filteredCount) : 0).toFixed(2);
+            document.getElementById('st-avgwin').innerText = `$${avgWin.toFixed(2)}`;
+            document.getElementById('st-avgloss').innerText = `-$${Math.abs(avgLoss).toFixed(2)}`;
+            document.getElementById('st-maxdd').innerText = `Max DD: -$${maxDD.toFixed(2)}`;
+
+            // ===== EQUITY CURVE =====
             const ctx = document.getElementById('equityChart').getContext('2d'); 
             if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#ef4444', fill: false, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: '#ef4444', font: {size: 8} } } } } });
+            myChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Equity', data: eqData, borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.1)', fill: true, tension: 0.3 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#4ade80', font: {size: 8} } } } } });
+
+            // ===== NET DAILY P&L (last 5 trading days) =====
+            const dayEntries = Object.entries(daysData).sort((a,b) => new Date(a[0]) - new Date(b[0])).slice(-5);
+            const dctx = document.getElementById('dailyPnlChart').getContext('2d');
+            if(dailyChart) dailyChart.destroy();
+            dailyChart = new Chart(dctx, { type: 'bar', data: { labels: dayEntries.map(e => e[0]), datasets: [{ data: dayEntries.map(e => e[1]), backgroundColor: dayEntries.map(e => e[1] >= 0 ? '#4ade80' : '#ef4444'), borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af', font: {size: 8} }, grid: { display: false } }, y: { ticks: { color: '#9ca3af', font: {size: 8} }, grid: { color: 'rgba(255,255,255,0.05)' } } } } });
+
+            // ===== CALENDAR =====
             const cal = document.getElementById('cal'); cal.innerHTML = '';
             let year = 2026, monthIndex = fM === 'ALL' ? new Date().getMonth() : parseInt(fM) - 1, daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
             for (let i = 1; i <= daysInMonth; i++) { 
@@ -2167,6 +2256,57 @@
                 const div = document.createElement('div'); div.className = `cal-day ${pnl > 0 ? 'profit' : pnl < 0 ? 'loss' : ''}`;
                 div.innerHTML = `<span>${i}</span><b style="font-size:6px">${pnl !== 0 ? (pnl > 0 ? '+' : '') + pnl.toFixed(0) : ''}</b>`; cal.appendChild(div);
             }
+
+            // ===== WIN/LOSS STREAKS =====
+            document.getElementById('st-current-streak').innerText = curStreak > 0 ? `Current: ${curStreak} ${curStreakType === 'win' ? 'wins' : 'losses'}` : 'Current: -';
+            document.getElementById('st-best-streak').innerText = bestWinStreak;
+            document.getElementById('st-worst-streak').innerText = worstLossStreak;
+            const recentBox = document.getElementById('st-recent-results'); recentBox.innerHTML = '';
+            recentResults.slice(-16).forEach(r => {
+                const icon = document.createElement('div');
+                const color = r === 'TP' ? 'var(--green)' : r === 'SL' ? 'var(--red)' : '#6b7280';
+                icon.style.cssText = `width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${color};font-size:12px;`;
+                icon.innerText = r === 'TP' ? '↗' : r === 'SL' ? '↘' : '⚖';
+                recentBox.appendChild(icon);
+            });
+
+            // ===== HOURLY PERFORMANCE =====
+            let bestHour = null, worstHour = null, bestHourPnl = -Infinity, worstHourPnl = Infinity;
+            Object.entries(hourlyData).forEach(([hr, d]) => { if(d.pnl > bestHourPnl) { bestHourPnl = d.pnl; bestHour = hr; } if(d.pnl < worstHourPnl) { worstHourPnl = d.pnl; worstHour = hr; } });
+            document.getElementById('st-best-hour').innerText = bestHour !== null ? `${bestHour}:00` : '--';
+            document.getElementById('st-worst-hour').innerText = worstHour !== null ? `${worstHour}:00` : '--';
+            const hGrid = document.getElementById('st-hourly-grid'); hGrid.innerHTML = '';
+            for (let hr = 0; hr < 24; hr++) {
+                const d = hourlyData[hr];
+                const cell = document.createElement('div');
+                let bg = '#1f2937', txt = '#4b5563';
+                if(d) { bg = d.pnl >= 0 ? 'rgba(74,222,128,0.25)' : 'rgba(239,68,68,0.25)'; txt = d.pnl >= 0 ? 'var(--green)' : 'var(--red)'; }
+                cell.style.cssText = `background:${bg};border-radius:8px;padding:6px 2px;text-align:center;font-size:9px;color:${txt};`;
+                cell.innerHTML = `<div>${hr}</div>${d ? `<div style="font-weight:700;">${d.count}</div>` : ''}`;
+                hGrid.appendChild(cell);
+            }
+
+            // ===== TRADER SCORE =====
+            const winPct = filteredCount > 0 ? (win / filteredCount) * 100 : 0;
+            const pfScore = Math.min(100, profitFactor * 20);
+            const ddScore = totalP > 0 ? Math.max(0, 100 - (maxDD / (totalP + maxDD || 1)) * 100) : (maxDD > 0 ? 0 : 100);
+            const recoveryFactor = maxDD > 0 ? totalP / maxDD : (totalP > 0 ? 5 : 0);
+            const recoveryScore = Math.max(0, Math.min(100, recoveryFactor * 20));
+            const avgWlRatio = Math.abs(avgLoss) > 0 ? avgWin / Math.abs(avgLoss) : (avgWin > 0 ? 5 : 0);
+            const avgWlScore = Math.max(0, Math.min(100, avgWlRatio * 25));
+            const pnlValues = Object.values(daysData);
+            const meanDay = pnlValues.length ? pnlValues.reduce((a,b) => a+b, 0) / pnlValues.length : 0;
+            const varianceDay = pnlValues.length ? pnlValues.reduce((a,b) => a + Math.pow(b - meanDay, 2), 0) / pnlValues.length : 0;
+            const stdDevDay = Math.sqrt(varianceDay);
+            const consistencyScore = meanDay !== 0 ? Math.max(0, 100 - Math.min(100, (stdDevDay / Math.abs(meanDay)) * 15)) : 0;
+            const traderScore = (winPct + pfScore + ddScore + recoveryScore + avgWlScore + consistencyScore) / 6;
+
+            document.getElementById('st-trader-score').innerText = traderScore.toFixed(2);
+            document.getElementById('st-score-marker').style.left = `${Math.max(0, Math.min(100, traderScore))}%`;
+
+            const rctx = document.getElementById('traderScoreChart').getContext('2d');
+            if(traderScoreChart) traderScoreChart.destroy();
+            traderScoreChart = new Chart(rctx, { type: 'radar', data: { labels: ['Win %','Consistency','Profit factor','Max drawdown','Recovery factor','Avg win/loss'], datasets: [{ data: [winPct, consistencyScore, pfScore, ddScore, recoveryScore, avgWlScore], backgroundColor: 'rgba(168,85,247,0.25)', borderColor: '#a855f7', pointBackgroundColor: '#a855f7' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { angleLines: { color: 'rgba(255,255,255,0.1)' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#9ca3af', font: {size: 8} }, ticks: { display: false, backdropColor: 'transparent' }, suggestedMin: 0, suggestedMax: 100 } } } });
         }
 
         // ===== MATRIX RAIN (rAF throttled ~80ms — hemat CPU) =====
@@ -2284,60 +2424,5 @@
         }
 
     </script>
-<script>
-// ══════════════════════════════════════════════════════
-//  KONTES TAB
-// ══════════════════════════════════════════════════════
-const KONTES_URL = 'kontestrading.html';
-
-function openKontesTab() {
-    // Switch to kontes-tab
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    const tab = document.getElementById('kontes-tab');
-    if (tab) tab.classList.add('active');
-    const navLink = document.getElementById('kontes-nav-link');
-    if (navLink) navLink.classList.add('active');
-    fetchKontesRate();
-}
-
-function openKontesWebsite() {
-    window.location.href = 'kontestrading.html';
-}
-
-async function fetchKontesRate() {
-    const rateEl = document.getElementById('kontes-rate-text');
-    const feeEl = document.getElementById('entry-fee-idr');
-    try {
-        // Use free open exchange rates API
-        const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-        const data = await res.json();
-        const rate = data.rates && data.rates.IDR;
-        if (rate) {
-            const formatted = new Intl.NumberFormat('id-ID').format(Math.round(rate));
-            const feeIDR = new Intl.NumberFormat('id-ID').format(Math.round(rate));
-            if (rateEl) rateEl.innerHTML = `💱 USD/IDR: <strong style="color:#38bdf8">Rp ${formatted}</strong> <span style="color:#555;font-size:9px">(live)</span>`;
-            if (feeEl) feeEl.textContent = `~Rp ${feeIDR}`;
-        } else {
-            throw new Error('no rate');
-        }
-    } catch(e) {
-        // Fallback: try another free API
-        try {
-            const res2 = await fetch('https://open.er-api.com/v6/latest/USD');
-            const data2 = await res2.json();
-            const rate2 = data2.rates && data2.rates.IDR;
-            if (rate2) {
-                const formatted2 = new Intl.NumberFormat('id-ID').format(Math.round(rate2));
-                if (rateEl) rateEl.innerHTML = `💱 USD/IDR: <strong style="color:#38bdf8">Rp ${formatted2}</strong> <span style="color:#555;font-size:9px">(live)</span>`;
-                if (feeEl) feeEl.textContent = `~Rp ${new Intl.NumberFormat('id-ID').format(Math.round(rate2))}`;
-            }
-        } catch(e2) {
-            if (rateEl) rateEl.innerHTML = `💱 USD/IDR: <strong style="color:#eab308">~Rp 18.100</strong> <span style="color:#555;font-size:9px">(estimasi)</span>`;
-            if (feeEl) feeEl.textContent = `~Rp 18.100`;
-        }
-    }
-}
-</script>
 </body>
 </html>
