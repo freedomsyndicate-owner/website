@@ -458,6 +458,7 @@
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
         <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
         <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
+        <a href="#" class="nav-link" onclick="openTab('account-tab', this); toggleNav()">🔗 Account MT5</a>
         <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
         <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
         <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
@@ -756,6 +757,34 @@
                 <div style="display:flex;justify-content:space-between;font-size:8px;color:#4b5563;margin-top:2px;"><span>0</span><span>100</span></div>
             </div>
             </div><!-- end monitor-content-inner -->
+        </div></div>
+
+        <!-- ===== ACCOUNT MT5 TAB ===== -->
+        <div id="account-tab" class="tab-content"><div class="inner-padding">
+            <div class="broker-card">
+                <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0; font-size:14px;">🔗 Account MT5</h2>
+                <p style="font-size:10px; color:#9ca3af; line-height:1.6;">Simpan detail akun MT5 kamu di sini. Data ini nantinya dipakai untuk menghubungkan Journal & Monitor dengan akun trading kamu secara otomatis (integrasi sinkronisasi real-time menyusul).</p>
+
+                <div style="background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:12px 14px; margin:14px 0; font-size:9.5px; color:#eab308; line-height:1.6;">
+                    ⚠️ <b>Gunakan Investor Password (read-only)</b>, JANGAN pakai master/trading password. Investor password cuma bisa lihat data akun & history, nggak bisa buka/tutup posisi atau withdraw. Cek di MT5: <i>Tools → Options → Server</i> atau minta ke broker kamu.
+                </div>
+
+                <div id="mt5-status-badge" style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid #1f2937; border-radius:10px; padding:10px 14px; margin-bottom:16px; font-size:10px; color:#9ca3af;">
+                    <span id="mt5-status-dot" style="width:8px; height:8px; border-radius:50%; background:#4b5563; flex-shrink:0;"></span>
+                    <span id="mt5-status-text">Belum ada akun tersimpan</span>
+                </div>
+
+                <form id="mt5-form" onsubmit="return saveMt5Account(event)">
+                    <div class="form-item"><label>🏦 Broker</label><input type="text" id="mt5-broker" placeholder="Contoh: Exness, XM, IC Markets" required></div>
+                    <div class="form-item"><label>🆔 Account ID / Login</label><input type="text" id="mt5-login" inputmode="numeric" placeholder="Contoh: 12345678" required></div>
+                    <div class="form-item"><label>🔑 Investor Password</label><input type="password" id="mt5-password" placeholder="Investor password (read-only)" required></div>
+                    <div class="form-item"><label>🌐 Server</label><input type="text" id="mt5-server" placeholder="Contoh: Exness-MT5Real8" required></div>
+                    <button type="submit" class="btn-save">💾 SIMPAN AKUN</button>
+                </form>
+                <button onclick="deleteMt5Account()" style="width:100%; background:transparent; color:var(--red); border:1px solid rgba(239,68,68,0.3); padding:12px; border-radius:12px; font-weight:700; font-family:'Orbitron'; font-size:10px; cursor:pointer; margin-top:10px;">🗑️ HAPUS AKUN TERSIMPAN</button>
+
+                <p style="font-size:8.5px; color:#4b5563; margin-top:16px; line-height:1.6;">ℹ️ Akun ini baru tersimpan di database — belum menarik data live dari MT5. Untuk sinkronisasi otomatis (balance, equity, history trade real-time), dibutuhkan integrasi tambahan (MetaApi.cloud atau bridge VPS).</p>
+            </div>
         </div></div>
 
         <div id="community-tab" class="tab-content"><div class="inner-padding">
@@ -1703,7 +1732,7 @@
 
         // ===== TRIAL LOCK SYSTEM =====
         // Tabs yang TIDAK terkunci saat trial habis:
-        const ALWAYS_UNLOCKED_TABS = ['announce-tab','community-tab','broker-tab','donasi-tab'];
+        const ALWAYS_UNLOCKED_TABS = ['announce-tab','community-tab','broker-tab','donasi-tab','account-tab'];
         // Semua tab yang bisa di-lock:
         const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab','vip-tab'];
 
@@ -2127,6 +2156,7 @@
                 if(id==='chart-tab') updateChart();
                 if(id==='signal-tab') { applyVipGates(); renderIctSignals(); renderFundSignals(); }
                 if(id==='monitor-tab') { applyVipGates(); loadData(); }
+                if(id==='account-tab') loadMt5Account();
                 if(id==='community-tab' || id==='announce-tab') loadData();
                 if(id==='vip-tab') loadVipTab();
             }, 150);
@@ -2169,6 +2199,51 @@
         }
 
         function loadData() { if(!curUser) return; rtdb.ref('users/' + curUser.uid + '/trades').on('value', snap => { allTrades = snap.val() ? Object.entries(snap.val()).map(([id, val]) => ({...val, id})) : []; render(allTrades); }); }
+
+        // ===== MT5 ACCOUNT (manual storage, sync menyusul) =====
+        function loadMt5Account() {
+            if(!curUser) return;
+            rtdb.ref('users/' + curUser.uid + '/mt5Account').once('value', snap => {
+                const dot = document.getElementById('mt5-status-dot'), txt = document.getElementById('mt5-status-text');
+                if(snap.exists()) {
+                    const d = snap.val();
+                    document.getElementById('mt5-broker').value = d.broker || '';
+                    document.getElementById('mt5-login').value = d.login || '';
+                    document.getElementById('mt5-server').value = d.server || '';
+                    document.getElementById('mt5-password').value = d.password || '';
+                    dot.style.background = 'var(--green)'; dot.style.boxShadow = '0 0 6px var(--green)';
+                    txt.innerHTML = `Tersimpan: <b>${d.login}</b> @ ${d.broker} (${d.server})`;
+                } else {
+                    dot.style.background = '#4b5563'; dot.style.boxShadow = 'none';
+                    txt.innerText = 'Belum ada akun tersimpan';
+                }
+            });
+        }
+
+        function saveMt5Account(e) {
+            e.preventDefault();
+            if(!curUser) { alert('Login dulu.'); return false; }
+            const data = {
+                broker: document.getElementById('mt5-broker').value.trim(),
+                login: document.getElementById('mt5-login').value.trim(),
+                password: document.getElementById('mt5-password').value,
+                server: document.getElementById('mt5-server').value.trim(),
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            if(!data.broker || !data.login || !data.password || !data.server) { alert('Semua field wajib diisi.'); return false; }
+            rtdb.ref('users/' + curUser.uid + '/mt5Account').set(data)
+                .then(() => { alert('✅ Akun MT5 tersimpan.'); loadMt5Account(); })
+                .catch(err => alert('Gagal simpan: ' + err.message));
+            return false;
+        }
+
+        function deleteMt5Account() {
+            if(!curUser) return;
+            if(!confirm('Hapus akun MT5 yang tersimpan?')) return;
+            rtdb.ref('users/' + curUser.uid + '/mt5Account').remove()
+                .then(() => { document.getElementById('mt5-form').reset(); loadMt5Account(); })
+                .catch(err => alert('Gagal hapus: ' + err.message));
+        }
         function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         
         function updateChart() { 
