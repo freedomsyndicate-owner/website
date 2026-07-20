@@ -1733,8 +1733,8 @@
         // ===== TRIAL LOCK SYSTEM =====
         // Tabs yang TIDAK terkunci saat trial habis:
         const ALWAYS_UNLOCKED_TABS = ['announce-tab','community-tab','broker-tab','donasi-tab','account-tab'];
-        // Semua tab yang bisa di-lock:
-        const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab','vip-tab'];
+        // Semua tab yang bisa di-lock (VIP tab TIDAK dikunci — harus tetap bisa diakses untuk upgrade):
+        const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab'];
 
         let trialActive = false;
         let trialEndTime = null;
@@ -1744,8 +1744,8 @@
             rtdb.ref('users/' + uid + '/trial').once('value', snap => {
                 const now = Date.now();
                 if (!snap.exists()) {
-                    // First time: set trial for 7 hari
-                    const endTime = now + (7 * 24 * 60 * 60 * 1000);
+                    // First time: set trial for 1 bulan
+                    const endTime = now + (30 * 24 * 60 * 60 * 1000);
                     rtdb.ref('users/' + uid + '/trial').set({ startedAt: now, endsAt: endTime });
                     trialActive = true;
                     trialEndTime = endTime;
@@ -1833,11 +1833,14 @@
                     applyTrialLocks();
                     return;
                 }
-                const h = Math.floor(remaining / 3600000);
+                const d = Math.floor(remaining / 86400000);
+                const h = Math.floor((remaining % 86400000) / 3600000);
                 const m = Math.floor((remaining % 3600000) / 60000);
                 const s = Math.floor((remaining % 60000) / 1000);
                 const el = document.getElementById('trial-countdown');
-                if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+                if (el) el.textContent = d > 0
+                    ? `${d}h ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+                    : `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             }, 1000);
         }
 
