@@ -137,6 +137,18 @@
 
         /* === SIGNAL TAB STYLES === */
         .signal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+        /* Notif badge di sidebar + toast popup */
+        .nav-badge { display:inline-block; min-width:16px; height:16px; padding:0 4px; margin-left:6px; background:var(--red,#ef4444); color:#fff; font-size:9px; line-height:16px; text-align:center; border-radius:8px; font-family:'Orbitron'; }
+        #toast-stack { position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; width:min(92vw,360px); pointer-events:none; }
+        .fs-toast { pointer-events:auto; background:linear-gradient(145deg,#0a0e14,#0d1117); border:1px solid #1f2937; border-left:4px solid var(--blue,#38bdf8); border-radius:12px; padding:10px 14px; box-shadow:0 8px 24px rgba(0,0,0,0.5); animation:toastIn 0.25s ease forwards; cursor:pointer; }
+        .fs-toast.signal { border-left-color:#4ade80; }
+        .fs-toast.blackout { border-left-color:#ef4444; }
+        .fs-toast .fs-toast-title { font-family:'Orbitron'; font-size:10px; color:#fff; margin-bottom:3px; }
+        .fs-toast .fs-toast-body { font-size:10px; color:#9ca3af; }
+        @keyframes toastIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+        .fs-toast.fade-out { animation:toastOut 0.25s ease forwards; }
+        @keyframes toastOut { to{opacity:0; transform:translateY(-10px);} }
         .signal-live-badge { display: flex; align-items: center; gap: 6px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); padding: 4px 10px; border-radius: 20px; font-family: 'Orbitron'; font-size: 8px; color: var(--green); }
         .signal-live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse-dot 1.2s infinite; }
         @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.3;transform:scale(0.6);} }
@@ -446,14 +458,15 @@
     <!-- SCANLINES -->
     <div class="scanlines"></div>
     <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
+    <div id="toast-stack"></div>
 
     <div class="menu-toggle" onclick="toggleNav()">☰</div>
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
         <a href="index.html" style="color:#4ade80; border-bottom:1px solid rgba(74,222,128,0.2);">🏠 Home</a>
-        <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News</a>
-        <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal</a>
+        <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News <span id="badge-news" class="nav-badge" style="display:none;"></span></a>
+        <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></a>
         <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
         <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
@@ -491,6 +504,14 @@
                 <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
                 <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
                 <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
+            </div>
+
+            <div class="signal-header" style="margin-top:20px;">
+                <h2 style="font-family:'Orbitron'; font-size:12px; color:white; margin:0;">📰 LIVE NEWS & UPDATES</h2>
+                <div class="signal-live-badge"><div class="signal-live-dot"></div>REAL-TIME</div>
+            </div>
+            <div id="announcements-container">
+                <div class="sig-empty"><div class="sig-empty-icon">📰</div><p>MENUNGGU PENGUMUMAN...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Ringkasan signal, session guarantee &amp; news blackout dari bot akan tampil di sini</p></div>
             </div>
             </div></div>
 
@@ -1403,7 +1424,7 @@
                 checkVipStatus(u.email).then(vip => {
                     _setVip(vip || (u.email === OWNER_EMAIL));
                     applyVipGates();
-                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals();
+                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); loadAnnouncements(); setupRealtimeNotifications();
                     loadVipTab();
                     if (!isVip) checkTrialStatus(u.uid);
                 });
@@ -1868,6 +1889,103 @@
         let allIctSignals = [];
         let allFundSignals = [];
 
+        // ===================================================
+        // === NEWS TAB - FIREBASE ANNOUNCEMENTS ===
+        // ===================================================
+        let allAnnouncements = [];
+
+        function loadAnnouncements() {
+            if (!curUser) return;
+            rtdb.ref('announcements').orderByChild('timestamp').limitToLast(30).on('value', snap => {
+                allAnnouncements = [];
+                snap.forEach(child => { allAnnouncements.unshift({ id: child.key, ...child.val() }); });
+                renderAnnouncements();
+            });
+        }
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcements-container');
+            if (!container) return;
+            if (!allAnnouncements.length) {
+                container.innerHTML = '<div class="sig-empty"><div class="sig-empty-icon">📰</div><p>BELUM ADA PENGUMUMAN</p></div>';
+                return;
+            }
+            const kindIcon = { signal: '🎯', guarantee: '📋', blackout: '🚫', fundamental: '🌍', info: 'ℹ️' };
+            const kindColor = { signal: '#4ade80', guarantee: '#38bdf8', blackout: '#ef4444', fundamental: '#eab308', info: '#6b7280' };
+            container.innerHTML = allAnnouncements.map(a => {
+                let timeDisplay = '';
+                try {
+                    const d = new Date(a.timestamp);
+                    timeDisplay = d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', timeZone:'Asia/Jakarta'})
+                                + ' · ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
+                } catch(e) {}
+                const icon = kindIcon[a.kind] || 'ℹ️';
+                const color = kindColor[a.kind] || '#6b7280';
+                return `<div class="ict-signal-card" style="border-left:3px solid ${color};">
+                    <div class="ict-card-top">
+                        <div><div style="font-family:'Orbitron';font-size:10px;color:#fff;">${icon} ${a.title || 'Update'}</div>
+                        <div class="ict-time">${timeDisplay}</div></div>
+                    </div>
+                    <p style="font-size:10px;color:#9ca3af;margin-top:8px;line-height:1.5;">${a.body || ''}</p>
+                </div>`;
+            }).join('');
+        }
+
+        // ===================================================
+        // === TOAST + BADGE NOTIFICATIONS (signal & news) ===
+        // ===================================================
+        let _notifReady = { ict: false, announcements: false };
+
+        function showToast(title, body, cls) {
+            const stack = document.getElementById('toast-stack');
+            if (!stack) return;
+            const el = document.createElement('div');
+            el.className = `fs-toast ${cls || ''}`;
+            el.innerHTML = `<div class="fs-toast-title">${title}</div><div class="fs-toast-body">${body || ''}</div>`;
+            el.onclick = () => { el.remove(); };
+            stack.appendChild(el);
+            if (Notification && Notification.permission === 'granted') {
+                try { new Notification(title, { body: body || '' }); } catch(e) {}
+            }
+            setTimeout(() => { el.classList.add('fade-out'); setTimeout(() => el.remove(), 300); }, 6000);
+        }
+
+        function bumpBadge(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const n = parseInt(el.dataset.count || '0', 10) + 1;
+            el.dataset.count = n;
+            el.innerText = n > 99 ? '99+' : n;
+            el.style.display = 'inline-block';
+        }
+
+        function clearBadge(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.dataset.count = 0;
+            el.style.display = 'none';
+        }
+
+        function setupRealtimeNotifications() {
+            if (Notification && Notification.permission === 'default') {
+                Notification.requestPermission().catch(() => {});
+            }
+            // Signal baru masuk (ICT) → toast + badge, skip batch data lama saat load pertama
+            rtdb.ref('signals/ict').limitToLast(1).on('child_added', snap => {
+                if (!_notifReady.ict) { _notifReady.ict = true; return; }
+                const s = snap.val();
+                showToast(`🎯 Signal Baru: ${s.pair || ''}`, `${s.direction || ''} — Score ${s.score || 0}`, 'signal');
+                bumpBadge('badge-signal');
+            });
+            // Pengumuman/News baru → toast + badge
+            rtdb.ref('announcements').limitToLast(1).on('child_added', snap => {
+                if (!_notifReady.announcements) { _notifReady.announcements = true; return; }
+                const a = snap.val();
+                showToast(a.title || 'Update Baru', a.body || '', a.kind === 'blackout' ? 'blackout' : '');
+                bumpBadge('badge-news');
+            });
+        }
+
         function loadSignals() {
             if (!curUser) return;
 
@@ -2157,7 +2275,8 @@
                 if(target) { target.classList.add('active'); }
                 if(el) el.classList.add('active');
                 if(id==='chart-tab') updateChart();
-                if(id==='signal-tab') { applyVipGates(); renderIctSignals(); renderFundSignals(); }
+                if(id==='signal-tab') { applyVipGates(); renderIctSignals(); renderFundSignals(); clearBadge('badge-signal'); }
+                if(id==='announce-tab') { clearBadge('badge-news'); }
                 if(id==='monitor-tab') { applyVipGates(); loadData(); }
                 if(id==='account-tab') loadMt5Account();
                 if(id==='community-tab' || id==='announce-tab') loadData();
