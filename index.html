@@ -1995,6 +1995,14 @@
                         scrolling="yes"
                         style="width:100%;height:100%;border:none;display:block;"
                     ></iframe>
+                    <!-- Fallback jika globe 3D gagal render (dikenal terjadi di sebagian WebView Android/Kiwi) -->
+                    <div id="tvWorldFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
+                        <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🌍 Layar hitam / globe tidak muncul?</div>
+                        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                            <button onclick="tvWorldReload()" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--primary);padding:8px 14px;border-radius:8px;font-weight:700;font-size:0.7rem;cursor:pointer;">🔁 Muat Ulang</button>
+                            <a href="https://tvgarden.world" target="_blank" rel="noopener" style="background:var(--primary);color:#000;text-decoration:none;padding:8px 14px;border-radius:8px;font-weight:700;font-size:0.7rem;">🌐 Buka Situs Asli</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2838,6 +2846,26 @@ let tv3Hls = null;
             const el = document.getElementById(idMap[key]);
             if (el && !el.src) { el.src = _iframeSrcs[key]; }
             _iframeLoaded[key] = true;
+
+            // Globe 3D di tvgarden.world/ kadang gagal render (layar hitam) di sebagian
+            // WebView Android (Kiwi Browser dll). Tampilkan tombol fallback setelah 6 detik
+            // supaya user tetap bisa lanjut nonton walau globe-nya tidak muncul.
+            if (key === 'tvWorld') {
+                setTimeout(function () {
+                    const fb = document.getElementById('tvWorldFallback');
+                    if (fb) fb.style.display = 'block';
+                }, 6000);
+            }
+        }
+
+        // Muat ulang iframe World (kalau globe 3D sempat gagal render / gangguan koneksi)
+        function tvWorldReload() {
+            const el = document.getElementById('iframeTvWorld');
+            const fb = document.getElementById('tvWorldFallback');
+            if (el) { el.src = ''; el.src = 'https://tvgarden.world/'; }
+            if (fb) fb.style.display = 'none';
+            // Kasih kesempatan lagi 6 detik sebelum tombol fallback muncul ulang
+            setTimeout(function () { if (fb) fb.style.display = 'block'; }, 6000);
         }
 
         // --- INJECT LINK DEWASA SETELAH PIN BENAR ---
