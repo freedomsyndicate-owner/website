@@ -1553,6 +1553,10 @@
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
+                <div id="rosyFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
+                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📚 Layar hitam / komik tidak muncul?</div>
+                    <button onclick="_komikReload('rosy')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+                </div>
             </div>
 
             <div class="komik-pane" id="pane-ryzu" style="display:none;position:relative;height:calc(100vh - 140px);min-height:500px;">
@@ -1560,6 +1564,10 @@
                     style="width:100%;height:100%;border:none;display:block;background:#000;"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 ></iframe>
+                <div id="ryzuFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
+                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📗 Layar hitam / komik tidak muncul?</div>
+                    <button onclick="_komikReload('ryzu')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+                </div>
             </div>
         </div>
 
@@ -1998,10 +2006,7 @@
                     <!-- Fallback jika globe 3D gagal render (dikenal terjadi di sebagian WebView Android/Kiwi) -->
                     <div id="tvWorldFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
                         <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🌍 Layar hitam / globe tidak muncul?</div>
-                        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-                            <button onclick="tvWorldReload()" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--primary);padding:8px 14px;border-radius:8px;font-weight:700;font-size:0.7rem;cursor:pointer;">🔁 Muat Ulang</button>
-                            <a href="https://tvgarden.world" target="_blank" rel="noopener" style="background:var(--primary);color:#000;text-decoration:none;padding:8px 14px;border-radius:8px;font-weight:700;font-size:0.7rem;">🌐 Buka Situs Asli</a>
-                        </div>
+                        <button onclick="tvWorldReload()" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
                     </div>
                 </div>
             </div>
@@ -2839,34 +2844,37 @@ let tv3Hls = null;
             tvWorld: 'https://tvgarden.world/'
         };
         const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false };
+        const _iframeIdMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', tvWorld: 'iframeTvWorld' };
+        const _fallbackIdMap = { rosy: 'rosyFallback', ryzu: 'ryzuFallback', tvWorld: 'tvWorldFallback' };
 
         function _lazyLoadIframe(key) {
             if (_iframeLoaded[key]) return;
-            const idMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', tvWorld: 'iframeTvWorld' };
-            const el = document.getElementById(idMap[key]);
+            const el = document.getElementById(_iframeIdMap[key]);
             if (el && !el.src) { el.src = _iframeSrcs[key]; }
             _iframeLoaded[key] = true;
-
-            // Globe 3D di tvgarden.world/ kadang gagal render (layar hitam) di sebagian
-            // WebView Android (Kiwi Browser dll). Tampilkan tombol fallback setelah 6 detik
-            // supaya user tetap bisa lanjut nonton walau globe-nya tidak muncul.
-            if (key === 'tvWorld') {
-                setTimeout(function () {
-                    const fb = document.getElementById('tvWorldFallback');
-                    if (fb) fb.style.display = 'block';
-                }, 6000);
-            }
+            _armFallback(key);
         }
 
-        // Muat ulang iframe World (kalau globe 3D sempat gagal render / gangguan koneksi)
-        function tvWorldReload() {
-            const el = document.getElementById('iframeTvWorld');
-            const fb = document.getElementById('tvWorldFallback');
-            if (el) { el.src = ''; el.src = 'https://tvgarden.world/'; }
+        // Situs pihak ketiga (globe 3D tvgarden.world, RosyScans, RyzuKomik) kadang gagal
+        // render / layar hitam di sebagian WebView Android (Kiwi Browser dll) atau saat
+        // koneksi lambat. Tampilkan tombol "Muat Ulang" setelah 6 detik sebagai jalan keluar.
+        function _armFallback(key) {
+            const fb = document.getElementById(_fallbackIdMap[key]);
+            if (!fb) return;
+            setTimeout(function () { fb.style.display = 'block'; }, 6000);
+        }
+
+        // Muat ulang iframe komik/World kalau gagal render / gangguan koneksi
+        function _komikReload(key) {
+            const el = document.getElementById(_iframeIdMap[key]);
+            const fb = document.getElementById(_fallbackIdMap[key]);
+            if (el) { el.src = ''; el.src = _iframeSrcs[key]; }
             if (fb) fb.style.display = 'none';
-            // Kasih kesempatan lagi 6 detik sebelum tombol fallback muncul ulang
-            setTimeout(function () { if (fb) fb.style.display = 'block'; }, 6000);
+            _armFallback(key);
         }
+
+        // Alias — dipakai tombol World (nama lama tetap dipertahankan)
+        function tvWorldReload() { _komikReload('tvWorld'); }
 
         // --- INJECT LINK DEWASA SETELAH PIN BENAR ---
         // Nama fungsi di-obfuscate agar tidak bisa di-call via address bar javascript:
