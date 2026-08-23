@@ -1459,7 +1459,7 @@
             <div class="social-grid">
                 <a href="https://t.me/freedom_syndicate_Bot" class="social-btn btn-tg">TELEGRAM</a>
                 <a href="https://discord.gg/hUf7D4jaNJ" class="social-btn btn-dc">DISCORD</a>
-                <a href=https://chat.whatsapp.com/IXGmoGu57smCr4OFlnhiuP" class="social-btn btn-wa">WHATSAPP</a>
+                <a href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" class="social-btn btn-wa">WHATSAPP</a>
                 <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
                 <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
                 <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
@@ -1763,7 +1763,7 @@
                         <div style="font-size:0.65rem;color:#94a3b8;">Coba ganti server lain di dropdown atas</div>
                         <button onclick="document.getElementById('fsErrorToast').style.display='none'" style="margin-top:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;">Tutup</button>
                     </div>
-                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;height:calc(100vh - 260px);border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
+                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;height:calc(100vh - 260px);border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-fullscreen"></iframe>
                 </div>
 
                 <script>
@@ -1901,10 +1901,10 @@
                 </script>
             </div>
             <div class="movie-pane" id="pane-cineby">
-                <iframe src="https://cineby.cc" style="width:100%;height:calc(100vh - 115px);border:none;display:block;" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
+                <iframe src="https://cineby.cc" style="width:100%;height:calc(100vh - 115px);border:none;display:block;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-fullscreen"></iframe>
             </div>
             <div class="movie-pane" id="pane-vidbox">
-                <iframe src="https://vidbox.pages.dev" style="width:100%;height:calc(100vh - 115px);border:none;display:block;" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
+                <iframe src="https://vidbox.pages.dev" style="width:100%;height:calc(100vh - 115px);border:none;display:block;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-fullscreen"></iframe>
             </div>
         </div>
 
@@ -2828,9 +2828,7 @@ let tv3Hls = null;
         const _iframeSrcs = {
             rosy:    'https://rosyscans.id/',
             ryzu:    'https://ryzukomik.my.id/',
-            // /id langsung ke daftar channel Indonesia, skip globe 3D pembuka
-            // yang sering gagal render (layar hitam) di beberapa WebView Android
-            tvWorld: 'https://tvgarden.world/id'
+            tvWorld: 'https://tvgarden.world/'
         };
         const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false };
 
