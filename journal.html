@@ -51,13 +51,14 @@
         * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
         input, textarea { -webkit-user-select: text; user-select: text; }
 
-        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; height: 100vh; height: 100dvh; width: 100%; position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none; display: flex; flex-direction: column; }
+        html { height: 100%; overflow: hidden; overscroll-behavior: none; }
 
         .sidebar { height: 100%; width: 0; position: fixed; z-index: 10001; top: 0; left: 0; background-color: var(--card); overflow-x: hidden; transition: 0.3s; padding-top: 60px; border-right: 1px solid #1f2937; }
         .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 13px; color: #9ca3af; display: block; transition: 0.3s; font-family: 'Orbitron', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar a:hover, .sidebar a.active { color: var(--blue); background: rgba(56, 189, 248, 0.1); }
         .sidebar .closebtn { position: absolute; top: 10px; right: 20px; font-size: 30px; color: var(--red); cursor: pointer; }
-        .menu-toggle { position: absolute; top: 18px; left: 18px; font-size: 22px; cursor: pointer; color: var(--blue); z-index: 1000; text-shadow: 0 0 10px var(--blue); }
+        .menu-toggle { position: fixed; top: calc(8px + env(safe-area-inset-top, 0px)); left: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; color: var(--blue); z-index: 10000; text-shadow: 0 0 10px var(--blue); background: rgba(5,10,20,0.55); border-radius: 12px; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); touch-action: manipulation; }
 
         .anim-journal { font-family: 'Orbitron'; font-size: 10px; letter-spacing: 3px; color: var(--be); margin-top: 5px; animation: glowText 2s infinite alternate; }
         @keyframes glowText {
@@ -750,7 +751,7 @@
         <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
             <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937;">
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
-                <button onclick="updateChart()" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
+                <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
             <div id="tv_v60" style="height:450px; width:100%;"></div>
             
@@ -1534,6 +1535,9 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), rtdb = firebase.database();
         let curUser = null, sRes = '', sSession = '', sStyle = '', bB = '', bA = '', myChart = null, allTrades = [], dailyChart = null, traderScoreChart = null;
+
+        // Cegah dokumen ikut ter-scroll (header + tombol menu harus selalu terlihat)
+        window.addEventListener('scroll', () => { if (window.scrollY || document.documentElement.scrollTop) window.scrollTo(0, 0); }, { passive: true });
 
         let sidebarOpen = false;
         function toggleNav() {
@@ -2564,9 +2568,30 @@
         }
         function del(id) { if(confirm("Hapus trade ini?")) rtdb.ref('users/' + curUser.uid + '/trades/' + id).remove(); }
         
-        function updateChart() { 
-            const p = document.getElementById('chart-pair').value.toUpperCase(); 
-            document.getElementById('tv_v60').innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=15&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart&utm_term=${p}"></iframe>`;
+        function updateChart(force) {
+            const inp = document.getElementById('chart-pair');
+            const p = (inp.value || 'XAUUSD').toUpperCase().trim();
+            const FC = window.FSChart;
+            const prefs = FC ? FC.prefs() : { mode: 'tv', tf: '15' };
+            const key = prefs.mode + '|' + p + '|' + prefs.tf;
+            const box = document.getElementById('tv_v60');
+            // Jangan bangun ulang chart setiap kali tab dibuka (kecuali SWITCH / ganti TF / ganti mode)
+            if (!force && window.__chartKey === key && box.firstChild) return;
+            window.__chartKey = key;
+            if (FC) FC.savePrefs({ pair: p });
+            if (FC && prefs.mode === 'mine') { FC.open(box, p, prefs.tf); }
+            else if (FC && prefs.mode === 'tl') {
+                FC.close();
+                box.style.height = '78vh'; box.style.minHeight = '560px';
+                box.innerHTML = '<div style="height:100%;display:flex;flex-direction:column"><div style="padding:6px 10px;font-size:10px;background:#0d1117;border-bottom:1px solid #1f2937;color:#9ca3af">Login TraderLens di dalam kotak ini. Kosong / ditolak? <a href="https://traderlens.online/dashboard" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:700">Buka di tab baru ↗</a></div><iframe src="https://traderlens.online/dashboard" style="flex:1;width:100%;border:none;background:#050a14" allow="fullscreen; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
+            }
+            else {
+                box.style.minHeight = '';
+                if (FC) FC.close();
+                box.style.height = '450px';
+                const iv = FC ? FC.tvInterval(prefs.tf) : '15';
+                box.innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=${iv}&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart&utm_term=${p}"></iframe>`;
+            }
             const sContainer = document.getElementById('sentiment-widget-container');
             const script = document.createElement('script'); script.type = 'text/javascript'; script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js'; script.async = true;
             script.innerHTML = JSON.stringify({ "interval": "1h", "width": "100%", "isTransparent": true, "height": 400, "symbol": p === "XAUUSD" ? "OANDA:XAUUSD" : `FX_IDC:${p}`, "showIntervalTabs": true, "displayMode": "single", "locale": "en", "colorTheme": "dark" });
@@ -2848,10 +2873,12 @@
         const LS_KEY_OLD = 'fs_term_layout_v1';
         const CHART_KEY = 'fs_chart_layout_v1';
         // Pindah ke tab Chart (tidak lagi muncul di Terminal)
-        const CHART_TYPES = ['clock', 'sentiment', 'backtest', 'heatmap'];
+        const CHART_TYPES = ['clock', 'sentiment', 'backtest', 'scanner', 'heatmap'];
+        // Hanya widget pilihan yang tersedia (sisanya dihapus)
+        const ALLOWED = ['ai', 'scanner', 'rules', 'converter', 'note', 'heartrate', 'stopwatch', 'clock', 'sentiment', 'backtest', 'heatmap'];
         // Sudah ada sebagai tab sendiri (Journal) — disembunyikan dari Terminal agar tidak dobel
         const HIDDEN_TYPES = ['journal'];
-        const DEFAULT = ['watchlist', 'ai', 'scanner', 'rules', 'calc'];
+        const DEFAULT = ['converter', 'heartrate', 'note', 'stopwatch', 'rules', 'ai'];
         const isTermType = t => !!W[t] && !CHART_TYPES.includes(t) && !HIDDEN_TYPES.includes(t);
         const mkDefault = () => DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} }));
         let layout = [];
@@ -2955,8 +2982,10 @@
             const counts = {}; layout.forEach(i => counts[i.type] = (counts[i.type] || 0) + 1);
             let h = `<div class="fs-mbox"><div class="fs-mhead"><span style="font-size:18px">▦</span><b>Pustaka Widget</b><span class="cnt">${layout.length} aktif</span><button class="fs-pop-x" onclick="fsCloseModal()">✕</button></div>`;
             CATS.forEach(cat => {
+                const keys = Object.keys(W).filter(k => W[k].cat === cat && isTermType(k));
+                if (!keys.length) return;
                 h += `<div class="lib-cat">${cat}</div><div class="lib-grid">`;
-                Object.keys(W).filter(k => W[k].cat === cat && isTermType(k)).forEach(k => {
+                keys.forEach(k => {
                     const n = counts[k] || 0;
                     h += `<div class="lib-item ${n ? 'has' : ''}" data-add="${k}">${n ? '<span class="n">' + n + '</span>' : ''}<span class="ic">${W[k].i}</span>${esc(W[k].t)}</div>`;
                 });
@@ -3000,7 +3029,7 @@
             initChartBoard();
         }
 
-        window.__fsTerm = { W, ui: { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, tvEmbed, openModal, closeModal, LWC, XLSX_URL }, register(k, d) { W[k] = d; }, init: initTab, get layout() { return layout; }, addWidget, openLibrary };
+        window.__fsTerm = { W, ui: { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, tvEmbed, openModal, closeModal, LWC, XLSX_URL }, register(k, d) { if (ALLOWED.includes(k)) W[k] = d; }, init: initTab, get layout() { return layout; }, addWidget, openLibrary };
     })();
     </script>
 
@@ -3077,43 +3106,85 @@
 
 
 
-        /* ---------- AI ANALYST ---------- */
+        /* ---------- AI ANALYST (gratis via Puter.js, tanpa API key) ---------- */
         reg('ai', {
             t: 'AI Analyst', i: '🤖', cat: 'ANALISA & BERITA',
             mount(body, inst) {
-                const KEY = 'fs_ai_endpoint';
+                const K_EP = 'fs_ai_endpoint', K_PV = 'fs_ai_provider', K_MD = 'fs_ai_model';
+                const PUTER = 'https://js.puter.com/v2/';
+                const MODELS = [['gpt-4.1-nano', 'GPT-4.1 nano (cepat, bisa baca gambar)'], ['gpt-4o-mini', 'GPT-4o mini'], ['deepseek-chat', 'DeepSeek Chat'], ['gemini-2.0-flash', 'Gemini 2.0 Flash']];
+                const SYS = 'Kamu adalah AI Analyst trading untuk platform Freedom Syndicate. Jawab dalam Bahasa Indonesia, ringkas dan terstruktur. Bantu analisa teknikal (ICT, price action, support/resistance), fundamental, gold, crypto, forex, dan saham. Jika diberi screenshot chart, jelaskan trend, struktur, level kunci, dan skenario. Selalu ingatkan bahwa ini bukan saran finansial dan sebutkan manajemen risiko.';
                 const hist = []; let img = null;
-                const ep = () => (window.FS_AI_ENDPOINT || ls.get(KEY, '') || '').trim();
-                body.innerHTML = `<div style="display:flex;justify-content:flex-end;gap:2px;padding:4px 8px;border-bottom:1px solid #1f2937"><button class="tw-hb" data-a="cfg" title="Atur endpoint AI">⚙</button><button class="tw-hb" data-a="reset" title="Mulai ulang">↻</button></div>
-                <div class="cf" style="display:none;padding:10px 12px;border-bottom:1px solid #1f2937"><label class="tw-lbl">URL endpoint AI (POST, balasan JSON {reply})</label><div style="display:flex;gap:8px"><input class="tw-in" placeholder="https://…/analyst" value="${esc(ls.get(KEY, ''))}"><button class="tm-btn pri sm" data-a="savecfg">SIMPAN</button></div></div>
+                const provider = () => ls.get(K_PV, 'puter');
+                const customUrl = () => (window.FS_AI_ENDPOINT || ls.get(K_EP, '') || '').trim();
+                body.innerHTML = `<div style="display:flex;justify-content:flex-end;gap:2px;padding:4px 8px;border-bottom:1px solid #1f2937"><button class="tw-hb" data-a="cfg" title="Pengaturan AI">⚙</button><button class="tw-hb" data-a="reset" title="Mulai ulang">↻</button></div>
+                <div class="cf" style="display:none;padding:10px 12px;border-bottom:1px solid #1f2937">
+                    <label class="tw-lbl">Sumber AI</label>
+                    <select class="tw-sel c-pv" style="margin-bottom:8px"><option value="puter">Puter — GRATIS, tanpa API key (disarankan)</option><option value="custom">Endpoint sendiri (POST JSON)</option></select>
+                    <div class="c-puter"><label class="tw-lbl">Model</label><select class="tw-sel c-md">${MODELS.map(m => `<option value="${m[0]}">${esc(m[1])}</option>`).join('')}</select><div class="tw-note" style="margin-top:6px">Pertama kali dipakai akan muncul popup login/daftar Puter (gratis). Izinkan popup di browser.</div></div>
+                    <div class="c-custom" style="display:none"><label class="tw-lbl">URL endpoint (balasan JSON {reply})</label><input class="tw-in c-ep" placeholder="https://…/analyst" value="${esc(ls.get(K_EP, ''))}"></div>
+                    <button class="tm-btn pri sm" data-a="savecfg" style="margin-top:8px">SIMPAN</button>
+                </div>
                 <div class="ai-log"></div>
                 <div class="ai-sug">${['Analisa trend saat ini', 'Support & resistance key level', 'Outlook minggu ini', 'Risiko yang perlu diperhatikan'].map(s => `<button>✦ ${s}</button>`).join('')}</div>
                 <div class="ai-in"><label class="ai-ph"><span>🖼</span>Photo<input type="file" accept="image/*" style="display:none"></label><input class="tw-in" placeholder="Tanya apa saja…" style="font-size:14px"><button class="ai-send">➤</button></div>`;
                 const log = $('.ai-log', body), inp = $('.ai-in .tw-in', body);
+                const cfgBox = $('.cf', body), selPv = $('.c-pv', body), selMd = $('.c-md', body);
+                const syncCfg = () => { $('.c-puter', body).style.display = selPv.value === 'puter' ? 'block' : 'none'; $('.c-custom', body).style.display = selPv.value === 'custom' ? 'block' : 'none'; };
+                selPv.value = provider(); selMd.value = ls.get(K_MD, MODELS[0][0]); if (!selMd.value) selMd.value = MODELS[0][0]; syncCfg();
+                selPv.onchange = syncCfg;
                 const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
                 const add = (who, html) => { const d = document.createElement('div'); d.className = 'ai-m' + (who === 'me' ? ' me' : ''); d.innerHTML = html; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
                 const hello = () => { log.innerHTML = ''; hist.length = 0; add('ai', 'Halo! Saya AI Analyst. Tanyakan apa saja — analisa teknikal, fundamental, gold, crypto, forex, saham, atau upload screenshot chart untuk dianalisa. 💹'); };
                 hello();
                 const shrink = f => new Promise(ok => { const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1024 / Math.max(im.width, im.height)); const c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/jpeg', 0.82)); }; im.src = r.result; }; r.readAsDataURL(f); });
                 $('input[type=file]', body).onchange = async e => { const f = e.target.files[0]; if (!f) return; img = await shrink(f); $('.ai-ph', body).style.borderColor = '#22c55e'; toast('📷 Gambar siap', 'Ketik pertanyaan lalu kirim.'); };
+
+                const textOf = r => {
+                    if (typeof r === 'string') return r;
+                    const c = r && r.message && r.message.content;
+                    if (typeof c === 'string') return c;
+                    if (Array.isArray(c)) return c.map(x => (x && (x.text || x.content)) || '').join('');
+                    return (r && (r.text || r.reply)) || JSON.stringify(r);
+                };
+                const errOf = e => (e && (e.message || (e.error && (e.error.message || e.error)) || e.msg)) || (typeof e === 'string' ? e : JSON.stringify(e));
+
+                async function askPuter(sentImg) {
+                    await loadScript(PUTER);
+                    if (!window.puter || !puter.ai) throw new Error('Puter.js gagal dimuat');
+                    const model = ls.get(K_MD, MODELS[0][0]);
+                    const msgs = [{ role: 'system', content: SYS }].concat(hist.slice(-12).map(m => ({ role: m.role, content: m.content })));
+                    if (sentImg) { const last = msgs[msgs.length - 1]; last.content = [{ type: 'text', text: last.content }, { type: 'image_url', image_url: { url: sentImg } }]; }
+                    return textOf(await puter.ai.chat(msgs, { model }));
+                }
+                async function askCustom(sentImg) {
+                    const url = customUrl(); if (!url) throw new Error('URL endpoint belum diisi (tekan ⚙).');
+                    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, app: 'freedom-syndicate' }) });
+                    const j = await r.json(); return j.reply || j.text || j.message || j.answer || JSON.stringify(j);
+                }
                 async function send(text) {
                     text = (text || inp.value).trim(); if (!text && !img) return; inp.value = '';
                     add('me', (img ? `<img src="${img}">` : '') + fmt(text || '(analisa gambar)'));
                     hist.push({ role: 'user', content: text || 'Tolong analisa gambar chart ini.' });
                     const sent = img; img = null; $('.ai-ph', body).style.borderColor = '';
-                    const url = ep();
-                    if (!url) { add('ai', 'AI Analyst belum terhubung ke server. Tekan ⚙ di kanan atas lalu isi URL endpoint AI kamu (POST JSON <code>{messages, image}</code> → balasan <code>{reply}</code>).'); return; }
                     const wait = add('ai', '<span class="m">Menganalisa…</span>');
                     try {
-                        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sent, app: 'freedom-syndicate' }) });
-                        const j = await r.json(); const out = j.reply || j.text || j.message || j.answer || JSON.stringify(j);
+                        const out = provider() === 'custom' ? await askCustom(sent) : await askPuter(sent);
                         wait.innerHTML = fmt(out); hist.push({ role: 'assistant', content: out });
-                    } catch (e) { wait.innerHTML = '⚠️ Gagal menghubungi server AI: ' + esc(e.message); }
+                    } catch (e) {
+                        hist.pop();
+                        wait.innerHTML = '⚠️ AI gagal merespons: ' + esc(errOf(e)) + '<br><span class="m">Pastikan popup tidak diblokir &amp; sudah login Puter, atau ganti model di ⚙.</span>';
+                    }
                     log.scrollTop = log.scrollHeight;
                 }
                 body.addEventListener('click', e => {
                     const a = e.target.closest('[data-a]');
-                    if (a) { if (a.dataset.a === 'reset') hello(); if (a.dataset.a === 'cfg') { const c = $('.cf', body); c.style.display = c.style.display === 'none' ? 'block' : 'none'; } if (a.dataset.a === 'savecfg') { ls.set(KEY, $('.cf input', body).value.trim()); toast('✅ Tersimpan', 'Endpoint AI diperbarui.'); $('.cf', body).style.display = 'none'; } return; }
+                    if (a) {
+                        if (a.dataset.a === 'reset') hello();
+                        if (a.dataset.a === 'cfg') cfgBox.style.display = cfgBox.style.display === 'none' ? 'block' : 'none';
+                        if (a.dataset.a === 'savecfg') { ls.set(K_PV, selPv.value); ls.set(K_MD, selMd.value); ls.set(K_EP, $('.c-ep', body).value.trim()); toast('✅ Tersimpan', 'Pengaturan AI diperbarui.'); cfgBox.style.display = 'none'; }
+                        return;
+                    }
                     const s = e.target.closest('.ai-sug button'); if (s) return send(s.textContent.replace('✦', '').trim());
                     if (e.target.closest('.ai-send')) send();
                 });
@@ -3160,6 +3231,39 @@
             }
         });
 
+        // Chart candlestick cadangan (canvas) — dipakai jika library chart diblokir/gagal dimuat
+        function miniChart(host, height) {
+            const cv = document.createElement('canvas'); cv.style.cssText = 'width:100%;height:' + height + 'px;display:block;border-radius:8px'; host.appendChild(cv);
+            let data = [];
+            function draw() {
+                const dpr = window.devicePixelRatio || 1, w = Math.max(host.clientWidth, 200), h = height;
+                cv.width = w * dpr; cv.height = h * dpr; const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+                g.fillStyle = '#0d1117'; g.fillRect(0, 0, w, h);
+                if (!data.length) return;
+                const padR = 56, padB = 4, slot = 8, n = Math.max(20, Math.floor((w - padR) / slot)), view = data.slice(-n), cw = (w - padR) / n;
+                let hi = -Infinity, lo = Infinity; view.forEach(c => { hi = Math.max(hi, c.high); lo = Math.min(lo, c.low); });
+                const pd = (hi - lo) * 0.06 || 1; hi += pd; lo -= pd;
+                const Y = p => 6 + (hi - p) / (hi - lo) * (h - padB - 12);
+                g.font = '10px Poppins, sans-serif'; g.textBaseline = 'middle'; g.lineWidth = 1;
+                for (let i = 0; i <= 4; i++) { const p = lo + (hi - lo) * i / 4, y = Y(p); g.strokeStyle = '#161e2e'; g.beginPath(); g.moveTo(0, y); g.lineTo(w - padR, y); g.stroke(); g.fillStyle = '#9ca3af'; g.fillText(p.toFixed(p > 1000 ? 1 : 2), w - padR + 4, y); }
+                const off = (n - view.length) * cw;
+                view.forEach((c, i) => {
+                    const x = off + i * cw + cw / 2, up = c.close >= c.open, col = up ? '#4ade80' : '#ef4444';
+                    g.strokeStyle = col; g.fillStyle = col; g.beginPath(); g.moveTo(x, Y(c.high)); g.lineTo(x, Y(c.low)); g.stroke();
+                    const y1 = Y(Math.max(c.open, c.close)), y2 = Y(Math.min(c.open, c.close)); g.fillRect(x - cw * 0.35, y1, cw * 0.7, Math.max(1, y2 - y1));
+                });
+                const last = view[view.length - 1], yl = Y(last.close); g.setLineDash([3, 3]); g.strokeStyle = '#38bdf8'; g.beginPath(); g.moveTo(0, yl); g.lineTo(w - padR, yl); g.stroke(); g.setLineDash([]);
+                g.fillStyle = '#38bdf8'; g.fillRect(w - padR, yl - 8, padR, 16); g.fillStyle = '#000'; g.fillText(last.close.toFixed(last.close > 1000 ? 1 : 2), w - padR + 4, yl);
+            }
+            const series = {
+                setData(a) { data = a.slice(); draw(); },
+                update(c) { if (data.length && data[data.length - 1].time === c.time) data[data.length - 1] = c; else data.push(c); draw(); }
+            };
+            return { series, chart: { remove() { cv.remove(); }, applyOptions() { draw(); }, timeScale() { return { fitContent() {} }; } } };
+        }
+        const LWC_ALT = ['https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js', 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js', LWC];
+        async function loadAny(urls) { let err; for (const u of urls) { try { await loadScript(u); if (window.LightweightCharts) return true; } catch (e) { err = e; } } return false; }
+
         /* ---------- BACKTEST (replay Binance) ---------- */
         const BT = { PAXGUSDT: { n: 'XAU/USD', pip: 0.1, mult: 100 }, BTCUSDT: { n: 'BTC/USD', pip: 1, mult: 1 }, ETHUSDT: { n: 'ETH/USD', pip: 0.1, mult: 1 }, SOLUSDT: { n: 'SOL/USD', pip: 0.01, mult: 1 }, BNBUSDT: { n: 'BNB/USD', pip: 0.1, mult: 1 } };
         reg('backtest', {
@@ -3200,15 +3304,17 @@
                 async function load() {
                     stop(); const btn = q('.s-load'); btn.textContent = '…';
                     try {
-                        await loadScript(LWC);
                         S.sym = q('.s-sym').value; const tf = q('.s-tf').value; const ms = new Date(q('.s-date').value + 'T00:00:00Z').getTime() || Date.now() - 20 * 864e5;
                         const [before, after] = await Promise.all([klines(S.sym, tf, `&endTime=${ms - 1}&limit=150`), klines(S.sym, tf, `&startTime=${ms}&limit=1000`)]);
                         if (!after.length) throw new Error('Tidak ada data pada tanggal itu');
                         S.data = before.concat(after); S.cur = before.length; S.bal = 10000; S.pos = null; S.closed = [];
                         const host = q('.bt-chart'); host.innerHTML = '';
                         if (S.chart) { try { S.chart.remove(); } catch (e) {} }
-                        S.chart = LightweightCharts.createChart(host, { width: host.clientWidth, height: 250, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true } });
-                        S.series = S.chart.addCandlestickSeries({ upColor: '#4ade80', downColor: '#ef4444', wickUpColor: '#4ade80', wickDownColor: '#ef4444', borderVisible: false });
+                        const lwOk = window.LightweightCharts || await loadAny(LWC_ALT);
+                        if (lwOk) {
+                            S.chart = LightweightCharts.createChart(host, { width: host.clientWidth, height: 250, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true } });
+                            S.series = S.chart.addCandlestickSeries({ upColor: '#4ade80', downColor: '#ef4444', wickUpColor: '#4ade80', wickDownColor: '#ef4444', borderVisible: false });
+                        } else { const m = miniChart(host, 250); S.chart = m.chart; S.series = m.series; }
                         S.series.setData(S.data.slice(0, S.cur + 1)); S.chart.timeScale().fitContent();
                         if (window.ResizeObserver) new ResizeObserver(() => { if (alive(host) && S.chart) S.chart.applyOptions({ width: host.clientWidth }); }).observe(host);
                         paint();
@@ -3573,13 +3679,32 @@
         reg('clock', {
             t: 'Market Clock', i: '⏰', cat: 'PRODUKTIVITAS',
             mount(body) {
+                // [bendera, kota, zona waktu, jam buka lokal, jam tutup lokal, warna]
                 const Z = [['🇦🇺', 'Sydney', 'Australia/Sydney', 7, 16, '#3b82f6'], ['🇯🇵', 'Tokyo', 'Asia/Tokyo', 9, 18, '#ef4444'], ['🇬🇧', 'London', 'Europe/London', 8, 17, '#22c55e'], ['🇺🇸', 'New York', 'America/New_York', 8, 17, '#f59e0b']];
-                const hm = (tz, d) => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(d);
+                const WD = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+                const p2 = n => String(n).padStart(2, '0');
+                const clk = (tz, d) => { // waktu lokal kota (ikut DST otomatis)
+                    const o = {}; new Intl.DateTimeFormat('en-US', { timeZone: tz, hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', weekday: 'short' }).formatToParts(d).forEach(x => o[x.type] = x.value);
+                    return { h: (+o.hour) % 24, m: +o.minute, s: +o.second, wd: WD[o.weekday] };
+                };
+                const dur = sec => { sec = Math.max(0, Math.floor(sec)); const dd = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60; return dd ? `${dd}h ${h}j ${m}m` : h ? `${h}j ${p2(m)}m ${p2(s)}d` : `${m}m ${p2(s)}d`; };
                 function draw() {
-                    const d = new Date();
-                    body.innerHTML = Z.map(z => { const t = hm(z[2], d), h = +t.slice(0, 2); const wk = new Intl.DateTimeFormat('en-US', { timeZone: z[2], weekday: 'short' }).format(d); const open = h >= z[3] && h < z[4] && wk !== 'Sat' && wk !== 'Sun'; return `<div class="ck-row" style="border-left-color:${open ? z[5] : 'transparent'}"><span class="fl">${z[0]}</span><span class="nm">${z[1]}</span><span class="tm">${t}</span><span class="st" style="background:${open ? z[5] : '#9ca3af'};${open ? 'box-shadow:0 0 8px ' + z[5] : ''}"></span></div>`; }).join('') + `<div class="ck-row" style="font-size:11px;color:#6b7280;border-bottom:none">🕒 Waktu kamu (${Intl.DateTimeFormat().resolvedOptions().timeZone}) <span class="sp" style="flex:1"></span><span class="tm" style="color:#9ca3af">${hm(undefined, d)}</span></div><div class="tw-pad" style="padding-top:0"><div class="tw-note">Titik berwarna = sesi sedang buka (jam kerja lokal tiap kota, Senin–Jumat).</div></div>`;
+                    const d = new Date(), act = [];
+                    const rows = Z.map(z => {
+                        const c = clk(z[2], d), now = c.h * 3600 + c.m * 60 + c.s, o = z[3] * 3600, e = z[4] * 3600, weekday = c.wd >= 1 && c.wd <= 5;
+                        const open = weekday && now >= o && now < e; let label, pct = 0;
+                        if (open) { act.push(z[1]); pct = (now - o) / (e - o) * 100; label = 'BUKA · tutup dalam ' + dur(e - now); }
+                        else {
+                            let ahead = 0; if (!(weekday && now < o)) { ahead = 1; while (!(((c.wd + ahead) % 7) >= 1 && ((c.wd + ahead) % 7) <= 5)) ahead++; }
+                            label = (weekday || ahead ? 'Tutup' : 'Tutup') + ' · buka dalam ' + dur(ahead * 86400 + o - now);
+                        }
+                        return `<div class="ck-row" style="border-left-color:${open ? z[5] : 'transparent'};border-bottom:none"><span class="fl">${z[0]}</span><span class="nm">${z[1]}</span><span class="tm">${p2(c.h)}:${p2(c.m)}:${p2(c.s)}</span><span class="st" style="background:${open ? z[5] : '#9ca3af'};${open ? 'box-shadow:0 0 8px ' + z[5] : ''}"></span></div>
+                        <div style="padding:0 16px 9px 16px;border-bottom:1px solid rgba(255,255,255,.05);border-left:3px solid ${open ? z[5] : 'transparent'}"><div style="height:3px;background:#1f2937;border-radius:2px;overflow:hidden"><i style="display:block;height:100%;width:${pct.toFixed(1)}%;background:${z[5]}"></i></div><div style="margin-top:4px;font-size:10px;color:${open ? z[5] : '#6b7280'};font-weight:${open ? 600 : 400}">${label}</div></div>`;
+                    }).join('');
+                    const sum = act.length ? `Sesi aktif: <b style="color:#4ade80">${act.join(' + ')}</b>${act.length > 1 ? ' · overlap' : ''}` : 'Tidak ada sesi besar yang buka (akhir pekan / di luar jam).';
+                    body.innerHTML = rows + `<div class="ck-row" style="font-size:11px;color:#6b7280;border-bottom:none">🕒 Waktu kamu (${Intl.DateTimeFormat().resolvedOptions().timeZone}) <span class="sp" style="flex:1"></span><span class="tm" style="color:#9ca3af">${new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(d)}</span></div><div class="tw-pad" style="padding-top:0"><div style="font-size:11px;margin-bottom:8px">${sum}</div><div class="tw-note">Real-time per detik. Sesi dihitung dari jam kerja lokal tiap kota (Senin–Jumat, otomatis ikut DST); bar & hitung mundur mulai dari nol lagi setiap sesi baru dibuka, Sabtu–Minggu libur.</div></div>`;
                 }
-                draw(); everySec(body, draw, 15000);
+                draw(); everySec(body, draw, 1000);
             }
         });
 
@@ -3627,6 +3752,287 @@
 
         // semua widget terdaftar → bangun tab
         T.init();
+    })();
+    </script>
+
+    <script>
+    /* =====================================================================
+       FREEDOM SYNDICATE — CHART PRIBADI (gambar/mapping tersimpan per akun)
+       Garis, kotak, fib disimpan di Firebase: users/{uid}/chartDrawings/{PAIR}
+       + cadangan localStorage. Tidak hilang saat logout/login atau ganti perangkat.
+       ===================================================================== */
+    (function () {
+        'use strict';
+        const $ = (s, r) => (r || document).querySelector(s);
+        const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+        const LWC_URLS = ['https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js', 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js', 'https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.js'];
+        const TF = [['1', '1m', '1m', 60], ['5', '5m', '5m', 300], ['15', '15m', '15m', 900], ['30', '30m', '30m', 1800], ['60', '1h', '1H', 3600], ['240', '4h', '4H', 14400], ['D', '1d', '1D', 86400]];
+        const tfOf = k => TF.find(t => t[0] === k) || TF[2];
+        const HOSTS = ['https://api.binance.com', 'https://data-api.binance.vision'];
+        const FIB = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
+
+        const PK = 'fs_chart_prefs_v1';
+        const prefs = Object.assign({ mode: 'mine', tf: '15', pair: 'XAUUSD' }, lsGet(PK, {}));
+        const me = () => { try { return auth.currentUser; } catch (e) { return null; } };
+        const clean = x => String(x).replace(/[^A-Za-z0-9]/g, '');
+        function savePrefs(o) {
+            Object.assign(prefs, o); lsSet(PK, prefs);
+            const u = me(); if (u) { try { rtdb.ref('users/' + u.uid + '/chartPrefs').set(prefs).catch(() => {}); } catch (e) {} }
+        }
+
+        function toBin(pair) {
+            let p = String(pair || '').toUpperCase().split(':').pop().replace(/[^A-Z0-9]/g, '');
+            if (!p) p = 'XAUUSD';
+            if (/^(XAU|XAUUSD|GOLD|PAXG|PAXGUSDT)$/.test(p)) return 'PAXGUSDT';
+            if (p.endsWith('USDT')) return p;
+            if (p.endsWith('USD')) return p.slice(0, -3) + 'USDT';
+            return p + 'USDT';
+        }
+        async function kl(sym, iv, extra) {
+            let err;
+            for (const h of HOSTS) {
+                try {
+                    const r = await fetch(`${h}/api/v3/klines?symbol=${sym}&interval=${iv}${extra || ''}`);
+                    if (!r.ok) throw new Error(r.status === 400 ? 'Pair "' + sym + '" tidak tersedia di data Binance' : 'HTTP ' + r.status);
+                    return (await r.json()).map(k => ({ time: Math.floor(k[0] / 1000), open: +k[1], high: +k[2], low: +k[3], close: +k[4] }));
+                } catch (e) { err = e; if (/tidak tersedia/.test(e.message)) throw e; }
+            }
+            throw err || new Error('Data pasar tidak bisa diakses');
+        }
+        function loadScript(src) { return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.async = true; s.onload = ok; s.onerror = () => no(new Error('x')); document.head.appendChild(s); }); }
+        async function ensureLWC() { if (window.LightweightCharts) return true; for (const u of LWC_URLS) { try { await loadScript(u); if (window.LightweightCharts) return true; } catch (e) {} } return false; }
+
+        const S = { id: 0, alive: false, tool: 'hand', dr: [], D: [], first: null, prev: null, fresh: false, down: null, color: '#38bdf8', sig: '', saveT: null };
+        const dkey = sym => 'fs_draw_' + (me() ? me().uid : 'anon') + '_' + sym;
+        const rpath = sym => { const u = me(); return u ? 'users/' + u.uid + '/chartDrawings/' + clean(sym) : null; };
+        const status = (t, c) => { const e = $('#fsc-status'); if (e) { e.textContent = t; e.style.color = c || '#6b7280'; } };
+
+        async function loadDrawings(sym) {
+            let arr = lsGet(dkey(sym), []);
+            const path = rpath(sym);
+            if (path) {
+                try {
+                    const sn = await Promise.race([rtdb.ref(path).once('value'), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 5000))]);
+                    const v = sn.val();
+                    if (v) { try { const r = JSON.parse(v); if (Array.isArray(r)) { arr = r; lsSet(dkey(sym), arr); } } catch (e) {} }
+                    else if (arr.length) { try { await rtdb.ref(path).set(JSON.stringify(arr)); } catch (e) {} } // naikkan data lokal ke cloud
+                    status('☁ Tersimpan di akun', '#4ade80');
+                } catch (e) { status('💾 Tersimpan di perangkat (cloud tidak terjangkau)', '#eab308'); }
+            } else status('💾 Tersimpan di perangkat (belum login)', '#eab308');
+            return arr;
+        }
+        function persist() {
+            const sym = S.sym; lsSet(dkey(sym), S.dr);
+            clearTimeout(S.saveT);
+            S.saveT = setTimeout(() => {
+                const path = rpath(sym); if (!path) return status('💾 Tersimpan di perangkat', '#eab308');
+                const op = S.dr.length ? rtdb.ref(path).set(JSON.stringify(S.dr)) : rtdb.ref(path).remove();
+                op.then(() => status('☁ Tersimpan di akun ✓', '#4ade80')).catch(() => status('⚠ Gagal simpan ke cloud — aman di perangkat', '#ef4444'));
+            }, 500);
+        }
+
+        // ---- konversi waktu/harga <-> koordinat layar (berbasis index logis, aman utk area kosong di kanan) ----
+        const iv = () => tfOf(prefs.tf)[3];
+        function tIdx(t) {
+            const D = S.D, n = D.length; if (!n) return 0;
+            if (t <= D[0].time) return (t - D[0].time) / iv();
+            if (t >= D[n - 1].time) return n - 1 + (t - D[n - 1].time) / iv();
+            let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (D[m].time <= t) lo = m; else hi = m; }
+            return lo + (t - D[lo].time) / (D[hi].time - D[lo].time);
+        }
+        function idxT(i) {
+            const D = S.D, n = D.length;
+            if (i <= 0) return Math.round(D[0].time + i * iv());
+            if (i >= n - 1) return Math.round(D[n - 1].time + (i - (n - 1)) * iv());
+            const lo = Math.floor(i); return Math.round(D[lo].time + (i - lo) * (D[lo + 1].time - D[lo].time));
+        }
+        const toPx = pt => { const x = S.chart.timeScale().logicalToCoordinate(tIdx(pt.time)), y = S.series.priceToCoordinate(pt.price); return (x == null || y == null) ? null : { x, y }; };
+        function fromPx(x, y) {
+            const l = S.chart.timeScale().coordinateToLogical(x), pr = S.series.coordinateToPrice(y);
+            if (l == null || pr == null) return null; return { time: idxT(l), price: pr };
+        }
+        const fmtP = p => p >= 1000 ? p.toFixed(1) : p >= 1 ? p.toFixed(2) : p.toFixed(5);
+        const plotW = () => { let w = 60; try { w = S.chart.priceScale('right').width() || 60; } catch (e) {} return S.el.clientWidth - w; };
+
+        function drawOne(g, d, pw) {
+            const A = toPx(d.a), B = d.b ? toPx(d.b) : null; if (!A) return;
+            g.strokeStyle = g.fillStyle = d.c || '#38bdf8'; g.lineWidth = 1.6; g.setLineDash([]); g.font = '10px Poppins, sans-serif'; g.textBaseline = 'middle';
+            if (d.t === 'hl') {
+                g.beginPath(); g.moveTo(0, A.y); g.lineTo(pw, A.y); g.stroke();
+                const tx = fmtP(d.a.price), tw = g.measureText(tx).width + 8; g.fillRect(pw - tw, A.y - 8, tw, 16); g.fillStyle = '#000'; g.fillText(tx, pw - tw + 4, A.y);
+            } else if (d.t === 'tl' && B) {
+                g.beginPath(); g.moveTo(A.x, A.y); g.lineTo(B.x, B.y); g.stroke();
+                [A, B].forEach(q => { g.beginPath(); g.arc(q.x, q.y, 3, 0, 7); g.fill(); });
+            } else if (d.t === 'rc' && B) {
+                g.globalAlpha = 0.14; g.fillRect(Math.min(A.x, B.x), Math.min(A.y, B.y), Math.abs(B.x - A.x), Math.abs(B.y - A.y)); g.globalAlpha = 1;
+                g.strokeRect(Math.min(A.x, B.x), Math.min(A.y, B.y), Math.abs(B.x - A.x), Math.abs(B.y - A.y));
+            } else if (d.t === 'fb' && B) {
+                g.setLineDash([4, 4]); g.beginPath(); g.moveTo(A.x, A.y); g.lineTo(B.x, B.y); g.stroke(); g.setLineDash([]);
+                const x0 = Math.min(A.x, B.x);
+                FIB.forEach(l => {
+                    const pr = d.b.price + (d.a.price - d.b.price) * l, y = S.series.priceToCoordinate(pr); if (y == null) return;
+                    g.globalAlpha = l === 0 || l === 1 ? 0.95 : 0.6; g.beginPath(); g.moveTo(x0, y); g.lineTo(pw, y); g.stroke(); g.globalAlpha = 1;
+                    g.fillText(l + '  (' + fmtP(pr) + ')', x0 + 4, y - 7);
+                });
+            }
+        }
+        function draw() {
+            if (!S.alive || !S.cv) return;
+            const w = S.el.clientWidth, h = S.el.clientHeight; if (!w || !h) return;
+            const dpr = window.devicePixelRatio || 1;
+            if (S.cv.width !== Math.round(w * dpr) || S.cv.height !== Math.round(h * dpr)) { S.cv.width = Math.round(w * dpr); S.cv.height = Math.round(h * dpr); S.cv.style.width = w + 'px'; S.cv.style.height = h + 'px'; }
+            const g = S.cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+            const pw = plotW(); g.save(); g.beginPath(); g.rect(0, 0, pw, h - 26); g.clip();
+            S.dr.forEach(d => drawOne(g, d, pw)); if (S.prev) drawOne(g, S.prev, pw);
+            g.restore();
+        }
+        function loop() {
+            if (!S.alive) return;
+            if (!S.el.isConnected) { S.alive = false; return; }
+            try {
+                const ts = S.chart.timeScale(), last = S.D[S.D.length - 1] || { close: 1 };
+                const sig = [ts.logicalToCoordinate(0), ts.logicalToCoordinate(100), S.series.priceToCoordinate(last.close), S.series.priceToCoordinate(last.close * 1.05), S.el.clientWidth, S.el.clientHeight, S.dr.length, S.dr.map(d => d.id).join(',')].join('|');
+                if (sig !== S.sig) { S.sig = sig; draw(); }
+            } catch (e) {}
+            requestAnimationFrame(loop);
+        }
+
+        // ---- interaksi menggambar ----
+        const uid8 = () => Math.random().toString(36).slice(2, 9);
+        const mk = (a, b) => ({ id: uid8(), t: S.tool, a, b: S.tool === 'hl' ? null : b, c: S.color });
+        function segDist(p, a, b) { const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy; let t = l2 ? ((p.x - a.x) * dx + (p.y - a.y) * dy) / l2 : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy)); }
+        function dist(d, p) {
+            const A = toPx(d.a), B = d.b ? toPx(d.b) : null; if (!A) return 1e9;
+            if (d.t === 'hl') return Math.abs(p.y - A.y);
+            if (!B) return 1e9;
+            if (d.t === 'tl') return segDist(p, A, B);
+            if (d.t === 'rc') { const x1 = Math.min(A.x, B.x), x2 = Math.max(A.x, B.x), y1 = Math.min(A.y, B.y), y2 = Math.max(A.y, B.y); return Math.min(segDist(p, { x: x1, y: y1 }, { x: x2, y: y1 }), segDist(p, { x: x2, y: y1 }, { x: x2, y: y2 }), segDist(p, { x: x2, y: y2 }, { x: x1, y: y2 }), segDist(p, { x: x1, y: y2 }, { x: x1, y: y1 })); }
+            if (d.t === 'fb') { let m = segDist(p, A, B); FIB.forEach(l => { const y = S.series.priceToCoordinate(d.b.price + (d.a.price - d.b.price) * l); if (y != null && p.x >= Math.min(A.x, B.x) - 6) m = Math.min(m, Math.abs(p.y - y)); }); return m; }
+            return 1e9;
+        }
+        function setTool(t) {
+            S.tool = t; S.first = null; S.prev = null; S.sig = '';
+            if (S.cv) { S.cv.style.pointerEvents = t === 'hand' ? 'none' : 'auto'; S.cv.style.cursor = t === 'erase' ? 'not-allowed' : 'crosshair'; }
+            document.querySelectorAll('#fsc-bar [data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === t));
+            const hints = { hand: '', tl: 'Seret garis, atau tap 2 titik', hl: 'Tap/seret ke level harga', rc: 'Seret kotak, atau tap 2 sudut', fb: 'Seret dari swing awal ke akhir', erase: 'Tap gambar untuk menghapus' };
+            const hn = $('#fsc-hint'); if (hn) hn.textContent = hints[t] || '';
+            draw();
+        }
+        function bindCanvas() {
+            const cv = S.cv;
+            const pt = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+            cv.addEventListener('pointerdown', e => {
+                if (S.tool === 'hand') return; e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+                const q = pt(e);
+                if (S.tool === 'erase') {
+                    let best = null, bd = 16; S.dr.forEach(d => { const k = dist(d, q); if (k < bd) { bd = k; best = d; } });
+                    if (best) { S.dr = S.dr.filter(d => d !== best); persist(); S.sig = ''; draw(); }
+                    return;
+                }
+                const dp = fromPx(q.x, q.y); if (!dp) return;
+                S.down = { x: e.clientX, y: e.clientY };
+                if (!S.first) { S.first = dp; S.fresh = true; } else S.fresh = false;
+                S.prev = mk(S.first, dp); draw();
+            });
+            cv.addEventListener('pointermove', e => {
+                if (S.tool === 'hand' || S.tool === 'erase' || !S.first) return;
+                const q = pt(e), dp = fromPx(q.x, q.y); if (!dp) return; S.prev = mk(S.first, dp); draw();
+            });
+            cv.addEventListener('pointerup', e => {
+                if (S.tool === 'hand' || S.tool === 'erase' || !S.first || !S.down) return;
+                const moved = Math.hypot(e.clientX - S.down.x, e.clientY - S.down.y), q = pt(e), dp = fromPx(q.x, q.y);
+                S.down = null;
+                if (S.tool !== 'hl' && S.fresh && moved < 8) { S.prev = null; draw(); status('Tap titik kedua…', '#38bdf8'); return; }
+                if (dp) { S.dr.push(mk(S.first, dp)); persist(); }
+                S.first = null; S.prev = null; S.sig = ''; setTool('hand');
+            });
+            cv.addEventListener('pointercancel', () => { S.first = null; S.prev = null; S.down = null; draw(); });
+        }
+
+        // ---- buka / tutup chart ----
+        function close() {
+            S.alive = false; S.id++; clearInterval(S.poll);
+            if (S.chart) { try { S.chart.remove(); } catch (e) {} S.chart = null; }
+            const bar = $('#fsc-bar'); if (bar) bar.classList.remove('mine');
+        }
+        async function open(box, pair, tfKey) {
+            close(); const id = S.id; const sym = toBin(pair); const T = tfOf(tfKey);
+            box.style.height = '480px'; box.style.minHeight = ''; S.sym = sym; S.tool = 'hand';
+            box.innerHTML = '<div style="position:relative;width:100%;height:100%"><div class="fsc-chart" style="position:absolute;inset:0"></div><canvas class="fsc-cv" style="position:absolute;left:0;top:0;pointer-events:none;touch-action:none"></canvas><div class="fsc-msg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9ca3af;font-size:12px;pointer-events:none">Memuat chart…</div></div>';
+            const bar = $('#fsc-bar'); if (bar) bar.classList.add('mine');
+            const msg = $('.fsc-msg', box);
+            const fail = t => { msg.style.pointerEvents = 'auto'; msg.innerHTML = '<div>⚠️ ' + t + '<br><br><button class="fsc-b on" onclick="FSChart.setMode(\'tv\')">Buka mode TradingView</button></div>'; };
+            try {
+                if (!(await ensureLWC())) return fail('Library chart gagal dimuat (diblokir jaringan/VPN).');
+                const [data, dr] = await Promise.all([kl(sym, T[1], '&limit=1000'), loadDrawings(sym)]);
+                if (id !== S.id) return;
+                if (!data.length) return fail('Tidak ada data untuk ' + sym);
+                S.D = data; S.dr = dr; S.el = $('.fsc-chart', box); S.cv = $('.fsc-cv', box);
+                S.chart = LightweightCharts.createChart(S.el, { width: S.el.clientWidth, height: S.el.clientHeight, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true, rightOffset: 10 }, crosshair: { mode: 0 } });
+                S.series = S.chart.addCandlestickSeries({ upColor: '#26a69a', downColor: '#ef5350', wickUpColor: '#26a69a', wickDownColor: '#ef5350', borderVisible: false });
+                S.series.setData(data); S.chart.timeScale().setVisibleLogicalRange({ from: data.length - 90, to: data.length + 10 });
+                msg.remove(); bindCanvas(); S.alive = true; S.sig = '';
+                if (window.ResizeObserver) new ResizeObserver(() => { if (S.chart && S.el.isConnected) { S.chart.applyOptions({ width: S.el.clientWidth, height: S.el.clientHeight }); S.sig = ''; } }).observe(S.el);
+                setTool('hand'); requestAnimationFrame(loop);
+                clearInterval(S.poll);
+                S.poll = setInterval(async () => {
+                    if (id !== S.id || !S.el.isConnected) return clearInterval(S.poll);
+                    try { (await kl(sym, T[1], '&limit=2')).forEach(c => { const L = S.D[S.D.length - 1]; if (L && L.time === c.time) S.D[S.D.length - 1] = c; else if (!L || c.time > L.time) S.D.push(c); S.series.update(c); }); } catch (e) {}
+                }, 5000);
+            } catch (e) { if (id === S.id) fail(e.message || 'Gagal memuat data'); }
+        }
+
+        // ---- toolbar ----
+        function buildBar() {
+            const tv = document.getElementById('tv_v60'); if (!tv || $('#fsc-bar')) return;
+            const st = document.createElement('style');
+            st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:8px 10px;display:flex;flex-direction:column;gap:8px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:7px 10px;font-size:11px;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}';
+            document.head.appendChild(st);
+            const bar = document.createElement('div'); bar.id = 'fsc-bar';
+            bar.innerHTML = '<div class="row"><button class="fsc-b" data-mode="mine">✏️ Chart Pribadi (mapping tersimpan)</button><button class="fsc-b" data-mode="tv">📈 TradingView</button><button class="fsc-b" data-mode="tl">🌐 TraderLens</button></div>' +
+                '<div class="row">' + TF.map(t => `<button class="fsc-b" data-tf="${t[0]}">${t[2]}</button>`).join('') + '</div>' +
+                '<div class="row tools"><button class="fsc-b" data-tool="hand">✋ Geser</button><button class="fsc-b" data-tool="tl">╱ Garis</button><button class="fsc-b" data-tool="hl">─ Horizontal</button><button class="fsc-b" data-tool="rc">▭ Kotak</button><button class="fsc-b" data-tool="fb">Fib</button><button class="fsc-b" data-tool="erase">🧽 Hapus</button><button class="fsc-b" data-act="undo">↶</button><button class="fsc-b" data-act="clear">🗑 Semua</button><input type="color" id="fsc-color" value="#38bdf8"></div>' +
+                '<div class="row"><span id="fsc-status"></span><span id="fsc-hint"></span></div>';
+            tv.parentNode.insertBefore(bar, tv);
+            bar.addEventListener('click', e => {
+                const b = e.target.closest('button'); if (!b) return;
+                if (b.dataset.mode) return setMode(b.dataset.mode);
+                if (b.dataset.tf) { savePrefs({ tf: b.dataset.tf }); sync(); return updateChart(true); }
+                if (b.dataset.tool) return setTool(S.tool === b.dataset.tool && b.dataset.tool !== 'hand' ? 'hand' : b.dataset.tool);
+                if (b.dataset.act === 'undo') { if (S.dr.length) { S.dr.pop(); persist(); S.sig = ''; draw(); } }
+                if (b.dataset.act === 'clear') { if (S.dr.length && confirm('Hapus SEMUA gambar di ' + S.sym + '?')) { S.dr = []; persist(); S.sig = ''; draw(); } }
+            });
+            $('#fsc-color').addEventListener('input', e => { S.color = e.target.value; });
+            sync();
+        }
+        function sync() {
+            document.querySelectorAll('#fsc-bar [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === prefs.mode));
+            document.querySelectorAll('#fsc-bar [data-tf]').forEach(b => b.classList.toggle('on', b.dataset.tf === prefs.tf));
+            const inp = $('#chart-pair'); if (inp && prefs.pair) inp.value = prefs.pair;
+            const bar = $('#fsc-bar'); if (bar) bar.classList.toggle('mine', prefs.mode === 'mine');
+            if (prefs.mode === 'tv') status('Mode TradingView: gambar di mode ini TIDAK bisa disimpan (batasan TradingView). Pakai Chart Pribadi.', '#eab308'); else if (prefs.mode === 'tl') status('Mode TraderLens: layout & gambar disimpan oleh akun TraderLens kamu.', '#38bdf8');
+            else status('', '');
+        }
+        function setMode(m) { savePrefs({ mode: m }); sync(); updateChart(true); }
+
+        window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0] };
+
+        function init() {
+            buildBar();
+            try {
+                auth.onAuthStateChanged(u => {
+                    if (!u) return;
+                    rtdb.ref('users/' + u.uid + '/chartPrefs').once('value').then(sn => {
+                        const v = sn.val(); if (!v) return;
+                        Object.assign(prefs, v); lsSet(PK, prefs); sync();
+                        const tab = document.getElementById('chart-tab');
+                        if (tab && tab.classList.contains('active')) updateChart(true);
+                    }).catch(() => {});
+                });
+            } catch (e) {}
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
     })();
     </script>
 </body>
