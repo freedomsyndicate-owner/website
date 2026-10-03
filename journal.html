@@ -448,6 +448,177 @@
         .trial-lock-title { font-family:'Orbitron'; font-size:14px; color:#ef4444; margin:0 0 8px; letter-spacing:2px; }
         .trial-lock-sub { font-size:10px; color:#9ca3af; margin:0 0 16px; line-height:1.6; }
         .btn-trial-upgrade { background:linear-gradient(135deg,#b45309,#eab308); color:#000; border:none; padding:12px; border-radius:10px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; width:100%; }
+
+        /* =====================================================
+           TERMINAL TAB (widget dashboard) + ANNOUNCE POPUP
+           ===================================================== */
+        #fs-announce { position:fixed; inset:0; z-index:10002; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(2,6,14,0.82); backdrop-filter:blur(6px); }
+        #fs-announce.show { display:flex; animation:subFadeIn 0.25s ease forwards; }
+        .fs-pop-card { position:relative; width:100%; max-width:420px; max-height:86vh; overflow-y:auto; background:linear-gradient(145deg,#0d1117,#111827); border:1px solid #1f2937; border-radius:22px; padding:22px 20px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 30px rgba(56,189,248,0.08); }
+        .fs-pop-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#38bdf8,#818cf8); border-radius:22px 22px 0 0; }
+        .fs-pop-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+        .fs-pop-head b { font-family:'Orbitron'; font-size:11px; letter-spacing:2px; color:var(--blue); }
+        .fs-pop-x { width:32px; height:32px; border-radius:10px; border:1px solid #1f2937; background:#0a0e14; color:#9ca3af; font-size:18px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+        .fs-pop-x:hover { color:#fff; border-color:var(--red); background:rgba(239,68,68,0.12); }
+
+        #terminal-tab { background:var(--bg); }
+        .tm-wrap { padding:12px 12px 150px; }
+        .tm-bar { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+        .tm-bar h2 { font-family:'Orbitron'; font-size:12px; letter-spacing:2px; margin:0; color:#fff; flex:1; min-width:140px; }
+        .tm-bar h2 small { display:block; font-size:8px; color:#4b5563; letter-spacing:1px; margin-top:3px; font-family:'Poppins'; }
+        .tm-btn { font-family:'Orbitron'; font-size:9px; padding:9px 14px; border-radius:10px; border:1px solid #1f2937; background:#111827; color:#9ca3af; cursor:pointer; transition:all .2s; white-space:nowrap; }
+        .tm-btn:hover { border-color:rgba(56,189,248,0.5); color:var(--blue); }
+        .tm-btn.pri { background:var(--blue); color:#000; border-color:var(--blue); font-weight:900; }
+        .tm-btn.pri:hover { box-shadow:0 0 18px rgba(56,189,248,0.45); color:#000; }
+        .tm-btn.go { background:#14532d; border-color:#166534; color:#4ade80; }
+        .tm-btn.bad { background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.4); color:#f87171; }
+        .tm-btn.sm { padding:6px 10px; font-size:8px; }
+        .tm-grid { display:grid; grid-template-columns:1fr; gap:12px; align-items:start; }
+        @media (min-width:760px) { .tm-grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-flow:dense; } .tw.wide { grid-column:span 2; } .tw.full { grid-column:1/-1; } }
+        @media (min-width:1280px) { .tm-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .tw.wide { grid-column:span 2; } .tw.full { grid-column:1/-1; } }
+
+        .tw { background:#0d1117; border:1px solid #1f2937; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; min-width:0; transition:border-color .25s, box-shadow .25s; }
+        .tw:hover { border-color:rgba(56,189,248,0.25); }
+        .tw.dragging { opacity:.55; border-color:var(--blue); box-shadow:0 0 24px rgba(56,189,248,.25); }
+        .tw-head { display:flex; align-items:center; gap:10px; padding:11px 12px; background:#161e2e; border-bottom:1px solid #1f2937; }
+        .tw-grip { cursor:grab; color:#4b5563; font-size:14px; letter-spacing:-2px; touch-action:none; padding:4px 2px; user-select:none; }
+        .tw-title { flex:1; font-family:'Orbitron'; font-size:10px; letter-spacing:1px; color:#e5e7eb; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .tw-hb { width:26px; height:26px; border-radius:8px; border:none; background:transparent; color:#6b7280; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .tw-hb:hover { color:#fff; background:rgba(255,255,255,.06); }
+        .tw-hb.x:hover { color:var(--red); background:rgba(239,68,68,.12); }
+        .tw-body { position:relative; min-height:60px; }
+        .tw.collapsed .tw-body { display:none; }
+        .tw-pad { padding:12px; }
+        .tw-load { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Orbitron'; font-size:8px; letter-spacing:2px; color:#374151; }
+
+        .tw-tabs { display:flex; gap:6px; padding:10px 12px 0; overflow-x:auto; scrollbar-width:none; }
+        .tw-tabs::-webkit-scrollbar { display:none; }
+        .tw-tab { flex-shrink:0; font-size:10px; padding:7px 12px; border-radius:10px; background:#111827; border:1px solid #1f2937; color:#9ca3af; cursor:pointer; font-family:'Poppins'; transition:all .2s; }
+        .tw-tab.on { background:#16a34a; border-color:#16a34a; color:#fff; font-weight:600; }
+        .tw-tab.on.pu { background:#8b5cf6; border-color:#8b5cf6; }
+        .tw-chips { display:flex; gap:6px; padding:10px 12px; overflow-x:auto; scrollbar-width:none; }
+        .tw-chips::-webkit-scrollbar { display:none; }
+        .tw-chip { flex-shrink:0; font-family:'Orbitron'; font-size:8px; padding:6px 10px; border-radius:20px; border:1px solid #1f2937; background:transparent; color:#6b7280; cursor:pointer; white-space:nowrap; }
+        .tw-chip.on { background:var(--blue); color:#000; border-color:var(--blue); font-weight:bold; }
+        .tw-in, .tw-sel { background:#050a14; border:1px solid #30363d; color:#fff; border-radius:8px; padding:9px 10px; font-size:11px; outline:none; width:100%; box-sizing:border-box; font-family:'Poppins'; }
+        .tw-in:focus, .tw-sel:focus { border-color:var(--blue); }
+        .tw-lbl { font-size:8px; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:4px; }
+        .tw-row { display:grid; gap:8px; margin-bottom:10px; }
+        .tw-row.c2 { grid-template-columns:1fr 1fr; } .tw-row.c3 { grid-template-columns:repeat(3,1fr); } .tw-row.c4 { grid-template-columns:repeat(4,1fr); }
+        .tw-res { background:rgba(234,179,8,.08); border:1px dashed rgba(234,179,8,.3); border-radius:12px; padding:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center; margin-top:4px; }
+        .tw-res small { display:block; font-size:8px; color:#8b949e; margin-bottom:3px; }
+        .tw-res b { font-family:'Orbitron'; font-size:12px; color:var(--be); }
+        .tw-kpi { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:10px; }
+        .tw-kpi > div { background:#0a0e14; border:1px solid #1f2937; border-radius:12px; padding:10px; }
+        .tw-kpi small { display:block; font-size:8px; color:#6b7280; margin-bottom:3px; text-transform:uppercase; }
+        .tw-kpi b { font-family:'Orbitron'; font-size:13px; }
+        .g { color:var(--green); } .r { color:var(--red); } .y { color:var(--be); } .b { color:var(--blue); } .m { color:#6b7280; }
+        .tw-empty { text-align:center; padding:26px 14px; font-size:10px; color:#4b5563; line-height:1.6; }
+        .tw-empty .ic { font-size:30px; margin-bottom:6px; display:block; }
+        .tw-note { font-size:9px; color:#6b7280; line-height:1.6; padding:8px 10px; background:rgba(0,0,0,.25); border-radius:8px; border:1px solid #1f2937; }
+        .tw-scroll { overflow-y:auto; }
+        .tw-table { width:100%; border-collapse:collapse; font-size:10px; }
+        .tw-table th { text-align:left; font-size:8px; color:#6b7280; font-weight:400; padding:6px 8px; text-transform:uppercase; border-bottom:1px solid #1f2937; }
+        .tw-table td { padding:8px; border-bottom:1px solid rgba(255,255,255,.04); }
+        .tw-pill { display:inline-block; font-family:'Orbitron'; font-size:8px; padding:3px 8px; border-radius:6px; }
+        .tw-pill.g { background:rgba(74,222,128,.12); border:1px solid rgba(74,222,128,.3); }
+        .tw-pill.r { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); }
+        .tw-pill.y { background:rgba(234,179,8,.12); border:1px solid rgba(234,179,8,.3); }
+        .tw-pill.m { background:rgba(75,85,99,.2); border:1px solid #374151; }
+
+        /* journal widget */
+        .tj-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; background:#0a0e14; border:1px solid #1f2937; border-radius:12px; margin-bottom:8px; font-size:10px; }
+        .tj-row .l b { display:block; font-family:'Orbitron'; font-size:10px; color:#fff; }
+        .tj-row .l span { font-size:8px; color:#6b7280; }
+        .tj-cal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+        .tj-cal .h { text-align:center; font-size:8px; color:#6b7280; padding:2px 0; }
+        .tj-cal .d { aspect-ratio:1/1.1; border-radius:6px; background:#111827; border:1px solid #1f2937; font-size:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.3; }
+        .tj-cal .d.p { border-color:var(--green); color:var(--green); background:rgba(74,222,128,.06); }
+        .tj-cal .d.l { border-color:var(--red); color:var(--red); background:rgba(239,68,68,.06); }
+        .tj-cal .d i { font-style:normal; font-size:7px; }
+        .tj-acts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .tj-big { padding:16px 10px; border-radius:14px; border:1px solid #1f2937; background:#111827; color:#9ca3af; font-size:12px; cursor:pointer; font-family:'Poppins'; }
+        .tj-big.g { background:#14532d; border-color:#166534; color:#86efac; }
+
+        #fs-modal { position:fixed; inset:0; z-index:10003; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(2,6,14,.8); backdrop-filter:blur(5px); }
+        #fs-modal.show { display:flex; }
+        .fs-mbox { width:100%; max-width:640px; max-height:86vh; overflow-y:auto; background:#0d1626; border:1px solid #1f2937; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+        .fs-mhead { display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid #1f2937; position:sticky; top:0; background:#0d1626; z-index:2; }
+        .fs-mhead b { font-family:'Orbitron'; font-size:12px; color:#fff; flex:1; }
+        .fs-mhead .cnt { font-size:9px; color:#9ca3af; background:#1f2937; padding:3px 9px; border-radius:20px; }
+        .lib-cat { font-size:9px; letter-spacing:1.5px; color:#6b7280; padding:14px 18px 6px; text-transform:uppercase; font-family:'Orbitron'; }
+        .lib-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(104px,1fr)); gap:8px; padding:0 18px; }
+        .lib-item { position:relative; background:#111a2c; border:1px solid #1f2937; border-radius:12px; padding:14px 6px 11px; text-align:center; cursor:pointer; transition:all .2s; color:#d1d5db; font-size:9px; }
+        .lib-item:hover { border-color:var(--blue); transform:translateY(-2px); }
+        .lib-item.has { background:#0f2f2c; border-color:#15803d; }
+        .lib-item .ic { display:block; font-size:22px; margin-bottom:6px; }
+        .lib-item .n { position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; border-radius:9px; background:#22c55e; color:#000; font-size:9px; font-weight:700; line-height:18px; padding:0 4px; font-family:'Orbitron'; }
+        .lib-foot { text-align:center; font-size:9px; color:#6b7280; padding:16px 18px 18px; border-top:1px solid #1f2937; margin-top:16px; }
+        .cn-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:18px; }
+        .cn-card { background:#1b2740; border:1px solid #243148; border-radius:16px; padding:18px 8px 14px; text-align:center; cursor:pointer; transition:all .2s; }
+        .cn-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+        .cn-ic { width:64px; height:64px; border-radius:14px; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:28px; }
+        .cn-card b { display:block; font-size:13px; color:#fff; }
+        .cn-card small { font-size:10px; color:#9ca3af; }
+
+        /* rules widget */
+        .tr-cat { border-radius:14px; margin-bottom:10px; overflow:hidden; border:1px solid transparent; }
+        .tr-cat.entry { background:rgba(22,163,74,.09); border-color:rgba(22,163,74,.25); } .tr-cat.risk { background:rgba(239,68,68,.09); border-color:rgba(239,68,68,.25); } .tr-cat.exit { background:rgba(234,179,8,.09); border-color:rgba(234,179,8,.25); }
+        .tr-ch { display:flex; align-items:center; gap:9px; padding:11px 14px; cursor:pointer; font-weight:600; font-size:13px; }
+        .tr-ch .dot { width:10px; height:10px; border-radius:50%; }
+        .entry .tr-ch { color:#22c55e; } .entry .dot { background:#22c55e; } .risk .tr-ch { color:#ef4444; } .risk .dot { background:#ef4444; } .exit .tr-ch { color:#f59e0b; } .exit .dot { background:#f59e0b; }
+        .tr-ch .sp { flex:1; } .tr-ch .ct { font-size:12px; opacity:.8; } .tr-ch .cv { transition:transform .2s; font-size:12px; }
+        .tr-cat.shut .tr-cb { display:none; } .tr-cat.shut .cv { transform:rotate(180deg); }
+        .tr-cb { padding:0 10px 10px; }
+        .tr-it { display:flex; align-items:center; gap:10px; padding:10px 10px; margin-bottom:6px; background:#0a1020; border-radius:12px; font-size:12px; color:#e5e7eb; line-height:1.4; }
+        .tr-it .tx { flex:1; min-width:0; } .tr-it.off .tx { opacity:.4; text-decoration:line-through; }
+        .tr-tg { width:24px; height:24px; border-radius:50%; flex-shrink:0; border:2px solid #374151; background:transparent; color:#fff; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+        .entry .tr-tg.on { background:#22c55e; border-color:#22c55e; } .risk .tr-tg.on { background:#ef4444; border-color:#ef4444; } .exit .tr-tg.on { background:#f59e0b; border-color:#f59e0b; }
+        .tr-ib { background:none; border:none; cursor:pointer; font-size:14px; color:#9ca3af; padding:4px; } .tr-ib.d { color:#ef4444; }
+        .tr-add { display:flex; align-items:center; gap:8px; padding:8px 10px; color:#9ca3af; font-size:12px; cursor:pointer; }
+        .tr-form { border:1.5px solid #f59e0b; border-radius:12px; padding:10px; margin:2px 0 4px; background:#0a1020; }
+        .entry .tr-form { border-color:#22c55e; } .risk .tr-form { border-color:#ef4444; }
+        .tr-form textarea { width:100%; background:transparent; border:none; outline:none; color:#fff; font-size:12px; resize:none; font-family:'Poppins'; box-sizing:border-box; min-height:36px; }
+        .tr-form .bt { display:flex; justify-content:flex-end; gap:8px; margin-top:6px; }
+        .tr-form .bt button { border:none; border-radius:8px; padding:8px 16px; font-size:12px; cursor:pointer; font-weight:600; font-family:'Poppins'; }
+        .tr-form .ok { background:#f59e0b; color:#000; } .entry .tr-form .ok { background:#22c55e; } .risk .tr-form .ok { background:#ef4444; color:#fff; } .tr-form .no { background:#1f2937; color:#9ca3af; }
+        .pc-top { display:flex; justify-content:space-between; font-size:13px; color:#9ca3af; margin-bottom:8px; } .pc-top b { color:#e5e7eb; font-weight:600; }
+        .pc-bar { height:8px; border-radius:6px; background:#1f2937; overflow:hidden; margin-bottom:16px; } .pc-bar i { display:block; height:100%; background:#22c55e; transition:width .3s; }
+        .pc-start { margin:0 auto 4px; width:fit-content; background:#1f2937; color:#9ca3af; border-radius:20px; padding:10px 26px; font-family:'Orbitron'; font-size:12px; letter-spacing:2px; }
+        .pc-line { width:2px; height:20px; background:#243148; margin:0 auto; position:relative; } .pc-line.on { background:#22c55e; }
+        .pc-step { display:flex; align-items:center; gap:10px; padding:12px; border-radius:14px; border:2px solid #243148; background:#0a1020; opacity:.5; transition:all .25s; }
+        .pc-step.cur { border-color:#8b5cf6; opacity:1; box-shadow:0 0 20px rgba(139,92,246,.25); }
+        .pc-step.ok { border-color:#22c55e; background:rgba(22,163,74,.12); opacity:1; } .pc-step.bad { border-color:#ef4444; background:rgba(239,68,68,.1); opacity:1; }
+        .pc-n { width:28px; height:28px; border-radius:50%; background:#1f2937; color:#9ca3af; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+        .cur .pc-n { background:#8b5cf6; color:#fff; } .ok .pc-n { background:#22c55e; color:#fff; } .bad .pc-n { background:#ef4444; color:#fff; }
+        .pc-cat { font-size:11px; padding:3px 8px; border-radius:6px; flex-shrink:0; } .pc-cat.entry { background:rgba(34,197,94,.12); color:#22c55e; } .pc-cat.risk { background:rgba(239,68,68,.12); color:#ef4444; } .pc-cat.exit { background:rgba(245,158,11,.12); color:#f59e0b; }
+        .pc-tx { flex:1; font-size:12px; color:#e5e7eb; line-height:1.35; min-width:0; }
+        .pc-b { width:34px; height:34px; border-radius:50%; border:none; background:#1f2937; color:#9ca3af; font-size:15px; cursor:pointer; flex-shrink:0; } .pc-b.on-ok { background:#22c55e; color:#fff; } .pc-b.on-bad { background:#ef4444; color:#fff; } .pc-step:not(.cur) .pc-b { pointer-events:none; }
+        .pc-verdict { text-align:center; border-radius:14px; padding:16px; margin-top:12px; font-size:12px; line-height:1.6; }
+        .pc-verdict.ok { background:rgba(22,163,74,.12); border:1px solid #22c55e; color:#86efac; } .pc-verdict.bad { background:rgba(239,68,68,.1); border:1px solid #ef4444; color:#fca5a5; }
+
+        /* ai */
+        .ai-log { height:300px; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; }
+        .ai-m { max-width:88%; padding:11px 14px; border-radius:16px; font-size:12px; line-height:1.55; background:#1b2740; color:#e5e7eb; align-self:flex-start; word-break:break-word; }
+        .ai-m.me { align-self:flex-end; background:linear-gradient(135deg,#0369a1,#075985); }
+        .ai-m img { max-width:100%; border-radius:8px; margin-bottom:6px; display:block; }
+        .ai-sug { display:flex; flex-wrap:wrap; gap:8px; padding:0 12px 10px; }
+        .ai-sug button { font-size:11px; padding:8px 12px; border-radius:20px; border:1px solid #243148; background:#162036; color:#9ca3af; cursor:pointer; font-family:'Poppins'; }
+        .ai-in { display:flex; gap:8px; padding:0 12px 12px; align-items:stretch; }
+        .ai-ph { width:52px; flex-shrink:0; border-radius:12px; border:1px solid #243148; background:#162036; color:#9ca3af; font-size:9px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
+        .ai-ph span { font-size:17px; }
+        .ai-send { width:46px; flex-shrink:0; border:none; border-radius:12px; background:#15803d; color:#fff; font-size:17px; cursor:pointer; }
+
+        .bt-chart { height:250px; width:100%; }
+        .hr-circle { width:150px; height:150px; border-radius:50%; margin:6px auto 12px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:2px dashed rgba(239,68,68,.45); background:rgba(239,68,68,.07); }
+        .hr-circle.live { border-style:solid; animation:hrBeat 1s ease-in-out infinite; }
+        @keyframes hrBeat { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+        .hr-bpm { font-family:'Orbitron'; font-size:34px; color:#fff; line-height:1; } .hr-bpm + small { font-size:9px; color:#9ca3af; letter-spacing:2px; margin-top:4px; }
+        .sw-time { font-family:'Orbitron'; font-size:30px; text-align:center; color:#fff; padding:14px 0 10px; letter-spacing:2px; }
+        .ck-row { display:flex; align-items:center; gap:12px; padding:14px 14px; border-bottom:1px solid #1a2438; border-left:3px solid transparent; font-size:14px; }
+        .ck-row .fl { font-size:20px; } .ck-row .nm { flex:1; color:#fff; } .ck-row .tm { font-family:'Roboto Mono',monospace,'Courier New'; letter-spacing:2px; color:#e5e7eb; }
+        .ck-row .st { width:10px; height:10px; border-radius:50%; background:#9ca3af; }
+        @media (max-width:420px) { .tw-row.c4 { grid-template-columns:1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -460,12 +631,28 @@
     <div id="modal-zoom" onclick="this.style.display='none'"><img id="zoom-target" src="" style="width:100%; height:auto;"></div>
     <div id="toast-stack"></div>
 
+    <!-- POPUP PENGUMUMAN (pengganti tab News) -->
+    <div id="fs-announce" onclick="if(event.target===this)closeAnnouncePopup()">
+        <div class="fs-pop-card">
+            <div class="fs-pop-head"><b>📢 PENGUMUMAN</b><button class="fs-pop-x" onclick="closeAnnouncePopup()" aria-label="Tutup">✕</button></div>
+            <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:25px; border-left:5px solid var(--red);">
+                <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
+                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
+                <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
+            </div>
+            <div id="announcements-container" style="margin-top:14px;"></div>
+            <button class="btn-save" style="margin-top:14px; padding:12px;" onclick="closeAnnouncePopup()">MENGERTI</button>
+        </div>
+    </div>
+    <div id="fs-modal"></div>
+
     <div class="menu-toggle" onclick="toggleNav()">☰</div>
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
         <a href="index.html" style="color:#4ade80; border-bottom:1px solid rgba(74,222,128,0.2);">🏠 Home</a>
-        <a href="#" class="nav-link active" onclick="openTab('announce-tab', this); toggleNav()">📢 News <span id="badge-news" class="nav-badge" style="display:none;"></span></a>
+        <a href="#" class="nav-link active" onclick="openTab('terminal-tab', this); toggleNav()">🧭 Terminal</a>
+        <a href="#" onclick="showAnnouncePopup(); toggleNav(); return false;">📢 News <span id="badge-news" class="nav-badge" style="display:none;"></span></a>
         <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></a>
         <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
@@ -499,14 +686,15 @@
     </div>
 
     <div class="content-container">
-        <div id="announce-tab" class="tab-content active"><div class="inner-padding">
-            <div style="background:var(--card); border:1px solid #1f2937; border-radius:20px; padding:25px; border-left:5px solid var(--red);">
-                <h3 style="font-family:'Orbitron'; color:var(--red); margin:0;">⚠️ SERVER UPDATE INFO</h3>
-                <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
-                <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
+        <!-- ===== TERMINAL TAB (halaman utama) ===== -->
+        <div id="terminal-tab" class="tab-content active"><div class="tm-wrap">
+            <div class="tm-bar">
+                <h2>🧭 TERMINAL TRADING<small id="tm-count"></small></h2>
+                <button class="tm-btn" id="tm-reset">↺ Reset</button>
+                <button class="tm-btn pri" id="tm-add">＋ Widget</button>
             </div>
-
-            </div></div>
+            <div class="tm-grid" id="tm-grid"></div>
+        </div></div>
 
         <!-- ===== SIGNAL TAB ===== -->
         <div id="signal-tab" class="tab-content"><div class="inner-padding" style="position:relative; min-height:400px;">
@@ -1746,7 +1934,7 @@
 
         // ===== TRIAL LOCK SYSTEM =====
         // Tabs yang TIDAK terkunci saat trial habis:
-        const ALWAYS_UNLOCKED_TABS = ['announce-tab','community-tab','broker-tab','donasi-tab','account-tab'];
+        const ALWAYS_UNLOCKED_TABS = ['terminal-tab','announce-tab','community-tab','broker-tab','donasi-tab','account-tab'];
         // Semua tab yang bisa di-lock (VIP tab TIDAK dikunci — harus tetap bisa diakses untuk upgrade):
         const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab'];
 
@@ -1814,7 +2002,7 @@
                 // Redirect to announce if currently on locked tab
                 const activeTab = document.querySelector('.tab-content.active');
                 if (activeTab && LOCKABLE_TABS.includes(activeTab.id)) {
-                    openTab('announce-tab', document.querySelector('.nav-link'));
+                    openTab('terminal-tab', document.querySelector('.nav-link'));
                 }
             }
         }
@@ -2613,6 +2801,883 @@
             };
         }
 
+    </script>
+
+    <script>
+    /* =====================================================================
+       FREEDOM SYNDICATE — TERMINAL TAB + ANNOUNCE POPUP
+       Ditambahkan sebagai blok terpisah; tidak mengubah script utama.
+       ===================================================================== */
+    (function () {
+        'use strict';
+
+        // ---------- helpers ----------
+        const $ = (s, r) => (r || document).querySelector(s);
+        const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+        const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const ls = {
+            get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+            set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+        };
+        const num = v => { if (typeof v === 'number') return v; const n = parseFloat(String(v == null ? '' : v).replace(/[\s ]/g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+        const money = (n, d) => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: d == null ? 2 : d, maximumFractionDigits: d == null ? 2 : d });
+        const uid = () => 'w' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const toast = (t, b, c) => { try { if (typeof showToast === 'function') showToast(t, b, c); } catch (e) {} };
+        const trades = () => { try { return Array.isArray(allTrades) ? allTrades : []; } catch (e) { return []; } };
+        const alive = el => el && el.isConnected;
+        const everySec = (el, fn, ms) => { const t = setInterval(() => { if (!alive(el)) return clearInterval(t); fn(); }, ms); return t; };
+
+        const _scripts = {};
+        function loadScript(src) {
+            if (_scripts[src]) return _scripts[src];
+            return (_scripts[src] = new Promise((ok, no) => {
+                const s = document.createElement('script'); s.src = src; s.async = true;
+                s.onload = ok; s.onerror = () => { delete _scripts[src]; no(new Error('Gagal memuat ' + src)); };
+                document.head.appendChild(s);
+            }));
+        }
+        const LWC = 'https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.js';
+        const XLSX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+
+        function tvEmbed(el, file, cfg) {
+            el.innerHTML = '';
+            const w = document.createElement('div'); w.className = 'tradingview-widget-container'; w.style.cssText = 'height:100%;width:100%';
+            const inner = document.createElement('div'); inner.className = 'tradingview-widget-container__widget'; inner.style.cssText = 'height:100%;width:100%';
+            w.appendChild(inner);
+            const s = document.createElement('script'); s.async = true; s.src = 'https://s3.tradingview.com/external-embedding/' + file; s.text = JSON.stringify(cfg);
+            w.appendChild(s); el.appendChild(w);
+        }
+
+        // ---------- ANNOUNCE POPUP (pengganti tab News) ----------
+        let announceShown = false;
+        window.showAnnouncePopup = function () {
+            const p = $('#fs-announce'); if (!p) return;
+            p.classList.add('show');
+            try { clearBadge('badge-news'); } catch (e) {}
+        };
+        window.closeAnnouncePopup = function () { const p = $('#fs-announce'); if (p) p.classList.remove('show'); };
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAnnouncePopup(); closeModal(); } });
+        try {
+            auth.onAuthStateChanged(u => {
+                if (u && !announceShown) { announceShown = true; setTimeout(showAnnouncePopup, 450); }
+            });
+        } catch (e) { setTimeout(showAnnouncePopup, 800); }
+
+        // ---------- modal ----------
+        function openModal(html, onReady) {
+            const m = $('#fs-modal'); m.innerHTML = html; m.classList.add('show');
+            m.onclick = e => { if (e.target === m) closeModal(); };
+            if (onReady) onReady(m);
+        }
+        function closeModal() { const m = $('#fs-modal'); if (m) { m.classList.remove('show'); m.innerHTML = ''; } }
+        window.fsCloseModal = closeModal;
+
+        // ---------- registry ----------
+        const W = {};
+        window.__fsW = W; // untuk debugging
+
+        // ---------- layout / state ----------
+        const LS_KEY = 'fs_term_layout_v1';
+        const DEFAULT = ['tickertape', 'chart', 'heatmap', 'headlines', 'ai', 'rules', 'journal', 'clock', 'calc'];
+        let layout = ls.get(LS_KEY, null);
+        if (!Array.isArray(layout)) layout = DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} }));
+        layout = layout.filter(i => W && i && i.type);
+        const saveLayout = () => ls.set(LS_KEY, layout.map(i => ({ id: i.id, type: i.type, cfg: i.cfg || {}, c: !!i.c })));
+
+        const grid = () => $('#tm-grid');
+        let io = null;
+
+        function mountWidget(card) {
+            if (card._mounted) return; card._mounted = true;
+            const inst = layout.find(i => i.id === card.dataset.id); if (!inst) return;
+            const def = W[inst.type]; const body = $('.tw-body', card);
+            body.innerHTML = '';
+            if (!inst.cfg) inst.cfg = {};
+            inst.cfg = new Proxy(inst.cfg, { set(t, k, v) { t[k] = v; saveLayout(); return true; } });
+            try { def.mount(body, inst, { save: saveLayout }); }
+            catch (e) { body.innerHTML = '<div class="tw-empty"><span class="ic">⚠️</span>Widget gagal dimuat.<br>' + esc(e.message) + '</div>'; }
+        }
+
+        function buildCard(inst) {
+            const def = W[inst.type]; if (!def) return null;
+            const c = document.createElement('div');
+            c.className = 'tw' + (def.wide ? ' wide' : '') + (def.full ? ' full' : '') + (inst.c ? ' collapsed' : '');
+            c.dataset.id = inst.id; c.dataset.type = inst.type;
+            c.innerHTML = `<div class="tw-head"><span class="tw-grip" title="Geser untuk pindah">⠿</span><span class="tw-title">${def.i} ${esc(def.t)}</span><button class="tw-hb col" title="Ciutkan">${inst.c ? '▾' : '▴'}</button><button class="tw-hb x" title="Hapus widget">✕</button></div><div class="tw-body" style="${def.h ? 'height:' + def.h + 'px' : ''}"><div class="tw-load">MEMUAT…</div></div>`;
+            $('.x', c).onclick = () => removeWidget(inst.id);
+            $('.col', c).onclick = e => { inst.c = !inst.c; c.classList.toggle('collapsed', inst.c); e.currentTarget.textContent = inst.c ? '▾' : '▴'; saveLayout(); };
+            bindDrag(c);
+            if (io && def.h) io.observe(c); else setTimeout(() => mountWidget(c), 0);
+            return c;
+        }
+
+        function renderAll() {
+            const g = grid(); if (!g) return;
+            g.innerHTML = '';
+            layout.forEach(i => { const c = buildCard(i); if (c) g.appendChild(c); });
+            updateMeta();
+            if (!layout.length) g.innerHTML = '<div class="tw-empty" style="grid-column:1/-1"><span class="ic">🧩</span>Belum ada widget.<br>Tekan <b>＋ Widget</b> untuk menambahkan.</div>';
+        }
+        function updateMeta() { const e = $('#tm-count'); if (e) e.textContent = layout.length + ' widget aktif'; }
+
+        function addWidget(type) {
+            const inst = { id: uid(), type, cfg: {} };
+            layout.push(inst); saveLayout();
+            const g = grid(); const emp = $('.tw-empty', g); if (emp && !emp.closest('.tw')) emp.remove();
+            const c = buildCard(inst); g.appendChild(c); updateMeta();
+            setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+            return inst;
+        }
+        function removeWidget(id) {
+            layout = layout.filter(i => i.id !== id); saveLayout();
+            const c = $('.tw[data-id="' + id + '"]'); if (c) c.remove();
+            updateMeta();
+            if (!layout.length) renderAll();
+        }
+
+        // ---------- drag reorder ----------
+        function bindDrag(card) {
+            const grip = $('.tw-grip', card); let on = false;
+            grip.addEventListener('pointerdown', e => { on = true; grip.setPointerCapture(e.pointerId); card.classList.add('dragging'); e.preventDefault(); });
+            grip.addEventListener('pointermove', e => {
+                if (!on) return;
+                card.style.pointerEvents = 'none';
+                const el = document.elementFromPoint(e.clientX, e.clientY);
+                card.style.pointerEvents = '';
+                const over = el && el.closest ? el.closest('.tw') : null;
+                if (over && over !== card && over.parentNode === card.parentNode) {
+                    const r = over.getBoundingClientRect();
+                    over.parentNode.insertBefore(card, (e.clientY - r.top) > r.height / 2 ? over.nextSibling : over);
+                }
+                const sc = $('#terminal-tab');
+                const tr = sc.getBoundingClientRect();
+                if (e.clientY < tr.top + 60) sc.scrollTop -= 14; else if (e.clientY > tr.bottom - 60) sc.scrollTop += 14;
+            });
+            const end = () => {
+                if (!on) return; on = false; card.classList.remove('dragging');
+                const order = $$('#tm-grid .tw').map(c => c.dataset.id);
+                layout.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id)); saveLayout();
+            };
+            grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+        }
+
+        // ---------- widget library ----------
+        const CATS = ['DATA PASAR', 'ANALISA & BERITA', 'ALAT BANTU', 'PRODUKTIVITAS'];
+        function openLibrary() {
+            const counts = {}; layout.forEach(i => counts[i.type] = (counts[i.type] || 0) + 1);
+            let h = `<div class="fs-mbox"><div class="fs-mhead"><span style="font-size:18px">▦</span><b>Pustaka Widget</b><span class="cnt">${layout.length} aktif</span><button class="fs-pop-x" onclick="fsCloseModal()">✕</button></div>`;
+            CATS.forEach(cat => {
+                h += `<div class="lib-cat">${cat}</div><div class="lib-grid">`;
+                Object.keys(W).filter(k => W[k].cat === cat).forEach(k => {
+                    const n = counts[k] || 0;
+                    h += `<div class="lib-item ${n ? 'has' : ''}" data-add="${k}">${n ? '<span class="n">' + n + '</span>' : ''}<span class="ic">${W[k].i}</span>${esc(W[k].t)}</div>`;
+                });
+                h += '</div>';
+            });
+            h += '<div class="lib-foot">Klik untuk tambah widget · Angka = jumlah aktif · Hapus via ✕ di header widget</div></div>';
+            openModal(h, m => {
+                m.onclick = e => {
+                    if (e.target === m) return closeModal();
+                    const it = e.target.closest('[data-add]'); if (!it) return;
+                    addWidget(it.dataset.add); closeModal();
+                };
+            });
+        }
+
+        // ---------- build tab ----------
+        function initTab() {
+            const tab = $('#terminal-tab'); if (!tab) return;
+            if ('IntersectionObserver' in window) {
+                io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); mountWidget(e.target); } }), { root: null, rootMargin: '400px 0px' });
+            }
+            $('#tm-add').onclick = openLibrary;
+            $('#tm-reset').onclick = () => {
+                if (!confirm('Kembalikan susunan widget ke bawaan?')) return;
+                layout = DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} })); saveLayout(); renderAll();
+            };
+            renderAll();
+        }
+
+        window.__fsTerm = { W, ui: { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, tvEmbed, openModal, closeModal, LWC, XLSX_URL }, register(k, d) { W[k] = d; }, init: initTab, get layout() { return layout; }, addWidget, openLibrary };
+    })();
+    </script>
+
+    <script>
+    (function () {
+        'use strict';
+        const T = window.__fsTerm; if (!T) return;
+        const { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, tvEmbed, openModal, closeModal, LWC, XLSX_URL } = T.ui;
+        const reg = T.register;
+        const chipRow = (items, cur) => '<div class="tw-chips">' + items.map(i => `<button class="tw-chip ${i[0] === cur ? 'on' : ''}" data-k="${esc(i[0])}">${esc(i[1])}</button>`).join('') + '</div>';
+        const onChips = (root, fn) => root.addEventListener('click', e => { const b = e.target.closest('.tw-chip'); if (!b) return; $$('.tw-chip', b.parentNode).forEach(x => x.classList.toggle('on', x === b)); fn(b.dataset.k); });
+
+        /* ===================== DATA PASAR ===================== */
+        reg('chart', {
+            t: 'Market Chart', i: '📈', cat: 'DATA PASAR', h: 480, wide: true,
+            mount(body, inst) {
+                const S = [['OANDA:XAUUSD', 'XAUUSD'], ['FX:EURUSD', 'EURUSD'], ['FX:GBPUSD', 'GBPUSD'], ['FX:USDJPY', 'USDJPY'], ['BITSTAMP:BTCUSD', 'BTCUSD'], ['OANDA:NAS100USD', 'NAS100'], ['OANDA:US30USD', 'US30']];
+                const cur = inst.cfg.sym || 'OANDA:XAUUSD';
+                body.innerHTML = chipRow(S, cur) + '<div class="ch" style="height:calc(100% - 46px)"></div>';
+                const draw = s => tvEmbed($('.ch', body), 'embed-widget-advanced-chart.js', { autosize: true, symbol: s, interval: '15', timezone: 'Asia/Jakarta', theme: 'dark', style: '1', locale: 'id', allow_symbol_change: true, save_image: true, hide_side_toolbar: false, backgroundColor: '#0d1117', support_host: 'https://www.tradingview.com' });
+                draw(cur);
+                onChips(body, k => { inst.cfg.sym = k; draw(k); });
+            }
+        });
+
+        reg('watchlist', {
+            t: 'Watchlist', i: '📋', cat: 'DATA PASAR', h: 440,
+            mount(body) {
+                const g = (name, arr) => ({ name, symbols: arr.map(a => ({ name: a[0], displayName: a[1] })) });
+                tvEmbed(body, 'embed-widget-market-quotes.js', {
+                    width: '100%', height: '100%', symbolsGroups: [
+                        g('Forex', [['FX:EURUSD', 'EUR/USD'], ['FX:GBPUSD', 'GBP/USD'], ['FX:USDJPY', 'USD/JPY'], ['FX:AUDUSD', 'AUD/USD'], ['FX:USDCAD', 'USD/CAD'], ['FX:USDCHF', 'USD/CHF']]),
+                        g('Metal & Indeks', [['OANDA:XAUUSD', 'Gold'], ['OANDA:XAGUSD', 'Silver'], ['OANDA:NAS100USD', 'Nasdaq 100'], ['OANDA:US30USD', 'Dow Jones'], ['OANDA:SPX500USD', 'S&P 500'], ['TVC:USOIL', 'WTI Oil']]),
+                        g('Crypto', [['BITSTAMP:BTCUSD', 'Bitcoin'], ['BITSTAMP:ETHUSD', 'Ethereum'], ['COINBASE:SOLUSD', 'Solana'], ['BINANCE:BNBUSDT', 'BNB']])
+                    ], showSymbolLogo: true, colorTheme: 'dark', isTransparent: true, locale: 'id'
+                });
+            }
+        });
+
+        reg('tickertape', {
+            t: 'Ticker Tape', i: '📡', cat: 'DATA PASAR', h: 78, full: true,
+            mount(body) {
+                const p = (s, t) => ({ proName: s, title: t });
+                tvEmbed(body, 'embed-widget-ticker-tape.js', {
+                    symbols: [p('OANDA:XAUUSD', 'Gold'), p('FX:EURUSD', 'EUR/USD'), p('FX:GBPUSD', 'GBP/USD'), p('FX:USDJPY', 'USD/JPY'), p('BITSTAMP:BTCUSD', 'Bitcoin'), p('BITSTAMP:ETHUSD', 'Ethereum'), p('OANDA:SPX500USD', 'S&P 500'), p('OANDA:NAS100USD', 'Nasdaq 100'), p('OANDA:US30USD', 'Dow Jones')],
+                    showSymbolLogo: true, isTransparent: true, displayMode: 'adaptive', colorTheme: 'dark', locale: 'id'
+                });
+            }
+        });
+
+        reg('heatmap', {
+            t: 'Heat Map', i: '🗺️', cat: 'DATA PASAR', h: 440,
+            mount(body, inst) {
+                const cur = inst.cfg.m || 'crypto';
+                body.innerHTML = '<div class="tw-tabs" style="padding-bottom:10px"><button class="tw-tab" data-k="crypto">🪙 Crypto</button><button class="tw-tab" data-k="stocks">📈 Stocks</button></div><div class="hm" style="height:calc(100% - 52px)"></div>';
+                const draw = m => {
+                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === m));
+                    const base = { locale: 'en', symbolUrl: '', colorTheme: 'dark', hasTopBar: false, isDataSetEnabled: false, isZoomEnabled: true, hasSymbolTooltip: true, isMonoSize: false, width: '100%', height: '100%' };
+                    if (m === 'crypto') tvEmbed($('.hm', body), 'embed-widget-crypto-coins-heatmap.js', Object.assign({ dataSource: 'Crypto', blockSize: 'market_cap_calc', blockColor: '24h_close_change|5' }, base));
+                    else tvEmbed($('.hm', body), 'embed-widget-stock-heatmap.js', Object.assign({ exchanges: [], dataSource: 'SPX500', grouping: 'sector', blockSize: 'market_cap_basic', blockColor: 'change' }, base));
+                };
+                draw(cur);
+                body.addEventListener('click', e => { const b = e.target.closest('.tw-tab'); if (!b) return; inst.cfg.m = b.dataset.k; draw(b.dataset.k); });
+            }
+        });
+
+        reg('sentiment', {
+            t: 'Market Sentiment', i: '🎭', cat: 'DATA PASAR',
+            mount(body) {
+                body.innerHTML = '<div class="tw-pad"><div class="tw-empty">Memuat Fear &amp; Greed…</div></div>';
+                const col = v => v < 25 ? '#ef4444' : v < 45 ? '#f97316' : v < 55 ? '#eab308' : v < 75 ? '#84cc16' : '#22c55e';
+                const lab = { 'Extreme Fear': 'Ketakutan Ekstrem', 'Fear': 'Takut', 'Neutral': 'Netral', 'Greed': 'Serakah', 'Extreme Greed': 'Keserakahan Ekstrem' };
+                const load = () => fetch('https://api.alternative.me/fng/?limit=14').then(r => r.json()).then(j => {
+                    const d = j.data; const n = +d[0].value; const c = col(n);
+                    body.innerHTML = `<div class="tw-pad"><div style="text-align:center"><div style="font-family:Orbitron;font-size:44px;color:${c};line-height:1">${n}</div><div style="font-size:12px;color:${c};margin:6px 0 2px;font-weight:600">${esc(lab[d[0].value_classification] || d[0].value_classification)}</div><div class="m" style="font-size:9px">Crypto Fear &amp; Greed Index · hari ini</div></div>
+                    <div style="height:10px;border-radius:6px;margin:16px 0 6px;background:linear-gradient(90deg,#ef4444,#f97316,#eab308,#84cc16,#22c55e);position:relative"><i style="position:absolute;top:-4px;left:calc(${n}% - 3px);width:6px;height:18px;border-radius:3px;background:#fff;box-shadow:0 0 8px #000"></i></div>
+                    <div style="display:flex;justify-content:space-between;font-size:8px;color:#6b7280"><span>Takut</span><span>Netral</span><span>Serakah</span></div>
+                    <div class="tw-lbl" style="margin-top:16px">14 hari terakhir</div><div style="display:flex;align-items:flex-end;gap:3px;height:60px">${d.slice().reverse().map(x => `<i title="${x.value}" style="flex:1;height:${Math.max(6, +x.value * 0.6)}px;background:${col(+x.value)};border-radius:3px 3px 0 0;opacity:.85"></i>`).join('')}</div></div>`;
+                }).catch(() => { body.innerHTML = '<div class="tw-empty"><span class="ic">📡</span>Gagal memuat data sentimen.<br>Cek koneksi lalu coba lagi.</div>'; });
+                load();
+            }
+        });
+
+        /* ===================== ANALISA & BERITA ===================== */
+        reg('headlines', {
+            t: 'Headlines', i: '📰', cat: 'ANALISA & BERITA', h: 420,
+            mount(body) { tvEmbed(body, 'embed-widget-timeline.js', { feedMode: 'all_symbols', isTransparent: true, displayMode: 'regular', width: '100%', height: '100%', colorTheme: 'dark', locale: 'id' }); }
+        });
+
+        reg('newstv', {
+            t: 'Live News TV', i: '📺', cat: 'ANALISA & BERITA', h: 330, wide: true,
+            mount(body, inst) {
+                const CH = [['UCIALMKvObZNtJ6AmdCLP7Lg', 'Bloomberg TV'], ['UCrp_UI8XtuYfpiqluWLD7Lw', 'CNBC'], ['UCEAZeUIeJs0IjQiqTCdVSIg', 'Yahoo Finance'], ['UChqUTb7kYRX8-EiaN3XFrSQ', 'Reuters'], ['UCoMdktPbSTixAyNGwb-UYkQ', 'Sky News'], ['UCNye-wNBqNL5ZzHSJjW88bg', 'Al Jazeera']];
+                const cur = inst.cfg.ch || CH[0][0];
+                body.innerHTML = '<div class="tw-tabs" style="padding-bottom:10px">' + CH.map(c => `<button class="tw-tab" data-k="${c[0]}">${c[1]}</button>`).join('') + '</div><div class="tv" style="height:calc(100% - 52px)"></div>';
+                const draw = k => {
+                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === k));
+                    $('.tv', body).innerHTML = `<iframe src="https://www.youtube.com/embed/live_stream?channel=${k}&autoplay=1&mute=1&playsinline=1" style="width:100%;height:100%;border:0;background:#000" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+                };
+                draw(cur);
+                body.addEventListener('click', e => { const b = e.target.closest('.tw-tab'); if (!b) return; inst.cfg.ch = b.dataset.k; draw(b.dataset.k); });
+            }
+        });
+
+        reg('fundamentals', {
+            t: 'Fundamentals', i: '📊', cat: 'ANALISA & BERITA', h: 460,
+            mount(body, inst) {
+                body.innerHTML = '<div style="padding:10px 12px;display:flex;gap:8px"><input class="tw-in" placeholder="Simbol saham, mis. NASDAQ:AAPL" value="' + esc(inst.cfg.sym || 'NASDAQ:AAPL') + '"><button class="tm-btn pri sm">LOAD</button></div><div class="fd" style="height:calc(100% - 58px)"></div>';
+                const draw = () => { const s = $('input', body).value.trim().toUpperCase() || 'NASDAQ:AAPL'; inst.cfg.sym = s; tvEmbed($('.fd', body), 'embed-widget-financials.js', { isTransparent: true, largeChartUrl: '', displayMode: 'regular', width: '100%', height: '100%', colorTheme: 'dark', symbol: s, locale: 'id' }); };
+                draw(); $('button', body).onclick = draw; $('input', body).onkeydown = e => { if (e.key === 'Enter') draw(); };
+            }
+        });
+
+        reg('technical', {
+            t: 'Technical Analysis', i: '🔍', cat: 'ANALISA & BERITA', h: 440,
+            mount(body, inst) {
+                body.innerHTML = '<div style="padding:10px 12px;display:grid;grid-template-columns:1fr 90px auto;gap:8px"><input class="tw-in" value="' + esc(inst.cfg.sym || 'OANDA:XAUUSD') + '"><select class="tw-sel"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1H</option><option value="4h">4H</option><option value="1D">1D</option></select><button class="tm-btn pri sm">LOAD</button></div><div class="ta" style="height:calc(100% - 58px)"></div>';
+                $('select', body).value = inst.cfg.tf || '1h';
+                const draw = () => { const s = $('input', body).value.trim().toUpperCase() || 'OANDA:XAUUSD'; inst.cfg.sym = s; inst.cfg.tf = $('select', body).value; tvEmbed($('.ta', body), 'embed-widget-technical-analysis.js', { interval: inst.cfg.tf, width: '100%', isTransparent: true, height: '100%', symbol: s, showIntervalTabs: true, displayMode: 'single', locale: 'id', colorTheme: 'dark' }); };
+                draw(); $('button', body).onclick = draw; $('select', body).onchange = draw; $('input', body).onkeydown = e => { if (e.key === 'Enter') draw(); };
+            }
+        });
+
+        reg('calendar', {
+            t: 'Economic Calendar', i: '🗓️', cat: 'ANALISA & BERITA', h: 460,
+            mount(body) { tvEmbed(body, 'embed-widget-events.js', { colorTheme: 'dark', isTransparent: true, width: '100%', height: '100%', locale: 'id', importanceFilter: '-1,0,1', countryFilter: 'us,eu,gb,jp,au,ca,ch,nz,cn,id' }); }
+        });
+
+        /* ---------- AI ANALYST ---------- */
+        reg('ai', {
+            t: 'AI Analyst', i: '🤖', cat: 'ANALISA & BERITA',
+            mount(body, inst) {
+                const KEY = 'fs_ai_endpoint';
+                const hist = []; let img = null;
+                const ep = () => (window.FS_AI_ENDPOINT || ls.get(KEY, '') || '').trim();
+                body.innerHTML = `<div style="display:flex;justify-content:flex-end;gap:2px;padding:4px 8px;border-bottom:1px solid #1f2937"><button class="tw-hb" data-a="cfg" title="Atur endpoint AI">⚙</button><button class="tw-hb" data-a="reset" title="Mulai ulang">↻</button></div>
+                <div class="cf" style="display:none;padding:10px 12px;border-bottom:1px solid #1f2937"><label class="tw-lbl">URL endpoint AI (POST, balasan JSON {reply})</label><div style="display:flex;gap:8px"><input class="tw-in" placeholder="https://…/analyst" value="${esc(ls.get(KEY, ''))}"><button class="tm-btn pri sm" data-a="savecfg">SIMPAN</button></div></div>
+                <div class="ai-log"></div>
+                <div class="ai-sug">${['Analisa trend saat ini', 'Support & resistance key level', 'Outlook minggu ini', 'Risiko yang perlu diperhatikan'].map(s => `<button>✦ ${s}</button>`).join('')}</div>
+                <div class="ai-in"><label class="ai-ph"><span>🖼</span>Photo<input type="file" accept="image/*" style="display:none"></label><input class="tw-in" placeholder="Tanya apa saja…" style="font-size:14px"><button class="ai-send">➤</button></div>`;
+                const log = $('.ai-log', body), inp = $('.ai-in .tw-in', body);
+                const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+                const add = (who, html) => { const d = document.createElement('div'); d.className = 'ai-m' + (who === 'me' ? ' me' : ''); d.innerHTML = html; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
+                const hello = () => { log.innerHTML = ''; hist.length = 0; add('ai', 'Halo! Saya AI Analyst. Tanyakan apa saja — analisa teknikal, fundamental, gold, crypto, forex, saham, atau upload screenshot chart untuk dianalisa. 💹'); };
+                hello();
+                const shrink = f => new Promise(ok => { const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1024 / Math.max(im.width, im.height)); const c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/jpeg', 0.82)); }; im.src = r.result; }; r.readAsDataURL(f); });
+                $('input[type=file]', body).onchange = async e => { const f = e.target.files[0]; if (!f) return; img = await shrink(f); $('.ai-ph', body).style.borderColor = '#22c55e'; toast('📷 Gambar siap', 'Ketik pertanyaan lalu kirim.'); };
+                async function send(text) {
+                    text = (text || inp.value).trim(); if (!text && !img) return; inp.value = '';
+                    add('me', (img ? `<img src="${img}">` : '') + fmt(text || '(analisa gambar)'));
+                    hist.push({ role: 'user', content: text || 'Tolong analisa gambar chart ini.' });
+                    const sent = img; img = null; $('.ai-ph', body).style.borderColor = '';
+                    const url = ep();
+                    if (!url) { add('ai', 'AI Analyst belum terhubung ke server. Tekan ⚙ di kanan atas lalu isi URL endpoint AI kamu (POST JSON <code>{messages, image}</code> → balasan <code>{reply}</code>).'); return; }
+                    const wait = add('ai', '<span class="m">Menganalisa…</span>');
+                    try {
+                        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sent, app: 'freedom-syndicate' }) });
+                        const j = await r.json(); const out = j.reply || j.text || j.message || j.answer || JSON.stringify(j);
+                        wait.innerHTML = fmt(out); hist.push({ role: 'assistant', content: out });
+                    } catch (e) { wait.innerHTML = '⚠️ Gagal menghubungi server AI: ' + esc(e.message); }
+                    log.scrollTop = log.scrollHeight;
+                }
+                body.addEventListener('click', e => {
+                    const a = e.target.closest('[data-a]');
+                    if (a) { if (a.dataset.a === 'reset') hello(); if (a.dataset.a === 'cfg') { const c = $('.cf', body); c.style.display = c.style.display === 'none' ? 'block' : 'none'; } if (a.dataset.a === 'savecfg') { ls.set(KEY, $('.cf input', body).value.trim()); toast('✅ Tersimpan', 'Endpoint AI diperbarui.'); $('.cf', body).style.display = 'none'; } return; }
+                    const s = e.target.closest('.ai-sug button'); if (s) return send(s.textContent.replace('✦', '').trim());
+                    if (e.target.closest('.ai-send')) send();
+                });
+                inp.onkeydown = e => { if (e.key === 'Enter') send(); };
+            }
+        });
+
+        /* ---------- PATTERN SCANNER (Binance klines) ---------- */
+        const BIN = ['https://api.binance.com', 'https://data-api.binance.vision'];
+        async function klines(sym, tf, extra) {
+            let err;
+            for (const h of BIN) {
+                try { const r = await fetch(`${h}/api/v3/klines?symbol=${sym}&interval=${tf}${extra || ''}`); if (!r.ok) throw new Error('HTTP ' + r.status); return (await r.json()).map(k => ({ time: Math.floor(k[0] / 1000), open: +k[1], high: +k[2], low: +k[3], close: +k[4] })); }
+                catch (e) { err = e; }
+            }
+            throw err;
+        }
+        const SYMS = [['PAXGUSDT', 'XAU (PAXG)'], ['BTCUSDT', 'BTC'], ['ETHUSDT', 'ETH'], ['SOLUSDT', 'SOL'], ['BNBUSDT', 'BNB'], ['XRPUSDT', 'XRP']];
+        function detect(a, b) { // a = candle sebelumnya, b = candle terakhir tertutup
+            const body = Math.abs(b.close - b.open), rng = b.high - b.low || 1e-9, up = b.high - Math.max(b.open, b.close), lo = Math.min(b.open, b.close) - b.low, out = [];
+            const aBear = a.close < a.open, aBull = a.close > a.open;
+            if (aBear && b.close > b.open && b.open <= a.close && b.close >= a.open) out.push(['Bullish Engulfing', 'g']);
+            if (aBull && b.close < b.open && b.open >= a.close && b.close <= a.open) out.push(['Bearish Engulfing', 'r']);
+            if (lo >= body * 2 && lo / rng >= 0.6 && up / rng <= 0.2) out.push(['Pin Bar Bullish', 'g']);
+            if (up >= body * 2 && up / rng >= 0.6 && lo / rng <= 0.2) out.push(['Pin Bar Bearish', 'r']);
+            if (body / rng <= 0.1) out.push(['Doji', 'y']);
+            if (b.high < a.high && b.low > a.low) out.push(['Inside Bar', 'y']);
+            return out;
+        }
+        window.__fsDetect = detect;
+        reg('scanner', {
+            t: 'Pattern Scanner', i: '🔍', cat: 'ANALISA & BERITA',
+            mount(body, inst) {
+                const TF = [['15m', '15M'], ['1h', '1H'], ['4h', '4H'], ['1d', '1D']];
+                const cur = inst.cfg.tf || '1h';
+                body.innerHTML = chipRow(TF, cur) + '<div class="sc"><div class="tw-empty">Memindai…</div></div><div class="tw-pad" style="padding-top:0"><div class="tw-note">Candle terakhir yang <b>sudah tertutup</b>. Data spot Binance (XAU memakai PAXG sebagai proksi emas). Pola adalah alat bantu, bukan sinyal.</div></div>';
+                const run = async tf => {
+                    const box = $('.sc', body); box.innerHTML = '<div class="tw-empty">Memindai…</div>';
+                    const rows = await Promise.all(SYMS.map(async s => { try { const k = await klines(s[0], tf, '&limit=5'); const b = k[k.length - 2], a = k[k.length - 3]; return { n: s[1], p: k[k.length - 1].close, pat: detect(a, b) }; } catch (e) { return { n: s[1], err: 1 }; } }));
+                    if (rows.every(r => r.err)) { box.innerHTML = '<div class="tw-empty"><span class="ic">📡</span>Data pasar tidak bisa diakses.<br>Cek koneksi / VPN lalu coba lagi.</div>'; return; }
+                    box.innerHTML = '<table class="tw-table"><tr><th>Pair</th><th>Harga</th><th>Pola</th></tr>' + rows.map(r => r.err ? `<tr><td>${r.n}</td><td colspan=2 class="m">gagal</td></tr>` : `<tr><td><b>${r.n}</b></td><td>${r.p.toLocaleString('en-US', { maximumFractionDigits: 4 })}</td><td>${r.pat.length ? r.pat.map(p => `<span class="tw-pill ${p[1]}">${p[0]}</span>`).join(' ') : '<span class="m">—</span>'}</td></tr>`).join('') + '</table>';
+                };
+                run(cur); onChips(body, k => { inst.cfg.tf = k; run(k); });
+            }
+        });
+
+        /* ---------- BACKTEST (replay Binance) ---------- */
+        const BT = { PAXGUSDT: { n: 'XAU/USD', pip: 0.1, mult: 100 }, BTCUSDT: { n: 'BTC/USD', pip: 1, mult: 1 }, ETHUSDT: { n: 'ETH/USD', pip: 0.1, mult: 1 }, SOLUSDT: { n: 'SOL/USD', pip: 0.01, mult: 1 }, BNBUSDT: { n: 'BNB/USD', pip: 0.1, mult: 1 } };
+        reg('backtest', {
+            t: 'Backtest', i: '⚗️', cat: 'ANALISA & BERITA', wide: true,
+            mount(body, inst) {
+                const d0 = new Date(Date.now() - 20 * 864e5).toISOString().slice(0, 10);
+                body.innerHTML = `<div class="tw-pad">
+                <div class="tw-row c4" style="grid-template-columns:1.5fr .8fr 1.4fr auto;align-items:end"><div><label class="tw-lbl">Pair</label><select class="tw-sel s-sym">${Object.keys(BT).map(k => `<option value="${k}">${BT[k].n}</option>`).join('')}</select></div><div><label class="tw-lbl">TF</label><select class="tw-sel s-tf"><option>15m</option><option selected>1h</option><option>4h</option></select></div><div><label class="tw-lbl">Mulai dari</label><input type="date" class="tw-in s-date" value="${d0}"></div><button class="tm-btn go s-load" style="padding:10px 16px">Load</button></div>
+                <div class="bt-chart"><div class="tw-empty" style="padding-top:90px">Pilih pair lalu klik <b>Load</b></div></div>
+                <div class="tw-row" style="grid-template-columns:auto auto 1fr auto auto;align-items:center;margin-top:8px"><button class="tm-btn sm s-rst">⟲</button><button class="tm-btn sm s-step">›</button><button class="tm-btn go sm s-play">▶ Play</button><select class="tw-sel s-spd" style="width:64px"><option value="900">1x</option><option value="450">2x</option><option value="300" selected>3x</option><option value="180">5x</option><option value="80">10x</option></select><span class="s-info m" style="font-size:9px;text-align:right"></span></div>
+                <div class="tw-row c4" style="grid-template-columns:1fr 1fr 1fr;margin-top:6px"><div><label class="tw-lbl">SL (pips)</label><input type="number" class="tw-in s-sl" value="50"></div><div><label class="tw-lbl">TP (pips)</label><input type="number" class="tw-in s-tp" value="100"></div><div><label class="tw-lbl">Lots</label><input type="number" step="0.01" class="tw-in s-lot" value="0.1"></div></div>
+                <div class="tw-row c3" style="grid-template-columns:1fr 1fr 1fr"><button class="tm-btn go s-buy" style="padding:11px">BUY</button><button class="tm-btn bad s-sell" style="padding:11px">SELL</button><button class="tm-btn s-close" style="padding:11px">CLOSE</button></div>
+                <div class="tw-kpi"><div><small>Saldo (demo)</small><b class="s-bal">$10,000</b></div><div><small>Posisi terbuka</small><b class="s-pos m">—</b></div></div>
+                <div class="s-log tw-scroll" style="max-height:120px;font-size:10px"></div>
+                <div class="tw-note" style="margin-top:8px">Replay candle dari data spot Binance (XAU memakai PAXG). Simulasi edukasi — bukan hasil trading nyata.</div></div>`;
+                const q = s => $(s, body);
+                const S = { data: [], cur: 0, bal: 10000, pos: null, closed: [], timer: null, chart: null, series: null };
+                const info = () => { const c = S.data[S.cur]; q('.s-info').textContent = c ? `${S.cur + 1}/${S.data.length} · ${c.close.toFixed(2)}` : ''; };
+                function floating() { const c = S.data[S.cur], p = S.pos; if (!p || !c) return 0; return (c.close - p.entry) * p.dir * p.lots * BT[S.sym].mult; }
+                function paint() {
+                    q('.s-bal').textContent = money(S.bal + floating()); const p = S.pos;
+                    const el = q('.s-pos'); if (p) { const f = floating(); el.className = 's-pos ' + (f >= 0 ? 'g' : 'r'); el.textContent = (p.dir > 0 ? 'BUY ' : 'SELL ') + p.lots + ' @ ' + p.entry.toFixed(2) + ' (' + money(f) + ')'; } else { el.className = 's-pos m'; el.textContent = '—'; }
+                    q('.s-log').innerHTML = S.closed.slice(-8).reverse().map(t => `<div style="display:flex;justify-content:space-between;padding:5px 2px;border-bottom:1px solid rgba(255,255,255,.04)"><span>${t.dir > 0 ? 'BUY' : 'SELL'} ${t.lots} · ${t.why}</span><b class="${t.pnl >= 0 ? 'g' : 'r'}">${money(t.pnl)}</b></div>`).join('');
+                    info();
+                }
+                function closePos(price, why) { const p = S.pos; if (!p) return; const pnl = (price - p.entry) * p.dir * p.lots * BT[S.sym].mult; S.bal += pnl; S.closed.push({ dir: p.dir, lots: p.lots, pnl, why }); S.pos = null; }
+                function checkExit(c) {
+                    const p = S.pos; if (!p) return;
+                    if (p.dir > 0) { if (p.sl && c.low <= p.sl) return closePos(p.sl, 'SL'); if (p.tp && c.high >= p.tp) return closePos(p.tp, 'TP'); }
+                    else { if (p.sl && c.high >= p.sl) return closePos(p.sl, 'SL'); if (p.tp && c.low <= p.tp) return closePos(p.tp, 'TP'); }
+                }
+                function step() {
+                    if (S.cur >= S.data.length - 1) { stop(); toast('🏁 Data habis', 'Replay sudah mencapai candle terakhir.'); return; }
+                    S.cur++; const c = S.data[S.cur]; S.series.update(c); checkExit(c); paint();
+                }
+                function stop() { clearInterval(S.timer); S.timer = null; q('.s-play').textContent = '▶ Play'; q('.s-play').className = 'tm-btn go sm s-play'; }
+                function play() { if (S.timer) return stop(); if (!S.data.length) return; q('.s-play').textContent = '❚❚ Pause'; q('.s-play').className = 'tm-btn bad sm s-play'; S.timer = setInterval(() => { if (!alive(body)) return clearInterval(S.timer); step(); }, +q('.s-spd').value); }
+                async function load() {
+                    stop(); const btn = q('.s-load'); btn.textContent = '…';
+                    try {
+                        await loadScript(LWC);
+                        S.sym = q('.s-sym').value; const tf = q('.s-tf').value; const ms = new Date(q('.s-date').value + 'T00:00:00Z').getTime() || Date.now() - 20 * 864e5;
+                        const [before, after] = await Promise.all([klines(S.sym, tf, `&endTime=${ms - 1}&limit=150`), klines(S.sym, tf, `&startTime=${ms}&limit=1000`)]);
+                        if (!after.length) throw new Error('Tidak ada data pada tanggal itu');
+                        S.data = before.concat(after); S.cur = before.length; S.bal = 10000; S.pos = null; S.closed = [];
+                        const host = q('.bt-chart'); host.innerHTML = '';
+                        if (S.chart) { try { S.chart.remove(); } catch (e) {} }
+                        S.chart = LightweightCharts.createChart(host, { width: host.clientWidth, height: 250, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true } });
+                        S.series = S.chart.addCandlestickSeries({ upColor: '#4ade80', downColor: '#ef4444', wickUpColor: '#4ade80', wickDownColor: '#ef4444', borderVisible: false });
+                        S.series.setData(S.data.slice(0, S.cur + 1)); S.chart.timeScale().fitContent();
+                        if (window.ResizeObserver) new ResizeObserver(() => { if (alive(host) && S.chart) S.chart.applyOptions({ width: host.clientWidth }); }).observe(host);
+                        paint();
+                    } catch (e) { q('.bt-chart').innerHTML = '<div class="tw-empty" style="padding-top:80px"><span class="ic">⚠️</span>' + esc(e.message) + '</div>'; }
+                    btn.textContent = 'Load';
+                }
+                function open(dir) {
+                    if (!S.data.length) return toast('Load data dulu', 'Klik Load untuk memuat candle.');
+                    if (S.pos) return toast('Posisi masih terbuka', 'Tutup dulu posisi sebelumnya.');
+                    const c = S.data[S.cur], pip = BT[S.sym].pip, sl = num(q('.s-sl').value), tp = num(q('.s-tp').value), lots = num(q('.s-lot').value) || 0.1;
+                    S.pos = { dir, lots, entry: c.close, sl: sl ? c.close - dir * sl * pip : 0, tp: tp ? c.close + dir * tp * pip : 0 }; paint();
+                }
+                q('.s-load').onclick = load; q('.s-play').onclick = play; q('.s-step').onclick = () => { if (S.data.length) step(); };
+                q('.s-rst').onclick = () => { if (!S.data.length) return; stop(); const k = S.data.length - 1; load(); };
+                q('.s-spd').onchange = () => { if (S.timer) { stop(); play(); } };
+                q('.s-buy').onclick = () => open(1); q('.s-sell').onclick = () => open(-1);
+                q('.s-close').onclick = () => { if (S.pos) { closePos(S.data[S.cur].close, 'Manual'); paint(); } };
+            }
+        });
+    })();
+    </script>
+
+    <script>
+    (function () {
+        'use strict';
+        const T = window.__fsTerm; if (!T) return;
+        const { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, openModal, closeModal, XLSX_URL } = T.ui;
+        const reg = T.register;
+        const tabsRow = (items, cur, cls) => '<div class="tw-tabs">' + items.map(i => `<button class="tw-tab ${i[0] === cur ? 'on ' + (cls || '') : ''}" data-k="${i[0]}">${i[1]}</button>`).join('') + '</div>';
+        const pnlOf = t => Number(t.pnl) || 0;
+        const f2 = n => (Math.round(n * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        /* ===================== TRADING JOURNAL ===================== */
+        function parseMt5(rows) {
+            let hi = -1;
+            for (let i = 0; i < rows.length; i++) {
+                const l = rows[i].map(c => String(c == null ? '' : c).trim().toLowerCase());
+                if (l.includes('position') && l.includes('symbol') && l.includes('profit')) { hi = i; break; }
+            }
+            if (hi < 0) throw new Error('Tabel "Positions" tidak ditemukan. Gunakan laporan MT5 → Trade History Report (.xlsx).');
+            const hd = rows[hi].map(c => String(c == null ? '' : c).trim().toLowerCase());
+            const idx = (n, k) => { let c = 0; for (let i = 0; i < hd.length; i++) if (hd[i] === n) { if (c === (k || 0)) return i; c++; } return -1; };
+            const I = { t0: idx('time', 0), t1: idx('time', 1), pos: idx('position'), sym: idx('symbol'), type: idx('type'), vol: idx('volume'), com: idx('commission'), swap: idx('swap'), pr: idx('profit') };
+            const out = [];
+            for (let i = hi + 1; i < rows.length; i++) {
+                const r = rows[i]; const first = String(r.find(c => c !== '' && c != null) || '');
+                if (!first) { if (out.length) break; continue; }
+                if (!/^\d{4}[.\-\/]\d{2}[.\-\/]\d{2}/.test(String(r[I.t0] || ''))) { if (out.length) break; continue; }
+                const type = String(r[I.type] || '').toLowerCase(); if (type !== 'buy' && type !== 'sell') continue;
+                const close = String(r[I.t1] >= 0 ? r[I.t1] : r[I.t0]).trim() || String(r[I.t0]);
+                const m = String(r[I.t1] || r[I.t0]).trim().match(/^(\d{4})[.\-\/](\d{2})[.\-\/](\d{2})[ T]?(\d{2}:\d{2})?/);
+                const net = num(r[I.pr]) + num(r[I.com]) + num(r[I.swap]);
+                let sym = String(r[I.sym] || '').toUpperCase(); const mm = sym.match(/^([A-Z]{6})[^A-Z]{0,1}[A-Z]{0,2}$/); if (mm) sym = mm[1];
+                out.push({ ticket: String(r[I.pos]), date: `${m[1]}-${m[2]}-${m[3]}`, time: m[4] || '00:00', pair: sym, session: 'N/A', poi: [], entry_style: 'N/A', reason: 'Import MT5 · ' + type.toUpperCase() + ' ' + num(r[I.vol]) + ' lot', rr: '-', pnl: Math.round(net * 100) / 100, res: net > 0 ? 'TP' : net < 0 ? 'SL' : 'BE', margin: 0, bef: '', aft: '', src: 'mt5-import' });
+            }
+            if (!out.length) throw new Error('Tidak ada posisi yang bisa dibaca dari file.');
+            return out;
+        }
+        window.__fsParseMt5 = parseMt5;
+
+        async function importFile(file) {
+            if (typeof curUser === 'undefined' || !curUser) return toast('Login dulu', 'Fitur ini butuh akun.');
+            try {
+                await loadScript(XLSX_URL);
+                const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+                let rows = []; wb.SheetNames.forEach(n => { rows = rows.concat(XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, defval: '', raw: true })); });
+                const list = parseMt5(rows);
+                const have = new Set(trades().map(t => String(t.ticket || '')).filter(Boolean));
+                const fresh = list.filter(t => !have.has(t.ticket));
+                const ref = rtdb.ref('users/' + curUser.uid + '/trades');
+                await Promise.all(fresh.map(t => ref.push(t)));
+                toast('✅ Import selesai', `${fresh.length} trade baru ditambahkan, ${list.length - fresh.length} duplikat dilewati.`, 'signal');
+            } catch (e) { toast('⚠️ Import gagal', e.message); }
+        }
+        function pickFile() {
+            const f = document.createElement('input'); f.type = 'file'; f.accept = '.xlsx,.xls,.csv';
+            f.onchange = () => { if (f.files[0]) importFile(f.files[0]); }; f.click();
+        }
+        function connectModal() {
+            openModal(`<div class="fs-mbox" style="max-width:520px"><div class="fs-mhead"><b>Connect Account</b><button class="fs-pop-x" onclick="fsCloseModal()">✕</button></div>
+            <div class="cn-grid"><div class="cn-card" data-c="mt5"><div class="cn-ic" style="background:#2e2a5e;border:1px solid #4c3f9c">📄</div><b>Import Laporan</b><small>MT5 .xlsx</small></div>
+            <div class="cn-card" data-c="ct"><div class="cn-ic" style="background:#fff;color:#ef4444;font-size:34px">◔</div><b>cTrader</b><small>Open API</small></div></div></div>`, m => {
+                m.onclick = e => {
+                    if (e.target === m) return closeModal();
+                    const c = e.target.closest('[data-c]'); if (!c) return;
+                    if (c.dataset.c === 'mt5') { closeModal(); pickFile(); } else toast('cTrader belum aktif', 'Butuh server OAuth Spotware Open API. Sementara gunakan Import Laporan.');
+                };
+            });
+        }
+
+        reg('journal', {
+            t: 'Trading Journal', i: '📒', cat: 'ALAT BANTU', wide: true,
+            mount(body, inst) {
+                let tab = inst.cfg.tab || 'journal', mon = new Date(); mon.setDate(1);
+                body.innerHTML = tabsRow([['journal', '📒 Journal'], ['stats', '📊 Stats'], ['cal', '🗓 Cal'], ['acc', '🔗 Accounts'], ['add', '＋ Add']], tab) + '<div class="tw-pad jb"></div>';
+                const box = $('.jb', body);
+                const stats = list => {
+                    let tot = 0, gp = 0, gl = 0, w = 0, l = 0, peak = 0, dd = 0, run = 0;
+                    list.slice().sort((a, b) => new Date(a.date + ' ' + (a.time || '')) - new Date(b.date + ' ' + (b.time || ''))).forEach(t => { const p = pnlOf(t); tot += p; run += p; if (p > 0) { gp += p; w++; } else if (p < 0) { gl += -p; l++; } if (run > peak) peak = run; if (peak - run > dd) dd = peak - run; });
+                    return { tot, gp, gl, w, l, n: list.length, wr: list.length ? w / list.length * 100 : 0, pf: gl ? gp / gl : gp ? 99 : 0, dd, aw: w ? gp / w : 0, al: l ? gl / l : 0 };
+                };
+                const views = {
+                    journal() {
+                        const L = trades().slice().sort((a, b) => new Date(b.date + ' ' + (b.time || '')) - new Date(a.date + ' ' + (a.time || ''))).slice(0, 40);
+                        if (!L.length) return '<div class="tw-empty"><span class="ic">📒</span>Belum ada transaksi.<br>Tambahkan lewat tab <b>＋ Add</b> atau <b>Accounts → Import Laporan</b>.</div>';
+                        return L.map(t => `<div class="tj-row"><div class="l"><b>${esc(t.pair)} <span class="tw-pill ${t.res === 'TP' ? 'g' : t.res === 'SL' ? 'r' : 'm'}">${esc(t.res)}</span></b><span>${esc(t.date)} · ${esc(t.time || '')} · RR ${esc(t.rr || '-')}</span></div><b class="${pnlOf(t) >= 0 ? 'g' : 'r'}" style="font-family:Orbitron">${money(pnlOf(t))}</b></div>`).join('');
+                    },
+                    stats() {
+                        const s = stats(trades()); if (!s.n) return views.journal();
+                        const by = {}; trades().forEach(t => { by[t.pair] = (by[t.pair] || 0) + pnlOf(t); });
+                        const top = Object.entries(by).sort((a, b) => b[1] - a[1]);
+                        return `<div class="tw-kpi"><div><small>Total P&L</small><b class="${s.tot >= 0 ? 'g' : 'r'}">${money(s.tot)}</b></div><div><small>Win rate</small><b class="b">${s.wr.toFixed(1)}%</b></div><div><small>Profit factor</small><b class="y">${s.pf.toFixed(2)}</b></div><div><small>Max drawdown</small><b class="r">${money(-s.dd)}</b></div><div><small>Rata-rata win</small><b class="g">${money(s.aw)}</b></div><div><small>Rata-rata loss</small><b class="r">${money(-s.al)}</b></div></div>
+                        <div class="tw-lbl">P&L per pair</div>${top.map(([p, v]) => `<div class="tj-row"><b style="font-family:Orbitron;font-size:10px">${esc(p)}</b><b class="${v >= 0 ? 'g' : 'r'}">${money(v)}</b></div>`).join('')}<div class="tw-note">${s.n} trade · ${s.w} win / ${s.l} loss</div>`;
+                    },
+                    cal() {
+                        const y = mon.getFullYear(), m = mon.getMonth(), days = new Date(y, m + 1, 0).getDate(), off = (new Date(y, m, 1).getDay() + 6) % 7, by = {};
+                        trades().forEach(t => { by[t.date] = (by[t.date] || 0) + pnlOf(t); });
+                        let h = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><button class="tm-btn sm" data-n="-1">‹</button><b style="font-family:Orbitron;font-size:11px">${mon.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }).toUpperCase()}</b><button class="tm-btn sm" data-n="1">›</button></div><div class="tj-cal">${['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map(d => `<div class="h">${d}</div>`).join('')}${'<div></div>'.repeat(off)}`;
+                        let mt = 0;
+                        for (let d = 1; d <= days; d++) { const k = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`, v = by[k]; if (v) mt += v; h += `<div class="d ${v > 0 ? 'p' : v < 0 ? 'l' : ''}">${d}${v ? `<i>${v > 0 ? '+' : ''}${Math.round(v)}</i>` : ''}</div>`; }
+                        return h + `</div><div class="tw-note" style="margin-top:10px">Total bulan ini: <b class="${mt >= 0 ? 'g' : 'r'}">${money(mt)}</b></div>`;
+                    },
+                    acc() {
+                        return `<div class="tj-acts"><button class="tj-big g" data-a="conn">＋ Hubungkan Akun</button><button class="tj-big" data-a="imp">⬆ Import Laporan</button></div><div class="mt5 tw-note" style="margin-top:12px">Memuat akun MT5…</div><div class="tw-note" style="margin-top:8px">Import membaca tabel <b>Positions</b> dari laporan MT5 (.xlsx) dan menyimpannya ke jurnal. Trade yang sama tidak akan diimpor dua kali.</div>`;
+                    },
+                    add() {
+                        const today = new Date().toISOString().slice(0, 10);
+                        return `<div class="tw-row c2"><div><label class="tw-lbl">Tanggal</label><input type="date" class="tw-in a-date" value="${today}"></div><div><label class="tw-lbl">Waktu</label><input type="time" class="tw-in a-time" value="${new Date().toTimeString().slice(0, 5)}"></div></div>
+                        <div class="tw-row c2"><div><label class="tw-lbl">Pair</label><input class="tw-in a-pair" value="XAUUSD"></div><div><label class="tw-lbl">Result</label><select class="tw-sel a-res"><option>TP</option><option>SL</option><option>BE</option></select></div></div>
+                        <div class="tw-row c2"><div><label class="tw-lbl">P&L ($)</label><input type="number" class="tw-in a-pnl" placeholder="0.00"></div><div><label class="tw-lbl">RR</label><input class="tw-in a-rr" value="1:2"></div></div>
+                        <div class="tw-row"><div><label class="tw-lbl">Catatan</label><input class="tw-in a-note" placeholder="Alasan entry / evaluasi"></div></div>
+                        <button class="tm-btn pri" style="width:100%;padding:13px" data-a="save">🚀 SIMPAN TRANSAKSI</button><div class="tw-note" style="margin-top:8px">Untuk foto before/after &amp; POI lengkap, gunakan tab <b>Journal</b> di menu samping.</div>`;
+                    }
+                };
+                function draw() {
+                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === tab));
+                    box.innerHTML = views[tab]();
+                    if (tab === 'acc') {
+                        const el = $('.mt5', box);
+                        try { if (curUser) rtdb.ref('users/' + curUser.uid + '/mt5Account').once('value', s => { if (!alive(el)) return; el.innerHTML = s.exists() ? `Akun MT5 tersimpan: <b>${esc(s.val().login)}</b> @ ${esc(s.val().broker)} (${esc(s.val().server)})` : 'Belum ada akun MT5 tersimpan. Atur lewat menu <b>Account MT5</b>.'; }); else el.textContent = 'Login untuk melihat akun.'; } catch (e) { el.textContent = ''; }
+                    }
+                }
+                body.addEventListener('click', e => {
+                    const t = e.target.closest('.tw-tab'); if (t) { tab = t.dataset.k; inst.cfg.tab = tab; return draw(); }
+                    const n = e.target.closest('[data-n]'); if (n) { mon.setMonth(mon.getMonth() + (+n.dataset.n)); return draw(); }
+                    const a = e.target.closest('[data-a]'); if (!a) return;
+                    if (a.dataset.a === 'conn') connectModal();
+                    if (a.dataset.a === 'imp') pickFile();
+                    if (a.dataset.a === 'save') {
+                        if (typeof curUser === 'undefined' || !curUser) return toast('Login dulu', '');
+                        const g = c => $(c, box).value;
+                        const pnl = num(g('.a-pnl')); const res = g('.a-res');
+                        rtdb.ref('users/' + curUser.uid + '/trades').push({ date: g('.a-date'), time: g('.a-time'), pair: g('.a-pair').toUpperCase(), session: 'N/A', poi: [], entry_style: 'N/A', reason: g('.a-note') || '-', rr: g('.a-rr'), pnl, res, margin: 0, bef: '', aft: '' })
+                            .then(() => { toast('🚀 Tersimpan', 'Transaksi masuk ke jurnal.', 'signal'); tab = 'journal'; draw(); })
+                            .catch(err => toast('Gagal simpan', err.message));
+                    }
+                });
+                let sig = ''; draw();
+                everySec(body, () => { const s = trades().length + ':' + trades().reduce((a, t) => a + pnlOf(t), 0); if (s !== sig) { sig = s; if (tab !== 'add' && tab !== 'acc') draw(); } }, 1500);
+            }
+        });
+
+        /* ===================== TRADING RULES ===================== */
+        const RKEY = 'fs_term_rules_v1';
+        const RDEF = { entry: ['Trend jelas teridentifikasi (Higher High / Lower Low)', 'Setup di area Support / Resistance key level', 'Konfirmasi candle pattern (Pin Bar, Engulfing, dll)'], risk: ['Risk per trade maksimal 1–2% dari account', 'Risk:Reward minimal 1:2'], exit: ['TP sudah ditentukan sebelum entry', 'Trailing stop aktif jika floating profit > 1R'] };
+        const RNAME = { entry: 'Entry Rules', risk: 'Risk Rules', exit: 'Exit Rules' };
+        const rid = () => 'r' + Math.random().toString(36).slice(2, 8);
+        function getRules() { let r = ls.get(RKEY, null); if (!r) { r = {}; Object.keys(RDEF).forEach(k => r[k] = RDEF[k].map(t => ({ id: rid(), t, on: true }))); ls.set(RKEY, r); } return r; }
+        reg('rules', {
+            t: 'Trading Rules', i: '📜', cat: 'ALAT BANTU', h: 540,
+            mount(body, inst) {
+                let tab = 'board', rules = getRules(), shut = {}, adding = null, editing = null, st = null;
+                const save = () => ls.set(RKEY, rules);
+                const flat = () => { const o = []; Object.keys(RNAME).forEach(k => rules[k].filter(r => r.on).forEach(r => o.push({ k, t: r.t }))); return o; };
+                const resetCheck = () => { st = { i: 0, res: [] }; };
+                resetCheck();
+                body.innerHTML = '<div style="display:flex;align-items:center;padding:10px 12px 8px;gap:6px"><div class="tw-tabs" style="padding:0;flex:1"><button class="tw-tab" data-k="board">📋 Rules Board</button><button class="tw-tab pu" data-k="check">✅ Pre-trade Check</button></div><button class="tm-btn sm rs" style="display:none">↺ Reset</button></div><div class="rb tw-scroll" style="height:calc(100% - 58px);padding:0 12px 12px"></div>';
+                const box = $('.rb', body);
+                function board() {
+                    return Object.keys(RNAME).map(k => {
+                        const L = rules[k], on = L.filter(r => r.on).length;
+                        return `<div class="tr-cat ${k} ${shut[k] ? 'shut' : ''}"><div class="tr-ch" data-s="${k}"><span class="dot"></span>${RNAME[k]}<span class="sp"></span><span class="ct">${on}/${L.length}</span><span class="cv">⌃</span></div><div class="tr-cb">${L.map(r => editing === r.id ? `<div class="tr-form"><textarea data-e="${r.id}" rows="2">${esc(r.t)}</textarea><div class="bt"><button class="ok" data-es="${k}|${r.id}">Simpan</button><button class="no" data-ec="1">Batal</button></div></div>` : `<div class="tr-it ${r.on ? '' : 'off'}"><button class="tr-tg ${r.on ? 'on' : ''}" data-t="${k}|${r.id}">${r.on ? '✓' : ''}</button><span class="tx">${esc(r.t)}</span><button class="tr-ib" data-ed="${r.id}">✎</button><button class="tr-ib d" data-d="${k}|${r.id}">🗑</button></div>`).join('')}
+                        ${adding === k ? `<div class="tr-form"><textarea id="tr-new" rows="2" placeholder="Tulis rule… (Enter untuk simpan)"></textarea><div class="bt"><button class="ok" data-as="${k}">Tambah</button><button class="no" data-ac="1">Batal</button></div></div>` : `<div class="tr-add" data-a="${k}">＋ Add rule</div>`}</div></div>`;
+                    }).join('');
+                }
+                function check() {
+                    const F = flat(); const n = F.length; if (!n) return '<div class="tw-empty"><span class="ic">📜</span>Belum ada rule aktif.<br>Aktifkan rule di Rules Board.</div>';
+                    const pass = st.res.filter(Boolean).length, done = st.i >= n;
+                    let h = `<div class="pc-top"><span>${done ? 'Selesai' : 'Step ' + (st.i + 1) + ' / ' + n}</span><b>${pass} lulus</b></div><div class="pc-bar"><i style="width:${Math.round(st.res.length / n * 100)}%"></i></div><div class="pc-start">▶ START</div><div class="pc-line ${st.i > 0 ? 'on' : ''}"></div>`;
+                    F.forEach((r, i) => {
+                        const cls = i < st.res.length ? (st.res[i] ? 'ok' : 'bad') : i === st.i ? 'cur' : '';
+                        h += `<div class="pc-step ${cls}"><span class="pc-n">${cls === 'ok' ? '✓' : cls === 'bad' ? '✕' : i + 1}</span><span class="pc-cat ${r.k}">${r.k[0].toUpperCase() + r.k.slice(1)}</span><span class="pc-tx">${esc(r.t)}</span><button class="pc-b ${cls === 'ok' ? 'on-ok' : ''}" data-p="1">✓</button><button class="pc-b ${cls === 'bad' ? 'on-bad' : ''}" data-p="0">✕</button></div>${i < n - 1 ? `<div class="pc-line ${i < st.res.length ? 'on' : ''}"></div>` : ''}`;
+                    });
+                    if (done) { const ok = pass === n; h += `<div class="pc-verdict ${ok ? 'ok' : 'bad'}">${ok ? '✅ <b>Semua rule terpenuhi.</b><br>Setup valid — eksekusi sesuai rencana.' : '⛔ <b>' + (n - pass) + ' rule belum terpenuhi.</b><br>Jangan entry sampai semua rule lulus.'}</div>`; }
+                    return h;
+                }
+                function draw() {
+                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === tab));
+                    $('.rs', body).style.display = tab === 'check' ? '' : 'none';
+                    const sc = box.scrollTop; box.innerHTML = tab === 'board' ? board() : check(); box.scrollTop = sc;
+                    const ta = $('#tr-new', box) || $('textarea[data-e]', box); if (ta) ta.focus();
+                }
+                body.addEventListener('click', e => {
+                    const tb = e.target.closest('.tw-tab'); if (tb) { tab = tb.dataset.k; if (tab === 'check') resetCheck(); return draw(); }
+                    if (e.target.closest('.rs')) { resetCheck(); return draw(); }
+                    const q = a => e.target.closest('[' + a + ']');
+                    let x;
+                    if ((x = q('data-s'))) { shut[x.dataset.s] = !shut[x.dataset.s]; return draw(); }
+                    if ((x = q('data-t'))) { const [k, id] = x.dataset.t.split('|'); const r = rules[k].find(r => r.id === id); r.on = !r.on; save(); return draw(); }
+                    if ((x = q('data-d'))) { const [k, id] = x.dataset.d.split('|'); rules[k] = rules[k].filter(r => r.id !== id); save(); return draw(); }
+                    if ((x = q('data-ed'))) { editing = x.dataset.ed; adding = null; return draw(); }
+                    if ((x = q('data-es'))) { const [k, id] = x.dataset.es.split('|'); const v = $('textarea[data-e]', box).value.trim(); if (v) rules[k].find(r => r.id === id).t = v; editing = null; save(); return draw(); }
+                    if (q('data-ec') || q('data-ac')) { editing = null; adding = null; return draw(); }
+                    if ((x = q('data-a'))) { adding = x.dataset.a; editing = null; return draw(); }
+                    if ((x = q('data-as'))) { addRule(x.dataset.as); return; }
+                    if ((x = q('data-p'))) { st.res.push(x.dataset.p === '1'); st.i++; return draw(); }
+                });
+                function addRule(k) { const v = ($('#tr-new', box).value || '').trim(); if (v) { rules[k].push({ id: rid(), t: v, on: true }); save(); } adding = null; draw(); }
+                box.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && e.target.tagName === 'TEXTAREA') { e.preventDefault(); if (e.target.id === 'tr-new') addRule(adding); else { const x = $('[data-es]', box); if (x) x.click(); } } });
+                draw();
+            }
+        });
+
+        /* ===================== POSITION CALCULATOR ===================== */
+        reg('calc', {
+            t: 'Position Calculator', i: '📐', cat: 'ALAT BANTU',
+            mount(body, inst) {
+                const P = [['10', 'Forex USD-quote'], ['6.7', 'USDJPY'], ['10', 'XAUUSD'], ['1', 'BTC / ETH'], ['custom', 'Custom…']];
+                const c = inst.cfg;
+                body.innerHTML = `<div class="tw-pad"><div class="tw-row c3"><div><label class="tw-lbl">💰 Balance ($)</label><input type="number" class="tw-in k-bal" placeholder="1000" value="${esc(c.bal || '')}"></div><div><label class="tw-lbl">⚠️ Risk (%)</label><input type="number" class="tw-in k-risk" placeholder="1" value="${esc(c.risk || '')}"></div><div><label class="tw-lbl">📉 SL (pips)</label><input type="number" class="tw-in k-sl" placeholder="30" value="${esc(c.sl || '')}"></div></div>
+                <div class="tw-row c2"><div><label class="tw-lbl">Instrumen</label><select class="tw-sel k-pv">${P.map((p, i) => `<option value="${i}">${p[1]}</option>`).join('')}</select></div><div><label class="tw-lbl">Nilai pip / lot ($)</label><input type="number" class="tw-in k-pval" value="10"></div></div>
+                <div class="tw-row"><div><label class="tw-lbl">⚙️ Leverage (1:X)</label><select class="tw-sel k-lev"><option value="100">1:100</option><option value="500" selected>1:500</option><option value="1000">1:1000</option><option value="2000">1:2000</option></select></div></div>
+                <div class="tw-res"><div><small>🎯 Rec. Lot Size</small><b class="o-lot">0.00 Lot</b></div><div><small>⚠️ Risiko ($)</small><b class="o-risk">$ 0.00</b></div><div><small>💵 Est. Margin</small><b class="o-mar">$ 0.00</b></div><div><small>🎯 TP @ 1:2</small><b class="o-tp">$ 0.00</b></div></div></div>`;
+                const q = s => $(s, body);
+                q('.k-pv').value = c.pv || '0'; if (c.pval) q('.k-pval').value = c.pval; q('.k-lev').value = c.lev || '500';
+                function calc() {
+                    const b = num(q('.k-bal').value), r = num(q('.k-risk').value), s = num(q('.k-sl').value), pv = num(q('.k-pval').value), lev = num(q('.k-lev').value) || 1;
+                    c.bal = q('.k-bal').value; c.risk = q('.k-risk').value; c.sl = q('.k-sl').value; c.pv = q('.k-pv').value; c.pval = q('.k-pval').value; c.lev = q('.k-lev').value;
+                    const risk$ = b * r / 100, lot = b > 0 && r > 0 && s > 0 && pv > 0 ? risk$ / (s * pv) : 0;
+                    q('.o-lot').textContent = lot.toFixed(2) + ' Lot'; q('.o-risk').textContent = '$ ' + f2(risk$); q('.o-mar').textContent = '$ ' + f2(lot * 100000 / lev); q('.o-tp').textContent = '$ ' + f2(risk$ * 2);
+                }
+                q('.k-pv').onchange = () => { const p = P[+q('.k-pv').value]; if (p[0] !== 'custom') q('.k-pval').value = p[0]; calc(); };
+                body.addEventListener('input', calc); calc();
+            }
+        });
+
+        /* ===================== CURRENCY CONVERTER ===================== */
+        reg('converter', {
+            t: 'Currency Converter', i: '💱', cat: 'ALAT BANTU',
+            mount(body, inst) {
+                const C = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'NZD', 'IDR', 'SGD', 'MYR', 'CNY', 'HKD', 'THB', 'INR', 'KRW'];
+                const opt = v => C.map(c => `<option ${c === v ? 'selected' : ''}>${c}</option>`).join('');
+                const c = inst.cfg;
+                body.innerHTML = `<div class="tw-pad"><div class="tw-row"><div><label class="tw-lbl">Jumlah</label><input type="number" class="tw-in v-amt" value="${esc(c.amt || 100)}" style="font-size:16px"></div></div><div class="tw-row" style="grid-template-columns:1fr auto 1fr;align-items:end"><div><label class="tw-lbl">Dari</label><select class="tw-sel v-from">${opt(c.from || 'USD')}</select></div><button class="tm-btn sm v-sw" style="padding:10px">⇄</button><div><label class="tw-lbl">Ke</label><select class="tw-sel v-to">${opt(c.to || 'IDR')}</select></div></div><div class="tw-res" style="grid-template-columns:1fr"><div><small class="v-rate">Memuat kurs…</small><b class="v-out" style="font-size:20px">—</b></div></div></div>`;
+                const q = s => $(s, body); const cache = {};
+                async function rate(f, t) {
+                    if (f === t) return { r: 1, d: '' }; const k = f + t; if (cache[k]) return cache[k];
+                    try { const j = await (await fetch(`https://api.frankfurter.app/latest?from=${f}&to=${t}`)).json(); return (cache[k] = { r: j.rates[t], d: j.date }); }
+                    catch (e) { const j = await (await fetch(`https://open.er-api.com/v6/latest/${f}`)).json(); return (cache[k] = { r: j.rates[t], d: (j.time_last_update_utc || '').slice(5, 16) }); }
+                }
+                async function go() {
+                    c.amt = q('.v-amt').value; c.from = q('.v-from').value; c.to = q('.v-to').value;
+                    try { const { r, d } = await rate(c.from, c.to); q('.v-out').textContent = (num(c.amt) * r).toLocaleString('en-US', { maximumFractionDigits: 4 }) + ' ' + c.to; q('.v-rate').textContent = `1 ${c.from} = ${r.toLocaleString('en-US', { maximumFractionDigits: 6 })} ${c.to}` + (d ? ' · ' + d : ''); }
+                    catch (e) { q('.v-out').textContent = '—'; q('.v-rate').textContent = 'Gagal memuat kurs'; }
+                }
+                q('.v-sw').onclick = () => { const a = q('.v-from').value; q('.v-from').value = q('.v-to').value; q('.v-to').value = a; go(); };
+                body.addEventListener('input', go); body.addEventListener('change', go); go();
+            }
+        });
+
+        /* ===================== NOTE ===================== */
+        reg('note', {
+            t: 'Note', i: '📓', cat: 'ALAT BANTU', h: 260,
+            mount(body, inst) {
+                body.innerHTML = '<textarea class="tw-in" style="height:100%;border:none;border-radius:0;resize:none;font-size:13px;line-height:1.6;background:transparent;padding:14px" placeholder="Catatan trading, plan harian, level penting…"></textarea>';
+                const ta = $('textarea', body); ta.value = inst.cfg.text || ''; let t;
+                ta.oninput = () => { clearTimeout(t); t = setTimeout(() => { inst.cfg.text = ta.value; }, 400); };
+            }
+        });
+
+        /* ===================== PROP FIRM CALC ===================== */
+        reg('prop', {
+            t: 'Prop Firm Calc', i: '🏆', cat: 'ALAT BANTU',
+            mount(body, inst) {
+                const c = inst.cfg; const v = (k, d) => esc(c[k] != null ? c[k] : d);
+                body.innerHTML = `<div class="tw-pad"><div class="tw-row c2"><div><label class="tw-lbl">Ukuran akun ($)</label><input type="number" class="tw-in" data-k="size" value="${v('size', 10000)}"></div><div><label class="tw-lbl">Profit target (%)</label><input type="number" class="tw-in" data-k="tgt" value="${v('tgt', 10)}"></div></div>
+                <div class="tw-row c2"><div><label class="tw-lbl">Max daily loss (%)</label><input type="number" class="tw-in" data-k="dd" value="${v('dd', 5)}"></div><div><label class="tw-lbl">Max total loss (%)</label><input type="number" class="tw-in" data-k="td" value="${v('td', 10)}"></div></div>
+                <div class="tw-row c2"><div><label class="tw-lbl">Equity sekarang ($)</label><input type="number" class="tw-in" data-k="eq" value="${v('eq', 10000)}"></div><div><label class="tw-lbl">Equity awal hari ini ($)</label><input type="number" class="tw-in" data-k="sod" value="${v('sod', 10000)}"></div></div>
+                <div class="out"></div></div>`;
+                function calc() {
+                    $$('[data-k]', body).forEach(i => c[i.dataset.k] = i.value);
+                    const size = num(c.size), tgt = size * (1 + num(c.tgt) / 100), eq = num(c.eq), sod = num(c.sod || c.eq);
+                    const dFloor = sod - size * num(c.dd) / 100, tFloor = size * (1 - num(c.td) / 100);
+                    const dBuf = eq - dFloor, tBuf = eq - tFloor, buf = Math.min(dBuf, tBuf), need = tgt - eq;
+                    $('.out', body).innerHTML = `<div class="tw-kpi"><div><small>Target equity</small><b class="g">${money(tgt, 0)}</b></div><div><small>Sisa menuju target</small><b class="${need <= 0 ? 'g' : 'b'}">${need <= 0 ? 'TERCAPAI' : money(need, 0)}</b></div><div><small>Batas daily loss</small><b class="y">${money(dFloor, 0)}</b></div><div><small>Batas total loss</small><b class="r">${money(tFloor, 0)}</b></div></div>
+                    <div class="tw-res" style="grid-template-columns:1fr 1fr"><div><small>Buffer harian</small><b class="${dBuf > 0 ? '' : 'r'}">${money(dBuf, 0)}</b></div><div><small>Buffer total</small><b class="${tBuf > 0 ? '' : 'r'}">${money(tBuf, 0)}</b></div></div>
+                    <div class="tw-note" style="margin-top:8px">${buf <= 0 ? '⛔ <b>Batas loss sudah tersentuh</b> — stop trading.' : `Ruang rugi paling sempit: <b>${money(buf, 0)}</b> (${(buf / size * 100).toFixed(2)}% dari akun). Risiko 1% = <b>${money(size * 0.01, 0)}</b> per trade.`} Rumus mengikuti aturan umum prop firm (batas dihitung dari ukuran akun awal) — cek aturan firm kamu.</div>`;
+                }
+                body.addEventListener('input', calc); calc();
+            }
+        });
+
+        /* ===================== ANALISA KONSISTENSI ===================== */
+        reg('consistency', {
+            t: 'Analisa Konsistensi', i: '🎯', cat: 'ALAT BANTU',
+            mount(body, inst) {
+                body.innerHTML = '<div class="tw-pad"><div class="tw-row"><div><label class="tw-lbl">Batas hari terbaik (% dari total profit)</label><select class="tw-sel th"><option value="30">30%</option><option value="40">40%</option><option value="50">50%</option></select></div></div><div class="out"></div></div>';
+                const th = $('.th', body); th.value = inst.cfg.th || '40';
+                function draw() {
+                    inst.cfg.th = th.value; const T_ = +th.value, by = {};
+                    trades().forEach(t => { by[t.date] = (by[t.date] || 0) + pnlOf(t); });
+                    const days = Object.entries(by); const out = $('.out', body);
+                    if (!days.length) { out.innerHTML = '<div class="tw-empty"><span class="ic">🎯</span>Belum ada data jurnal untuk dianalisa.</div>'; return; }
+                    const total = days.reduce((a, d) => a + d[1], 0), best = days.slice().sort((a, b) => b[1] - a[1])[0], pd = days.filter(d => d[1] > 0).length;
+                    if (total <= 0) { out.innerHTML = `<div class="pc-verdict bad">Total profit belum positif (${money(total)}).<br>Aturan konsistensi baru bisa dinilai setelah akun profit.</div>`; return; }
+                    const ratio = best[1] / total * 100, ok = ratio <= T_, need = best[1] / (T_ / 100) - total;
+                    out.innerHTML = `<div class="pc-verdict ${ok ? 'ok' : 'bad'}" style="margin-top:0">${ok ? '✅ <b>Konsisten</b>' : '⛔ <b>Belum konsisten</b>'}<br>Hari terbaik = <b>${ratio.toFixed(1)}%</b> dari total profit (batas ${T_}%)</div>
+                    <div class="tw-kpi" style="margin-top:10px"><div><small>Total profit</small><b class="g">${money(total)}</b></div><div><small>Hari terbaik</small><b class="y">${money(best[1])}</b><small style="margin:3px 0 0">${esc(best[0])}</small></div><div><small>Hari trading</small><b>${days.length}</b></div><div><small>Hari profit</small><b class="b">${Math.round(pd / days.length * 100)}%</b></div></div>
+                    ${ok ? '' : `<div class="tw-note">Tambahkan sekitar <b>${money(need)}</b> profit dari hari lain (tanpa menaikkan hari terbaik) agar rasio ≤ ${T_}%.</div>`}`;
+                }
+                th.onchange = draw; draw(); let s = ''; everySec(body, () => { const n = trades().length + ':' + trades().reduce((a, t) => a + pnlOf(t), 0); if (n !== s) { s = n; draw(); } }, 2000);
+            }
+        });
+
+        /* ===================== COMPOUND & DRAWDOWN ===================== */
+        reg('compound', {
+            t: 'Compound & Drawdown', i: '🧮', cat: 'ALAT BANTU',
+            mount(body, inst) {
+                let tab = inst.cfg.tab || 'cmp';
+                body.innerHTML = tabsRow([['cmp', '📈 Compound'], ['dd', '📉 Drawdown']], tab) + '<div class="tw-pad cb"></div>';
+                const box = $('.cb', body); const c = inst.cfg;
+                function draw() {
+                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === tab)); inst.cfg.tab = tab;
+                    if (tab === 'cmp') {
+                        box.innerHTML = `<div class="tw-row c3"><div><label class="tw-lbl">Modal ($)</label><input type="number" class="tw-in" data-k="b" value="${esc(c.b || 1000)}"></div><div><label class="tw-lbl">Profit / periode (%)</label><input type="number" class="tw-in" data-k="r" value="${esc(c.r || 5)}"></div><div><label class="tw-lbl">Jumlah periode</label><input type="number" class="tw-in" data-k="n" value="${esc(c.n || 12)}"></div></div><div class="out"></div>`;
+                        calcC();
+                    } else {
+                        box.innerHTML = `<div class="tw-row c2"><div><label class="tw-lbl">Balance ($)</label><input type="number" class="tw-in" data-k="db" value="${esc(c.db || 1000)}"></div><div><label class="tw-lbl">Risk / trade (%)</label><input type="number" class="tw-in" data-k="dr" value="${esc(c.dr || 2)}"></div></div><div class="out"></div>`;
+                        calcD();
+                    }
+                }
+                function calcC() {
+                    $$('[data-k]', box).forEach(i => c[i.dataset.k] = i.value);
+                    const b = num(c.b), r = num(c.r) / 100, n = Math.min(Math.max(Math.round(num(c.n)), 1), 120); let bal = b, rows = '';
+                    for (let i = 1; i <= n; i++) { bal *= 1 + r; if (i <= 12 || i === n) rows += `<tr><td>${i}</td><td>${money(bal)}</td><td class="g">+${((bal / b - 1) * 100).toFixed(1)}%</td></tr>`; }
+                    $('.out', box).innerHTML = `<div class="tw-res" style="grid-template-columns:1fr 1fr"><div><small>Saldo akhir</small><b>${money(bal)}</b></div><div><small>Total pertumbuhan</small><b class="g">+${((bal / b - 1) * 100).toFixed(1)}%</b></div></div><table class="tw-table" style="margin-top:8px"><tr><th>Periode</th><th>Saldo</th><th>Total</th></tr>${rows}</table>`;
+                }
+                function calcD() {
+                    $$('[data-k]', box).forEach(i => c[i.dataset.k] = i.value);
+                    const b = num(c.db), r = num(c.dr) / 100; let rows = '';
+                    [5, 10, 20, 30, 40, 50, 70].forEach(d => { rows += `<tr><td>-${d}%</td><td>${money(b * (1 - d / 100))}</td><td class="y">+${(100 / (100 - d) * 100 - 100).toFixed(1)}%</td></tr>`; });
+                    let sim = ''; [3, 5, 8, 10].forEach(k => { const rem = b * Math.pow(1 - r, k); sim += `<tr><td>${k}x loss beruntun</td><td>${money(rem)}</td><td class="r">-${((1 - rem / b) * 100).toFixed(1)}%</td></tr>`; });
+                    $('.out', box).innerHTML = `<div class="tw-lbl">Gain yang dibutuhkan untuk pulih</div><table class="tw-table"><tr><th>Drawdown</th><th>Sisa saldo</th><th>Butuh gain</th></tr>${rows}</table><div class="tw-lbl" style="margin-top:12px">Simulasi loss beruntun (risk ${(r * 100).toFixed(1)}%)</div><table class="tw-table"><tr><th>Skenario</th><th>Saldo</th><th>DD</th></tr>${sim}</table>`;
+                }
+                body.addEventListener('click', e => { const t = e.target.closest('.tw-tab'); if (t) { tab = t.dataset.k; draw(); } });
+                body.addEventListener('input', e => { if (e.target.dataset.k) tab === 'cmp' ? calcC() : calcD(); });
+                draw();
+            }
+        });
+
+        /* ===================== PRODUKTIVITAS ===================== */
+        reg('clock', {
+            t: 'Market Clock', i: '⏰', cat: 'PRODUKTIVITAS',
+            mount(body) {
+                const Z = [['🇦🇺', 'Sydney', 'Australia/Sydney', 7, 16, '#3b82f6'], ['🇯🇵', 'Tokyo', 'Asia/Tokyo', 9, 18, '#ef4444'], ['🇬🇧', 'London', 'Europe/London', 8, 17, '#22c55e'], ['🇺🇸', 'New York', 'America/New_York', 8, 17, '#f59e0b']];
+                const hm = (tz, d) => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(d);
+                function draw() {
+                    const d = new Date();
+                    body.innerHTML = Z.map(z => { const t = hm(z[2], d), h = +t.slice(0, 2); const wk = new Intl.DateTimeFormat('en-US', { timeZone: z[2], weekday: 'short' }).format(d); const open = h >= z[3] && h < z[4] && wk !== 'Sat' && wk !== 'Sun'; return `<div class="ck-row" style="border-left-color:${open ? z[5] : 'transparent'}"><span class="fl">${z[0]}</span><span class="nm">${z[1]}</span><span class="tm">${t}</span><span class="st" style="background:${open ? z[5] : '#9ca3af'};${open ? 'box-shadow:0 0 8px ' + z[5] : ''}"></span></div>`; }).join('') + `<div class="ck-row" style="font-size:11px;color:#6b7280;border-bottom:none">🕒 Waktu kamu (${Intl.DateTimeFormat().resolvedOptions().timeZone}) <span class="sp" style="flex:1"></span><span class="tm" style="color:#9ca3af">${hm(undefined, d)}</span></div><div class="tw-pad" style="padding-top:0"><div class="tw-note">Titik berwarna = sesi sedang buka (jam kerja lokal tiap kota, Senin–Jumat).</div></div>`;
+                }
+                draw(); everySec(body, draw, 15000);
+            }
+        });
+
+        reg('heartrate', {
+            t: 'Heart Rate Monitor', i: '❤️', cat: 'PRODUKTIVITAS',
+            mount(body) {
+                body.innerHTML = `<div class="tw-pad"><div style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;margin-bottom:6px"><span class="r">♡</span> Heart Rate</div><div class="hr-circle"><span style="font-size:34px" class="r hr-ic">♡</span><div class="hr-bpm" style="display:none"></div><small class="hr-u" style="display:none">BPM</small></div><div style="text-align:center"><div class="hr-t" style="font-weight:600;font-size:15px;margin-bottom:6px">Monitor Detak Jantung</div><div class="hr-d m" style="font-size:11px;line-height:1.6;margin-bottom:12px">Hubungkan smartwatch / heart-rate strap Bluetooth untuk memantau kondisi fisik saat trading.</div><button class="tm-btn pri hr-b">🔗 HUBUNGKAN PERANGKAT</button></div><div class="hr-g" style="display:none;margin-top:12px"><svg viewBox="0 0 200 40" style="width:100%;height:50px"><polyline class="hr-l" fill="none" stroke="#ef4444" stroke-width="1.5" points=""/></svg></div><div class="tw-note hr-n" style="margin-top:12px;display:none"></div></div>`;
+                const q = s => $(s, body); let dev = null; const pts = [];
+                if (!navigator.bluetooth) { q('.hr-d').innerHTML = 'Browser ini belum mendukung Web Bluetooth. Gunakan <b>Chrome di Android / desktop</b>, atau sambungkan lewat perangkat yang memancarkan heart-rate Bluetooth (BLE).'; q('.hr-b').style.display = 'none'; return; }
+                function show(b) {
+                    q('.hr-bpm').style.display = ''; q('.hr-u').style.display = ''; q('.hr-ic').style.display = 'none'; q('.hr-bpm').textContent = b; q('.hr-circle').classList.add('live');
+                    pts.push(b); if (pts.length > 40) pts.shift(); q('.hr-g').style.display = '';
+                    const mx = Math.max(...pts, 100), mn = Math.min(...pts, 50); q('.hr-l').setAttribute('points', pts.map((v, i) => `${i * 5},${38 - (v - mn) / (mx - mn || 1) * 34}`).join(' '));
+                    const n = q('.hr-n'); n.style.display = '';
+                    n.innerHTML = b > 100 ? '⚠️ Detak tinggi (' + b + ' bpm). Tarik napas dulu — jangan ambil keputusan entry saat emosional.' : b < 60 ? '😌 Sangat tenang (' + b + ' bpm).' : '✅ Kondisi stabil (' + b + ' bpm). Fokus pada rules kamu.';
+                }
+                q('.hr-b').onclick = async () => {
+                    try {
+                        if (dev && dev.gatt.connected) { dev.gatt.disconnect(); return; }
+                        dev = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
+                        q('.hr-b').textContent = '⏳ MENGHUBUNGKAN…';
+                        const srv = await dev.gatt.connect(), svc = await srv.getPrimaryService('heart_rate'), ch = await svc.getCharacteristic('heart_rate_measurement');
+                        await ch.startNotifications();
+                        ch.addEventListener('characteristicvaluechanged', e => { const v = e.target.value, f = v.getUint8(0); show(f & 1 ? v.getUint16(1, true) : v.getUint8(1)); });
+                        q('.hr-t').textContent = dev.name || 'Terhubung'; q('.hr-b').textContent = '✕ PUTUSKAN';
+                        dev.addEventListener('gattserverdisconnected', () => { if (!alive(body)) return; q('.hr-circle').classList.remove('live'); q('.hr-b').textContent = '🔗 HUBUNGKAN PERANGKAT'; q('.hr-t').textContent = 'Terputus'; });
+                    } catch (e) { q('.hr-b').textContent = '🔗 HUBUNGKAN PERANGKAT'; if (e.name !== 'NotFoundError') toast('Gagal terhubung', e.message); }
+                };
+            }
+        });
+
+        reg('stopwatch', {
+            t: 'Stopwatch', i: '⏱️', cat: 'PRODUKTIVITAS',
+            mount(body) {
+                body.innerHTML = '<div class="tw-pad"><div class="sw-time">00:00.00</div><div class="tw-row c3"><button class="tm-btn go sw-go">▶ Start</button><button class="tm-btn sw-lap">⚑ Lap</button><button class="tm-btn bad sw-rs">⟲ Reset</button></div><div class="sw-laps" style="font-size:11px"></div></div>';
+                let run = false, t0 = 0, acc = 0, laps = [];
+                const fmt = ms => { const m = Math.floor(ms / 60000), s = Math.floor(ms % 60000 / 1000), c = Math.floor(ms % 1000 / 10); return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + '.' + String(c).padStart(2, '0'); };
+                const now = () => acc + (run ? performance.now() - t0 : 0);
+                const tick = () => { if (!alive(body)) return; $('.sw-time', body).textContent = fmt(now()); if (run) requestAnimationFrame(tick); };
+                $('.sw-go', body).onclick = e => { if (run) { acc = now(); run = false; e.target.textContent = '▶ Start'; } else { t0 = performance.now(); run = true; e.target.textContent = '❚❚ Stop'; tick(); } };
+                $('.sw-lap', body).onclick = () => { if (!now()) return; laps.unshift(now()); $('.sw-laps', body).innerHTML = laps.map((l, i) => `<div style="display:flex;justify-content:space-between;padding:6px 2px;border-bottom:1px solid rgba(255,255,255,.04)"><span class="m">Lap ${laps.length - i}</span><b>${fmt(l)}</b></div>`).join(''); };
+                $('.sw-rs', body).onclick = () => { run = false; acc = 0; laps = []; $('.sw-go', body).textContent = '▶ Start'; $('.sw-time', body).textContent = '00:00.00'; $('.sw-laps', body).innerHTML = ''; };
+            }
+        });
+
+        // semua widget terdaftar → bangun tab
+        T.init();
+    })();
     </script>
 </body>
 </html>
