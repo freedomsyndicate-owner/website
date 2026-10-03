@@ -218,18 +218,9 @@
         .sig-filter-btn { flex-shrink: 0; font-family: 'Orbitron'; font-size: 8px; padding: 6px 12px; border-radius: 20px; border: 1px solid #1f2937; background: transparent; color: #6b7280; cursor: pointer; white-space: nowrap; }
         .sig-filter-btn.active { background: var(--blue); color: black; border-color: var(--blue); }
 
-        /* ===== TICKER TAPE ===== */
-        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.97); border-bottom:1px solid rgba(56,189,248,0.25); border-top:1px solid rgba(56,189,248,0.1); padding:0; position:relative; z-index:99; flex-shrink:0; height:26px; }
-        .ticker-wrap::before,.ticker-wrap::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; pointer-events:none; }
-        .ticker-wrap::before { left:0; background:linear-gradient(to right,#050a14 40%,transparent); }
-        .ticker-wrap::after  { right:0; background:linear-gradient(to left,#050a14 40%,transparent); }
-        .ticker-inner { position:absolute; top:0; left:0; display:flex; align-items:center; height:100%; will-change:transform; }
-        .ticker-item { display:inline-flex; align-items:center; gap:5px; padding:0 16px; font-family:'Orbitron'; font-size:8px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0; }
-        .ticker-pair { color:#4b5563; }
-        .ticker-price { color:white; font-weight:bold; }
-        .ticker-chg.up   { color:#4ade80; }
-        .ticker-chg.down { color:#ef4444; }
-        .ticker-dot { width:3px; height:3px; border-radius:50%; background:rgba(56,189,248,0.3); margin:0 4px; flex-shrink:0; display:inline-block; }
+        /* ===== TICKER TAPE (TradingView, data asli) ===== */
+        .ticker-wrap { width:100%; overflow:hidden; background:rgba(5,10,20,0.97); border-bottom:1px solid rgba(56,189,248,0.25); border-top:1px solid rgba(56,189,248,0.1); padding:0; position:relative; z-index:99; flex-shrink:0; height:46px; }
+        .ticker-wrap .tradingview-widget-container { height:46px !important; width:100%; }
 
         /* ===== SCAN LINE OVERLAY ===== */
         .scanlines { position:fixed; inset:0; pointer-events:none !important; z-index:10; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
@@ -652,7 +643,6 @@
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
         <a href="index.html" style="color:#4ade80; border-bottom:1px solid rgba(74,222,128,0.2);">🏠 Home</a>
         <a href="#" class="nav-link active" onclick="openTab('terminal-tab', this); toggleNav()">🧭 Terminal</a>
-        <a href="#" onclick="showAnnouncePopup(); toggleNav(); return false;">📢 News <span id="badge-news" class="nav-badge" style="display:none;"></span></a>
         <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></a>
         <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
@@ -682,7 +672,6 @@
 
     <!-- LIVE TICKER TAPE -->
     <div class="ticker-wrap" id="ticker-wrap">
-        <div class="ticker-inner" id="ticker-inner"></div>
     </div>
 
     <div class="content-container">
@@ -767,9 +756,11 @@
             
             <div class="inner-padding" style="padding-top:0;">
                 <div class="widget-box">
-                    <div class="widget-title">📊 MARKET SENTIMENT (TECHNICALS)</div>
+                    <div class="widget-title">📊 TECHNICAL ANALYSIS</div>
                     <div id="sentiment-widget-container" style="height: 400px;"></div>
                 </div>
+                <!-- Widget dari Terminal (Clock, Sentiment, Backtest, Heat Map) -->
+                <div class="tm-grid" id="chart-widgets" style="margin-top:15px;"></div>
             </div>
         </div>
 
@@ -789,8 +780,9 @@
 
                 <div id="tv-box" class="sub-eco-content" style="display:none; height: 500px;">
                     <div class="widget-box" style="height: 100%;">
-                        <div class="widget-title">📺 BLOOMBERG / LIVE NEWS TV</div>
-                        <iframe src="https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJjW88bg&autoplay=1&mute=1" width="100%" height="90%" frameborder="0" allowfullscreen></iframe>
+                        <div class="widget-title">📺 LIVE NEWS TV</div>
+                        <div id="mtv-tabs" class="tw-tabs" style="padding:0 0 10px;"></div>
+                        <div id="mtv-frame" style="height:calc(100% - 78px);"></div>
                     </div>
                 </div>
 
@@ -2465,7 +2457,30 @@
             }, 150);
         }
 
+        // ===== MARKET TV (Live News TV) — dimuat saat sub-tab dibuka =====
+        function initMarketTv() {
+            if (window._mtvReady) return; window._mtvReady = true;
+            const MTV_CH = [['UCIALMKvObZNtJ6AmdCLP7Lg','Bloomberg TV'],['UCrp_UI8XtuYfpiqluWLD7Lw','CNBC'],['UCEAZeUIeJs0IjQiqTCdVSIg','Yahoo Finance'],['UChqUTb7kYRX8-EiaN3XFrSQ','Reuters'],['UCoMdktPbSTixAyNGwb-UYkQ','Sky News'],['UCNye-wNBqNL5ZzHSJjW88bg','Al Jazeera']];
+            const tabs = document.getElementById('mtv-tabs'), frame = document.getElementById('mtv-frame');
+            if (!tabs || !frame) return;
+            let cur = MTV_CH[0][0];
+            try { cur = localStorage.getItem('fs_mtv_ch') || cur; } catch (e) {}
+            if (!MTV_CH.some(c => c[0] === cur)) cur = MTV_CH[0][0];
+            tabs.innerHTML = MTV_CH.map(c => `<button class="tw-tab" data-k="${c[0]}">${c[1]}</button>`).join('');
+            const draw = k => {
+                tabs.querySelectorAll('.tw-tab').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+                frame.innerHTML = `<iframe src="https://www.youtube.com/embed/live_stream?channel=${k}&autoplay=1&mute=1&playsinline=1" style="width:100%;height:100%;border:0;background:#000;border-radius:10px" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+            };
+            tabs.addEventListener('click', e => {
+                const b = e.target.closest('.tw-tab'); if (!b) return;
+                try { localStorage.setItem('fs_mtv_ch', b.dataset.k); } catch (err) {}
+                draw(b.dataset.k);
+            });
+            draw(cur);
+        }
+
         function showSubEco(boxId, btn) {
+            if (boxId === 'tv-box') initMarketTv();
             document.querySelectorAll('.sub-eco-content').forEach(b => { b.style.display = 'none'; b.classList.remove('sub-fade'); });
             document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
             const box = document.getElementById(boxId);
@@ -2719,76 +2734,28 @@
             requestAnimationFrame(draw);
         })();
 
-        // ===== LIVE TICKER TAPE (SMOOTH INFINITE SCROLL) =====
+        // ===== LIVE TICKER TAPE (TradingView — harga asli) =====
         (function(){
-            const PAIRS = [
-                {pair:'XAUUSD',base:2340,d:2},{pair:'EURUSD',base:1.0850,d:5},{pair:'GBPUSD',base:1.2700,d:5},
-                {pair:'USDJPY',base:154.50,d:2},{pair:'AUDUSD',base:0.6450,d:5},{pair:'USDCAD',base:1.3650,d:5},
-                {pair:'USDCHF',base:0.9020,d:5},{pair:'NZDUSD',base:0.5920,d:5},{pair:'EURJPY',base:167.50,d:2},
-                {pair:'GBPJPY',base:196.30,d:2},{pair:'EURGBP',base:0.8540,d:5},{pair:'XAGUSD',base:29.45,d:2},
-                {pair:'BTCUSD',base:65000,d:2},{pair:'ETHUSD',base:3200,d:2},{pair:'NAS100',base:18500,d:2},{pair:'US30',base:38500,d:2}
-            ];
-
-            // State per pair
-            const state = {};
-            PAIRS.forEach(p => { state[p.pair] = { price: p.base, prev: p.base, dir: 1 }; });
-
-            const inner = document.getElementById('ticker-inner');
-            if(!inner) return;
-
-            // Build DOM items — 3 full sets so loop is seamless
-            const allPairs = [...PAIRS, ...PAIRS, ...PAIRS];
-            inner.innerHTML = allPairs.map((p,i) =>
-                `<span class="ticker-item" data-pair="${p.pair}" data-idx="${i}">` +
-                `<span class="ticker-pair">${p.pair}</span> ` +
-                `<span class="ticker-price" id="tp-${i}">${p.base.toFixed(p.d)}</span> ` +
-                `<span class="ticker-chg up" id="tc-${i}">▲0.${'0'.repeat(p.d-1)}1</span>` +
-                `<span class="ticker-dot"></span>` +
-                `</span>`
-            ).join('');
-
-            // Wait one frame to measure real width
-            requestAnimationFrame(() => {
-                const totalW = inner.scrollWidth;
-                const oneSetW = totalW / 3;  // width of one full set of pairs
-                let x = 0;
-                const speed = 0.5; // px per frame — smooth & readable
-
-                // Price update every 2.5s — update DOM in-place, NO innerHTML rebuild
-                function updatePrices() {
-                    PAIRS.forEach(p => {
-                        const s = state[p.pair];
-                        s.prev = s.price;
-                        const move = (Math.random() - 0.48) * p.base * 0.00035;
-                        s.price = Math.max(p.base * 0.85, s.price + move);
-                        const chg = s.price - s.prev;
-                        const arrow = chg >= 0 ? '▲' : '▼';
-                        const cls   = chg >= 0 ? 'up' : 'down';
-                        // Update all 3 copies
-                        for(let copy = 0; copy < 3; copy++){
-                            const idx = copy * PAIRS.length + PAIRS.indexOf(p);
-                            const priceEl = document.getElementById('tp-' + idx);
-                            const chgEl   = document.getElementById('tc-' + idx);
-                            if(priceEl) priceEl.textContent = s.price.toFixed(p.d);
-                            if(chgEl) {
-                                chgEl.textContent = arrow + Math.abs(chg).toFixed(p.d);
-                                chgEl.className = 'ticker-chg ' + cls;
-                            }
-                        }
-                    });
-                }
-                setInterval(updatePrices, 2500);
-
-                // Scroll loop — rAF based, perfectly smooth
-                function tick() {
-                    x += speed;
-                    // When we've scrolled one full set, snap back seamlessly
-                    if(x >= oneSetW) x -= oneSetW;
-                    inner.style.transform = 'translateX(-' + x + 'px)';
-                    requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-            });
+            const wrap = document.getElementById('ticker-wrap');
+            if(!wrap) return;
+            const p = (s, t) => ({ proName: s, title: t });
+            const cfg = {
+                symbols: [
+                    p('OANDA:XAUUSD','Gold'), p('OANDA:XAGUSD','Silver'), p('FX:EURUSD','EUR/USD'), p('FX:GBPUSD','GBP/USD'),
+                    p('FX:USDJPY','USD/JPY'), p('FX:AUDUSD','AUD/USD'), p('FX:USDCAD','USD/CAD'), p('FX:USDCHF','USD/CHF'),
+                    p('BITSTAMP:BTCUSD','Bitcoin'), p('BITSTAMP:ETHUSD','Ethereum'),
+                    p('OANDA:NAS100USD','Nasdaq 100'), p('OANDA:US30USD','Dow Jones'), p('OANDA:SPX500USD','S&P 500')
+                ],
+                showSymbolLogo: true, isTransparent: true, displayMode: 'adaptive', colorTheme: 'dark', locale: 'id'
+            };
+            wrap.innerHTML = '';
+            const box = document.createElement('div'); box.className = 'tradingview-widget-container';
+            const inner = document.createElement('div'); inner.className = 'tradingview-widget-container__widget';
+            box.appendChild(inner);
+            const sc = document.createElement('script'); sc.async = true;
+            sc.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+            sc.text = JSON.stringify(cfg);
+            box.appendChild(sc); wrap.appendChild(box);
         })();
 
         // ===== MENU TOGGLE ICON ANIM =====
@@ -2877,44 +2844,64 @@
         window.__fsW = W; // untuk debugging
 
         // ---------- layout / state ----------
-        const LS_KEY = 'fs_term_layout_v1';
-        const DEFAULT = ['tickertape', 'chart', 'heatmap', 'headlines', 'ai', 'rules', 'journal', 'clock', 'calc'];
-        let layout = ls.get(LS_KEY, null);
-        if (!Array.isArray(layout)) layout = DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} }));
-        layout = layout.filter(i => W && i && i.type);
+        const LS_KEY = 'fs_term_layout_v2';
+        const LS_KEY_OLD = 'fs_term_layout_v1';
+        const CHART_KEY = 'fs_chart_layout_v1';
+        // Pindah ke tab Chart (tidak lagi muncul di Terminal)
+        const CHART_TYPES = ['clock', 'sentiment', 'backtest', 'heatmap'];
+        // Sudah ada sebagai tab sendiri (Journal) — disembunyikan dari Terminal agar tidak dobel
+        const HIDDEN_TYPES = ['journal'];
+        const DEFAULT = ['watchlist', 'ai', 'scanner', 'rules', 'calc'];
+        const isTermType = t => !!W[t] && !CHART_TYPES.includes(t) && !HIDDEN_TYPES.includes(t);
+        const mkDefault = () => DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} }));
+        let layout = [];
         const saveLayout = () => ls.set(LS_KEY, layout.map(i => ({ id: i.id, type: i.type, cfg: i.cfg || {}, c: !!i.c })));
+        function loadLayout() {
+            let l = ls.get(LS_KEY, null), migrated = false;
+            if (!Array.isArray(l)) { l = ls.get(LS_KEY_OLD, null); migrated = true; }
+            if (Array.isArray(l)) l = l.filter(i => i && isTermType(i.type));
+            if (!Array.isArray(l) || (migrated && !l.length)) l = mkDefault();
+            layout = l; saveLayout();
+        }
 
         const grid = () => $('#tm-grid');
         let io = null;
 
+        // "board" = papan widget (Terminal atau Chart). Tiap kartu tahu papannya sendiri.
+        const termBoard = {
+            remove: true, lazy: false,
+            save: () => saveLayout(),
+            order(ids) { layout.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)); saveLayout(); }
+        };
+
         function mountWidget(card) {
             if (card._mounted) return; card._mounted = true;
-            const inst = layout.find(i => i.id === card.dataset.id); if (!inst) return;
+            const inst = card._inst, board = card._board; if (!inst) return;
             const def = W[inst.type]; const body = $('.tw-body', card);
             body.innerHTML = '';
             if (!inst.cfg) inst.cfg = {};
-            inst.cfg = new Proxy(inst.cfg, { set(t, k, v) { t[k] = v; saveLayout(); return true; } });
-            try { def.mount(body, inst, { save: saveLayout }); }
+            inst.cfg = new Proxy(inst.cfg, { set(t, k, v) { t[k] = v; board.save(); return true; } });
+            try { def.mount(body, inst, { save: board.save }); }
             catch (e) { body.innerHTML = '<div class="tw-empty"><span class="ic">⚠️</span>Widget gagal dimuat.<br>' + esc(e.message) + '</div>'; }
         }
 
-        function buildCard(inst) {
+        function buildCard(inst, board) {
             const def = W[inst.type]; if (!def) return null;
             const c = document.createElement('div');
             c.className = 'tw' + (def.wide ? ' wide' : '') + (def.full ? ' full' : '') + (inst.c ? ' collapsed' : '');
-            c.dataset.id = inst.id; c.dataset.type = inst.type;
-            c.innerHTML = `<div class="tw-head"><span class="tw-grip" title="Geser untuk pindah">⠿</span><span class="tw-title">${def.i} ${esc(def.t)}</span><button class="tw-hb col" title="Ciutkan">${inst.c ? '▾' : '▴'}</button><button class="tw-hb x" title="Hapus widget">✕</button></div><div class="tw-body" style="${def.h ? 'height:' + def.h + 'px' : ''}"><div class="tw-load">MEMUAT…</div></div>`;
-            $('.x', c).onclick = () => removeWidget(inst.id);
-            $('.col', c).onclick = e => { inst.c = !inst.c; c.classList.toggle('collapsed', inst.c); e.currentTarget.textContent = inst.c ? '▾' : '▴'; saveLayout(); };
-            bindDrag(c);
-            if (io && def.h) io.observe(c); else setTimeout(() => mountWidget(c), 0);
+            c.dataset.id = inst.id; c.dataset.type = inst.type; c._inst = inst; c._board = board;
+            c.innerHTML = `<div class="tw-head"><span class="tw-grip" title="Geser untuk pindah">⠿</span><span class="tw-title">${def.i} ${esc(def.t)}</span><button class="tw-hb col" title="Ciutkan">${inst.c ? '▾' : '▴'}</button>${board.remove ? '<button class="tw-hb x" title="Hapus widget">✕</button>' : ''}</div><div class="tw-body" style="${def.h ? 'height:' + def.h + 'px' : ''}"><div class="tw-load">MEMUAT…</div></div>`;
+            if (board.remove) $('.x', c).onclick = () => removeWidget(inst.id);
+            $('.col', c).onclick = e => { inst.c = !inst.c; c.classList.toggle('collapsed', inst.c); e.currentTarget.textContent = inst.c ? '▾' : '▴'; board.save(); };
+            bindDrag(c, board);
+            if (io && (def.h || board.lazy)) io.observe(c); else setTimeout(() => mountWidget(c), 0);
             return c;
         }
 
         function renderAll() {
             const g = grid(); if (!g) return;
             g.innerHTML = '';
-            layout.forEach(i => { const c = buildCard(i); if (c) g.appendChild(c); });
+            layout.forEach(i => { const c = buildCard(i, termBoard); if (c) g.appendChild(c); });
             updateMeta();
             if (!layout.length) g.innerHTML = '<div class="tw-empty" style="grid-column:1/-1"><span class="ic">🧩</span>Belum ada widget.<br>Tekan <b>＋ Widget</b> untuk menambahkan.</div>';
         }
@@ -2924,7 +2911,7 @@
             const inst = { id: uid(), type, cfg: {} };
             layout.push(inst); saveLayout();
             const g = grid(); const emp = $('.tw-empty', g); if (emp && !emp.closest('.tw')) emp.remove();
-            const c = buildCard(inst); g.appendChild(c); updateMeta();
+            const c = buildCard(inst, termBoard); g.appendChild(c); updateMeta();
             setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
             return inst;
         }
@@ -2936,7 +2923,7 @@
         }
 
         // ---------- drag reorder ----------
-        function bindDrag(card) {
+        function bindDrag(card, board) {
             const grip = $('.tw-grip', card); let on = false;
             grip.addEventListener('pointerdown', e => { on = true; grip.setPointerCapture(e.pointerId); card.classList.add('dragging'); e.preventDefault(); });
             grip.addEventListener('pointermove', e => {
@@ -2949,14 +2936,15 @@
                     const r = over.getBoundingClientRect();
                     over.parentNode.insertBefore(card, (e.clientY - r.top) > r.height / 2 ? over.nextSibling : over);
                 }
-                const sc = $('#terminal-tab');
-                const tr = sc.getBoundingClientRect();
-                if (e.clientY < tr.top + 60) sc.scrollTop -= 14; else if (e.clientY > tr.bottom - 60) sc.scrollTop += 14;
+                const sc = card.closest('.tab-content');
+                if (sc) {
+                    const tr = sc.getBoundingClientRect();
+                    if (e.clientY < tr.top + 60) sc.scrollTop -= 14; else if (e.clientY > tr.bottom - 60) sc.scrollTop += 14;
+                }
             });
             const end = () => {
                 if (!on) return; on = false; card.classList.remove('dragging');
-                const order = $$('#tm-grid .tw').map(c => c.dataset.id);
-                layout.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id)); saveLayout();
+                board.order($$('.tw', card.parentNode).map(c => c.dataset.id));
             };
             grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
         }
@@ -2968,7 +2956,7 @@
             let h = `<div class="fs-mbox"><div class="fs-mhead"><span style="font-size:18px">▦</span><b>Pustaka Widget</b><span class="cnt">${layout.length} aktif</span><button class="fs-pop-x" onclick="fsCloseModal()">✕</button></div>`;
             CATS.forEach(cat => {
                 h += `<div class="lib-cat">${cat}</div><div class="lib-grid">`;
-                Object.keys(W).filter(k => W[k].cat === cat).forEach(k => {
+                Object.keys(W).filter(k => W[k].cat === cat && isTermType(k)).forEach(k => {
                     const n = counts[k] || 0;
                     h += `<div class="lib-item ${n ? 'has' : ''}" data-add="${k}">${n ? '<span class="n">' + n + '</span>' : ''}<span class="ic">${W[k].i}</span>${esc(W[k].t)}</div>`;
                 });
@@ -2984,18 +2972,32 @@
             });
         }
 
+        // ---------- papan widget di tab Chart ----------
+        function initChartBoard() {
+            const host = $('#chart-widgets'); if (!host) return;
+            const saved = ls.get(CHART_KEY, null);
+            const seen = new Set();
+            const cl = (Array.isArray(saved) ? saved : []).filter(i => i && CHART_TYPES.includes(i.type) && W[i.type] && !seen.has(i.type) && seen.add(i.type));
+            CHART_TYPES.forEach(t => { if (W[t] && !seen.has(t)) cl.push({ id: uid(), type: t, cfg: {} }); });
+            const save = () => ls.set(CHART_KEY, cl.map(i => ({ id: i.id, type: i.type, cfg: i.cfg || {}, c: !!i.c })));
+            const board = { remove: false, lazy: true, save, order(ids) { cl.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)); save(); } };
+            cl.forEach(i => { const c = buildCard(i, board); if (c) host.appendChild(c); });
+        }
+
         // ---------- build tab ----------
         function initTab() {
             const tab = $('#terminal-tab'); if (!tab) return;
             if ('IntersectionObserver' in window) {
                 io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); mountWidget(e.target); } }), { root: null, rootMargin: '400px 0px' });
             }
+            loadLayout();
             $('#tm-add').onclick = openLibrary;
             $('#tm-reset').onclick = () => {
                 if (!confirm('Kembalikan susunan widget ke bawaan?')) return;
-                layout = DEFAULT.map(t => ({ id: uid(), type: t, cfg: {} })); saveLayout(); renderAll();
+                layout = mkDefault(); saveLayout(); renderAll();
             };
             renderAll();
+            initChartBoard();
         }
 
         window.__fsTerm = { W, ui: { $, $$, esc, ls, num, money, toast, trades, alive, everySec, loadScript, tvEmbed, openModal, closeModal, LWC, XLSX_URL }, register(k, d) { W[k] = d; }, init: initTab, get layout() { return layout; }, addWidget, openLibrary };
@@ -3012,17 +3014,6 @@
         const onChips = (root, fn) => root.addEventListener('click', e => { const b = e.target.closest('.tw-chip'); if (!b) return; $$('.tw-chip', b.parentNode).forEach(x => x.classList.toggle('on', x === b)); fn(b.dataset.k); });
 
         /* ===================== DATA PASAR ===================== */
-        reg('chart', {
-            t: 'Market Chart', i: '📈', cat: 'DATA PASAR', h: 480, wide: true,
-            mount(body, inst) {
-                const S = [['OANDA:XAUUSD', 'XAUUSD'], ['FX:EURUSD', 'EURUSD'], ['FX:GBPUSD', 'GBPUSD'], ['FX:USDJPY', 'USDJPY'], ['BITSTAMP:BTCUSD', 'BTCUSD'], ['OANDA:NAS100USD', 'NAS100'], ['OANDA:US30USD', 'US30']];
-                const cur = inst.cfg.sym || 'OANDA:XAUUSD';
-                body.innerHTML = chipRow(S, cur) + '<div class="ch" style="height:calc(100% - 46px)"></div>';
-                const draw = s => tvEmbed($('.ch', body), 'embed-widget-advanced-chart.js', { autosize: true, symbol: s, interval: '15', timezone: 'Asia/Jakarta', theme: 'dark', style: '1', locale: 'id', allow_symbol_change: true, save_image: true, hide_side_toolbar: false, backgroundColor: '#0d1117', support_host: 'https://www.tradingview.com' });
-                draw(cur);
-                onChips(body, k => { inst.cfg.sym = k; draw(k); });
-            }
-        });
 
         reg('watchlist', {
             t: 'Watchlist', i: '📋', cat: 'DATA PASAR', h: 440,
@@ -3038,16 +3029,6 @@
             }
         });
 
-        reg('tickertape', {
-            t: 'Ticker Tape', i: '📡', cat: 'DATA PASAR', h: 78, full: true,
-            mount(body) {
-                const p = (s, t) => ({ proName: s, title: t });
-                tvEmbed(body, 'embed-widget-ticker-tape.js', {
-                    symbols: [p('OANDA:XAUUSD', 'Gold'), p('FX:EURUSD', 'EUR/USD'), p('FX:GBPUSD', 'GBP/USD'), p('FX:USDJPY', 'USD/JPY'), p('BITSTAMP:BTCUSD', 'Bitcoin'), p('BITSTAMP:ETHUSD', 'Ethereum'), p('OANDA:SPX500USD', 'S&P 500'), p('OANDA:NAS100USD', 'Nasdaq 100'), p('OANDA:US30USD', 'Dow Jones')],
-                    showSymbolLogo: true, isTransparent: true, displayMode: 'adaptive', colorTheme: 'dark', locale: 'id'
-                });
-            }
-        });
 
         reg('heatmap', {
             t: 'Heat Map', i: '🗺️', cat: 'DATA PASAR', h: 440,
@@ -3083,25 +3064,7 @@
         });
 
         /* ===================== ANALISA & BERITA ===================== */
-        reg('headlines', {
-            t: 'Headlines', i: '📰', cat: 'ANALISA & BERITA', h: 420,
-            mount(body) { tvEmbed(body, 'embed-widget-timeline.js', { feedMode: 'all_symbols', isTransparent: true, displayMode: 'regular', width: '100%', height: '100%', colorTheme: 'dark', locale: 'id' }); }
-        });
 
-        reg('newstv', {
-            t: 'Live News TV', i: '📺', cat: 'ANALISA & BERITA', h: 330, wide: true,
-            mount(body, inst) {
-                const CH = [['UCIALMKvObZNtJ6AmdCLP7Lg', 'Bloomberg TV'], ['UCrp_UI8XtuYfpiqluWLD7Lw', 'CNBC'], ['UCEAZeUIeJs0IjQiqTCdVSIg', 'Yahoo Finance'], ['UChqUTb7kYRX8-EiaN3XFrSQ', 'Reuters'], ['UCoMdktPbSTixAyNGwb-UYkQ', 'Sky News'], ['UCNye-wNBqNL5ZzHSJjW88bg', 'Al Jazeera']];
-                const cur = inst.cfg.ch || CH[0][0];
-                body.innerHTML = '<div class="tw-tabs" style="padding-bottom:10px">' + CH.map(c => `<button class="tw-tab" data-k="${c[0]}">${c[1]}</button>`).join('') + '</div><div class="tv" style="height:calc(100% - 52px)"></div>';
-                const draw = k => {
-                    $$('.tw-tab', body).forEach(b => b.classList.toggle('on', b.dataset.k === k));
-                    $('.tv', body).innerHTML = `<iframe src="https://www.youtube.com/embed/live_stream?channel=${k}&autoplay=1&mute=1&playsinline=1" style="width:100%;height:100%;border:0;background:#000" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-                };
-                draw(cur);
-                body.addEventListener('click', e => { const b = e.target.closest('.tw-tab'); if (!b) return; inst.cfg.ch = b.dataset.k; draw(b.dataset.k); });
-            }
-        });
 
         reg('fundamentals', {
             t: 'Fundamentals', i: '📊', cat: 'ANALISA & BERITA', h: 460,
@@ -3112,20 +3075,7 @@
             }
         });
 
-        reg('technical', {
-            t: 'Technical Analysis', i: '🔍', cat: 'ANALISA & BERITA', h: 440,
-            mount(body, inst) {
-                body.innerHTML = '<div style="padding:10px 12px;display:grid;grid-template-columns:1fr 90px auto;gap:8px"><input class="tw-in" value="' + esc(inst.cfg.sym || 'OANDA:XAUUSD') + '"><select class="tw-sel"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1H</option><option value="4h">4H</option><option value="1D">1D</option></select><button class="tm-btn pri sm">LOAD</button></div><div class="ta" style="height:calc(100% - 58px)"></div>';
-                $('select', body).value = inst.cfg.tf || '1h';
-                const draw = () => { const s = $('input', body).value.trim().toUpperCase() || 'OANDA:XAUUSD'; inst.cfg.sym = s; inst.cfg.tf = $('select', body).value; tvEmbed($('.ta', body), 'embed-widget-technical-analysis.js', { interval: inst.cfg.tf, width: '100%', isTransparent: true, height: '100%', symbol: s, showIntervalTabs: true, displayMode: 'single', locale: 'id', colorTheme: 'dark' }); };
-                draw(); $('button', body).onclick = draw; $('select', body).onchange = draw; $('input', body).onkeydown = e => { if (e.key === 'Enter') draw(); };
-            }
-        });
 
-        reg('calendar', {
-            t: 'Economic Calendar', i: '🗓️', cat: 'ANALISA & BERITA', h: 460,
-            mount(body) { tvEmbed(body, 'embed-widget-events.js', { colorTheme: 'dark', isTransparent: true, width: '100%', height: '100%', locale: 'id', importanceFilter: '-1,0,1', countryFilter: 'us,eu,gb,jp,au,ca,ch,nz,cn,id' }); }
-        });
 
         /* ---------- AI ANALYST ---------- */
         reg('ai', {
