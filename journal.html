@@ -2580,21 +2580,18 @@
             window.__chartKey = key;
             if (FC) FC.savePrefs({ pair: p });
             if (FC && prefs.mode === 'mine') { FC.open(box, p, prefs.tf); }
-            else if (FC && prefs.mode === 'tl') {
-                FC.close();
-                box.style.height = '78vh'; box.style.minHeight = '560px';
-                box.innerHTML = '<div style="height:100%;display:flex;flex-direction:column"><div style="padding:6px 10px;font-size:10px;background:#0d1117;border-bottom:1px solid #1f2937;color:#9ca3af">Login TraderLens di dalam kotak ini. Kosong / ditolak? <a href="https://traderlens.online/dashboard" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:700">Buka di tab baru ↗</a></div><iframe src="https://traderlens.online/dashboard" style="flex:1;width:100%;border:none;background:#050a14" allow="fullscreen; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>';
-            }
             else {
                 box.style.minHeight = '';
                 if (FC) FC.close();
                 box.style.height = '450px';
                 const iv = FC ? FC.tvInterval(prefs.tf) : '15';
-                box.innerHTML = `<iframe style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${p}&interval=${iv}&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart&utm_term=${p}"></iframe>`;
+                const sym = encodeURIComponent(FC ? FC.tvSymbol(p) : p);
+                // sandbox tanpa allow-popups/top-navigation: klik di dalam chart tidak bisa melempar ke aplikasi/tab TradingView
+                box.innerHTML = `<iframe sandbox="allow-scripts allow-same-origin allow-forms" style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${sym}&interval=${iv}&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart"></iframe>`;
             }
             const sContainer = document.getElementById('sentiment-widget-container');
             const script = document.createElement('script'); script.type = 'text/javascript'; script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js'; script.async = true;
-            script.innerHTML = JSON.stringify({ "interval": "1h", "width": "100%", "isTransparent": true, "height": 400, "symbol": p === "XAUUSD" ? "OANDA:XAUUSD" : `FX_IDC:${p}`, "showIntervalTabs": true, "displayMode": "single", "locale": "en", "colorTheme": "dark" });
+            script.innerHTML = JSON.stringify({ "interval": "1h", "width": "100%", "isTransparent": true, "height": 400, "symbol": FC ? FC.tvSymbol(p) : (p === "XAUUSD" ? "OANDA:XAUUSD" : `FX_IDC:${p}`), "showIntervalTabs": true, "displayMode": "single", "locale": "en", "colorTheme": "dark" });
             sContainer.innerHTML = ""; sContainer.appendChild(script);
         }
 
@@ -3774,11 +3771,34 @@
 
         const PK = 'fs_chart_prefs_v1';
         const prefs = Object.assign({ mode: 'mine', tf: '15', pair: 'XAUUSD' }, lsGet(PK, {}));
+        if (prefs.mode !== 'tv') prefs.mode = 'mine';
         const me = () => { try { return auth.currentUser; } catch (e) { return null; } };
         const clean = x => String(x).replace(/[^A-Za-z0-9]/g, '');
         function savePrefs(o) {
             Object.assign(prefs, o); lsSet(PK, prefs);
             const u = me(); if (u) { try { rtdb.ref('users/' + u.uid + '/chartPrefs').set(prefs).catch(() => {}); } catch (e) {} }
+        }
+
+        // Ubah input singkat (BTC, XAU, EURUSD…) jadi simbol TradingView lengkap dengan exchange,
+        // supaya "BTC" tidak salah jadi saham Grayscale Bitcoin Trust dsb.
+        function tvSymbol(raw) {
+            let p = String(raw || '').toUpperCase().replace(/\s+/g, '');
+            if (!p) return 'OANDA:XAUUSD';
+            if (p.includes(':')) return p;
+            p = p.replace(/[\/\-_]/g, '');
+            if (/^(XAU|XAUUSD|GOLD)$/.test(p)) return 'OANDA:XAUUSD';
+            if (/^(XAG|XAGUSD|SILVER)$/.test(p)) return 'OANDA:XAGUSD';
+            if (/^(OIL|USOIL|WTI)$/.test(p)) return 'TVC:USOIL';
+            const IDX = { NAS100: 'OANDA:NAS100USD', NASDAQ: 'OANDA:NAS100USD', US30: 'OANDA:US30USD', DOW: 'OANDA:US30USD', SPX500: 'OANDA:SPX500USD', SPX: 'OANDA:SPX500USD' };
+            if (IDX[p]) return IDX[p];
+            const CUR = 'USD|EUR|GBP|JPY|AUD|NZD|CAD|CHF';
+            if (new RegExp('^(' + CUR + ')(' + CUR + ')$').test(p)) return 'FX:' + p;
+            const CR = /^(BTC|ETH|SOL|BNB|XRP|ADA|DOGE|DOT|AVAX|LINK|LTC|TRX|MATIC|SHIB|TON|PEPE|ARB|OP|APT|SUI|NEAR|ATOM|UNI|BCH|XLM|ETC|FIL|INJ)$/;
+            if (CR.test(p)) return 'BINANCE:' + p + 'USDT';
+            const m = p.match(/^([A-Z0-9]+?)(USDT|USD)$/);
+            if (m && CR.test(m[1])) return 'BINANCE:' + m[1] + 'USDT';
+            if (p.endsWith('USDT')) return 'BINANCE:' + p;
+            return p;
         }
 
         function toBin(pair) {
@@ -3990,7 +4010,7 @@
             st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:8px 10px;display:flex;flex-direction:column;gap:8px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:7px 10px;font-size:11px;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}';
             document.head.appendChild(st);
             const bar = document.createElement('div'); bar.id = 'fsc-bar';
-            bar.innerHTML = '<div class="row"><button class="fsc-b" data-mode="mine">✏️ Chart Pribadi (mapping tersimpan)</button><button class="fsc-b" data-mode="tv">📈 TradingView</button><button class="fsc-b" data-mode="tl">🌐 TraderLens</button></div>' +
+            bar.innerHTML = '<div class="row"><button class="fsc-b" data-mode="mine">✏️ Chart Pribadi (mapping tersimpan)</button><button class="fsc-b" data-mode="tv">📈 TradingView</button></div>' +
                 '<div class="row">' + TF.map(t => `<button class="fsc-b" data-tf="${t[0]}">${t[2]}</button>`).join('') + '</div>' +
                 '<div class="row tools"><button class="fsc-b" data-tool="hand">✋ Geser</button><button class="fsc-b" data-tool="tl">╱ Garis</button><button class="fsc-b" data-tool="hl">─ Horizontal</button><button class="fsc-b" data-tool="rc">▭ Kotak</button><button class="fsc-b" data-tool="fb">Fib</button><button class="fsc-b" data-tool="erase">🧽 Hapus</button><button class="fsc-b" data-act="undo">↶</button><button class="fsc-b" data-act="clear">🗑 Semua</button><input type="color" id="fsc-color" value="#38bdf8"></div>' +
                 '<div class="row"><span id="fsc-status"></span><span id="fsc-hint"></span></div>';
@@ -4011,12 +4031,13 @@
             document.querySelectorAll('#fsc-bar [data-tf]').forEach(b => b.classList.toggle('on', b.dataset.tf === prefs.tf));
             const inp = $('#chart-pair'); if (inp && prefs.pair) inp.value = prefs.pair;
             const bar = $('#fsc-bar'); if (bar) bar.classList.toggle('mine', prefs.mode === 'mine');
-            if (prefs.mode === 'tv') status('Mode TradingView: gambar di mode ini TIDAK bisa disimpan (batasan TradingView). Pakai Chart Pribadi.', '#eab308'); else if (prefs.mode === 'tl') status('Mode TraderLens: layout & gambar disimpan oleh akun TraderLens kamu.', '#38bdf8');
+            if (prefs.mode !== 'mine') { const hn = $('#fsc-hint'); if (hn) hn.textContent = ''; }
+            if (prefs.mode === 'tv') status('Mode TradingView: gambar di mode ini TIDAK bisa disimpan (batasan TradingView). Pakai Chart Pribadi.', '#eab308');
             else status('', '');
         }
         function setMode(m) { savePrefs({ mode: m }); sync(); updateChart(true); }
 
-        window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0] };
+        window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0], tvSymbol };
 
         function init() {
             buildBar();
@@ -4025,7 +4046,7 @@
                     if (!u) return;
                     rtdb.ref('users/' + u.uid + '/chartPrefs').once('value').then(sn => {
                         const v = sn.val(); if (!v) return;
-                        Object.assign(prefs, v); lsSet(PK, prefs); sync();
+                        Object.assign(prefs, v); if (prefs.mode !== 'tv') prefs.mode = 'mine'; lsSet(PK, prefs); sync();
                         const tab = document.getElementById('chart-tab');
                         if (tab && tab.classList.contains('active')) updateChart(true);
                     }).catch(() => {});
