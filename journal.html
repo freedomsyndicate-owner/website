@@ -613,54 +613,61 @@
         @media (max-width:420px) { .tw-row.c4 { grid-template-columns:1fr 1fr; } }
     </style>
 <style id="fs-elegant">
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-:root{--bg:#070d1c;--card:#0f172a;--card2:#131d33;--line:rgba(148,163,184,.14);--txt:#e6ecf8;--mut:#8b9ab8;--blue:#6b8cff;--green:#34d399;--red:#fb7185;--gold:#f5b72e;--be:#f5b72e}
-html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;background:radial-gradient(120% 60% at 50% -10%,#14234a 0%,var(--bg) 60%)!important;color:var(--txt)}
-.fixed-top{padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px 64px!important;text-align:left!important;background:transparent!important;border-bottom:1px solid var(--line)!important}
-.logo{font-family:inherit!important;font-size:15px!important;font-weight:800;letter-spacing:.5px!important;text-shadow:none!important}
-.anim-journal{display:none!important}#display-user{font-size:10px!important;color:var(--mut)!important;margin-top:2px!important}
-.menu-toggle{text-shadow:none!important;color:var(--txt)!important;background:var(--card2)!important;border:1px solid var(--line);border-radius:14px!important}
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap');
+:root{--bg:#090c13;--card:#0f141f;--card2:#141b29;--line:rgba(226,214,186,.10);--line2:rgba(226,214,186,.20);--txt:#ece7da;--mut:#8d93a1;--gold:#d6b872;--gold2:#a98a45;--green:#6fcfa6;--red:#e8768a;--blue:#d6b872;--be:#d6b872;--serif:'Instrument Serif',Georgia,serif}
+html,body{font-family:'Manrope',system-ui,sans-serif!important;background:radial-gradient(90% 40% at 50% -8%,#1a2236 0%,var(--bg) 65%)!important;color:var(--txt);-webkit-font-smoothing:antialiased}
+.fixed-top{padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px 64px!important;text-align:left!important;background:rgba(9,12,19,.82)!important;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)!important}
+.logo{font-family:var(--serif)!important;font-size:21px!important;font-weight:400!important;letter-spacing:.2px!important;text-shadow:none!important;color:var(--txt)!important;text-transform:none!important}
+.anim-journal{display:none!important}#display-user{font-size:10.5px!important;color:var(--mut)!important;margin-top:1px!important}
+.menu-toggle{text-shadow:none!important;color:var(--gold)!important;background:var(--card2)!important;border:1px solid var(--line2);border-radius:50%!important}
 .ticker-wrap{border-bottom:1px solid var(--line)!important;background:transparent!important}
-.content-container{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+.content-container{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
 .tab-content{scrollbar-width:none}.tab-content::-webkit-scrollbar{display:none}
 .sidebar{display:none!important}
-#fs-nav{position:fixed;left:0;right:0;bottom:0;z-index:9000;display:flex;background:rgba(10,16,32,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
-#fs-nav button{flex:1;background:none;border:0;color:var(--mut);font:600 10px inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
-#fs-nav button i{font-style:normal;font-size:19px}#fs-nav button.on{color:var(--blue)}
-.fs{padding:16px 16px 28px;max-width:640px;margin:0 auto}
-.fs h2{font-size:17px;font-weight:800;margin:0 0 4px}.fs .sub{color:var(--mut);font-size:12px;margin:0 0 14px}
-.fs .card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px}
-.fs .hero{background:linear-gradient(150deg,#0f3a46,#111c36);border-color:rgba(52,211,153,.28)}
-.fs .lbl{font-size:10px;letter-spacing:1.6px;color:var(--mut);font-weight:700;text-transform:uppercase}
-.fs .big{font-size:34px;font-weight:800;margin:4px 0}.up{color:var(--green)}.dn{color:var(--red)}.mu{color:var(--mut)}
+svg.ic{display:block;flex:none}
+#fs-nav{position:fixed;left:0;right:0;bottom:0;z-index:9000;display:flex;background:rgba(9,12,19,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+#fs-nav button{flex:1;background:none;border:0;color:var(--mut);font:600 10.5px 'Manrope',sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;position:relative;transition:color .2s}
+#fs-nav button.on{color:var(--gold)}#fs-nav button.on::before{content:"";position:absolute;top:-9px;width:22px;height:2px;border-radius:2px;background:var(--gold)}
+.fs{padding:20px 16px 32px;max-width:640px;margin:0 auto}
+.fs h2{font-family:var(--serif);font-size:30px;font-weight:400;margin:0 0 4px;letter-spacing:.1px}.fs .sub{color:var(--mut);font-size:12.5px;margin:0 0 16px}
+.fs .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:12px}
+.fs .hero{background:linear-gradient(155deg,#18202f 0%,#0f141f 70%);border-color:var(--line2);padding:22px 20px}
+.fs .lbl{font-size:12px;color:var(--mut);font-weight:600}
+.fs .big{font-family:var(--serif);font-size:48px;line-height:1.05;font-weight:400;margin:6px 0 4px;letter-spacing:-.3px}.up{color:var(--green)}.dn{color:var(--red)}.mu{color:var(--mut)}
 .fs .row{display:flex;gap:8px}.fs .row>*{flex:1}
-.seg{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}
-.seg button{flex:1;white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--mut);border-radius:14px;padding:10px 14px;font:600 12px inherit;font-family:inherit}
-.seg button.on{color:#fff;border-color:var(--blue);background:rgba(107,140,255,.14)}
-.stat{text-align:center;padding:14px 6px}.stat b{display:block;font-size:24px}.stat span{font-size:11px;color:var(--mut)}
-.sig{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:16px;padding:12px;margin-bottom:8px}
-.sig.sell{border-left-color:var(--red)}.sig .d{font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;background:rgba(52,211,153,.14);color:var(--green)}
-.sig.sell .d{background:rgba(251,113,133,.14);color:var(--red)}.sig .p{margin-left:auto;text-align:right;font-weight:700}
-.chip{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--mut);margin-top:3px}
-.chip.tp{color:var(--green);border-color:rgba(52,211,153,.4)}.chip.sl{color:var(--red);border-color:rgba(251,113,133,.4)}.chip.be{color:var(--blue);border-color:rgba(107,140,255,.4)}
-.short{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.short button,.grid-f button{background:var(--card);border:1px solid var(--line);border-radius:16px;color:var(--txt);font:600 11px inherit;font-family:inherit;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
-.short i,.grid-f i{font-style:normal;font-size:20px;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:rgba(107,140,255,.12)}
-.lnk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:var(--txt);font-family:inherit;cursor:pointer}.lnk small{display:block;color:var(--mut);font-size:11px}
+.seg{display:flex;gap:4px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;white-space:nowrap;background:transparent;border:0;color:var(--mut);border-radius:10px;padding:9px 14px;font:600 12px 'Manrope',sans-serif;transition:all .2s}
+.seg button.on{color:#16120a;background:var(--gold)}
+.stat{text-align:center;padding:14px 6px}.stat b{display:block;font-family:var(--serif);font-size:30px;font-weight:400}.stat span{font-size:11.5px;color:var(--mut)}
+.sig{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:13px 14px;margin-bottom:8px;cursor:pointer}
+.sig .d{font-size:11px;font-weight:700;padding:5px 11px;border-radius:99px;background:rgba(111,207,166,.12);color:var(--green)}
+.sig.sell .d{background:rgba(232,118,138,.12);color:var(--red)}.sig .p{margin-left:auto;text-align:right;font-weight:700}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--mut);margin-top:4px}
+.chip.tp{color:var(--green);border-color:rgba(111,207,166,.4)}.chip.sl{color:var(--red);border-color:rgba(232,118,138,.4)}.chip.be{color:var(--gold);border-color:rgba(214,184,114,.4)}
+.short{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.short button,.grid-f button{background:var(--card);border:1px solid var(--line);border-radius:18px;color:var(--txt);font:600 11.5px 'Manrope',sans-serif;padding:14px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:9px;position:relative;line-height:1.25;text-align:center}
+.short i,.grid-f i{font-style:normal;width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:rgba(214,184,114,.09);color:var(--gold)}
+.lnk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:var(--txt);cursor:pointer}.lnk small{display:block;color:var(--mut);font-size:11.5px}
 .tvbox{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#0a0f1c}.tvbox iframe{width:100%;height:340px;border:0;display:block}
-#fs-sheet,#fs-detail{position:fixed;inset:0;z-index:10050;display:none;background:rgba(3,6,15,.7);backdrop-filter:blur(4px)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 10px}.sec b{font-family:var(--serif);font-size:21px;font-weight:400}.sec span{font-size:12px;color:var(--gold);font-weight:600;cursor:pointer}
+#fs-sheet,#fs-detail{position:fixed;inset:0;z-index:10050;display:none;background:rgba(3,5,10,.72);backdrop-filter:blur(5px)}
 #fs-sheet.on,#fs-detail.on{display:flex;align-items:flex-end}
-.sheet{width:100%;max-height:86%;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px 26px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom,0px))}
-.sheet .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sheet .hd b{font-size:17px}.sheet .hd a{color:var(--blue);font-size:13px;font-weight:700}
-.grp{font-size:11px;letter-spacing:1.4px;color:var(--mut);font-weight:700;margin:14px 0 8px;text-transform:uppercase}
-.grid-f{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid-f .lk{position:absolute;top:4px;right:6px;font-size:11px}.grid-f .nw{position:absolute;top:-6px;right:0;background:var(--red);color:#fff;font-size:8px;padding:2px 6px;border-radius:99px}
-.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.kv div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px}.kv small{display:block;font-size:10px;color:var(--mut);letter-spacing:1px}.kv b{font-size:16px}
-.btn{width:100%;border:0;border-radius:14px;padding:13px;font:700 14px inherit;font-family:inherit;background:var(--blue);color:#fff;margin-top:8px}.btn.g{background:var(--gold);color:#201600}.btn.o{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
-#fs-vip{position:fixed;left:12px;right:12px;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:8999;display:none;align-items:center;justify-content:space-between;background:var(--card);border:1px solid rgba(245,183,46,.4);border-radius:16px;padding:10px 12px;font-size:13px;font-weight:700}
-#fs-vip button{background:var(--gold);color:#201600;border:0;border-radius:12px;padding:9px 16px;font:800 13px inherit;font-family:inherit}
-.fs input[type=date],.fs input[type=text]{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:10px;font-family:inherit}
-.sess{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}.sess:last-child{border:0}
-.warn{background:rgba(245,183,46,.08);border:1px solid rgba(245,183,46,.3);color:var(--gold);border-radius:14px;padding:10px 12px;font-size:12px;margin-bottom:12px}
+.sheet{width:100%;max-height:88%;overflow:auto;background:var(--bg);border:1px solid var(--line2);border-bottom:0;border-radius:28px 28px 0 0;padding:10px 16px calc(26px + env(safe-area-inset-bottom,0px))}
+.sheet::before{content:"";display:block;width:38px;height:4px;border-radius:4px;background:var(--line2);margin:0 auto 14px}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.sheet .hd b{font-family:var(--serif);font-size:26px;font-weight:400}.sheet .hd a{color:var(--gold);font-size:13px;font-weight:600;cursor:pointer}
+.grp{font-size:13px;color:var(--mut);font-weight:600;margin:18px 2px 10px}
+.grid-f{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid-f .lk{position:absolute;top:8px;right:8px;color:var(--gold2);display:block}
+.grid-f .nw{position:absolute;top:-7px;left:50%;transform:translateX(-50%);background:var(--gold);color:#16120a;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}.kv div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:11px}.kv small{display:block;font-size:11px;color:var(--mut);margin-bottom:2px}.kv b{font-size:16px}
+.btn{width:100%;border:0;border-radius:14px;padding:14px;font:700 14px 'Manrope',sans-serif;background:var(--gold);color:#16120a;margin-top:8px}.btn.g{background:var(--gold);color:#16120a}.btn.o{background:var(--card2);color:var(--txt);border:1px solid var(--line2)}.btn.r,.btn.d,.btn.dn{background:rgba(232,118,138,.12);color:var(--red);border:1px solid rgba(232,118,138,.35)}
+#fs-vip{position:fixed;left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:8999;display:none;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid rgba(214,184,114,.4);border-radius:18px;padding:10px 12px 10px 16px;font-size:13px;font-weight:600}
+#fs-vip button{background:var(--gold);color:#16120a;border:0;border-radius:12px;padding:9px 16px;font:700 13px 'Manrope',sans-serif}
+.fs input[type=date],.fs input[type=text]{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:11px;font-family:inherit}
+.sess{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px}.sess:last-child{border:0}
+.warn{background:rgba(214,184,114,.07);border:1px solid rgba(214,184,114,.3);color:var(--gold);border-radius:14px;padding:11px 13px;font-size:12.5px;margin-bottom:12px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -695,7 +702,6 @@ html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;backgro
         <a href="index.html" style="color:#4ade80; border-bottom:1px solid rgba(74,222,128,0.2);">🏠 Home</a>
         <a href="#" class="nav-link active" onclick="openTab('terminal-tab', this); toggleNav()">🧭 Terminal</a>
         <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></a>
-        <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
         <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
         <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
         <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
@@ -715,7 +721,7 @@ html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;backgro
     </div>
 
     <div class="fixed-top">
-        <h1 class="logo">FREEDOM SYNDICATE</h1>
+        <h1 class="logo">Freedom Syndicate</h1>
         <div class="anim-journal">( JOURNAL )</div>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
     </div>
@@ -727,22 +733,12 @@ html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;backgro
 
     <div class="content-container">
 <div id="home-tab" class="tab-content active"><div class="fs">
- <div class="card hero lnk" onclick="openTab('history-tab')"><div style="flex:1"><div class="lbl">Track record all-time</div><div class="big up" id="h-pips">…</div><div class="mu" style="font-size:12px" id="h-sub">Memuat data…</div><div class="mu" style="font-size:11px;margin-top:6px">Menang &amp; kalah apa adanya — ketuk untuk riwayat →</div></div></div>
- <div class="card"><div class="lbl">Minggu ini</div><div class="big" id="w-pips" style="font-size:26px">…</div><div class="mu" style="font-size:12px" id="w-sub"></div></div>
- <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 2px 10px"><b>Pintasan</b><span class="mu" style="font-size:12px;font-weight:700;cursor:pointer" onclick="fsSheet(1)">Semua fitur ›</span></div>
- <div class="short"><button onclick="openTab('economic-tab')"><i>📅</i>Kalender</button><button onclick="openTab('history-tab')"><i>🕘</i>Riwayat</button><button onclick="openTab('news-tab')"><i>📰</i>Berita</button><button onclick="openTab('journal-tab')"><i>🧮</i>Kalkulator</button></div>
- <div class="card" style="padding:12px"><div class="row" style="align-items:center;margin-bottom:8px"><b style="flex:2">XAU/USD</b><div class="seg" style="margin:0;flex:3" id="h-tf"><button data-i="1">1m</button><button data-i="30">30m</button><button data-i="60" class="on">1H</button><button data-i="240">4H</button></div></div><div class="tvbox" id="h-chart"></div></div>
- <div class="card lnk" onclick="fsTool('arena')"><span style="font-size:22px">🏟️</span><div><b>Trading Arena</b><small>Tonton live, atau ikut lewat link undangan</small></div></div>
- <div class="card lnk" onclick="fsTool('affiliate')"><span style="font-size:22px">🤝</span><div><b>Program Affiliate</b><small>Undang teman, komisi langsung ke saldo</small></div></div>
- <div style="display:flex;justify-content:space-between;margin:14px 2px 10px"><b>Signal Terbaru</b><span class="mu" style="font-size:12px;cursor:pointer" onclick="openTab('chat-tab')">Lihat semua</span></div><div id="h-latest"></div>
-</div></div>
-
-<div id="history-tab" class="tab-content"><div class="fs"><h2>Riwayat &amp; Rekap</h2>
- <div class="seg" id="r-per"><button data-p="d">Harian</button><button data-p="w">Mingguan</button><button data-p="m" class="on">Bulanan</button><button data-p="c">Custom</button></div>
- <div class="row" id="r-cust" style="display:none;margin-bottom:12px"><input type="date" id="r-from"><input type="date" id="r-to"></div>
- <div class="card hero"><div class="lbl" id="r-title"></div><div class="big" id="r-pips"></div><div class="mu" style="font-size:12px" id="r-sub"></div></div>
- <div class="row" style="margin-bottom:12px"><div class="card stat"><b class="up" id="r-p">0</b><span>Profit</span></div><div class="card stat"><b class="dn" id="r-l">0</b><span>Loss</span></div><div class="card stat"><b style="color:var(--blue)" id="r-b">0</b><span>Break Even</span></div></div>
- <div style="display:flex;justify-content:space-between;margin:4px 2px 10px"><b>Riwayat Signal</b><span class="mu" id="r-n" style="font-size:12px"></span></div><div id="r-list"></div>
+ <div class="card hero"><div class="lbl">Track record sepanjang waktu</div><div class="big up" id="h-pips">…</div><div class="mu" style="font-size:12.5px" id="h-sub">Memuat data…</div><div class="mu" style="font-size:11.5px;margin-top:8px">Menang dan kalah ditampilkan apa adanya.</div></div>
+ <div class="card"><div class="lbl">Minggu ini</div><div class="big" id="w-pips" style="font-size:38px">…</div><div class="mu" style="font-size:12.5px" id="w-sub"></div></div>
+ <div class="sec"><b>Pintasan</b><span onclick="fsSheet(1)">Semua fitur</span></div>
+ <div class="short"><button onclick="openTab('economic-tab')"><i><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></i>Kalender</button><button onclick="openTab('news-tab')"><i><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></i>Berita</button><button onclick="fsTool('sesi')"><i><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></i>Sesi</button><button onclick="openTab('journal-tab')"><i><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg></i>Kalkulator</button></div>
+ <div class="card" style="padding:12px"><div class="row" style="align-items:center;margin-bottom:10px"><b style="flex:2;font-family:var(--serif);font-size:20px;font-weight:400">XAU/USD</b><div class="seg" style="margin:0;flex:3" id="h-tf"><button data-i="1">1m</button><button data-i="30">30m</button><button data-i="60" class="on">1H</button><button data-i="240">4H</button></div></div><div class="tvbox" id="h-chart"></div></div>
+ <div class="sec" style="margin-top:18px"><b>Signal terbaru</b><span onclick="openTab('chat-tab')">Lihat semua</span></div><div id="h-latest"></div>
 </div></div>
 
 <div id="news-tab" class="tab-content"><div class="fs"><h2>Berita Pasar</h2><p class="sub">Pasar &amp; makro · live</p>
@@ -764,7 +760,7 @@ html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;backgro
 <div id="tool-tab" class="tab-content"><div class="fs"><h2 id="t-title"></h2><p class="sub" id="t-sub"></p><div id="t-body"></div></div></div>
 
 <div id="fs-vip"><span>Akses VIP belum aktif</span><button onclick="openTab('vip-tab')">Aktifkan</button></div>
-<div id="fs-nav"><button data-t="home-tab"><i>🏠</i>Beranda</button><button data-t="signal-tab"><i>📡</i>Signal</button><button data-t="chat-tab"><i>💬</i>Chat</button><button data-t="chart-tab"><i>📈</i>Indikator</button><button data-t="vip-tab"><i>👤</i>Akun</button></div>
+<div id="fs-nav"><button data-t="home-tab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Beranda</button><button data-t="signal-tab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.2"/></svg>Signal</button><button data-t="chat-tab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</button><button data-t="economic-tab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Kalender</button><button data-t="vip-tab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Akun</button></div>
 <div id="fs-sheet" onclick="if(event.target===this)fsSheet(0)"><div class="sheet"><div class="hd"><b>Semua fitur</b><a onclick="fsSheet(0)">Tutup</a></div><div id="fs-grid"></div></div></div>
 <div id="fs-detail" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" id="fs-dbody"></div></div>
 
@@ -4207,7 +4203,7 @@ function stats(a){const f=a.filter(s=>res(s)!=='OPEN'),p=f.filter(s=>res(s)[0]==
 const chip=s=>{const r=res(s);return`<span class="chip ${r[0]==='T'?'tp':r==='SL'?'sl':r==='BE'?'be':''}">${r==='OPEN'?'AKTIF':r==='SL'?'SL HIT':r==='BE'?'BREAK EVEN':r+' HIT'}</span>`};
 const row=s=>{const d=(s.direction||'WAIT').toUpperCase(),p=pips(s);return`<div class="sig ${d==='SELL'?'sell':''}" onclick="fsDetail('${s.id}')"><span class="d">${esc(d)}</span><b>${esc(s.pair||'XAUUSD')}</b><div class="p"><div class="${p>0?'up':p<0?'dn':'mu'}">${nf(p)} pips</div>${chip(s)}</div></div>`};
 
-function loadSigs(){rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(1500).on('value',sn=>{SIGS=[];sn.forEach(c=>{SIGS.unshift(Object.assign({id:c.key},c.val()))});renderHome();renderHist();renderChat()})}
+function loadSigs(){rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(1500).on('value',sn=>{SIGS=[];sn.forEach(c=>{SIGS.unshift(Object.assign({id:c.key},c.val()))});renderHome();renderChat()})}
 auth.onAuthStateChanged(u=>{if(u)loadSigs()});
 
 /* ===== BERANDA ===== */
@@ -4217,20 +4213,6 @@ function renderHome(){const a=stats(SIGS);$('h-pips').textContent=nf(a.sum)+' pi
  $('h-latest').innerHTML=SIGS.slice(0,3).map(row).join('')||'<div class="mu" style="font-size:12px">Belum ada sinyal.</div>'}
 function homeChart(iv){$('h-chart').innerHTML=`<iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&interval=${iv}&theme=dark&style=1&locale=id&hidesidetoolbar=1&allow_symbol_change=0&hidelegend=0" loading="lazy"></iframe>`}
 seg('h-tf',b=>homeChart(b.dataset.i));homeChart(60);
-
-/* ===== RIWAYAT & REKAP ===== */
-let per='m';
-function range(){const n=new Date(),s=new Date(n);s.setHours(0,0,0,0);let e=new Date(s);e.setDate(e.getDate()+1);
- if(per==='w')s.setDate(s.getDate()-((n.getDay()+6)%7));else if(per==='m'){s.setDate(1);e=new Date(n.getFullYear(),n.getMonth()+1,1)}
- else if(per==='c'){const f=$('r-from').value,t=$('r-to').value;if(f)s.setTime(new Date(f+'T00:00').getTime());if(t)e=new Date(new Date(t+'T00:00').getTime()+864e5)}
- if(per==='w'){e=new Date(s);e.setDate(s.getDate()+7)}return[s,e]}
-function renderHist(){const[s,e]=range(),a=SIGS.filter(x=>ts(x)>=s&&ts(x)<e),st=stats(a);
- $('r-title').textContent='REKAP · '+({d:'Hari ini',w:'Minggu ini',m:s.toLocaleDateString('id-ID',{month:'long',year:'numeric'}),c:'Custom'})[per];
- $('r-pips').textContent=nf(st.sum)+' pips';$('r-pips').className='big '+(st.sum>=0?'up':'dn');
- $('r-sub').textContent=`Win rate ${st.wr}% · ${st.f.length} signal selesai · est. ${st.est>=0?'+':''}${st.est.toFixed(1)}% (risk 1%/trade)`;
- $('r-p').textContent=st.p;$('r-l').textContent=st.l;$('r-b').textContent=st.b;$('r-n').textContent=a.length+' signal';
- $('r-list').innerHTML=a.map(row).join('')||'<div class="mu" style="font-size:12px">Tidak ada sinyal pada periode ini.</div>'}
-seg('r-per',b=>{per=b.dataset.p;$('r-cust').style.display=per==='c'?'flex':'none';renderHist()});$('r-from').onchange=$('r-to').onchange=renderHist;
 
 /* ===== DETAIL ANALISA ===== */
 window.fsDetail=id=>{const s=SIGS.find(x=>x.id===id);if(!s)return;const d=(s.direction||'').toUpperCase(),pins=JSON.parse(localStorage.getItem('fs_pins')||'[]'),pin=pins.includes(id);
@@ -4271,11 +4253,13 @@ const FUND={peta:`<div class="card"><h2 style="color:var(--gold)">Fundamental Em
 const fundGo=k=>$('f-body').innerHTML=FUND[k];seg('f-seg',b=>fundGo(b.dataset.k));fundGo('peta');
 
 /* ===== SEMUA FITUR ===== */
-const G=[['Sinyal & Analisa',[['Terminal','⌨️','terminal-tab',1],['Signal','📡','signal-tab',1],['AI Analisis','✨','terminal-tab',1],['Analisis','📈','analisis',1],['Riwayat','🕘','history-tab'],['WAR','⚔️','war']]],
-['Pasar',[['Kalender','📅','economic-tab'],['Berita','📰','news-tab'],['Sesi','🌐','sesi'],['Saham Global','📊','saham'],['Crypto','₿','crypto',1],['Micin Radar','🎯','micin',1],['Meme Terminal','🚀','meme',1],['Radar Dunia','🛰️','radar']]],
-['Edukasi & Alat',[['Fundamental','🎓','fund-tab',0,1],['Intraday','〰️','intraday',1],['US Insider','🧿','insider',1],['Jurnal','📝','journal-tab',1],['Indikator','📉','chart-tab',1],['Video Edukasi','▶️','video',1],['Materi','📖','materi',1],['EA','🤖','ea',1],['EA Builder','🛠️','eabuilder',1]]],
-['Komunitas & Cuan',[['Chat','💬','chat-tab',1],['Trading Arena','🏟️','arena',0,1],['Affiliate','🤝','affiliate'],['Video Campaign','🎬','campaign']]]];
-$('fs-grid').innerHTML=G.map(g=>`<div class="grp">${g[0]} · ${g[1].length} fitur</div><div class="grid-f">${g[1].map(f=>`<button data-t="${f[2]}" data-l="${f[3]||0}">${f[4]?'<span class="nw">NEW</span>':''}${f[3]?'<span class="lk">🔒</span>':''}<i>${f[1]}</i>${f[0]}</button>`).join('')}</div>`).join('');
+const G=[['Sinyal dan analisa',[['Terminal','term','terminal-tab',1],['Signal','signal','signal-tab',1],['Analisis','chart','analisis',1]]],
+['Pasar',[['Kalender','cal','economic-tab'],['Berita','news','news-tab'],['Sesi','globe','sesi'],['Saham Global','bars','saham'],['Crypto','coin','crypto',1],['Radar Dunia','radar','radar']]],
+['Edukasi dan alat',[['Fundamental','cap','fund-tab',0,1],['Intraday','wave','intraday',1],['US Insider','eye','insider',1],['Jurnal','note','journal-tab',1]]],
+['Komunitas',[['Chat','chat','chat-tab',1]]]];
+const IC={"home": "<path d=\"M3 11l9-8 9 8\"/><path d=\"M5 10v10h14V10\"/>", "signal": "<path d=\"M4 11a9 9 0 0 1 9 9\"/><path d=\"M4 4a16 16 0 0 1 16 16\"/><circle cx=\"5\" cy=\"19\" r=\"1.2\"/>", "chat": "<path d=\"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z\"/>", "cal": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21c1-4 4-6 8-6s7 2 8 6\"/>", "term": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"3\"/><path d=\"M7 10l3 2-3 2M13 15h4\"/>", "chart": "<path d=\"M3 20h18\"/><path d=\"M5 15l4-4 3 3 6-7\"/>", "news": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"M8 9h8M8 13h8M8 17h5\"/>", "globe": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18\"/>", "bars": "<path d=\"M5 20V10M12 20V4M19 20v-7\"/>", "coin": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M10 7v10M10 8h3.5a2 2 0 0 1 0 4H10M10 12h4a2 2 0 0 1 0 4h-4\"/>", "radar": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"4.5\"/><path d=\"M12 12l6-5\"/>", "cap": "<path d=\"M2 9l10-5 10 5-10 5z\"/><path d=\"M6 11.5V16c3 2.5 9 2.5 12 0v-4.5\"/>", "wave": "<path d=\"M2 12c3-6 5-6 8 0s5 6 8 0 3-4 4-3\"/>", "eye": "<path d=\"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>", "note": "<path d=\"M5 4h11l3 3v13H5z\"/><path d=\"M9 11h6M9 15h6\"/>", "calc": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"3\"/><path d=\"M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"9\" rx=\"2.5\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/>"};
+const ico=(n,s)=>`<svg class="ic" viewBox="0 0 24 24" width="${s||22}" height="${s||22}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+$('fs-grid').innerHTML=G.map(g=>`<div class="grp">${g[0]}</div><div class="grid-f">${g[1].map(f=>`<button data-t="${f[2]}" data-l="${f[3]||0}">${f[4]?'<span class="nw">NEW</span>':''}${f[3]?'<span class="lk">'+ico('lock',12)+'</span>':''}<i>${ico(f[1])}</i>${f[0]}</button>`).join('')}</div>`).join('');
 $('fs-grid').onclick=e=>{const b=e.target.closest('button');if(!b)return;fsSheet(0);if(b.dataset.l==='1'&&!isVip&&curUser&&curUser.email!==OWNER_EMAIL)return openTab('vip-tab');b.dataset.t.endsWith('-tab')?openTab(b.dataset.t):fsTool(b.dataset.t)};
 window.fsSheet=o=>$('fs-sheet').classList.toggle('on',!!o);
 document.addEventListener('click',e=>{if(e.target.closest('.menu-toggle')){e.stopPropagation();e.preventDefault();fsSheet(1)}},true);
@@ -4283,22 +4267,18 @@ document.addEventListener('click',e=>{if(e.target.closest('.menu-toggle')){e.sto
 /* ===== HALAMAN ALAT ===== */
 const soon='<div class="card mu" style="font-size:13px;line-height:1.6">Modul ini sudah terdaftar di menu. Sambungkan ke sumber data / halaman Anda di fungsi <code>fsTool()</code> pada bagian skrip bawah file ini.</div>';
 const TL={analisis:['Analisis & Mapping','Rencana harian, bias, dan area entry dari tim',()=>`<div id="t-sg">${SIGS.slice(0,10).map(row).join('')||soon}</div>`],
-war:['WAR','Mode kompetisi trader',()=>soon],
 sesi:['Sesi Market','Jam buka sesi utama (WIB)',()=>{const H=[['Sydney',22,7],['Tokyo',0,9],['London',7,16],['New York',12,21]];const f=()=>{const u=new Date().getUTCHours();$('t-ses').innerHTML=H.map(h=>{const on=h[1]<h[2]?u>=h[1]&&u<h[2]:u>=h[1]||u<h[2],w=x=>String((x+7)%24).padStart(2,'0')+'.00';return`<div class="sess"><b>${h[0]}</b><span class="mu">${w(h[1])} – ${w(h[2])}</span><span class="${on?'up':'mu'}">${on?'● BUKA':'Tutup'}</span></div>`}).join('')};setTimeout(()=>{f();clearInterval(window._ses);window._ses=setInterval(f,30000)});return'<div class="card" id="t-ses"></div>'}],
 saham:['Saham Global','Indeks utama dunia',()=>{setTimeout(()=>tv($('t-w'),'market-quotes',{height:520,symbolsGroups:[{name:'Indeks',symbols:[{name:'FOREXCOM:SPXUSD'},{name:'FOREXCOM:NSXUSD'},{name:'FOREXCOM:DJI'},{name:'INDEX:NKY'},{name:'INDEX:DEU40'},{name:'FOREXCOM:UKXGBP'}]}]}));return'<div class="tvbox" id="t-w"></div>'}],
 crypto:['Crypto','Harga aset kripto utama',()=>{setTimeout(()=>tv($('t-w'),'market-quotes',{height:520,symbolsGroups:[{name:'Crypto',symbols:[{name:'BINANCE:BTCUSDT'},{name:'BINANCE:ETHUSDT'},{name:'BINANCE:SOLUSDT'},{name:'BINANCE:BNBUSDT'},{name:'BINANCE:XRPUSDT'}]}]}));return'<div class="tvbox" id="t-w"></div>'}],
-micin:['Micin Radar','Radar koin berisiko tinggi',()=>'<div class="warn">⚠ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>'+soon],
-meme:['Meme Terminal','Terminal koin meme',()=>'<div class="warn">⚠ Eksperimental — risiko sangat tinggi.</div>'+soon],
 radar:['Radar Dunia','Kekuatan mata uang dunia',()=>{setTimeout(()=>tv($('t-w'),'forex-heat-map',{height:480}));return'<div class="tvbox" id="t-w"></div>'}],
 intraday:['Intraday','Teknikal XAUUSD intraday',()=>{setTimeout(()=>tv($('t-w'),'technical-analysis',{height:460,symbol:'OANDA:XAUUSD',interval:'1h'}));return'<div class="tvbox" id="t-w"></div>'}],
-insider:['US Insider','Angka terakhir dan peluang Fed',()=>soon],video:['Video Edukasi','Kumpulan video belajar',()=>soon],materi:['Materi','Modul belajar trading',()=>soon],ea:['EA','Expert Advisor siap pakai',()=>soon],eabuilder:['EA Builder','Rakit EA tanpa coding',()=>soon],
-arena:['Trading Arena','Tonton live, atau ikut lewat link undangan',()=>soon],affiliate:['Program Affiliate','Undang teman, komisi langsung ke saldo',()=>soon],campaign:['Video Campaign','Kampanye video komunitas',()=>soon]};
+insider:['US Insider','Angka terakhir dan peluang Fed',()=>soon]};
 window.fsTool=k=>{const t=TL[k];if(!t)return;$('t-title').textContent=t[0];$('t-sub').textContent=t[1];$('t-body').innerHTML=t[2]();openTab('tool-tab')};
 
 /* ===== NAVIGASI ===== */
 const _ot=window.openTab;
 window.openTab=function(id,el){fsSheet(0);_ot(id,el);setTimeout(()=>{const a=document.querySelector('.tab-content.active'),i=a?a.id:id;Q('#fs-nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===i));
- if(i==='history-tab')renderHist();if(i==='economic-tab')calInit();if(i==='news-tab'&&!window._nw){window._nw=1;newsFlt()}if(i==='chat-tab')renderChat()},200)};
+ if(i==='economic-tab')calInit();if(i==='news-tab'&&!window._nw){window._nw=1;newsFlt()}if(i==='chat-tab')renderChat()},200)};
 $('fs-nav').onclick=e=>{const b=e.target.closest('button');if(b)openTab(b.dataset.t)};
 Q('#fs-nav button')[0].classList.add('on');
 const t0=$('terminal-tab');if(t0)t0.classList.remove('active');
