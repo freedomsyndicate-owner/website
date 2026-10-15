@@ -612,6 +612,56 @@
         .ck-row .st { width:10px; height:10px; border-radius:50%; background:#9ca3af; }
         @media (max-width:420px) { .tw-row.c4 { grid-template-columns:1fr 1fr; } }
     </style>
+<style id="fs-elegant">
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root{--bg:#070d1c;--card:#0f172a;--card2:#131d33;--line:rgba(148,163,184,.14);--txt:#e6ecf8;--mut:#8b9ab8;--blue:#6b8cff;--green:#34d399;--red:#fb7185;--gold:#f5b72e;--be:#f5b72e}
+html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif!important;background:radial-gradient(120% 60% at 50% -10%,#14234a 0%,var(--bg) 60%)!important;color:var(--txt)}
+.fixed-top{padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px 64px!important;text-align:left!important;background:transparent!important;border-bottom:1px solid var(--line)!important}
+.logo{font-family:inherit!important;font-size:15px!important;font-weight:800;letter-spacing:.5px!important;text-shadow:none!important}
+.anim-journal{display:none!important}#display-user{font-size:10px!important;color:var(--mut)!important;margin-top:2px!important}
+.menu-toggle{text-shadow:none!important;color:var(--txt)!important;background:var(--card2)!important;border:1px solid var(--line);border-radius:14px!important}
+.ticker-wrap{border-bottom:1px solid var(--line)!important;background:transparent!important}
+.content-container{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+.tab-content{scrollbar-width:none}.tab-content::-webkit-scrollbar{display:none}
+.sidebar{display:none!important}
+#fs-nav{position:fixed;left:0;right:0;bottom:0;z-index:9000;display:flex;background:rgba(10,16,32,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+#fs-nav button{flex:1;background:none;border:0;color:var(--mut);font:600 10px inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+#fs-nav button i{font-style:normal;font-size:19px}#fs-nav button.on{color:var(--blue)}
+.fs{padding:16px 16px 28px;max-width:640px;margin:0 auto}
+.fs h2{font-size:17px;font-weight:800;margin:0 0 4px}.fs .sub{color:var(--mut);font-size:12px;margin:0 0 14px}
+.fs .card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px}
+.fs .hero{background:linear-gradient(150deg,#0f3a46,#111c36);border-color:rgba(52,211,153,.28)}
+.fs .lbl{font-size:10px;letter-spacing:1.6px;color:var(--mut);font-weight:700;text-transform:uppercase}
+.fs .big{font-size:34px;font-weight:800;margin:4px 0}.up{color:var(--green)}.dn{color:var(--red)}.mu{color:var(--mut)}
+.fs .row{display:flex;gap:8px}.fs .row>*{flex:1}
+.seg{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--mut);border-radius:14px;padding:10px 14px;font:600 12px inherit;font-family:inherit}
+.seg button.on{color:#fff;border-color:var(--blue);background:rgba(107,140,255,.14)}
+.stat{text-align:center;padding:14px 6px}.stat b{display:block;font-size:24px}.stat span{font-size:11px;color:var(--mut)}
+.sig{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:16px;padding:12px;margin-bottom:8px}
+.sig.sell{border-left-color:var(--red)}.sig .d{font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;background:rgba(52,211,153,.14);color:var(--green)}
+.sig.sell .d{background:rgba(251,113,133,.14);color:var(--red)}.sig .p{margin-left:auto;text-align:right;font-weight:700}
+.chip{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--mut);margin-top:3px}
+.chip.tp{color:var(--green);border-color:rgba(52,211,153,.4)}.chip.sl{color:var(--red);border-color:rgba(251,113,133,.4)}.chip.be{color:var(--blue);border-color:rgba(107,140,255,.4)}
+.short{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.short button,.grid-f button{background:var(--card);border:1px solid var(--line);border-radius:16px;color:var(--txt);font:600 11px inherit;font-family:inherit;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative}
+.short i,.grid-f i{font-style:normal;font-size:20px;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:rgba(107,140,255,.12)}
+.lnk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:var(--txt);font-family:inherit;cursor:pointer}.lnk small{display:block;color:var(--mut);font-size:11px}
+.tvbox{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#0a0f1c}.tvbox iframe{width:100%;height:340px;border:0;display:block}
+#fs-sheet,#fs-detail{position:fixed;inset:0;z-index:10050;display:none;background:rgba(3,6,15,.7);backdrop-filter:blur(4px)}
+#fs-sheet.on,#fs-detail.on{display:flex;align-items:flex-end}
+.sheet{width:100%;max-height:86%;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px 26px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sheet .hd b{font-size:17px}.sheet .hd a{color:var(--blue);font-size:13px;font-weight:700}
+.grp{font-size:11px;letter-spacing:1.4px;color:var(--mut);font-weight:700;margin:14px 0 8px;text-transform:uppercase}
+.grid-f{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.grid-f .lk{position:absolute;top:4px;right:6px;font-size:11px}.grid-f .nw{position:absolute;top:-6px;right:0;background:var(--red);color:#fff;font-size:8px;padding:2px 6px;border-radius:99px}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.kv div{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px}.kv small{display:block;font-size:10px;color:var(--mut);letter-spacing:1px}.kv b{font-size:16px}
+.btn{width:100%;border:0;border-radius:14px;padding:13px;font:700 14px inherit;font-family:inherit;background:var(--blue);color:#fff;margin-top:8px}.btn.g{background:var(--gold);color:#201600}.btn.o{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+#fs-vip{position:fixed;left:12px;right:12px;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:8999;display:none;align-items:center;justify-content:space-between;background:var(--card);border:1px solid rgba(245,183,46,.4);border-radius:16px;padding:10px 12px;font-size:13px;font-weight:700}
+#fs-vip button{background:var(--gold);color:#201600;border:0;border-radius:12px;padding:9px 16px;font:800 13px inherit;font-family:inherit}
+.fs input[type=date],.fs input[type=text]{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:10px;font-family:inherit}
+.sess{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}.sess:last-child{border:0}
+.warn{background:rgba(245,183,46,.08);border:1px solid rgba(245,183,46,.3);color:var(--gold);border-radius:14px;padding:10px 12px;font-size:12px;margin-bottom:12px}
+</style>
 </head>
 <body>
 
@@ -676,6 +726,48 @@
     </div>
 
     <div class="content-container">
+<div id="home-tab" class="tab-content active"><div class="fs">
+ <div class="card hero lnk" onclick="openTab('history-tab')"><div style="flex:1"><div class="lbl">Track record all-time</div><div class="big up" id="h-pips">…</div><div class="mu" style="font-size:12px" id="h-sub">Memuat data…</div><div class="mu" style="font-size:11px;margin-top:6px">Menang &amp; kalah apa adanya — ketuk untuk riwayat →</div></div></div>
+ <div class="card"><div class="lbl">Minggu ini</div><div class="big" id="w-pips" style="font-size:26px">…</div><div class="mu" style="font-size:12px" id="w-sub"></div></div>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 2px 10px"><b>Pintasan</b><span class="mu" style="font-size:12px;font-weight:700;cursor:pointer" onclick="fsSheet(1)">Semua fitur ›</span></div>
+ <div class="short"><button onclick="openTab('economic-tab')"><i>📅</i>Kalender</button><button onclick="openTab('history-tab')"><i>🕘</i>Riwayat</button><button onclick="openTab('news-tab')"><i>📰</i>Berita</button><button onclick="openTab('journal-tab')"><i>🧮</i>Kalkulator</button></div>
+ <div class="card" style="padding:12px"><div class="row" style="align-items:center;margin-bottom:8px"><b style="flex:2">XAU/USD</b><div class="seg" style="margin:0;flex:3" id="h-tf"><button data-i="1">1m</button><button data-i="30">30m</button><button data-i="60" class="on">1H</button><button data-i="240">4H</button></div></div><div class="tvbox" id="h-chart"></div></div>
+ <div class="card lnk" onclick="fsTool('arena')"><span style="font-size:22px">🏟️</span><div><b>Trading Arena</b><small>Tonton live, atau ikut lewat link undangan</small></div></div>
+ <div class="card lnk" onclick="fsTool('affiliate')"><span style="font-size:22px">🤝</span><div><b>Program Affiliate</b><small>Undang teman, komisi langsung ke saldo</small></div></div>
+ <div style="display:flex;justify-content:space-between;margin:14px 2px 10px"><b>Signal Terbaru</b><span class="mu" style="font-size:12px;cursor:pointer" onclick="openTab('chat-tab')">Lihat semua</span></div><div id="h-latest"></div>
+</div></div>
+
+<div id="history-tab" class="tab-content"><div class="fs"><h2>Riwayat &amp; Rekap</h2>
+ <div class="seg" id="r-per"><button data-p="d">Harian</button><button data-p="w">Mingguan</button><button data-p="m" class="on">Bulanan</button><button data-p="c">Custom</button></div>
+ <div class="row" id="r-cust" style="display:none;margin-bottom:12px"><input type="date" id="r-from"><input type="date" id="r-to"></div>
+ <div class="card hero"><div class="lbl" id="r-title"></div><div class="big" id="r-pips"></div><div class="mu" style="font-size:12px" id="r-sub"></div></div>
+ <div class="row" style="margin-bottom:12px"><div class="card stat"><b class="up" id="r-p">0</b><span>Profit</span></div><div class="card stat"><b class="dn" id="r-l">0</b><span>Loss</span></div><div class="card stat"><b style="color:var(--blue)" id="r-b">0</b><span>Break Even</span></div></div>
+ <div style="display:flex;justify-content:space-between;margin:4px 2px 10px"><b>Riwayat Signal</b><span class="mu" id="r-n" style="font-size:12px"></span></div><div id="r-list"></div>
+</div></div>
+
+<div id="news-tab" class="tab-content"><div class="fs"><h2>Berita Pasar</h2><p class="sub">Pasar &amp; makro · live</p>
+ <div class="seg" id="n-mode"><button data-m="wire" class="on">● Wire</button><button data-m="kanal">Kanal</button></div>
+ <div class="seg" id="n-flt"></div><div class="tvbox" id="n-box"></div>
+</div></div>
+
+<div id="chat-tab" class="tab-content"><div class="fs"><h2>Chat Komunitas</h2>
+ <div class="seg" id="c-mode"><button data-m="s" class="on">📣 Sinyal</button><button data-m="d">💬 Diskusi</button></div>
+ <div class="card lnk" onclick="fsTool('analisis')"><span style="font-size:22px">📈</span><div><b>Analisis &amp; Mapping</b><small>Rencana harian, bias, dan area entry dari tim</small></div></div>
+ <div id="c-sig"></div>
+ <div id="c-dis" style="display:none"><div class="card" id="c-msgs" style="height:46vh;overflow:auto"></div><div class="row"><input type="text" id="c-in" placeholder="Tulis pesan ke komunitas…" style="flex:5"><button class="btn" style="flex:1;margin:0" onclick="fsSend()">➤</button></div></div>
+</div></div>
+
+<div id="fund-tab" class="tab-content"><div class="fs"><h2>Fundamental Emas</h2>
+ <div class="seg" id="f-seg"><button data-k="peta" class="on">Peta</button><button data-k="ind">Indikator</button><button data-k="baca">Cara Baca</button></div><div id="f-body"></div>
+</div></div>
+
+<div id="tool-tab" class="tab-content"><div class="fs"><h2 id="t-title"></h2><p class="sub" id="t-sub"></p><div id="t-body"></div></div></div>
+
+<div id="fs-vip"><span>Akses VIP belum aktif</span><button onclick="openTab('vip-tab')">Aktifkan</button></div>
+<div id="fs-nav"><button data-t="home-tab"><i>🏠</i>Beranda</button><button data-t="signal-tab"><i>📡</i>Signal</button><button data-t="chat-tab"><i>💬</i>Chat</button><button data-t="chart-tab"><i>📈</i>Indikator</button><button data-t="vip-tab"><i>👤</i>Akun</button></div>
+<div id="fs-sheet" onclick="if(event.target===this)fsSheet(0)"><div class="sheet"><div class="hd"><b>Semua fitur</b><a onclick="fsSheet(0)">Tutup</a></div><div id="fs-grid"></div></div></div>
+<div id="fs-detail" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" id="fs-dbody"></div></div>
+
         <!-- ===== TERMINAL TAB (halaman utama) ===== -->
         <div id="terminal-tab" class="tab-content active"><div class="tm-wrap">
             <div class="tm-bar">
@@ -4094,5 +4186,124 @@
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
     })();
     </script>
+<script>
+(function(){
+const $=id=>document.getElementById(id),Q=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf=n=>(n>0?'+':'')+Math.round(n).toLocaleString('id-ID');
+function tv(el,name,cfg){el.innerHTML='<div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>';const s=document.createElement('script');s.src='https://s3.tradingview.com/external-embedding/embed-widget-'+name+'.js';s.async=true;s.text=JSON.stringify(Object.assign({colorTheme:'dark',isTransparent:true,width:'100%',locale:'id'},cfg));el.firstChild.appendChild(s)}
+function seg(id,fn){const b=$(id);b.onclick=e=>{const x=e.target.closest('button');if(!x)return;Q('button',b).forEach(y=>y.classList.toggle('on',y===x));fn(x)}}
+
+/* ===== DATA SINYAL ===== */
+let SIGS=[];
+const num=v=>{const n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));return isNaN(n)?null:n};
+const entryP=s=>{const l=num(s.entry_low),h=num(s.entry_high);if(l&&h)return(l+h)/2;return num(s.entry_price??s.entry??s.price??s.open_price??s.market_price)};
+const entryT=s=>s.entry_zone||s.zone_entry||(s.entry_low&&s.entry_high?s.entry_low+' – '+s.entry_high:(s.entry_price??s.entry??s.price??s.open_price??'-'));
+const res=s=>{const t=String(s.status??s.result??s.outcome??s.hit??'').toUpperCase();if(/SL/.test(t))return'SL';const m=t.match(/TP\s*(\d)/);if(m)return'TP'+m[1];if(/BE|BREAK/.test(t))return'BE';return'OPEN'};
+const pips=s=>{if(s.pips!=null&&!isNaN(+s.pips))return+s.pips;if(s.profit_pips!=null)return+s.profit_pips;const r=res(s),e=entryP(s);if(r==='BE'||r==='OPEN'||e==null)return 0;const t=r==='SL'?num(s.sl):num(s['tp'+r[2]]);return t==null?0:(r==='SL'?-1:1)*Math.abs(t-e)*10};
+const slP=s=>{const e=entryP(s),sl=num(s.sl);return e!=null&&sl!=null?Math.abs(sl-e)*10:50};
+const ts=s=>new Date(s.timestamp||0);
+function stats(a){const f=a.filter(s=>res(s)!=='OPEN'),p=f.filter(s=>res(s)[0]==='T'),l=f.filter(s=>res(s)==='SL'),b=f.filter(s=>res(s)==='BE');const sum=f.reduce((x,s)=>x+pips(s),0),r=f.reduce((x,s)=>x+pips(s)/slP(s),0);return{f,p:p.length,l:l.length,b:b.length,sum,wr:p.length+l.length?Math.round(p.length/(p.length+l.length)*100):0,est:r}}
+const chip=s=>{const r=res(s);return`<span class="chip ${r[0]==='T'?'tp':r==='SL'?'sl':r==='BE'?'be':''}">${r==='OPEN'?'AKTIF':r==='SL'?'SL HIT':r==='BE'?'BREAK EVEN':r+' HIT'}</span>`};
+const row=s=>{const d=(s.direction||'WAIT').toUpperCase(),p=pips(s);return`<div class="sig ${d==='SELL'?'sell':''}" onclick="fsDetail('${s.id}')"><span class="d">${esc(d)}</span><b>${esc(s.pair||'XAUUSD')}</b><div class="p"><div class="${p>0?'up':p<0?'dn':'mu'}">${nf(p)} pips</div>${chip(s)}</div></div>`};
+
+function loadSigs(){rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(1500).on('value',sn=>{SIGS=[];sn.forEach(c=>{SIGS.unshift(Object.assign({id:c.key},c.val()))});renderHome();renderHist();renderChat()})}
+auth.onAuthStateChanged(u=>{if(u)loadSigs()});
+
+/* ===== BERANDA ===== */
+function renderHome(){const a=stats(SIGS);$('h-pips').textContent=nf(a.sum)+' pips';$('h-pips').className='big '+(a.sum>=0?'up':'dn');$('h-sub').textContent=a.wr+'% winrate · '+a.f.length+' sinyal';
+ const now=new Date(),mon=new Date(now);mon.setHours(0,0,0,0);mon.setDate(now.getDate()-((now.getDay()+6)%7));const w=stats(SIGS.filter(s=>ts(s)>=mon));
+ $('w-pips').textContent=nf(w.sum)+' pips';$('w-pips').className='big '+(w.sum>=0?'up':'dn');$('w-sub').textContent=w.f.length+' sinyal selesai · '+w.p+' TP · '+w.l+' SL';
+ $('h-latest').innerHTML=SIGS.slice(0,3).map(row).join('')||'<div class="mu" style="font-size:12px">Belum ada sinyal.</div>'}
+function homeChart(iv){$('h-chart').innerHTML=`<iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA%3AXAUUSD&interval=${iv}&theme=dark&style=1&locale=id&hidesidetoolbar=1&allow_symbol_change=0&hidelegend=0" loading="lazy"></iframe>`}
+seg('h-tf',b=>homeChart(b.dataset.i));homeChart(60);
+
+/* ===== RIWAYAT & REKAP ===== */
+let per='m';
+function range(){const n=new Date(),s=new Date(n);s.setHours(0,0,0,0);let e=new Date(s);e.setDate(e.getDate()+1);
+ if(per==='w')s.setDate(s.getDate()-((n.getDay()+6)%7));else if(per==='m'){s.setDate(1);e=new Date(n.getFullYear(),n.getMonth()+1,1)}
+ else if(per==='c'){const f=$('r-from').value,t=$('r-to').value;if(f)s.setTime(new Date(f+'T00:00').getTime());if(t)e=new Date(new Date(t+'T00:00').getTime()+864e5)}
+ if(per==='w'){e=new Date(s);e.setDate(s.getDate()+7)}return[s,e]}
+function renderHist(){const[s,e]=range(),a=SIGS.filter(x=>ts(x)>=s&&ts(x)<e),st=stats(a);
+ $('r-title').textContent='REKAP · '+({d:'Hari ini',w:'Minggu ini',m:s.toLocaleDateString('id-ID',{month:'long',year:'numeric'}),c:'Custom'})[per];
+ $('r-pips').textContent=nf(st.sum)+' pips';$('r-pips').className='big '+(st.sum>=0?'up':'dn');
+ $('r-sub').textContent=`Win rate ${st.wr}% · ${st.f.length} signal selesai · est. ${st.est>=0?'+':''}${st.est.toFixed(1)}% (risk 1%/trade)`;
+ $('r-p').textContent=st.p;$('r-l').textContent=st.l;$('r-b').textContent=st.b;$('r-n').textContent=a.length+' signal';
+ $('r-list').innerHTML=a.map(row).join('')||'<div class="mu" style="font-size:12px">Tidak ada sinyal pada periode ini.</div>'}
+seg('r-per',b=>{per=b.dataset.p;$('r-cust').style.display=per==='c'?'flex':'none';renderHist()});$('r-from').onchange=$('r-to').onchange=renderHist;
+
+/* ===== DETAIL ANALISA ===== */
+window.fsDetail=id=>{const s=SIGS.find(x=>x.id===id);if(!s)return;const d=(s.direction||'').toUpperCase(),pins=JSON.parse(localStorage.getItem('fs_pins')||'[]'),pin=pins.includes(id);
+ const own=curUser&&typeof OWNER_EMAIL!=='undefined'&&curUser.email===OWNER_EMAIL,rs=(s.reasons||[]).map(r=>'• '+esc(r)).join('<br>');
+ $('fs-dbody').innerHTML=`<div class="hd"><b>Detail Analisa</b><a onclick="$('fs-detail').classList.remove('on')">Tutup</a></div>
+ <span class="chip ${d==='SELL'?'sl':'tp'}">${d==='SELL'?'↘ BEARISH':'↗ BULLISH'}</span> <b style="margin-left:6px">${esc(s.pair||'XAUUSD')}</b> ${chip(s)}
+ <div class="kv"><div><small>ENTRY</small><b>${esc(entryT(s))}</b></div><div><small>SL</small><b class="dn">${esc(s.sl??'-')}</b></div><div><small>TP 1</small><b class="up">${esc(s.tp1??'-')}</b></div><div><small>TP 2</small><b class="up">${esc(s.tp2??'-')}</b></div>${s.tp3?`<div><small>TP 3</small><b class="up">${esc(s.tp3)}</b></div>`:''}</div>
+ <div class="mu" style="font-size:13px;line-height:1.6">${rs||'Tidak ada catatan.'}</div><div class="mu" style="font-size:11px;margin-top:8px">${ts(s).toLocaleString('id-ID')} WIB</div>
+ <button class="btn" onclick="fsShare('${id}')">⇪ Bagikan Analisa</button><div class="row"><button class="btn o" onclick="fsPin('${id}')">${pin?'📌 Lepas Pin':'📌 Pin'}</button>${own?`<button class="btn o dn" onclick="fsDel('${id}')">🗑 Hapus</button>`:''}</div>`;$('fs-detail').classList.add('on')};
+window.$=$;
+window.fsShare=id=>{const s=SIGS.find(x=>x.id===id),t=`${s.direction} ${s.pair||'XAUUSD'}\nEntry: ${entryT(s)}\nSL: ${s.sl} | TP1: ${s.tp1} | TP2: ${s.tp2}\n— Freedom Syndicate`;navigator.share?navigator.share({text:t}).catch(()=>{}):navigator.clipboard.writeText(t).then(()=>alert('Disalin ke clipboard'))};
+window.fsPin=id=>{let p=JSON.parse(localStorage.getItem('fs_pins')||'[]');p=p.includes(id)?p.filter(x=>x!==id):[...p,id];localStorage.setItem('fs_pins',JSON.stringify(p));fsDetail(id)};
+window.fsDel=id=>{if(confirm('Hapus sinyal ini?'))rtdb.ref('signals/ict/'+id).remove().then(()=>$('fs-detail').classList.remove('on'))};
+
+/* ===== KALENDER (3 mode) ===== */
+const CAL={usd:{countryFilter:'us',importanceFilter:'0,1'},hi:{countryFilter:'us,eu,gb,jp,cn,au,ca,ch,nz',importanceFilter:'1'},gm:{countryFilter:'us,eu,gb,jp,cn,au,ca,ch,nz',importanceFilter:'-1,0,1'}};
+function calInit(){if(window._cal)return;window._cal=1;const b=$('cal-box');b.style.height='auto';b.innerHTML='<div class="fs" style="padding-bottom:0"><div class="seg" id="cal-seg"><button data-k="usd" class="on">USD Focus</button><button data-k="hi">High Impact</button><button data-k="gm">Global Major</button></div><div class="warn" id="cal-note"></div><div class="tvbox" id="cal-tv"></div></div>';
+ const N={usd:'Gunakan sebagai konteks. Fokus ke CPI, NFP, FOMC, GDP, Retail Sales, Jobless Claims, dan PMI.',hi:'Gunakan sebagai konteks. Cocok untuk membaca risk sentiment sebelum London/New York session.',gm:'Gunakan untuk konteks market, bukan untuk entry cepat.'};
+ const go=k=>{$('cal-note').textContent=N[k];tv($('cal-tv'),'events',Object.assign({height:560},CAL[k]))};seg('cal-seg',x=>go(x.dataset.k));go('usd')}
+
+/* ===== BERITA ===== */
+const WIRE=[['Semua',{feedMode:'market',market:'forex'}],['USD · FED',{feedMode:'symbol',symbol:'TVC:DXY'}],['Emas · Minyak',{feedMode:'symbol',symbol:'OANDA:XAUUSD'}]],KAN=[['Semua',{feedMode:'all_symbols'}],['Breaking',{feedMode:'market',market:'forex'}],['Crypto',{feedMode:'market',market:'crypto'}],['Saham',{feedMode:'market',market:'stock'}],['Indeks',{feedMode:'market',market:'index'}]];
+let nm='wire';
+function newsFlt(){const L=nm==='wire'?WIRE:KAN;$('n-flt').innerHTML=L.map((x,i)=>`<button data-i="${i}" class="${i?'':'on'}">${x[0]}</button>`).join('');newsGo(0)}
+function newsGo(i){tv($('n-box'),'timeline',Object.assign({displayMode:'regular',height:560},(nm==='wire'?WIRE:KAN)[i][1]))}
+seg('n-mode',b=>{nm=b.dataset.m;newsFlt()});seg('n-flt',b=>newsGo(+b.dataset.i));
+
+/* ===== CHAT ===== */
+function renderChat(){$('c-sig').innerHTML=SIGS.slice(0,30).map(row).join('')||'<div class="mu" style="font-size:12px">Belum ada sinyal.</div>'}
+let chatOn=0;
+seg('c-mode',b=>{const d=b.dataset.m==='d';$('c-sig').style.display=d?'none':'';$('c-dis').style.display=d?'':'none';if(d&&!chatOn){chatOn=1;rtdb.ref('chat').limitToLast(50).on('value',sn=>{const box=$('c-msgs');box.innerHTML='';sn.forEach(c=>{const m=c.val(),me=curUser&&m.uid===curUser.uid,e=document.createElement('div');e.style.cssText='margin:6px 0;text-align:'+(me?'right':'left');e.innerHTML=`<div class="mu" style="font-size:10px">${esc(m.name)}</div><div style="display:inline-block;background:${me?'rgba(107,140,255,.2)':'var(--card)'};border-radius:14px;padding:8px 12px;font-size:13px">${esc(m.msg)}</div>`;box.appendChild(e)});box.scrollTop=box.scrollHeight})}});
+window.fsSend=()=>{const i=$('c-in');if(!i.value.trim()||!curUser)return;rtdb.ref('chat').push({uid:curUser.uid,name:curUser.email.split('@')[0],msg:i.value,ts:firebase.database.ServerValue.TIMESTAMP});i.value=''};
+
+/* ===== FUNDAMENTAL EMAS ===== */
+const FUND={peta:`<div class="card"><h2 style="color:var(--gold)">Fundamental Emas</h2><p class="sub">Belajar membaca data ekonomi AS supaya kamu tahu KENAPA emas bergerak, bukan cuma menebak arah candle.</p><div style="font-size:13px;line-height:1.7">✓ Emas tidak punya bunga dan laba; nilainya ditentukan biaya kesempatan memegangnya, yang datang dari suku bunga riil AS.<br>✓ Lompatan besar XAUUSD biasanya terjadi di menit rilis data AS.<br>✓ Tujuannya bukan memberi sinyal, tapi supaya kamu bisa menyusun rantai sebab dari angka rilis ke harga emas.<br>✓ Pakai bareng <b>Kalender</b> (jadwal), <b>US Insider</b> (angka terakhir &amp; peluang Fed), dan <b>Jurnal</b> (catat reaksimu).</div></div>`,
+ ind:`<div class="card"><b>Indikator utama</b><div class="mu" style="font-size:13px;line-height:1.8;margin-top:8px">• CPI / Core CPI — inflasi, memengaruhi arah suku bunga<br>• NFP &amp; Jobless Claims — kekuatan pasar kerja<br>• FOMC &amp; Fed Funds — keputusan suku bunga<br>• GDP &amp; Retail Sales — kesehatan ekonomi<br>• PMI — arah aktivitas bisnis (di atas 50 = ekspansi)</div></div>`,
+ baca:`<div class="card"><b>Cara baca angka rilis</b><div class="mu" style="font-size:13px;line-height:1.8;margin-top:8px">Bandingkan <b>A</b> (Actual) dengan <b>P</b> (Perkiraan) dan <b>S</b> (Sebelumnya).<br>• Data AS lebih kuat dari perkiraan → USD &amp; yield naik → emas cenderung tertekan.<br>• Data lebih lemah → USD melemah → emas cenderung naik.<br>Tunggu candle pertama selesai, lalu baca reaksinya.</div></div>`};
+const fundGo=k=>$('f-body').innerHTML=FUND[k];seg('f-seg',b=>fundGo(b.dataset.k));fundGo('peta');
+
+/* ===== SEMUA FITUR ===== */
+const G=[['Sinyal & Analisa',[['Terminal','⌨️','terminal-tab',1],['Signal','📡','signal-tab',1],['AI Analisis','✨','terminal-tab',1],['Analisis','📈','analisis',1],['Riwayat','🕘','history-tab'],['WAR','⚔️','war']]],
+['Pasar',[['Kalender','📅','economic-tab'],['Berita','📰','news-tab'],['Sesi','🌐','sesi'],['Saham Global','📊','saham'],['Crypto','₿','crypto',1],['Micin Radar','🎯','micin',1],['Meme Terminal','🚀','meme',1],['Radar Dunia','🛰️','radar']]],
+['Edukasi & Alat',[['Fundamental','🎓','fund-tab',0,1],['Intraday','〰️','intraday',1],['US Insider','🧿','insider',1],['Jurnal','📝','journal-tab',1],['Indikator','📉','chart-tab',1],['Video Edukasi','▶️','video',1],['Materi','📖','materi',1],['EA','🤖','ea',1],['EA Builder','🛠️','eabuilder',1]]],
+['Komunitas & Cuan',[['Chat','💬','chat-tab',1],['Trading Arena','🏟️','arena',0,1],['Affiliate','🤝','affiliate'],['Video Campaign','🎬','campaign']]]];
+$('fs-grid').innerHTML=G.map(g=>`<div class="grp">${g[0]} · ${g[1].length} fitur</div><div class="grid-f">${g[1].map(f=>`<button data-t="${f[2]}" data-l="${f[3]||0}">${f[4]?'<span class="nw">NEW</span>':''}${f[3]?'<span class="lk">🔒</span>':''}<i>${f[1]}</i>${f[0]}</button>`).join('')}</div>`).join('');
+$('fs-grid').onclick=e=>{const b=e.target.closest('button');if(!b)return;fsSheet(0);if(b.dataset.l==='1'&&!isVip&&curUser&&curUser.email!==OWNER_EMAIL)return openTab('vip-tab');b.dataset.t.endsWith('-tab')?openTab(b.dataset.t):fsTool(b.dataset.t)};
+window.fsSheet=o=>$('fs-sheet').classList.toggle('on',!!o);
+document.addEventListener('click',e=>{if(e.target.closest('.menu-toggle')){e.stopPropagation();e.preventDefault();fsSheet(1)}},true);
+
+/* ===== HALAMAN ALAT ===== */
+const soon='<div class="card mu" style="font-size:13px;line-height:1.6">Modul ini sudah terdaftar di menu. Sambungkan ke sumber data / halaman Anda di fungsi <code>fsTool()</code> pada bagian skrip bawah file ini.</div>';
+const TL={analisis:['Analisis & Mapping','Rencana harian, bias, dan area entry dari tim',()=>`<div id="t-sg">${SIGS.slice(0,10).map(row).join('')||soon}</div>`],
+war:['WAR','Mode kompetisi trader',()=>soon],
+sesi:['Sesi Market','Jam buka sesi utama (WIB)',()=>{const H=[['Sydney',22,7],['Tokyo',0,9],['London',7,16],['New York',12,21]];const f=()=>{const u=new Date().getUTCHours();$('t-ses').innerHTML=H.map(h=>{const on=h[1]<h[2]?u>=h[1]&&u<h[2]:u>=h[1]||u<h[2],w=x=>String((x+7)%24).padStart(2,'0')+'.00';return`<div class="sess"><b>${h[0]}</b><span class="mu">${w(h[1])} – ${w(h[2])}</span><span class="${on?'up':'mu'}">${on?'● BUKA':'Tutup'}</span></div>`}).join('')};setTimeout(()=>{f();clearInterval(window._ses);window._ses=setInterval(f,30000)});return'<div class="card" id="t-ses"></div>'}],
+saham:['Saham Global','Indeks utama dunia',()=>{setTimeout(()=>tv($('t-w'),'market-quotes',{height:520,symbolsGroups:[{name:'Indeks',symbols:[{name:'FOREXCOM:SPXUSD'},{name:'FOREXCOM:NSXUSD'},{name:'FOREXCOM:DJI'},{name:'INDEX:NKY'},{name:'INDEX:DEU40'},{name:'FOREXCOM:UKXGBP'}]}]}));return'<div class="tvbox" id="t-w"></div>'}],
+crypto:['Crypto','Harga aset kripto utama',()=>{setTimeout(()=>tv($('t-w'),'market-quotes',{height:520,symbolsGroups:[{name:'Crypto',symbols:[{name:'BINANCE:BTCUSDT'},{name:'BINANCE:ETHUSDT'},{name:'BINANCE:SOLUSDT'},{name:'BINANCE:BNBUSDT'},{name:'BINANCE:XRPUSDT'}]}]}));return'<div class="tvbox" id="t-w"></div>'}],
+micin:['Micin Radar','Radar koin berisiko tinggi',()=>'<div class="warn">⚠ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>'+soon],
+meme:['Meme Terminal','Terminal koin meme',()=>'<div class="warn">⚠ Eksperimental — risiko sangat tinggi.</div>'+soon],
+radar:['Radar Dunia','Kekuatan mata uang dunia',()=>{setTimeout(()=>tv($('t-w'),'forex-heat-map',{height:480}));return'<div class="tvbox" id="t-w"></div>'}],
+intraday:['Intraday','Teknikal XAUUSD intraday',()=>{setTimeout(()=>tv($('t-w'),'technical-analysis',{height:460,symbol:'OANDA:XAUUSD',interval:'1h'}));return'<div class="tvbox" id="t-w"></div>'}],
+insider:['US Insider','Angka terakhir dan peluang Fed',()=>soon],video:['Video Edukasi','Kumpulan video belajar',()=>soon],materi:['Materi','Modul belajar trading',()=>soon],ea:['EA','Expert Advisor siap pakai',()=>soon],eabuilder:['EA Builder','Rakit EA tanpa coding',()=>soon],
+arena:['Trading Arena','Tonton live, atau ikut lewat link undangan',()=>soon],affiliate:['Program Affiliate','Undang teman, komisi langsung ke saldo',()=>soon],campaign:['Video Campaign','Kampanye video komunitas',()=>soon]};
+window.fsTool=k=>{const t=TL[k];if(!t)return;$('t-title').textContent=t[0];$('t-sub').textContent=t[1];$('t-body').innerHTML=t[2]();openTab('tool-tab')};
+
+/* ===== NAVIGASI ===== */
+const _ot=window.openTab;
+window.openTab=function(id,el){fsSheet(0);_ot(id,el);setTimeout(()=>{const a=document.querySelector('.tab-content.active'),i=a?a.id:id;Q('#fs-nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===i));
+ if(i==='history-tab')renderHist();if(i==='economic-tab')calInit();if(i==='news-tab'&&!window._nw){window._nw=1;newsFlt()}if(i==='chat-tab')renderChat()},200)};
+$('fs-nav').onclick=e=>{const b=e.target.closest('button');if(b)openTab(b.dataset.t)};
+Q('#fs-nav button')[0].classList.add('on');
+const t0=$('terminal-tab');if(t0)t0.classList.remove('active');
+setInterval(()=>{try{$('fs-vip').style.display=(curUser&&!isVip&&!document.querySelector('#vip-tab.active'))?'flex':'none'}catch(e){}},1500);
+})();
+</script>
 </body>
 </html>
