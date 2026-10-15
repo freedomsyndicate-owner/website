@@ -611,6 +611,44 @@
         .ck-row .fl { font-size:20px; } .ck-row .nm { flex:1; color:#fff; } .ck-row .tm { font-family:'Roboto Mono',monospace,'Courier New'; letter-spacing:2px; color:#e5e7eb; }
         .ck-row .st { width:10px; height:10px; border-radius:50%; background:#9ca3af; }
         @media (max-width:420px) { .tw-row.c4 { grid-template-columns:1fr 1fr; } }
+    
+        /* ===== SIDEBAR GROUPED (PRO) ===== */
+        .sidebar { display:flex; flex-direction:column; padding-top:0; background:linear-gradient(180deg,#0b1220 0%,#080d18 100%); border-right:1px solid rgba(56,189,248,0.15); box-shadow:6px 0 30px rgba(0,0,0,0.5); }
+        .sidebar .sb-brand { display:flex; align-items:center; gap:10px; padding:22px 22px 16px; font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:3px; color:#6b7a90; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
+        .sidebar .sb-brand-mark { color:var(--blue); text-shadow:0 0 10px var(--blue); font-size:12px; }
+        .sidebar .closebtn { top:12px; right:16px; font-size:26px; padding:0 !important; border:none !important; background:none !important; width:auto; z-index:2; }
+        .sidebar .closebtn::before,.sidebar .closebtn::after { display:none; }
+        .sidebar .sb-scroll { flex:1; overflow-y:auto; overflow-x:hidden; padding:10px 10px 6px; scrollbar-width:thin; scrollbar-color:#1f2937 transparent; }
+        .sidebar .nav-group { margin-bottom:4px; border-radius:12px; }
+        .sidebar .nav-group-head { width:100%; display:flex; align-items:center; gap:11px; padding:12px 12px; background:transparent; border:none; border-radius:12px; cursor:pointer; color:#9ca3af; font-family:'Orbitron',sans-serif; font-size:10.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; text-align:left; transition:background .25s,color .25s; }
+        .sidebar .nav-group-head:hover { background:rgba(255,255,255,0.04); color:#e5e7eb; }
+        .sidebar .ngh-ico { width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:13px; background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.12); border-radius:8px; flex-shrink:0; }
+        .sidebar .ngh-title { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sidebar .ngh-count { font-size:9px; color:#4b5563; font-weight:600; letter-spacing:0; }
+        .sidebar .ngh-chev { font-size:16px; line-height:1; color:#4b5563; transition:transform .3s,color .3s; font-family:sans-serif; }
+        .sidebar .nav-group.open > .nav-group-head { color:#e5e7eb; }
+        .sidebar .nav-group.open .ngh-chev { transform:rotate(90deg); color:var(--blue); }
+        .sidebar .nav-group.has-active > .nav-group-head { color:var(--blue); }
+        .sidebar .nav-group.has-active .ngh-ico { background:rgba(56,189,248,0.15); border-color:rgba(56,189,248,0.4); box-shadow:0 0 10px rgba(56,189,248,0.2); }
+        .sidebar .nav-group-body { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s ease; }
+        .sidebar .nav-group.open > .nav-group-body { grid-template-rows:1fr; }
+        .sidebar .nav-group-inner { overflow:hidden; min-height:0; margin-left:24px; padding-left:10px; border-left:1px solid rgba(255,255,255,0.07); }
+        .sidebar .nav-group.open .nav-group-inner { padding-top:2px; padding-bottom:6px; }
+        .sidebar .nav-group-inner a { display:flex; align-items:center; gap:10px; padding:10px 12px; margin:1px 0; font-size:11.5px; border-bottom:none; border-radius:8px; letter-spacing:.3px; }
+        .sidebar .nav-group-inner a::before { display:none; }
+        .sidebar .nav-group-inner a.active { background:rgba(56,189,248,0.12); color:var(--blue); box-shadow:inset 2px 0 0 var(--blue); }
+        .sidebar .nav-ico { width:18px; text-align:center; font-size:13px; flex-shrink:0; }
+        .sidebar .nav-txt { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sidebar .lock-icon-inline { margin-left:auto; }
+        .sidebar .sb-footer { flex-shrink:0; padding:10px 10px calc(14px + env(safe-area-inset-bottom,0px)); border-top:1px solid rgba(255,255,255,0.07); background:rgba(0,0,0,0.25); }
+        .sidebar .sb-footer a { display:flex; align-items:center; gap:10px; padding:11px 14px; margin-top:3px; font-size:11.5px; border-bottom:none; border-radius:10px; }
+        .sidebar .sb-footer a::before { display:none; }
+        .sidebar .sb-footer a.vip-nav { background:linear-gradient(135deg,rgba(180,83,9,0.25),rgba(234,179,8,0.12)); border:1px solid rgba(234,179,8,0.35); font-weight:700; letter-spacing:1px; }
+        .sidebar .sb-footer a.sb-plain { color:#6b7280; }
+        .sidebar .sb-footer a.sb-plain:hover { color:#9ca3af; background:rgba(255,255,255,0.04); }
+        .sidebar .sb-footer a.sb-logout { color:var(--red); }
+        .sidebar .sb-footer a.sb-logout:hover { background:rgba(239,68,68,0.1); color:var(--red); }
+        .sidebar .sb-footer a.active { background:rgba(56,189,248,0.12); color:var(--blue); }
     </style>
 <style>
 
@@ -781,46 +819,124 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">×</a>
-        <a href="index.html" style="color:#4ade80; border-bottom:1px solid rgba(74,222,128,0.2);">🏠 Home</a>
-        <a href="#" class="nav-link active" onclick="openTab('terminal-tab', this); toggleNav()">🧭 Terminal</a>
-        <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()">📡 Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></a>
-        <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()">📈 Chart</a>
-        <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()">📅 Economic Calendar</a>
-        <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()">📓 Journal</a>
-        <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()">🖥️ Monitor</a>
-        <a href="#" class="nav-link" onclick="openTab('account-tab', this); toggleNav()">🔗 Account MT5</a>
-        <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()">👥 Community</a>
-        <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()">🏦 Broker & Funded</a>
-        <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()">☕ Donasi</a>
-        <a href="#" class="nav-link vip-nav" onclick="openTab('vip-tab', this); toggleNav()">👑 VIP</a>
-        <a href="#" class="nav-link" id="nav-home-link" onclick="openTab('home-tab', this); if(window.toggleNav)toggleNav()">🏠 Beranda</a>
-<a href="#" class="nav-link" onclick="FSX.hub(); if(window.toggleNav)toggleNav()">🧭 Semua Fitur</a>
-<a href="#" class="nav-link" onclick="openTab('news-tab', this); if(window.toggleNav)toggleNav()">📰 Berita</a>
-<a href="#" class="nav-link" onclick="openTab('kalender-tab', this); if(window.toggleNav)toggleNav()">📅 Kalender</a>
-<a href="#" class="nav-link" onclick="openTab('sesi-tab', this); if(window.toggleNav)toggleNav()">🕒 Sesi</a>
-<a href="#" class="nav-link" onclick="openTab('saham-tab', this); if(window.toggleNav)toggleNav()">🌐 Saham Global</a>
-<a href="#" class="nav-link" onclick="openTab('crypto-tab', this); if(window.toggleNav)toggleNav()">🪙 Crypto</a>
-<a href="#" class="nav-link" onclick="openTab('micin-tab', this); if(window.toggleNav)toggleNav()">🧪 Micin Radar</a>
-<a href="#" class="nav-link" onclick="openTab('meme-tab', this); if(window.toggleNav)toggleNav()">🐸 Meme Terminal</a>
-<a href="#" class="nav-link" onclick="openTab('radar-tab', this); if(window.toggleNav)toggleNav()">🛰️ Radar Dunia</a>
-<a href="#" class="nav-link" onclick="openTab('riwayat-tab', this); if(window.toggleNav)toggleNav()">📜 Riwayat</a>
-<a href="#" class="nav-link" onclick="openTab('ai-tab', this); if(window.toggleNav)toggleNav()">🤖 AI Analisis</a>
-<a href="#" class="nav-link" onclick="openTab('analisis-tab', this); if(window.toggleNav)toggleNav()">📊 Analisis</a>
-<a href="#" class="nav-link" onclick="openTab('war-tab', this); if(window.toggleNav)toggleNav()">⚔️ WAR</a>
-<a href="#" class="nav-link" onclick="openTab('fundamental-tab', this); if(window.toggleNav)toggleNav()">🏦 Fundamental</a>
-<a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()">⚡ Intraday</a>
-<a href="#" class="nav-link" onclick="openTab('insider-tab', this); if(window.toggleNav)toggleNav()">🕵️ US Insider</a>
-<a href="#" class="nav-link" onclick="openTab('indikator-tab', this); if(window.toggleNav)toggleNav()">📈 Indikator</a>
-<a href="#" class="nav-link" onclick="openTab('video-tab', this); if(window.toggleNav)toggleNav()">🎬 Video Edukasi</a>
-<a href="#" class="nav-link" onclick="openTab('materi-tab', this); if(window.toggleNav)toggleNav()">📚 Materi</a>
-<a href="#" class="nav-link" onclick="openTab('ea-tab', this); if(window.toggleNav)toggleNav()">🤖 EA</a>
-<a href="#" class="nav-link" onclick="openTab('eabuilder-tab', this); if(window.toggleNav)toggleNav()">🛠️ EA Builder</a>
-<a href="#" class="nav-link" onclick="openTab('arena-tab', this); if(window.toggleNav)toggleNav()">🏆 Trading Arena</a>
-<a href="#" class="nav-link" onclick="openTab('affiliate-tab', this); if(window.toggleNav)toggleNav()">🤝 Affiliate</a>
-<a href="#" class="nav-link" onclick="openTab('campaign-tab', this); if(window.toggleNav)toggleNav()">🎥 Video Campaign</a>
-<a href="#" class="nav-link" onclick="openTab('account2-tab', this); if(window.toggleNav)toggleNav()">👤 Akun</a>
-<a href="#" style="color: var(--red); border-top: 2px solid #1f2937" onclick="logout()">🚪 Logout</a>
+        <div class="sb-brand"><span class="sb-brand-mark">◆</span><span>MENU NAVIGASI</span></div>
+        <div class="sb-scroll">
+        <div class="nav-group" data-group="utama">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🏠</span><span class="ngh-title">Utama</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" id="nav-home-link" onclick="openTab('home-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏠</span><span class="nav-txt">Beranda</span></a>
+            <a href="#" class="nav-link" onclick="FSX.hub(); if(window.toggleNav)toggleNav()"><span class="nav-ico">🧭</span><span class="nav-txt">Semua Fitur</span></a>
+            <a href="#" class="nav-link active" onclick="openTab('terminal-tab', this); toggleNav()"><span class="nav-ico">🧭</span><span class="nav-txt">Terminal</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="analisis">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()"><span class="nav-ico">📡</span><span class="nav-txt">Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></span></a>
+            <a href="#" class="nav-link" onclick="openTab('ai-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤖</span><span class="nav-txt">AI Analisis</span></a>
+            <a href="#" class="nav-link" onclick="openTab('analisis-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📊</span><span class="nav-txt">Analisis</span></a>
+            <a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚡</span><span class="nav-txt">Intraday</span></a>
+            <a href="#" class="nav-link" onclick="openTab('war-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚔️</span><span class="nav-txt">WAR</span></a>
+            <a href="#" class="nav-link" onclick="openTab('fundamental-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Fundamental</span></a>
+            <a href="#" class="nav-link" onclick="openTab('insider-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🕵️</span><span class="nav-txt">US Insider</span></a>
+            <a href="#" class="nav-link" onclick="openTab('chart-tab', this); toggleNav()"><span class="nav-ico">📈</span><span class="nav-txt">Chart</span></a>
+            <a href="#" class="nav-link" onclick="openTab('indikator-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📈</span><span class="nav-txt">Indikator</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="pasar">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🌐</span><span class="ngh-title">Pasar & Berita</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('news-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📰</span><span class="nav-txt">Berita</span></a>
+            <a href="#" class="nav-link" onclick="openTab('kalender-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📅</span><span class="nav-txt">Kalender</span></a>
+            <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()"><span class="nav-ico">📅</span><span class="nav-txt">Economic Calendar</span></a>
+            <a href="#" class="nav-link" onclick="openTab('sesi-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🕒</span><span class="nav-txt">Sesi</span></a>
+            <a href="#" class="nav-link" onclick="openTab('radar-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🛰️</span><span class="nav-txt">Radar Dunia</span></a>
+            <a href="#" class="nav-link" onclick="openTab('saham-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🌐</span><span class="nav-txt">Saham Global</span></a>
+            <a href="#" class="nav-link" onclick="openTab('crypto-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🪙</span><span class="nav-txt">Crypto</span></a>
+            <a href="#" class="nav-link" onclick="openTab('micin-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🧪</span><span class="nav-txt">Micin Radar</span></a>
+            <a href="#" class="nav-link" onclick="openTab('meme-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🐸</span><span class="nav-txt">Meme Terminal</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="portofolio">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">📊</span><span class="ngh-title">Portofolio</span><span class="ngh-count">4</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('journal-tab', this); toggleNav()"><span class="nav-ico">📓</span><span class="nav-txt">Journal</span></a>
+            <a href="#" class="nav-link" onclick="openTab('riwayat-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📜</span><span class="nav-txt">Riwayat</span></a>
+            <a href="#" class="nav-link" onclick="openTab('monitor-tab', this); toggleNav()"><span class="nav-ico">🖥️</span><span class="nav-txt">Monitor</span></a>
+            <a href="#" class="nav-link" onclick="openTab('account-tab', this); toggleNav()"><span class="nav-ico">🔗</span><span class="nav-txt">Account MT5</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="otomasi">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">⚙️</span><span class="ngh-title">Otomatisasi</span><span class="ngh-count">2</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('ea-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤖</span><span class="nav-txt">EA</span></a>
+            <a href="#" class="nav-link" onclick="openTab('eabuilder-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🛠️</span><span class="nav-txt">EA Builder</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="edukasi">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎓</span><span class="ngh-title">Edukasi</span><span class="ngh-count">2</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('video-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🎬</span><span class="nav-txt">Video Edukasi</span></a>
+            <a href="#" class="nav-link" onclick="openTab('materi-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📚</span><span class="nav-txt">Materi</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="komunitas">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">👥</span><span class="ngh-title">Komunitas</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()"><span class="nav-ico">👥</span><span class="nav-txt">Community</span></a>
+            <a href="#" class="nav-link" onclick="openTab('arena-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏆</span><span class="nav-txt">Trading Arena</span></a>
+            <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Broker & Funded</span></a>
+            </div></div>
+        </div>
+        <div class="nav-group" data-group="program">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🤝</span><span class="ngh-title">Program</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
+            <div class="nav-group-body"><div class="nav-group-inner">
+            <a href="#" class="nav-link" onclick="openTab('affiliate-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤝</span><span class="nav-txt">Affiliate</span></a>
+            <a href="#" class="nav-link" onclick="openTab('campaign-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🎥</span><span class="nav-txt">Video Campaign</span></a>
+            <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()"><span class="nav-ico">☕</span><span class="nav-txt">Donasi</span></a>
+            </div></div>
+        </div>
+        </div>
+        <div class="sb-footer">
+            <a href="#" class="nav-link vip-nav" onclick="openTab('vip-tab', this); toggleNav()"><span class="nav-ico">👑</span><span class="nav-txt">VIP</span></a>
+            <a href="#" class="nav-link" onclick="openTab('account2-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">👤</span><span class="nav-txt">Akun</span></a>
+            <a href="index.html" class="sb-plain"><span class="nav-ico">🏠</span><span class="nav-txt">Website Utama</span></a>
+            <a href="#" class="sb-plain sb-logout" onclick="logout()"><span class="nav-ico">🚪</span><span class="nav-txt">Logout</span></a>
+        </div>
     </div>
+
+    <script>
+    (function(){
+        var sb = document.getElementById('mySidebar');
+        if(!sb) return;
+        function setOpen(g, open){
+            g.classList.toggle('open', open);
+            var h = g.querySelector('.nav-group-head'); if(h) h.setAttribute('aria-expanded', open ? 'true':'false');
+        }
+        window.sbToggleGroup = function(g){
+            var willOpen = !g.classList.contains('open');
+            sb.querySelectorAll('.nav-group.open').forEach(function(o){ if(o!==g) setOpen(o,false); });
+            setOpen(g, willOpen);
+        };
+        function sync(){
+            var activeGroup = null;
+            sb.querySelectorAll('.nav-group').forEach(function(g){
+                var has = !!g.querySelector('a.active');
+                g.classList.toggle('has-active', has);
+                if(has) activeGroup = g;
+            });
+            if(activeGroup && !activeGroup.classList.contains('open')){
+                sb.querySelectorAll('.nav-group.open').forEach(function(o){ setOpen(o,false); });
+                setOpen(activeGroup,true);
+            }
+        }
+        var mo = new MutationObserver(sync);
+        sb.querySelectorAll('a').forEach(function(a){ mo.observe(a,{attributes:true,attributeFilter:['class']}); });
+        sync();
+        if(!sb.querySelector('.nav-group.open')){ var f = sb.querySelector('.nav-group'); if(f) setOpen(f,true); }
+    })();
+    </script>
+
 
     <div id="auth-screen">
         <div class="auth-card">
@@ -2014,7 +2130,7 @@
         let sidebarOpen = false;
         function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
-            if (!sidebarOpen) { sidebar.style.width = "250px"; sidebarOpen = true; } 
+            if (!sidebarOpen) { sidebar.style.width = "min(290px, 82vw)"; sidebarOpen = true; } 
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
