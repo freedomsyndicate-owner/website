@@ -836,6 +836,20 @@
 .of-sp{text-align:center;font-size:9px;color:#eab308;padding:3px;border-top:1px dashed #374151;border-bottom:1px dashed #374151;margin:2px 0}
 .of-rd p{margin:0 0 7px;font-size:10px;line-height:1.5;color:#d1d5db;padding-left:10px;border-left:3px solid #374151}.of-rd p.g{border-color:#4ade80}.of-rd p.r{border-color:#ef4444}.of-rd p.y{border-color:#eab308}
 .of-leg{height:6px;border-radius:3px;background:linear-gradient(90deg,#0a1020,hsl(200 90% 25%),hsl(130 90% 40%),hsl(50 90% 55%),#fff);margin-top:6px}
+.ls-seg button i{font-style:normal;background:#eab308;color:#000;border-radius:10px;padding:0 5px;margin-left:4px;font-size:8px}.ls-seg button i:empty{display:none}
+#ls-cat button{font-size:8px}
+.ls-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.ls-top h2{font:900 13px Orbitron,sans-serif;color:#fff;margin:0}.ls-top small{font-size:8.5px;color:#6b7280;display:block;margin-top:3px}
+.ls-hero{background:linear-gradient(160deg,#0f1a2b,#0d1117 70%);border:1px solid #1f2937;border-radius:20px;padding:14px;margin-bottom:12px}
+.ls-rng{display:flex;gap:4px;background:#0b0f16;padding:3px;border-radius:20px;width:fit-content;margin-bottom:10px}.ls-rng button{border:0;background:transparent;color:#6b7280;font-size:10px;padding:5px 12px;border-radius:16px;cursor:pointer}.ls-rng button.on{background:#1f2937;color:#fff}
+.ls-hr{display:flex;align-items:center;gap:14px}.ls-wl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ls-wl div{border-radius:12px;padding:8px 4px;text-align:center;font-size:8px;letter-spacing:1px;font-family:Orbitron,sans-serif}.ls-wl b{display:block;font-size:19px;margin-bottom:2px}
+.ls-wl .w{background:rgba(74,222,128,.1);color:#4ade80}.ls-wl .l{background:rgba(248,113,113,.1);color:#f87171}.ls-wl .b{background:rgba(234,179,8,.1);color:#eab308}
+.ls-sum{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:10px;color:#9ca3af}.ls-sum b{font:900 14px Orbitron,sans-serif}.ls-sum b.g,.ls-day .g{color:#4ade80}.ls-sum b.r,.ls-day .r{color:#f87171}
+.ls-sub button{font-size:9px}
+.ls-res{font:700 9px Orbitron,sans-serif;padding:4px 9px;border-radius:20px}.ls-res.win{background:rgba(74,222,128,.14);color:#4ade80}.ls-res.lose{background:rgba(248,113,113,.14);color:#f87171}.ls-res.be{background:rgba(234,179,8,.14);color:#eab308}
+.ls-day{margin-bottom:10px}.ls-day summary{display:flex;align-items:center;gap:8px;list-style:none;cursor:pointer;background:#111827;border:1px solid #1f2937;border-radius:12px;padding:10px 12px;margin-bottom:6px;font-size:10px}.ls-day summary::-webkit-details-marker{display:none}
+.ls-day summary b{flex:1;color:#fff;font-size:11px}.ls-day summary .w{color:#4ade80}.ls-day summary .l{color:#f87171}.ls-day summary .b{color:#eab308;flex:none;font-size:10px}.ls-day summary .wr{color:#9ca3af}.ls-day summary .p{font-weight:700;min-width:40px;text-align:right}
+.ls-card{box-shadow:0 6px 24px rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
@@ -1046,17 +1060,14 @@
             <div id="signal-content-inner">
             <div class="ls-seg" id="ls-seg"><button class="on" data-v="live">⚡ AUTO LIVE</button><button data-v="legacy">🎯 ICT & FUNDAMENTAL</button></div>
             <div id="ls-live">
-                <div class="signal-header"><h2 style="font-family:'Orbitron'; font-size:13px; color:white; margin:0;">📡 LIVE SIGNAL</h2><div class="signal-live-badge"><div class="signal-live-dot"></div>REAL-TIME</div></div>
+                <div class="ls-top"><div><h2>📡 LIVE SIGNAL</h2><small id="ls-clk">--</small></div><div class="signal-live-badge"><div class="signal-live-dot"></div>REAL-TIME</div></div>
+                <div class="ls-seg" id="ls-cat"><button data-c="fx">💱 FOREX<i></i></button><button data-c="cr">🪙 CRYPTO<i></i></button><button data-c="cm">🥇 LOGAM<i></i></button></div>
                 <div class="fsx-pills" id="ls-pairs"></div>
                 <div class="ls-tick" id="ls-tick"></div>
                 <div id="ls-stats"></div>
-                <div class="sig-section-title">⚡ SINYAL AKTIF</div>
-                <div id="ls-act"></div>
-                <div id="ls-ctx"></div>
-                <div class="sig-section-title">🕘 RIWAYAT</div>
-                <div class="ls-flt" id="ls-flt"><button class="on" data-k="all">Semua</button><button data-k="Intraday">Intraday</button><button data-k="Scalping">Scalping</button></div>
-                <div id="ls-hist"></div>
-                <p style="font-size:8px;color:#4b5563;line-height:1.6;margin-top:14px">ℹ️ Sinyal dihitung otomatis di perangkat dari data Binance (XAU memakai PAXG sebagai proxy; EUR/GBP/AUD via pair USDT), jadi level bisa berbeda beberapa pip dari broker. Riwayat & winrate tersimpan lokal di browser. Bukan saran finansial.</p>
+                <div class="ls-seg ls-sub" id="ls-sub"><button class="on" data-s="act">⚡ Aktif<i></i></button><button data-s="his">🕘 Riwayat</button><button data-s="ctx">🧭 Konteks</button></div>
+                <div id="ls-body"></div>
+                <p style="font-size:8px;color:#4b5563;line-height:1.6;margin-top:14px">ℹ️ Sinyal dihitung otomatis di perangkat & hanya dipantau saat aplikasi terbuka. Crypto, XAU (proxy PAXG), EUR/GBP/AUD: Binance real-time. Forex lain, XAG, Oil: Yahoo Finance (tertunda, bisa beda beberapa pip dari broker). Papan sinyal direset tiap 00:00 WIB; riwayat 30 hari tersimpan di browser. WIN = TP2/TP3, BE = kembali ke entry setelah TP1, LOSE = SL. Winrate tidak menghitung BE. Bukan saran finansial.</p>
             </div>
             <div id="sig-legacy" style="display:none">
             <div class="signal-header">
@@ -5419,21 +5430,28 @@ ${sig}
 (()=>{'use strict';
 const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
 const BIN=['https://api.binance.com','https://data-api.binance.vision'],FAPI='https://fapi.binance.com';
-const PAIRS={XAUUSD:{b:'PAXGUSDT',f:'PAXGUSDT',pip:.1,d:2},BTCUSD:{b:'BTCUSDT',f:'BTCUSDT',pip:1,d:1},ETHUSD:{b:'ETHUSDT',f:'ETHUSDT',pip:.1,d:2},EURUSD:{b:'EURUSDT',pip:1e-4,d:5},GBPUSD:{b:'GBPUSDT',pip:1e-4,d:5},AUDUSD:{b:'AUDUSDT',pip:1e-4,d:5},SOLUSD:{b:'SOLUSDT',f:'SOLUSDT',pip:.01,d:3},BNBUSD:{b:'BNBUSDT',f:'BNBUSDT',pip:.1,d:2}};
-const KS=Object.keys(PAIRS),PILLS=KS.map(k=>[k,k]);
+const PAIRS={};
+const mk=(c,k,b,f,y,pip,d)=>{PAIRS[k]={c,b,f,y,pip,d}};
+mk('fx','EURUSD','EURUSDT',0,'EURUSD=X',1e-4,5);mk('fx','GBPUSD','GBPUSDT',0,'GBPUSD=X',1e-4,5);mk('fx','AUDUSD','AUDUSDT',0,'AUDUSD=X',1e-4,5);
+[['USDJPY',.01,3],['USDCHF',1e-4,5],['USDCAD',1e-4,5],['NZDUSD',1e-4,5],['EURJPY',.01,3],['GBPJPY',.01,3],['EURGBP',1e-4,5],['AUDJPY',.01,3],['EURAUD',1e-4,5],['EURCHF',1e-4,5],['GBPAUD',1e-4,5],['GBPCHF',1e-4,5],['CADJPY',.01,3],['CHFJPY',.01,3],['AUDCAD',1e-4,5],['NZDJPY',.01,3]].forEach(a=>mk('fx',a[0],0,0,a[0]+'=X',a[1],a[2]));
+[['BTCUSD','BTCUSDT',1,1],['ETHUSD','ETHUSDT',.1,2],['BNBUSD','BNBUSDT',.1,2],['SOLUSD','SOLUSDT',.01,3],['XRPUSD','XRPUSDT',1e-4,4],['ADAUSD','ADAUSDT',1e-4,4],['DOGEUSD','DOGEUSDT',1e-5,5],['AVAXUSD','AVAXUSDT',.01,3],['LINKUSD','LINKUSDT',.01,3],['LTCUSD','LTCUSDT',.01,2],['DOTUSD','DOTUSDT',.001,3]].forEach(a=>mk('cr',a[0],a[1],a[1],0,a[2],a[3]));
+mk('cm','XAUUSD','PAXGUSDT','PAXGUSDT',0,.1,2);mk('cm','XAGUSD',0,0,'SI=F',.01,3);mk('cm','USOIL',0,0,'CL=F',.01,2);
+const KS=Object.keys(PAIRS),CATS={fx:'FOREX',cr:'CRYPTO',cm:'LOGAM & KOMODITAS'},BK=KS.filter(k=>PAIRS[k].b),YK=KS.filter(k=>!PAIRS[k].b),YH=u=>[`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,`https://corsproxy.io/?url=${encodeURIComponent(u)}`];
 const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},lsw=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const jget=async u=>{const r=await fetch(u);if(!r.ok)throw new Error(r.status);return r.json()};
 const bget=async p=>{let e;for(const h of BIN){try{return await jget(h+p)}catch(x){e=x}}throw e};
 const kl=async(s,i,n)=>(await bget(`/api/v3/klines?symbol=${s}&interval=${i}&limit=${n}`)).map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5],tb:+k[9]}));
 const ema=(a,n)=>{const k=2/(n+1);let e=a[0];for(let i=1;i<a.length;i++)e=a[i]*k+e*(1-k);return e};
 const trs=a=>a.map((x,i)=>i?Math.max(x.h-x.l,Math.abs(x.h-a[i-1].c),Math.abs(x.l-a[i-1].c)):x.h-x.l);
+const rsi=a=>{let g=0,l=0;const n=14;for(let i=1;i<=n;i++){const d=a[i]-a[i-1];d>0?g+=d:l-=d}g/=n;l/=n;for(let i=n+1;i<a.length;i++){const d=a[i]-a[i-1];g=(g*(n-1)+(d>0?d:0))/n;l=(l*(n-1)+(d<0?-d:0))/n}return l?100-100/(1+g/l):100};
 const avg=a=>a.reduce((s,x)=>s+x,0)/(a.length||1);
 const fx=(v,d)=>v==null||isNaN(v)?'--':(+v).toFixed(d);
 const fm=v=>{const a=Math.abs(v);return (v<0?'-':'')+(a>=1e6?(a/1e6).toFixed(2)+'M':a>=1e3?(a/1e3).toFixed(1)+'K':a.toFixed(0))};
 const ago=ms=>{const m=Math.max(0,Math.round(ms/6e4));return m<60?m+' mnt':m<1440?Math.floor(m/60)+' j'+(m%60?' '+m%60+' m':''):Math.floor(m/1440)+' h'};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const pills=(id,cur,fn)=>{const el=$(id);el.innerHTML=PILLS.map(i=>`<button class="fsx-pill ${i[0]===cur?'on':''}" data-k="${i[0]}">${i[1]}</button>`).join('');el.onclick=e=>{const b=e.target.closest('.fsx-pill');if(!b)return;$$('.fsx-pill',el).forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset.k)}};
+const pills=(id,cur,fn,L)=>{const el=$(id);el.innerHTML=(L||KS).map(k=>`<button class="fsx-pill ${k===cur?'on':''}" data-k="${k}">${k}</button>`).join('');el.onclick=e=>{const b=e.target.closest('.fsx-pill');if(!b)return;$$('.fsx-pill',el).forEach(x=>x.classList.toggle('on',x===b));fn(b.dataset.k)}};
 const isAct=id=>{const e=document.getElementById(id);return !!e&&e.classList.contains('active')};
+async function yget(sym,iv,rg){const u=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${iv}&range=${rg}`;let e;for(const p of YH(u)){try{const j=await jget(p);return j.chart.result[0]}catch(x){e=x}}throw e}
 async function fut(sym){const o={},[a,b,c]=await Promise.allSettled([jget(`${FAPI}/futures/data/openInterestHist?symbol=${sym}&period=5m&limit=13`),jget(`${FAPI}/futures/data/globalLongShortAccountRatio?symbol=${sym}&period=5m&limit=1`),jget(`${FAPI}/fapi/v1/premiumIndex?symbol=${sym}`)]);
  if(a.status==='fulfilled'&&a.value.length>1)o.oi=(+a.value[a.value.length-1].sumOpenInterest/+a.value[0].sumOpenInterest-1)*100;
  if(b.status==='fulfilled'&&b.value.length)o.ls=+b.value[0].longAccount*100;
@@ -5441,12 +5459,20 @@ async function fut(sym){const o={},[a,b,c]=await Promise.allSettled([jget(`${FAP
 
 /* ================= LIVE AUTO SIGNAL ================= */
 const STY={Intraday:{m:1.2,tp:[1,2,3],ttl:144e5,life:432e5,cool:36e5},Scalping:{m:1,tp:[1,1.8,2.5],ttl:18e5,life:72e5,cool:9e5}};
-let SEL=ls('fs_ls_pair','XAUUSD'),FLT='all',PX={},CX={},SIG=ls('fs_ls_v1',[]),busy=false;
-async function ctx(k){const P=PAIRS[k],[h1,m5,m15,f]=await Promise.all([kl(P.b,'1h',100),kl(P.b,'5m',24),kl(P.b,'15m',80),P.f?fut(P.f).catch(()=>({})):{}]);
+let SEL=ls('fs_ls_pair','XAUUSD'),CAT=ls('fs_ls_cat','cm'),FLT='all',PX={},CX={},FAIL={},YT={},SIG=ls('fs_ls_v1',[]),busy=false,rrB=0,rrY=0;if(!PAIRS[SEL])SEL='XAUUSD';CAT=PAIRS[SEL].c;const SC=()=>SIG.filter(s=>PAIRS[s.pair]&&PAIRS[s.pair].c===CAT),CK=()=>KS.filter(k=>PAIRS[k].c===CAT);
+async function ctxY(k){const P=PAIRS[k],r=await yget(P.y,'15m','10d'),q=r.indicators.quote[0],m15=[];r.timestamp.forEach((t,i)=>{if(q.close[i]!=null&&q.high[i]!=null&&q.low[i]!=null)m15.push({t:t*1e3,o:q.open[i],h:q.high[i],l:q.low[i],c:q.close[i],v:0,tb:0})});
+ const g={};m15.forEach(b=>{const h=Math.floor(b.t/36e5),x=g[h];if(!x)g[h]={t:h*36e5,o:b.o,h:b.h,l:b.l,c:b.c,v:0,tb:0};else{x.h=Math.max(x.h,b.h);x.l=Math.min(x.l,b.l);x.c=b.c}});
+ const h1=Object.keys(g).sort((a,b)=>a-b).map(x=>g[x]);if(h1.length<60||m15.length<40)throw new Error('data');const p=m15[m15.length-1].c,T=trs(h1),a14=avg(T.slice(-14));
+ return{k,fx:1,p,h1,m15:m15.slice(-80),buy:null,oi:null,ls:null,atr:a14,atrPct:a14/p*100,ar:a14/(avg(T.slice(-72,-14))||a14),vr:null,rsi:rsi(h1.map(x=>x.c))}}
+async function ctx(k){const P=PAIRS[k];if(!P.b)return ctxY(k);const [h1,m5,m15,f]=await Promise.all([kl(P.b,'1h',100),kl(P.b,'5m',24),kl(P.b,'15m',80),P.f?fut(P.f).catch(()=>({})):{}]);
  const p=m5[m5.length-1].c,l=m5.slice(-12),tv=l.reduce((s,x)=>s+x.v,0),tb=l.reduce((s,x)=>s+x.tb,0),T=trs(h1),a14=avg(T.slice(-14)),cl=h1.slice(0,-1);
  return{k,p,h1,m15,buy:tv?tb/tv*100:50,oi:f.oi,ls:f.ls,atr:a14,atrPct:a14/p*100,ar:a14/(avg(T.slice(-72,-14))||a14),vr:cl[cl.length-1].v/(avg(cl.slice(-25,-1).map(x=>x.v))||1)}}
 const row=(n,ok,t)=>({n,ok,t});
 function evalM(c){const an=c.ar>=.6&&c.ar<=1.8,al=c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL',sell=100-c.buy;
+ if(c.fx){const h=c.h1.map(x=>x.c),m=c.m15.map(x=>x.c),e20=ema(h,20),e50=ema(h,50),m1=ema(m,9)>ema(m,21)?1:-1,hr=new Date().getUTCHours(),ses=hr>=7&&hr<21,r=c.rsi;
+  const aR=row('ATR H1',an,`${fx(c.atrPct,3)}% (${al}${an?' ✓':''})`),sR=row('Sesi',ses,`${session()} — ${ses?'likuid (London/NY)':'sepi / spread lebar'}`);
+  return{L:[row('Trend H1',e20>e50&&c.p>e50,e20>e50&&c.p>e50?'EMA20>EMA50 — naik':'belum naik'),row('Trend M15',m1>0,m1>0?'EMA9>EMA21 — naik':'belum naik'),row('RSI H1',r>=45&&r<=70,`RSI ${fx(r,0)} — ${r>=45&&r<=70?'zona sehat buy':r>70?'overbought':'lemah'}`),aR,sR],
+   S:[row('Trend H1',e20<e50&&c.p<e50,e20<e50&&c.p<e50?'EMA20<EMA50 — turun':'belum turun'),row('Trend M15',m1<0,m1<0?'EMA9<EMA21 — turun':'belum turun'),row('RSI H1',r>=30&&r<=55,`RSI ${fx(r,0)} — ${r>=30&&r<=55?'zona sehat sell':r<30?'oversold':'kuat'}`),aR,sR]}}
  const oi=(t)=>row('OI 1j',c.oi==null?null:c.oi>=1,c.oi==null?'data tidak tersedia':`${c.oi>=0?'+':''}${fx(c.oi,2)}% — ${c.oi>=1?'naik ≥1%':'belum naik ≥1%'}`);
  const atr=row('ATR H1',an,`${fx(c.atrPct,2)}% (${al}${an?' ✓':''})`),vol=row('Volume',c.vr>=.8,`${fx(c.vr,2)}× (${c.vr>=.8?'cukup':'SEPI – di bawah 0,8×'})`);
  return{L:[row('Taker 1j',c.buy>=55,`B ${fx(c.buy,0)}% ${c.buy>=55?'≥':'<'}55% — ${c.buy>=55?'buyer dominan':'belum dominan'}`),oi(),row('L/S',c.ls==null?null:c.ls<65,c.ls==null?'data tidak tersedia':`L${fx(c.ls,0)}% — ${c.ls<65?'tidak crowded (<65%)':'batas <65% belum terpenuhi'}`),atr,vol],
@@ -5471,9 +5497,11 @@ function step(s,p){if(!p)return;const d=s.dir==='BUY'?1:-1,now=Date.now(),P=PAIR
   if(d*(p-s.tp[2])>=0)close(s,'TP3',(tp1p+tp3p)/2);
   else if(d*(p-s.sl)<=0)close(s,s.h2?'TP2':s.h1?'BE':'SL',s.h2?tp1p:s.h1?tp1p/2:-Math.abs(s.sl0-s.e)/P.pip);
   else if(now-s.ft>s.life)close(s,'EARLY',s.h1?tp1p/2+cur/2:cur)}}
-async function prices(){try{const syms=[...new Set(KS.map(k=>PAIRS[k].b))],j=await bget('/api/v3/ticker/price?symbols='+encodeURIComponent(JSON.stringify(syms))),m={};j.forEach(x=>m[x.symbol]=+x.price);KS.forEach(k=>PX[k]=m[PAIRS[k].b]);
- SIG.forEach(s=>{if(s.st==='pending'||s.st==='active')step(s,PX[s.pair])});lsw('fs_ls_v1',SIG.slice(0,300));render()}catch(e){}}
-async function scanAll(){if(busy||document.hidden)return;busy=true;for(const k of KS){try{CX[k]=await ctx(k);PX[k]=CX[k].p;scan(CX[k]);SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active'))step(s,PX[k])})}catch(e){}}busy=false;SIG=SIG.slice(0,300);lsw('fs_ls_v1',SIG);render()}
+async function prices(){try{const syms=[...new Set(BK.map(k=>PAIRS[k].b))],j=await bget('/api/v3/ticker/price?symbols='+encodeURIComponent(JSON.stringify(syms))),m={};j.forEach(x=>m[x.symbol]=+x.price);BK.forEach(k=>PX[k]=m[PAIRS[k].b]);YK.forEach(k=>{if((k===SEL||SIG.some(s=>s.pair===k&&(s.st==='active'||s.st==='pending')))&&Date.now()-(YT[k]||0)>25e3){YT[k]=Date.now();yget(PAIRS[k].y,'1m','1d').then(r=>{if(r.meta&&r.meta.regularMarketPrice)PX[k]=r.meta.regularMarketPrice}).catch(()=>{})}});
+ SIG.forEach(s=>{if(s.st==='pending'||s.st==='active')step(s,PX[s.pair])});lsw('fs_ls_v1',SIG.slice(0,400));rollover();render()}catch(e){}}
+async function scanAll(){if(busy||document.hidden)return;busy=true;const pick=(a,n,i)=>Array.from({length:Math.min(n,a.length)},(_,j)=>a[(i+j)%a.length]),L=[...pick(BK,6,rrB),...pick(YK,3,rrY)];rrB=(rrB+6)%BK.length;rrY=(rrY+3)%YK.length;
+ await Promise.all(L.map(async k=>{try{CX[k]=await ctx(k);PX[k]=CX[k].p;FAIL[k]=0;scan(CX[k]);SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active'))step(s,PX[k])})}catch(e){FAIL[k]=1}}));busy=false;SIG=SIG.slice(0,400);lsw('fs_ls_v1',SIG);render()}
+async function scanFull(){for(let i=0;i<5;i++){while(busy)await new Promise(r=>setTimeout(r,500));await scanAll()}}
 function session(){const h=new Date().getUTCHours();return h>=13&&h<21?'New York':h>=7&&h<13?'London':h<7?'Asia (Tokyo)':'Sydney'}
 function card(s,p){const P=PAIRS[s.pair],d=s.dir==='BUY'?1:-1,now=Date.now(),den=Math.abs(s.tp[2]-s.e)/P.pip,pend=s.st==='pending';
  const tp1p=Math.abs(s.tp[0]-s.e)/P.pip,live=pend?0:(s.h1?tp1p/2+pipsOf(s,p)/2:pipsOf(s,p)),mv=pend?0:pipsOf(s,p)*P.pip/Math.abs(s.sl0-s.e);
@@ -5485,33 +5513,56 @@ function card(s,p){const P=PAIRS[s.pair],d=s.dir==='BUY'?1:-1,now=Date.now(),den
  <div class="ls-lv">Zona <b>${fx(s.zl,P.d)}–${fx(s.zh,P.d)}</b> · E <b>${fx(s.e,P.d)}</b> · <span class="s">SL</span> <b>${fx(s.sl,P.d)}${s.h1?' (BE)':''}</b> · <span class="t">TP1</span> <b>${fx(s.tp[0],P.d)}</b> · <span class="t">TP2</span> <b>${fx(s.tp[1],P.d)}</b> · <span class="t">TP3</span> <b>${fx(s.tp[2],P.d)}</b></div>
  ${valid}${s.h1?`<span class="ls-chip g">TP1 ✓ +${fx(tp1p,0)}</span>`:''}${s.h2?'<span class="ls-chip g">TP2 ✓</span>':''}
  <div class="ls-bar"><div class="ls-fill" style="left:${Math.min(a,b)}%;width:${Math.abs(a-b)}%;background:${(d*(p-s.e))>=0?'#4ade80':'#ef4444'}"></div><div class="ls-tk sl" style="left:0"></div><div class="ls-tk" style="left:${a}%"></div>${s.tp.map(v=>`<div class="ls-tk tp" style="left:${pos(v)}%"></div>`).join('')}<div class="ls-dot" style="left:${b}%"></div></div></div>`}
-function outLbl(s){const P=PAIRS[s.pair],r=s.res,t=`${r>=0?'+':'−'}${fx(Math.abs(r),0)} pips`;
- return s.out==='cancel'?['Dibatalkan','n','']:s.out==='SL'?['Stop Loss · '+t,'r']:s.out==='BE'?['Profit TP1 · BE '+t,'g']:s.out==='TP2'?['Profit TP2 · '+t,'g']:s.out==='TP3'?['Profit TP3 · '+t,'g']:[`Ditutup lebih awal · ${t}`,r>=0?'g':'r']}
-function stats(){const C=SIG.filter(s=>s.st==='closed'&&s.out!=='cancel'),w=C.filter(s=>s.res>0).length,l=C.filter(s=>s.res<0).length,pp=C.reduce((a,s)=>a+s.res,0),wr=w+l?w/(w+l)*100:null;
- const per=KS.map(k=>{const x=C.filter(s=>s.pair===k),a=x.filter(s=>s.res>0).length,b=x.filter(s=>s.res<0).length;return a+b?`<span>${k} <b>${fx(a/(a+b)*100,0)}%</b> (${a+b})</span>`:''}).join('');
- return{html:`<div class="ls-stats"><div class="ls-st"><b>${SIG.filter(s=>s.out!=='cancel').length}</b><span>Total Sinyal</span></div><div class="ls-st"><b class="${wr==null?'':wr>=50?'g':'r'}">${wr==null?'--':fx(wr,0)+'%'}</b><span>Winrate</span></div><div class="ls-st"><b class="${pp>=0?'g':'r'}">${pp>=0?'+':''}${fx(pp,0)}</b><span>Total Pips</span></div><div class="ls-st"><b class="g">${w}</b><span>Win</span></div><div class="ls-st"><b class="r">${l}</b><span>Loss</span></div><div class="ls-st"><b class="y">${SIG.filter(s=>s.st==='active'||s.st==='pending').length}</b><span>Aktif</span></div></div>${per?`<div class="ls-pp">${per}</div>`:'<div class="ls-pp"><span>Winrate per pair muncul setelah sinyal pertama selesai</span></div>'}`}}
+const WIB=7*36e5,dk=t=>new Date(t+WIB).toISOString().slice(0,10),today=()=>dk(Date.now());
+const cls=s=>{if(s.st!=='closed'||s.out==='cancel')return null;if(s.out==='BE')return'be';if(s.out==='TP2'||s.out==='TP3')return'win';if(s.out==='SL')return'lose';const sl=Math.abs(s.sl0-s.e)/PAIRS[s.pair].pip;return s.res>sl*.05?'win':s.res<-sl*.05?'lose':'be'};
+let RNG=ls('fs_ls_rng','day'),SUB='act',LD=ls('fs_ls_day',today());
+const inRng=s=>RNG==='all'||(RNG==='day'?dk(s.t)===today():Date.now()-s.t<7*864e5);
+function agg(L){let w=0,l=0,b=0,p=0;L.forEach(s=>{const c=cls(s);if(!c)return;c==='win'?w++:c==='lose'?l++:b++;p+=s.res});return{w,l,b,p,n:w+l+b,wr:w+l?w/(w+l)*100:null}}
+const DO={},setH=(e,h)=>{if(e._h!==h){e._h=h;e.innerHTML=h}};
+const pf=v=>(v>=0?'+':'−')+fx(Math.abs(v),0);
+function rollover(){const t=today();if(t===LD)return;LD=t;lsw('fs_ls_day',t);SIG.forEach(s=>{if(s.st==='pending')close(s,'cancel',0);else if(s.st==='active'){const p=PX[s.pair]||s.e,tp1p=Math.abs(s.tp[0]-s.e)/PAIRS[s.pair].pip,cur=pipsOf(s,p);close(s,'EARLY',s.h1?tp1p/2+cur/2:cur)}});const cut=Date.now()-30*864e5;SIG=SIG.filter(s=>s.t>cut);lsw('fs_ls_v1',SIG);render()}
+function hero(){const g=agg(SC().filter(inRng)),wr=g.wr,C=2*Math.PI*34,col=wr==null?'#374151':wr>=50?'#4ade80':'#f87171',R=[['day','Hari ini'],['week','7 hari'],['all','Semua']];
+ return`<div class="ls-hero"><div class="ls-rng">${R.map(r=>`<button data-r="${r[0]}" class="${RNG===r[0]?'on':''}">${r[1]}</button>`).join('')}</div>
+ <div class="ls-hr"><svg width="92" height="92" viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="#1f2937" stroke-width="8"/><circle cx="42" cy="42" r="34" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${wr==null?0:C*wr/100} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="46" text-anchor="middle" fill="#fff" font-size="15" font-weight="900" font-family="Orbitron">${wr==null?'--':fx(wr,0)+'%'}</text><text x="42" y="58" text-anchor="middle" fill="#6b7280" font-size="6">WINRATE</text></svg>
+ <div style="flex:1"><div class="ls-wl"><div class="w"><b>${g.w}</b>WIN</div><div class="l"><b>${g.l}</b>LOSE</div><div class="b"><b>${g.b}</b>BE</div></div>
+ <div class="ls-sum"><span>${g.n} trade</span><b class="${g.p>=0?'g':'r'}">${pf(g.p)} pips</b></div></div></div></div>`}
+function resChip(s){const c=cls(s),t=c==='win'?'WIN':c==='lose'?'LOSE':'BE';return`<span class="ls-res ${c}">${t} ${pf(s.res)}</span>`}
+function histHtml(){const L=SC().filter(s=>cls(s)&&(FLT==='all'||s.sty===FLT)),G={};L.forEach(s=>(G[dk(s.t)]=G[dk(s.t)]||[]).push(s));const days=Object.keys(G).sort().reverse(),y=dk(Date.now()-864e5);
+ const f=`<div class="ls-flt">${['all','Intraday','Scalping'].map(k=>`<button data-f="${k}" class="${FLT===k?'on':''}">${k==='all'?'Semua':k}</button>`).join('')}</div>`;
+ if(!days.length)return f+'<div class="fsx-empty">Belum ada trade selesai.<br>Riwayat tersimpan 30 hari, tiap hari papan sinyal otomatis bersih.</div>';
+ return f+days.map((d,i)=>{const g=agg(G[d]),lb=d===today()?'Hari ini':d===y?'Kemarin':new Date(d+'T00:00:00Z').toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
+  return`<details class="ls-day" data-d="${d}" ${(DO[d]!==undefined?DO[d]:i===0)?'open':''}><summary><b>${lb}</b><span class="w">${g.w}W</span><span class="l">${g.l}L</span><span class="b">${g.b}BE</span><span class="wr">${g.wr==null?'--':fx(g.wr,0)+'%'}</span><span class="p ${g.p>=0?'g':'r'}">${pf(g.p)}</span></summary>${G[d].map(s=>`<div class="ls-h"><span class="d ${s.dir.toLowerCase()}">${s.dir==='BUY'?'↑':'↓'}</span><b>${s.pair}</b><span class="ls-tag" style="margin:0">${s.sty}</span><span class="o">${resChip(s)}<span class="a">${new Date(s.ct).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'})}</span></span></div>`).join('')}</details>`}).join('')+'<button class="fsx-btn bad" id="ls-clr" style="width:100%;margin-top:10px">🗑 Hapus semua riwayat</button>'}
 function ctxHtml(){const c=CX[SEL];if(!c)return'<div class="fsx-empty">Memuat konteks pasar…</div>';const M=evalM(c),L=scoreOf(M.L),S=scoreOf(M.S),best=Math.max(L.n?L.ok/L.n:0,S.n?S.ok/S.n:0);
  const tile=(a,b)=>`<div><small>${a}</small><b>${b}</b></div>`,mk=(t,r,sc)=>`<div><h4 style="color:${t==='LONG (Buy)'?'#4ade80':'#f87171'}">${t==='LONG (Buy)'?'🟢':'🔴'} ${t}</h4>${r.map(x=>`<p>${x.ok==null?'➖':x.ok?'✅':'❌'} <b>${x.n}</b> ${esc(x.t)}</p>`).join('')}<p style="color:#9ca3af">Skor: ${sc.ok}/${sc.n} ${sc.n&&sc.ok/sc.n>=.8?'🟢 Layak':sc.n&&sc.ok/sc.n>=.6?'🟡 Butuh konfirmasi':'🔴 Belum layak'}</p></div>`;
- return`<div class="sig-section-title">KONTEKS INTRADAY · ${SEL}</div><div class="ls-ctx">${tile('Taker 1j','B '+fx(c.buy,0)+'% / S '+fx(100-c.buy,0)+'%')}${tile('OI 1j',c.oi==null?'n/a':(c.oi>=0?'Masuk +':'Keluar ')+fx(c.oi,2)+'%')}${tile('L/S',c.ls==null?'n/a':'L '+fx(c.ls,0)+'% / S '+fx(100-c.ls,0)+'%')}${tile('ATR H1',fx(c.atrPct,2)+'% ('+(c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL')+')')}${tile('Volume',fx(c.vr,2)+'× ('+(c.vr<.8?'SEPI':'OK')+')')}${tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}</div>
+const tg=c.fx?tile('Trend H1',M.L[0].ok?'Naik ▲':M.S[0].ok?'Turun ▼':'Sideways')+tile('Trend M15',M.L[1].ok?'Naik ▲':M.S[1].ok?'Turun ▼':'Sideways')+tile('RSI H1',fx(c.rsi,0))+tile('ATR H1',fx(c.atrPct,3)+'% ('+(c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL')+')')+tile('Sesi',session())+tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})):null;
+ return`<div class="sig-section-title">KONTEKS INTRADAY · ${SEL}</div><div class="ls-ctx">${tg||`${tile('Taker 1j','B '+fx(c.buy,0)+'% / S '+fx(100-c.buy,0)+'%')}${tile('OI 1j',c.oi==null?'n/a':(c.oi>=0?'Masuk +':'Keluar ')+fx(c.oi,2)+'%')}${tile('L/S',c.ls==null?'n/a':'L '+fx(c.ls,0)+'% / S '+fx(100-c.ls,0)+'%')}${tile('ATR H1',fx(c.atrPct,2)+'% ('+(c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL')+')')}${tile('Volume',fx(c.vr,2)+'× ('+(c.vr<.8?'SEPI':'OK')+')')}${tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}`}</div>
  <div class="sig-section-title">📋 PANDUAN KEPUTUSAN ENTRY</div><div class="ls-vd ${best>=.8?'g':''}">${best>=.8?'✅ SETUP LAYAK — cek sinyal aktif di atas':'⏳ TUNGGU — metrik belum selaras'}</div><div class="ls-gd">${mk('LONG (Buy)',M.L,L)}${mk('SHORT (Sell)',M.S,S)}</div>`}
-function render(){if(!isAct('signal-tab'))return;const root=$('#ls-live');if(!root)return;const c=CX[SEL],p=PX[SEL],P=PAIRS[SEL],h=c?c.h1.slice(-24).map(x=>x.c):[];
- let chg=c&&c.h1.length>24?(p/c.h1[c.h1.length-25].c-1)*100:0,sp='';if(h.length>2){const mn=Math.min(...h),mx=Math.max(...h);const pts=h.map((v,i)=>`${i/(h.length-1)*80},${28-(v-mn)/((mx-mn)||1)*26}`);sp=`<svg width="80" height="30"><polyline points="${pts.join(' ')}" fill="none" stroke="#eab308" stroke-width="1.5"/><circle cx="80" cy="${pts[pts.length-1].split(',')[1]}" r="3" fill="#eab308"/></svg>`}
+function render(){if(!isAct('signal-tab'))return;if(!$('#ls-live'))return;const c=CX[SEL],p=PX[SEL],P=PAIRS[SEL],h=c?c.h1.slice(-24).map(x=>x.c):[];
+ let chg=c&&c.h1.length>24&&p?(p/c.h1[c.h1.length-25].c-1)*100:0,sp='';if(h.length>2){const mn=Math.min(...h),mx=Math.max(...h),pts=h.map((v,i)=>`${i/(h.length-1)*80},${28-(v-mn)/((mx-mn)||1)*26}`);sp=`<svg width="80" height="30"><polyline points="${pts.join(' ')}" fill="none" stroke="#eab308" stroke-width="1.5"/><circle cx="80" cy="${pts[pts.length-1].split(',')[1]}" r="3" fill="#eab308"/></svg>`}
  const ps=p?fx(p,P.d).split('.'):['--'];
- $('#ls-tick').innerHTML=`<div><small><b>● Live</b>${session()}</small><div class="ls-px">${ps[0]}${ps[1]!=null?'<i>.'+ps[1]+'</i>':''}<span class="ls-chg ${chg>=0?'g':'r'}">${chg>=0?'▲ +':'▼ '}${fx(chg,2)}%</span></div></div>${sp}`;
- $('#ls-stats').innerHTML=stats().html;
- const act=SIG.filter(s=>s.st==='active'||s.st==='pending');$('#ls-act').innerHTML=act.length?act.map(s=>card(s,PX[s.pair])).join(''):`<div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MEMINDAI ${KS.length} PAIR…</p><p style="font-size:8px;color:#4b5563;margin-top:4px">Sinyal muncul otomatis saat trend + order flow selaras</p></div>`;
- $('#ls-ctx').innerHTML=ctxHtml();
- const H=SIG.filter(s=>s.st==='closed'&&(FLT==='all'||s.sty===FLT)).slice(0,40);
- $('#ls-hist').innerHTML=H.length?H.map(s=>{const o=outLbl(s);return`<div class="ls-h"><span class="ls-tag" style="margin:0">${s.sty}</span><span class="d ${s.dir.toLowerCase()}">${s.dir==='BUY'?'↑':'↓'} ${s.dir}</span><span style="color:#6b7280">${s.pair}</span><span class="o"><span class="ls-chip ${o[1]}" style="margin:0">${o[0]}</span><span class="a">${ago(Date.now()-s.ct)}</span></span></div>`}).join(''):'<div class="fsx-empty">Belum ada riwayat.</div>'}
+ setH($('#ls-tick'),`<div><small><b>● ${P.b?'Live 1 dtk':'Tertunda ~30 dtk'}</b>${session()}</small><div class="ls-px">${ps[0]}${ps[1]!=null?'<i>.'+ps[1]+'</i>':''}<span class="ls-chg ${chg>=0?'g':'r'}">${chg>=0?'▲ +':'▼ '}${fx(chg,2)}%</span></div></div>${sp}`+(!c&&FAIL[SEL]?'<div style="font-size:9px;color:#eab308;width:100%">⚠ Data pair ini belum bisa dimuat, mencoba lagi otomatis…</div>':''));
+ setH($('#ls-stats'),hero());
+ const open=SC().filter(s=>s.st==='active'||s.st==='pending');
+ $$('#ls-cat button').forEach(b=>{const n=SIG.filter(s=>(s.st==='active'||s.st==='pending')&&PAIRS[s.pair]&&PAIRS[s.pair].c===b.dataset.c).length;b.querySelector('i').textContent=n||''});
+ $$('#ls-sub button').forEach(b=>{b.classList.toggle('on',b.dataset.s===SUB);if(b.dataset.s==='act')b.querySelector('i').textContent=open.length||''});
+ const B=$('#ls-body');
+ setH(B,SUB==='act'?(open.length?open.map(s=>card(s,PX[s.pair])).join(''):`<div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MEMINDAI ${CK().length} PAIR ${CATS[CAT]}…</p><p style="font-size:8px;color:#4b5563;margin-top:4px">Sinyal muncul otomatis saat trend & metrik selaras</p></div>`):SUB==='his'?histHtml():ctxHtml())}
+function clk(){const e=$('#ls-clk');if(!e)return;const n=new Date(),w=new Date(n.getTime()+WIB),left=864e5-((w.getUTCHours()*60+w.getUTCMinutes())*60+w.getUTCSeconds())*1e3;e.textContent=w.toISOString().slice(11,19)+' WIB · reset harian 00:00 (−'+Math.floor(left/36e5)+'j '+Math.floor(left%36e5/6e4)+'m)';rollover()}
+let RT=0;const tr=()=>{const n=Date.now();if(n-RT>900){RT=n;render()}};
+function liveWS(){try{const w=new WebSocket('wss://stream.binance.com:9443/stream?streams='+[...new Set(BK.map(k=>PAIRS[k].b.toLowerCase()))].map(x=>x+'@miniTicker').join('/'));w.onmessage=e=>{try{const d=JSON.parse(e.data).data,pr=+d.c;let ch=0;BK.forEach(k=>{if(PAIRS[k].b===d.s){PX[k]=pr;SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active')){const o=s.st+(s.h1||0)+(s.h2||0);step(s,pr);if(s.st+(s.h1||0)+(s.h2||0)!==o)ch=1}})}});if(ch)lsw('fs_ls_v1',SIG);tr()}catch(x){}};w.onclose=()=>setTimeout(liveWS,3000)}catch(e){}}
 function initSig(){const root=$('#ls-live');if(!root||root.dataset.i)return;root.dataset.i=1;
- pills('#ls-pairs',SEL,k=>{SEL=k;lsw('fs_ls_pair',k);render()});
- $('#ls-flt').onclick=e=>{const b=e.target.closest('button');if(!b)return;FLT=b.dataset.k;$$('#ls-flt button').forEach(x=>x.classList.toggle('on',x===b));render()};
+ const dp=()=>pills('#ls-pairs',SEL,k=>{SEL=k;lsw('fs_ls_pair',k);render()},CK());dp();$$('#ls-cat button').forEach(b=>b.classList.toggle('on',b.dataset.c===CAT));
+ $('#ls-cat').onclick=e=>{const b=e.target.closest('button');if(!b)return;CAT=b.dataset.c;lsw('fs_ls_cat',CAT);SEL=CK().includes(SEL)?SEL:CK()[0];lsw('fs_ls_pair',SEL);$$('#ls-cat button').forEach(x=>x.classList.toggle('on',x===b));dp();render()};
+ $('#ls-body').addEventListener('toggle',e=>{if(e.target.dataset&&e.target.dataset.d)DO[e.target.dataset.d]=e.target.open},true);
+ $('#ls-sub').onclick=e=>{const b=e.target.closest('button');if(!b)return;SUB=b.dataset.s;render()};
+ $('#ls-stats').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;RNG=b.dataset.r;lsw('fs_ls_rng',RNG);render()};
+ $('#ls-body').onclick=e=>{const f=e.target.closest('[data-f]');if(f){FLT=f.dataset.f;render();return}if(e.target.id==='ls-clr'&&confirm('Hapus semua riwayat sinyal?')){SIG=SIG.filter(s=>s.st==='active'||s.st==='pending');lsw('fs_ls_v1',SIG);render()}};
  $('#ls-seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#ls-seg button').forEach(x=>x.classList.toggle('on',x===b));$('#ls-live').style.display=b.dataset.v==='live'?'block':'none';$('#sig-legacy').style.display=b.dataset.v==='live'?'none':'block'};
- prices();scanAll()}
+ liveWS();clk();setInterval(clk,1000);prices();scanFull()}
 
 /* ================= ORDER FLOW ================= */
 const O={k:ls('fs_of_pair','XAUUSD'),ws:null,on:false,bars:[],prof:new Map,bub:[],cols:[],R:0,tick:1,avg:0,last:0,book:null,fut:{},ft:0,dt:null,mid:0};
-if(!PAIRS[O.k])O.k='XAUUSD';
+if(!PAIRS[O.k]||!PAIRS[O.k].b)O.k='XAUUSD';
 const nice=x=>{const e=Math.pow(10,Math.floor(Math.log10(x))),m=x/e;return(m<1.5?1:m<3.5?2:m<7.5?5:10)*e};
 function onTrade(m){const p=+m.p,q=+m.q,T=+m.T,b=!m.m,u=p*q,mt=Math.floor(T/6e4)*6e4;O.last=p;let B=O.bars[O.bars.length-1];
  if(!B||B.t!==mt){B={t:mt,o:p,h:p,l:p,c:p,b:0,s:0};O.bars.push(B);if(O.bars.length>90)O.bars.shift()}
@@ -5561,14 +5612,14 @@ function drawRead(){const m=O.m;if(!m||!O.bars.length){return}const n=[],B=O.bar
  const bb=O.bub.filter(b=>Date.now()-b.t<3e5),nb=bb.filter(b=>b.b).reduce((a,b)=>a+b.u,0),ns=bb.filter(b=>!b.b).reduce((a,b)=>a+b.u,0);if(bb.length)n.push([nb>ns?'g':'r',`${bb.length} market order besar (5 mnt): beli ${fm(nb)} vs jual ${fm(ns)}.`]);
  $('#of-rd').innerHTML=n.map(x=>`<p class="${x[0]}">${x[1]}</p>`).join('')+'<p style="border-color:#374151;color:#6b7280;font-size:9px">Data: Binance spot (aggTrade + depth 500). Bukan saran finansial.</p>'}
 function drawAll(){if(!isAct('analisis-tab'))return;drawStats();drawHM();drawDOM();drawProf();drawDelta();drawRead();const e=$('#of-meta');if(e)e.textContent=`${O.cols.length} snapshot · ±${fx(O.R,PAIRS[O.k].d>3?4:2)}`}
-function initOF(){const r=$('#an-of');if(!r||r.dataset.i)return;r.dataset.i=1;pills('#of-pairs',O.k,k=>{ofStop();O.k=k;lsw('fs_of_pair',k);O.bars=[];O.cols=[];O.book=null;$('#of-dom').innerHTML='';ofStart()})}
+function initOF(){const r=$('#an-of');if(!r||r.dataset.i)return;r.dataset.i=1;pills('#of-pairs',O.k,k=>{ofStop();O.k=k;lsw('fs_of_pair',k);O.bars=[];O.cols=[];O.book=null;$('#of-dom').innerHTML='';ofStart()},BK)}
 function initSeg(){const s=$('#an-seg');if(!s||s.dataset.i)return;s.dataset.i=1;s.onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#an-seg button').forEach(x=>x.classList.toggle('on',x===b));const of=b.dataset.v==='of';$('#an-tech').style.display=of?'none':'block';$('#an-of').style.display=of?'block':'none';if(of)initOF()}}
 
 /* ================= lifecycle ================= */
 const _ot=window.openTab;window.openTab=function(id,el){_ot&&_ot(id,el);setTimeout(()=>{if(id==='signal-tab'){initSig();render()}if(id==='analisis-tab')initSeg()},260)};
 setInterval(()=>{const vis=isAct('analisis-tab')&&$('#an-of')&&$('#an-of').style.display!=='none'&&!document.hidden;if(vis&&!O.on)ofStart();else if(!vis&&O.on)ofStop()},1000);
-setInterval(()=>{if(!document.hidden)prices()},8000);setInterval(scanAll,6e4);
-const boot=()=>{initSig();initSeg();setTimeout(()=>{prices();scanAll()},2500)};
+setInterval(()=>{if(!document.hidden)prices()},8000);setInterval(scanAll,3e4);
+const boot=()=>{initSig();initSeg();setTimeout(()=>{prices();scanFull()},2500)};
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
 })();
 </script>
