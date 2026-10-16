@@ -895,7 +895,6 @@
             <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()"><span class="nav-ico">📡</span><span class="nav-txt">Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></span></a>
-            <a href="#" class="nav-link" onclick="openTab('ai-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤖</span><span class="nav-txt">AI Analisis</span></a>
             <a href="#" class="nav-link" onclick="openTab('analisis-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📊</span><span class="nav-txt">Analisis</span></a>
             <a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚡</span><span class="nav-txt">Intraday</span></a>
             <a href="#" class="nav-link" onclick="openTab('war-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚔️</span><span class="nav-txt">WAR</span></a>
@@ -943,16 +942,9 @@
             <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Broker & Funded</span></a>
             </div></div>
         </div>
-        <div class="nav-group" data-group="program">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🤝</span><span class="ngh-title">Program</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
-            <div class="nav-group-body"><div class="nav-group-inner">
-            <a href="#" class="nav-link" onclick="openTab('affiliate-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤝</span><span class="nav-txt">Affiliate</span></a>
-            <a href="#" class="nav-link" onclick="openTab('campaign-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🎥</span><span class="nav-txt">Video Campaign</span></a>
-            <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()"><span class="nav-ico">☕</span><span class="nav-txt">Donasi</span></a>
-            </div></div>
-        </div>
         </div>
         <div class="sb-footer">
+            <a href="#" class="nav-link" onclick="openTab('donasi-tab', this); toggleNav()"><span class="nav-ico">☕</span><span class="nav-txt">Donasi</span></a>
             <a href="#" class="nav-link vip-nav" onclick="openTab('vip-tab', this); toggleNav()"><span class="nav-ico">👑</span><span class="nav-txt">VIP</span></a>
             <a href="#" class="nav-link" onclick="openTab('account2-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">👤</span><span class="nav-txt">Akun</span></a>
             <a href="index.html" class="sb-plain"><span class="nav-ico">🏠</span><span class="nav-txt">Website Utama</span></a>
@@ -1890,7 +1882,7 @@
                             <button onclick="grantVip()" class="vip-action-btn btn-grant">✅ GRANT</button>
                             <button onclick="revokeVip()" class="vip-action-btn btn-revoke">❌ REVOKE</button>
                         </div>
-                        <select aria-label="Durasi VIP" id="vip-plan-input" style="background:#050a14;border:1px solid #374151;color:#eab308;border-radius:12px;padding:12px;font-family:Orbitron;font-size:10px;width:100%;margin-bottom:8px"><option value="1">1 Bulan · Rp 9.000</option><option value="3">3 Bulan · Rp 27.000</option><option value="6">6 Bulan · Rp 50.000</option><option value="12">12 Bulan · $5</option><option value="0">Lifetime · $10</option></select>
+                        <select aria-label="Durasi VIP" id="vip-plan-input" style="background:#050a14;border:1px solid #374151;color:#eab308;border-radius:12px;padding:12px;font-family:Orbitron;font-size:10px;width:100%;margin-bottom:8px"><option value="1">1 Bulan · Rp 9.000</option><option value="3">3 Bulan · Rp 27.000</option><option value="6">6 Bulan · Rp 50.000</option><option value="12">12 Bulan · $5</option><option value="0">Permanen · $10 / Funded</option></select>
                         <div id="vip-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px; margin-top:4px;"></div>
                     </div>
                 </div>
@@ -1948,7 +1940,6 @@
                     <button class="fsx-btn" onclick="FSX.go('vip-tab')">👑 VIP / Upgrade</button>
                     <button class="fsx-btn" onclick="FSX.go('account-tab')">🔗 Account MT5</button>
                     <button class="fsx-btn" onclick="FSX.go('journal-tab')">📓 Journal</button>
-                    <button class="fsx-btn" onclick="FSX.go('affiliate-tab')">🤝 Affiliate</button>
                     <button class="fsx-btn" onclick="FSX.go('donasi-tab')">☕ Donasi</button>
                     <button class="fsx-btn bad" onclick="logout()">🚪 Logout</button>
                 </div></div>
@@ -2037,11 +2028,6 @@
         </div></div>
 
         <!-- AI ANALISIS -->
-        <div id="ai-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>✨ AI ANALISIS<small>Upload screenshot chart atau tanya apa saja</small></h2></div>
-            <div class="tw" style="border-radius:16px"><div class="tw-body" id="ai-host"></div></div>
-        </div></div>
-
         <!-- ANALISIS -->
         <div id="analisis-tab" class="tab-content"><div class="inner-padding">
             <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>📊 ANALISIS</h2></div>
@@ -2145,28 +2131,7 @@
         </div></div>
 
         <!-- AFFILIATE -->
-        <div id="affiliate-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🤝 AFFILIATE</h2></div>
-            <div class="fsx-card"><h3>LINK REFERRAL KAMU</h3>
-                <div class="fsx-code" id="af-link" style="white-space:normal;word-break:break-all"></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="fsx-btn pri" onclick="FSX.aff.copy()">📋 Salin</button><button class="fsx-btn" onclick="FSX.aff.share()">↗ Bagikan</button></div>
-                <div class="fsx-note">Setiap orang yang membuka link ini dihitung sebagai klik. Pencairan komisi dikelola owner secara manual.</div></div>
-            <div class="fsx-card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center"><div><small class="m" style="font-size:8px">KLIK</small><div class="b" style="font-family:Orbitron;font-size:20px" id="af-clicks">0</div></div><div><small class="m" style="font-size:8px">DAFTAR</small><div class="g" style="font-family:Orbitron;font-size:20px" id="af-reg">0</div></div></div></div>
-            <div class="fsx-card"><h3>PROGRAM BROKER & FUNDED</h3><div class="fsx-note" style="margin:0 0 8px">Daftar lewat link partner Freedom Syndicate di menu Broker & Funded.</div><button class="fsx-btn" style="width:100%" onclick="FSX.go('broker-tab')">🏦 Buka Broker & Funded ›</button></div>
-        </div></div>
-
         <!-- VIDEO CAMPAIGN -->
-        <div id="campaign-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🎬 VIDEO CAMPAIGN</h2></div>
-            <div id="cp-list"></div>
-            <div class="fsx-card"><h3>KIRIM VIDEO KAMU</h3><label class="fsx-lbl">Link video (TikTok / YouTube / IG)</label><input class="fsx-in" id="cp-url" placeholder="https://…"><label class="fsx-lbl">Catatan</label><input class="fsx-in" id="cp-note">
-                <button class="fsx-btn pri" style="width:100%;margin-top:10px" onclick="FSX.camp.submit()">KIRIM</button><div class="fsx-note">Tinjauan & reward dikelola owner.</div></div>
-            <div class="fsx-card" id="cp-owner" style="display:none"><h3>👑 OWNER</h3>
-                <input class="fsx-in" id="cp-t" placeholder="Judul campaign"><label class="fsx-lbl">Brief / hadiah</label><textarea class="fsx-in" id="cp-b" rows="3"></textarea>
-                <button class="fsx-btn gold" style="width:100%;margin-top:10px" onclick="FSX.content.add('campaigns',{title:'cp-t',body:'cp-b'})">BUAT CAMPAIGN</button>
-                <label class="fsx-lbl" style="margin-top:14px">Kiriman masuk</label><div id="cp-subs"></div></div>
-        </div></div>
-
 </div><!-- end content-container -->
 
     <script>
@@ -2241,17 +2206,39 @@
                     loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); loadAnnouncements(); setupRealtimeNotifications();
                     loadVipTab();
                     if (!isVip) checkTrialStatus(u.uid);
+                    watchVipLive(u);
                 });
             } 
             else { document.getElementById('auth-screen').style.display='flex'; }
         });
+
+        /* Pantau vip_index secara live: begitu owner REVOKE, VIP member langsung hilang tanpa reload */
+        let _vipWatchUid = null;
+        function watchVipLive(u) {
+            if (_vipWatchUid === u.uid || u.email === OWNER_EMAIL) return;
+            _vipWatchUid = u.uid;
+            rtdb.ref('vip_index/' + u.uid).on('value', snap => {
+                const v = snap.val();
+                const ok = v === true || (typeof v === 'number' && v > Date.now());
+                window.__vipExp = ok ? v : null;
+                if (ok === !!isVip) return;
+                _setVip(ok);
+                applyVipGates();
+                loadVipTab();
+                if (!ok) {
+                    checkTrialStatus(u.uid);
+                    try { if (typeof openTab === 'function') openTab('home-tab', document.querySelector('.nav-link')); } catch (e) {}
+                    fsNote('⚠️ Akses VIP kamu telah dicabut.', '#ef4444');
+                }
+            }, () => {});
+        }
 
         // Cek VIP via /vip_index/{uid} — lebih aman, tidak perlu baca seluruh vip_members
         async function checkVipStatus(email) {
             try {
                 if (!curUser) return false;
                 const snap = await rtdb.ref('vip_index/' + curUser.uid).once('value');
-                const v=snap.val();if(typeof v==='number'&&v<=Date.now()){rtdb.ref('vip_index/'+curUser.uid).remove();return false}return v===true||typeof v==='number';
+                const v=snap.val();window.__vipExp=v;if(typeof v==='number'&&v<=Date.now()){rtdb.ref('vip_index/'+curUser.uid).remove();return false}return v===true||typeof v==='number';
             } catch(e) { return false; }
         }
 
@@ -2287,8 +2274,8 @@
                 loadVipMembers();
             } else if (isVip) {
                 statusBox.style.cssText = 'background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3);color:#eab308;';
-                statusBox.innerHTML = '✅ STATUS: <b style="margin-left:6px;">VIP AKTIF</b>';
-                registerInfo.style.display = 'none';
+                statusBox.innerHTML = '✅ STATUS: <b style="margin-left:6px;">' + (window.__vipExp === true ? 'VIP PERMANEN' : 'VIP AKTIF') + '</b>';
+                registerInfo.style.display = (window.__vipExp === true) ? 'none' : 'block';
             } else {
                 statusBox.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;';
                 statusBox.innerHTML = '🔒 STATUS: <b style="margin-left:6px;">BELUM VIP</b>';
@@ -2297,10 +2284,10 @@
             }
         }
 
-const VIP_PLANS={1:'1 Bulan',3:'3 Bulan',6:'6 Bulan',12:'12 Bulan',0:'Lifetime'};
+const VIP_PLANS={1:'1 Bulan',3:'3 Bulan',6:'6 Bulan',12:'12 Bulan',0:'Permanen'};
 const addMonths=(base,m)=>{const d=new Date(base);d.setMonth(d.getMonth()+m);return d.getTime()};
 const vipOk=v=>v===true||(typeof v==='number'&&v>Date.now());
-const vipLeft=e=>e==null?'♾️ Lifetime':e<=Date.now()?'⛔ Kadaluarsa':'Sisa '+Math.ceil((e-Date.now())/864e5)+' hari · s/d '+new Date(e).toLocaleDateString('id-ID');
+const vipLeft=e=>e==null?'♾️ PERMANEN':e<=Date.now()?'⛔ Kadaluarsa':'Sisa '+Math.ceil((e-Date.now())/864e5)+' hari · s/d '+new Date(e).toLocaleDateString('id-ID');
 function syncIndex(email,exp){rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value',s=>s.forEach(c=>rtdb.ref('vip_index/'+c.key).set(exp==null?true:exp)))}
 function grantPlan(email,months,msg){
   email=(email||'').trim().toLowerCase();
@@ -2308,9 +2295,9 @@ function grantPlan(email,months,msg){
   return rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value').then(snap=>{
     const now=Date.now();let key=null,old=null;snap.forEach(c=>{key=c.key;old=c.val()});
     let base=now;if(old&&old.expiresAt&&old.expiresAt>now)base=old.expiresAt;
-    const lifetime=+months===0||(old&&old.plan==='lifetime'&&old.expiresAt==null&&old.grantedAt);
+    const lifetime=+months===0||(old&&old.plan==='permanen'&&old.expiresAt==null&&old.grantedAt);
     const exp=(+months===0||(old&&old.expiresAt==null&&old.lifetime))?null:addMonths(base,+months);
-    const rec={email,plan:+months===0?'lifetime':months+' bulan',months:+months,grantedAt:old&&old.grantedAt||now,updatedAt:now,grantedBy:curUser.email,expiresAt:exp,lifetime:exp==null};
+    const rec={email,plan:+months===0?'permanen':months+' bulan',months:+months,grantedAt:old&&old.grantedAt||now,updatedAt:now,grantedBy:curUser.email,expiresAt:exp,lifetime:exp==null};
     const p=key?rtdb.ref('vip_members/'+key).update(rec):rtdb.ref('vip_members').push(rec);
     return p.then(()=>{syncIndex(email,exp);if(msg){msg.style.color='#4ade80';msg.textContent=`✅ ${email} VIP ${VIP_PLANS[+months]} · ${exp==null?'selamanya':'s/d '+new Date(exp).toLocaleDateString('id-ID')}`}})
   }).catch(e=>{if(msg){msg.style.color='#ef4444';msg.textContent='❌ '+e.message}});
@@ -2332,42 +2319,86 @@ function loadVipMembers(){
         <div class="vip-member-since" style="color:${exp?'#ef4444':'#4ade80'}">${vipLeft(d.expiresAt)}</div></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">${[1,3,6,12].map(m=>`<button onclick="extendVipKey('${d.email}',${m})" class="vip-action-btn" style="background:rgba(234,179,8,.15);color:#eab308;border:1px solid rgba(234,179,8,.4)">+${m}bln</button>`).join('')}
         <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
-        <button onclick="revokeVipKey('${d.k}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
+        <button onclick="revokeVipKey('${d.k}','${d.email}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
     list.innerHTML=html})}
-const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab','fundamental-tab','insider-tab','indikator-tab','monitor-tab','micin-tab','meme-tab','radar-tab'];
+const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
 
-        function revokeVip() {
-            const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
-            const msg   = document.getElementById('vip-admin-msg');
-            if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
-            rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value', snap => {
-                if (!snap.exists()) { msg.style.color='#ef4444'; msg.textContent = `❌ ${email} tidak ditemukan di daftar VIP.`; return; }
-                const promises = [];
-                snap.forEach(child => promises.push(rtdb.ref('vip_members/' + child.key).remove()));
-                Promise.all(promises).then(() => {
-                    msg.style.color='#eab308';
-                    msg.textContent = `⚠️ VIP ${email} telah direvoke.`;
-                    document.getElementById('vip-email-input').value='';
-                    // Hapus dari vip_index via uid_registry
-                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap2 => {
-                        snap2.forEach(child => rtdb.ref('vip_index/' + child.key).remove());
-                    });
-                });
+        /* ===== DIALOG KUSTOM (pengganti confirm/prompt/alert yang bisa diblokir browser) ===== */
+        function fsModal(html) {
+            return new Promise(res => {
+                const o = document.createElement('div');
+                o.style.cssText = 'position:fixed;inset:0;z-index:30000;background:rgba(3,7,14,.85);display:flex;align-items:center;justify-content:center;padding:18px';
+                o.innerHTML = '<div style="background:#0d1117;border:1px solid rgba(234,179,8,.4);border-radius:16px;padding:20px;width:100%;max-width:320px;text-align:center;font-family:Poppins,sans-serif;color:#e5e7eb">' + html + '</div>';
+                document.body.appendChild(o);
+                o.onclick = e => { const b = e.target.closest('[data-v]'); if (b) { o.remove(); res(b.dataset.v); } else if (e.target === o) { o.remove(); res(null); } };
             });
         }
+        const fsBtn = (v, t, c) => `<button data-v="${v}" style="padding:11px 6px;border-radius:10px;border:1px solid ${c}88;background:${c}22;color:${c};font-family:Orbitron;font-size:9px;font-weight:bold;cursor:pointer">${t}</button>`;
+        async function fsConfirm(text, okLabel) {
+            const v = await fsModal(`<div style="font-size:12px;line-height:1.6;margin-bottom:16px">${text}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${fsBtn('0', 'BATAL', '#9ca3af')}${fsBtn('1', okLabel || 'YA', '#ef4444')}</div>`);
+            return v === '1';
+        }
+        async function fsPick(email) {
+            const v = await fsModal(`<div style="font-size:12px;line-height:1.6;margin-bottom:4px">Aktifkan VIP untuk</div><div style="font-size:11px;color:#eab308;margin-bottom:14px;word-break:break-all">${email}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">${fsBtn('1', '1 BULAN', '#eab308')}${fsBtn('3', '3 BULAN', '#eab308')}${fsBtn('6', '6 BULAN', '#eab308')}${fsBtn('12', '12 BULAN', '#eab308')}</div>${fsBtn('0', '♾️ PERMANEN', '#c084fc').replace('<button', '<button style="width:100%;margin-bottom:8px;padding:11px 6px;border-radius:10px;border:1px solid #c084fc88;background:#c084fc22;color:#c084fc;font-family:Orbitron;font-size:9px;font-weight:bold;cursor:pointer"').replace(/style="padding[^"]*"/, '')}${fsBtn('x', 'BATAL', '#9ca3af').replace('<button', '<button style="width:100%"')}`);
+            return (v === null || v === 'x') ? null : +v;
+        }
+        function fsNote(t, c) {
+            const n = document.createElement('div');
+            n.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:30001;background:#0d1117;border:1px solid ' + c + ';color:' + c + ';padding:10px 16px;border-radius:12px;font-size:11px;max-width:90%;text-align:center';
+            n.textContent = t; document.body.appendChild(n); setTimeout(() => n.remove(), 4000);
+            const m = document.getElementById('vip-admin-msg'); if (m) { m.style.color = c; m.textContent = t; }
+        }
 
-        function revokeVipKey(key) {
-            if (!confirm("Yakin revoke VIP member ini?")) return;
-            // Ambil email dulu, lalu hapus dari vip_index juga
-            rtdb.ref('vip_members/' + key).once('value', snap => {
-                const email = snap.val() && snap.val().email;
-                rtdb.ref('vip_members/' + key).remove();
-                if (email) {
-                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap2 => {
-                        snap2.forEach(child => rtdb.ref('vip_index/' + child.key).remove());
-                    });
+        /* ===== REVOKE (diperbaiki): hapus catatan VIP dulu, sisanya best-effort ===== */
+        async function revokeByEmail(email, knownKey) {
+            email = (email || '').trim().toLowerCase();
+            let removed = 0, warn = [];
+            // 1) Hapus catatan vip_members (utama) — tidak bergantung pada node lain
+            const keys = new Set();
+            if (knownKey) keys.add(knownKey);
+            try {
+                const all = await rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value');
+                all.forEach(c => { keys.add(c.key); });
+            } catch (e) { warn.push('baca vip_members: ' + e.message); }
+            for (const k of keys) {
+                try { await rtdb.ref('vip_members/' + k).remove(); removed++; }
+                catch (e) { warn.push('hapus vip_members: ' + e.message); }
+            }
+            // 2) Cabut akses (vip_index) semua UID milik email ini — best-effort
+            try {
+                const reg = await rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value');
+                const uids = []; reg.forEach(c => { uids.push(c.key); });
+                for (const u of uids) {
+                    try { await rtdb.ref('vip_index/' + u).remove(); }
+                    catch (e) { warn.push('hapus vip_index: ' + e.message); }
                 }
-            });
+            } catch (e) { warn.push('baca uid_registry: ' + e.message); }
+            return { removed, warn };
+        }
+        function revokeReport(email, r) {
+            if (r.removed && !r.warn.length) return fsNote('⚠️ VIP ' + email + ' sudah dicabut.', '#eab308');
+            if (r.removed) return fsNote('⚠️ Dicabut dari daftar, tapi sebagian gagal: ' + r.warn[0] + ' (cek Firebase Rules)', '#f59e0b');
+            return fsNote('❌ Gagal revoke: ' + (r.warn[0] || 'data tidak ditemukan') + ' (cek Firebase Rules)', '#ef4444');
+        }
+        async function revokeVip() {
+            const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
+            if (!email || !email.includes('@')) return fsNote('❌ Email tidak valid!', '#ef4444');
+            if (!(await fsConfirm('Cabut VIP <b>' + email + '</b>?', 'REVOKE'))) return;
+            try {
+                const r = await revokeByEmail(email);
+                if (r.removed) document.getElementById('vip-email-input').value = '';
+                revokeReport(email, r);
+            } catch (e) { fsNote('❌ Gagal revoke: ' + e.message, '#ef4444'); }
+        }
+        async function revokeVipKey(key, email) {
+            try {
+                email = (email || '').trim().toLowerCase();
+                if (!email) {
+                    try { const snap = await rtdb.ref('vip_members/' + key).once('value'); email = (snap.val() && snap.val().email) || ''; } catch (e) {}
+                }
+                if (!(await fsConfirm('Cabut VIP <b>' + (email || 'member ini') + '</b>?', 'REVOKE'))) return;
+                revokeReport(email || 'member', await revokeByEmail(email, key));
+            } catch (e) { fsNote('❌ Gagal revoke: ' + e.message, '#ef4444'); }
         }
 
         // ===== OWNER SUB TABS =====
@@ -2537,27 +2568,24 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
             });
         }
 
-        function approveProof(proofKey, email) {
-            if (!email || !email.includes('@')) { alert('Email tidak valid'); return; }
-            if (!confirm('Approve & Grant VIP untuk ' + email + '?')) return;
-            grantPlan(email, (()=>{const x=prompt('Durasi VIP untuk '+email+'? ketik 1, 3, 6, 12 (bulan) atau 0 (lifetime)','1');return ['0','1','3','6','12'].includes((x||'').trim())?+x:1})())
-                .then(() => {
-                    rtdb.ref('payment_proofs/' + proofKey).update({ status: 'approved', approvedAt: Date.now(), approvedBy: curUser.email });
-                    alert('✅ VIP granted untuk ' + email);
-                    loadPaymentProofs();
-                    // Sync ke vip_index via uid_registry
-                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap => {
-                        snap.forEach(child => rtdb.ref('vip_index/' + child.key).set(true));
-                    });
-                })
-                .catch(e => alert('Error: ' + e.message));
+        async function approveProof(proofKey, email) {
+            if (!email || !email.includes('@')) return fsNote('❌ Email tidak valid', '#ef4444');
+            const m = await fsPick(email);
+            if (m === null) return;
+            try {
+                await grantPlan(email, m, null);
+                await rtdb.ref('payment_proofs/' + proofKey).update({ status: 'approved', approvedAt: Date.now(), approvedBy: curUser.email, plan: m === 0 ? 'permanen' : m + ' bulan' });
+                fsNote('✅ VIP ' + (m === 0 ? 'PERMANEN' : m + ' bulan') + ' aktif untuk ' + email, '#4ade80');
+                loadPaymentProofs();
+            } catch (e) { fsNote('❌ Error: ' + e.message, '#ef4444'); }
         }
 
-        function rejectProof(proofKey) {
-            if (!confirm('Yakin reject bukti pembayaran ini?')) return;
-            rtdb.ref('payment_proofs/' + proofKey).update({ status: 'rejected', rejectedAt: Date.now() })
-                .then(() => loadPaymentProofs())
-                .catch(e => alert('Error: ' + e.message));
+        async function rejectProof(proofKey) {
+            if (!(await fsConfirm('Tolak bukti pembayaran ini?', 'TOLAK'))) return;
+            try {
+                await rtdb.ref('payment_proofs/' + proofKey).update({ status: 'rejected', rejectedAt: Date.now() });
+                loadPaymentProofs();
+            } catch (e) { fsNote('❌ Error: ' + e.message, '#ef4444'); }
         }
 
         // ===== TRIAL LOCK SYSTEM =====
@@ -2584,13 +2612,14 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
                     trialEndTime = data.endsAt;
                     trialActive = now < trialEndTime;
                 }
+                window.__trialLoaded = true;
                 applyTrialLocks();
                 if (trialActive) startTrialCountdown();
             });
         }
 
         function applyTrialLocks() {
-            if (isVip) return; // VIP & Owner bypass trial lock
+            return; // pengunci lama dimatikan: sekarang lewat gate openTab + popup VIP
 
             if (!trialActive) {
                 // Lock semua tab kecuali yang diizinkan
@@ -2637,8 +2666,8 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
 
         let trialCountdownInterval = null;
         function startTrialCountdown() {
-            // Show trial banner if not VIP
-            if (isVip) return;
+            // banner lama diganti modul status (hitung mundur trial/VIP)
+            return;
             const existing = document.getElementById('trial-banner');
             if (existing) existing.remove();
 
@@ -3078,7 +3107,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         }
 
         function openTab(id, el) {
-            if (!isVip && PREMIUM_TABS.includes(id)) { if (window.showVipPopup) showVipPopup(id); return; }
+            if (!isVip && !trialActive && !FREE_TABS.includes(id)) { if (window.showVipPopup) showVipPopup(id); return; }
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
                 id = 'vip-tab';
@@ -4768,10 +4797,10 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
 
         /* ---------- hub "Semua fitur" ---------- */
         const CATS = [
-            { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['AI Analisis', '✨', 'ai-tab'], ['Analisis', '📊', 'analisis-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
+            { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['Analisis', '📊', 'analisis-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
             { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender', '📅', 'kalender-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
             { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
-            { k: 'com', n: 'Komunitas & Cuan', ic: '💬', th: 'th-com', isNew: true, items: [['Chat', '💬', 'community-tab'], ['Trading Arena', '🏟', 'arena-tab', 'new'], ['Affiliate', '🤝', 'affiliate-tab'], ['Video Campaign', '🎬', 'campaign-tab']] }
+            { k: 'com', n: 'Komunitas & Cuan', ic: '💬', th: 'th-com', isNew: true, items: [['Chat', '💬', 'community-tab'], ['Trading Arena', '🏟', 'arena-tab', 'new']] }
         ];
         function buildHub() {
             if ($('#fsx-hub')) return;
@@ -4785,7 +4814,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         }
         function hubItems(k) {
             const c = CATS.find(x => x.k === k);
-            $('#fsx-hub .hub-box').innerHTML = `<div class="hub-head"><button class="fsx-back" onclick="FSX.hub()">‹</button><h3>${c.n}</h3><button class="hub-x" onclick="FSX.closeHub()">Tutup</button></div><div class="hub-items">${c.items.map(i => `<div class="hub-it" data-go="${i[2]}">${i[3] === 'new' ? '<span class="nw">NEW</span>' : ''}${(PREMIUM_TABS.includes(i[2]) && !VIP()) ? '<span class="lock">🔒</span>' : ''}<div class="ic ${c.th}">${i[1]}</div>${esc(i[0])}</div>`).join('')}</div>${k === 'mkt' ? '<div class="fsx-warn" style="margin-top:16px;margin-bottom:0">⚠️ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>' : ''}`;
+            $('#fsx-hub .hub-box').innerHTML = `<div class="hub-head"><button class="fsx-back" onclick="FSX.hub()">‹</button><h3>${c.n}</h3><button class="hub-x" onclick="FSX.closeHub()">Tutup</button></div><div class="hub-items">${c.items.map(i => `<div class="hub-it" data-go="${i[2]}">${i[3] === 'new' ? '<span class="nw">NEW</span>' : ''}${(!FREE_TABS.includes(i[2]) && !VIP() && !trialActive) ? '<span class="lock">🔒</span>' : ''}<div class="ic ${c.th}">${i[1]}</div>${esc(i[0])}</div>`).join('')}</div>${k === 'mkt' ? '<div class="fsx-warn" style="margin-top:16px;margin-bottom:0">⚠️ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>' : ''}`;
             $('#fsx-hub .hub-box').onclick = e => { const i = e.target.closest('[data-go]'); if (i) FSX.go(i.dataset.go); };
         }
         function closeHub() { const h = $('#fsx-hub'); if (h) h.classList.remove('show'); }
@@ -4793,7 +4822,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         FSX.hub = function () { buildHub(); hubCats(); $('#fsx-hub').classList.add('show'); };
 
         /* ---------- BERANDA ---------- */
-        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender', 'kalender-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['✨', 'AI', 'ai-tab'], ['₿', 'Crypto', 'crypto-tab'], ['🏟', 'Arena', 'arena-tab']];
+        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender', 'kalender-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['₿', 'Crypto', 'crypto-tab'], ['🏟', 'Arena', 'arena-tab']];
         FSX.renderHome = function () {
             const u = U();
             if (u) {
@@ -5264,13 +5293,13 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         const INIT = {
             'home-tab': () => FSX.renderHome(), 'account2-tab': () => FSX.renderHome(), 'news-tab': () => FSX.news.load(), 'kalender-tab': openKalender, 'sesi-tab': () => FSX.sesi.open(),
             'saham-tab': () => FSX.saham.open(), 'crypto-tab': () => FSX.crypto.load(), 'micin-tab': () => FSX.micin.load(), 'meme-tab': () => FSX.meme.load(), 'radar-tab': () => FSX.radar.init(),
-            'riwayat-tab': () => FSX.riwayat.open(), 'ai-tab': openAI, 'analisis-tab': () => FSX.analisis.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
+            'riwayat-tab': () => FSX.riwayat.open(), 'analisis-tab': () => FSX.analisis.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
             'intraday-tab': () => FSX.intraday.open(), 'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open(),
-            'arena-tab': () => FSX.arena.init(), 'affiliate-tab': () => FSX.aff.open(), 'campaign-tab': () => FSX.camp.open()
+            'arena-tab': () => FSX.arena.init()
         };
         const _openTab = window.openTab;
         window.openTab = function (id, el) {
-            if (!window.isVip && PREMIUM_TABS.includes(id)) { closeHub(); if (window.showVipPopup) showVipPopup(id); return; }
+            if (!window.isVip && !trialActive && !FREE_TABS.includes(id)) { closeHub(); if (window.showVipPopup) showVipPopup(id); return; }
             _openTab(id, el);
             setTimeout(() => { syncNav(); try { if (INIT[id]) INIT[id](); } catch (e) { console.error(e); } const sc = document.getElementById(id); if (sc) sc.scrollTop = 0; }, 200);
         };
@@ -5508,19 +5537,77 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boo
 (function(){
 var css=document.createElement('style');css.textContent='.fs-lk{margin-left:6px;font-size:11px;filter:drop-shadow(0 0 4px rgba(234,179,8,.6))}.nav-link.vip-locked{opacity:.78}.fsx-bnav button .fs-lk{position:absolute;top:0;right:calc(50% - 22px);margin:0;font-size:9px}#vip-popup{position:fixed;inset:0;z-index:20000;background:rgba(3,7,14,.88);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}#vip-popup.show{display:flex}#vip-popup .vip-lock-card{position:relative;max-height:92vh;overflow:auto}';document.head.appendChild(css);
 var NAMES={'signal-tab':'Live Signal ICT','ai-tab':'AI Analisis','analisis-tab':'Analisis','intraday-tab':'Intraday','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
+window.__trialEnded=function(){return typeof trialEndTime!=='undefined'&&!!trialEndTime&&!trialActive};
 window.showVipPopup=function(id){
  var p=document.getElementById('vip-popup');if(!p){p=document.createElement('div');p.id='vip-popup';p.onclick=function(e){if(e.target===p)p.classList.remove('show')};document.body.appendChild(p)}
- p.innerHTML='<div class="vip-lock-card"><div class="vip-lock-icon">🔒</div><h2 class="vip-lock-title">KHUSUS VIP</h2><p class="vip-lock-sub">Fitur <b>'+(NAMES[id]||'ini')+'</b> hanya bisa dibuka oleh member <b>VIP Freedom Syndicate</b>.</p><div class="vip-price-grid"><div class="vip-price-card"><div class="vip-price-duration">1 BULAN</div><div class="vip-price-val">Rp 9.000</div></div><div class="vip-price-card popular"><div class="vip-price-duration">3 BULAN</div><div class="vip-price-val">Rp 27.000</div></div><div class="vip-price-card"><div class="vip-price-duration">6 BULAN</div><div class="vip-price-val">Rp 50.000</div></div><div class="vip-price-card"><div class="vip-price-duration">12 BULAN</div><div class="vip-price-val">$5</div></div><div class="vip-price-card lifetime"><div class="vip-price-duration">♾️ LIFETIME</div><div class="vip-price-val lifetime-val">$10</div></div></div><button id="vp-go" style="width:100%;background:linear-gradient(135deg,#b45309,#eab308);color:#000;border:none;padding:13px;border-radius:12px;font-family:Orbitron;font-weight:900;font-size:11px;cursor:pointer;margin-bottom:8px">👑 UPGRADE VIP</button><button id="vp-x" style="width:100%;background:transparent;color:#9ca3af;border:1px solid #374151;padding:10px;border-radius:12px;font-family:Orbitron;font-size:9px;cursor:pointer">NANTI SAJA</button><p class="vip-note" style="margin-top:10px">Akses diaktifkan owner setelah bukti pembayaran terverifikasi.</p></div>';
+ p.innerHTML='<div class="vip-lock-card"><div class="vip-lock-icon">🔒</div><h2 class="vip-lock-title">'+(window.__trialEnded()?'TRIAL HABIS':'KHUSUS VIP')+'</h2><p class="vip-lock-sub">'+(window.__trialEnded()?'Masa trial kamu sudah berakhir. Upgrade VIP untuk membuka ':'')+'Fitur <b>'+(function(){var a=document.querySelector('.nav-link[onclick*="\''+id+'\'"] .nav-txt');return a?a.textContent.replace('🔒','').trim():'ini'})()+'</b> hanya bisa dibuka oleh member <b>VIP Freedom Syndicate</b>.</p><div class="vip-price-grid"><div class="vip-price-card"><div class="vip-price-duration">1 BULAN</div><div class="vip-price-val">Rp 9.000</div></div><div class="vip-price-card popular"><div class="vip-price-duration">3 BULAN</div><div class="vip-price-val">Rp 27.000</div></div><div class="vip-price-card"><div class="vip-price-duration">6 BULAN</div><div class="vip-price-val">Rp 50.000</div></div><div class="vip-price-card"><div class="vip-price-duration">12 BULAN</div><div class="vip-price-val">$5</div></div><div class="vip-price-card lifetime"><div class="vip-price-duration">♾️ LIFETIME</div><div class="vip-price-val lifetime-val">$10</div></div></div><button id="vp-go" style="width:100%;background:linear-gradient(135deg,#b45309,#eab308);color:#000;border:none;padding:13px;border-radius:12px;font-family:Orbitron;font-weight:900;font-size:11px;cursor:pointer;margin-bottom:8px">👑 UPGRADE VIP</button><button id="vp-x" style="width:100%;background:transparent;color:#9ca3af;border:1px solid #374151;padding:10px;border-radius:12px;font-family:Orbitron;font-size:9px;cursor:pointer">NANTI SAJA</button><p class="vip-note" style="margin-top:10px">Akses diaktifkan owner setelah bukti pembayaran terverifikasi.</p></div>';
  p.classList.add('show');
  document.getElementById('vp-x').onclick=function(){p.classList.remove('show')};
  document.getElementById('vp-go').onclick=function(){p.classList.remove('show');var l=document.querySelector('.nav-link.vip-nav');openTab('vip-tab',l)};
 };
 function lock(el,on){var k=el.querySelector(':scope > .fs-lk,:scope .fs-lk');if(on&&!k){k=document.createElement('span');k.className='fs-lk';k.textContent='🔒';el.appendChild(k)}else if(!on&&k)k.remove();el.classList.toggle('vip-locked',on)}
-function apply(){var v=!!window.isVip,P=window.PREMIUM_TABS||[];
- document.querySelectorAll('.nav-link').forEach(function(a){var m=(a.getAttribute('onclick')||'').match(/openTab\('([^']+)'/);if(m)lock(a.querySelector('.nav-txt')||a,!v&&P.indexOf(m[1])>-1)});
- document.querySelectorAll('.fsx-bnav button').forEach(function(b){var t=b.dataset.t;var o=b.querySelector('.lk');if(o)o.style.display='none';lock(b,!v&&P.indexOf(t)>-1)});
- document.querySelectorAll('.hub-it[data-go]').forEach(function(h){if(!v&&P.indexOf(h.dataset.go)>-1&&!h.querySelector('.lock')){var s=document.createElement('span');s.className='lock';s.textContent='🔒';h.appendChild(s)}})}
+function apply(){var v=!!window.isVip||(typeof trialActive!=='undefined'&&trialActive),F=(typeof FREE_TABS!=='undefined'?FREE_TABS:[]);
+ document.querySelectorAll('.nav-link').forEach(function(a){var m=(a.getAttribute('onclick')||'').match(/openTab\('([^']+)'/);if(m)lock(a.querySelector('.nav-txt')||a,!v&&F.indexOf(m[1])<0)});
+ document.querySelectorAll('.fsx-bnav button').forEach(function(b){var t=b.dataset.t;var o=b.querySelector('.lk');if(o)o.style.display='none';lock(b,!v&&F.indexOf(t)<0)});
+ document.querySelectorAll('.hub-it[data-go]').forEach(function(h){if(!v&&F.indexOf(h.dataset.go)<0&&!h.querySelector('.lock')){var s=document.createElement('span');s.className='lock';s.textContent='🔒';h.appendChild(s)}})}
 setInterval(apply,1000);document.addEventListener('click',function(){setTimeout(apply,50)},true);
+})();
+</script>
+<script>
+(function(){
+/* ISI link akun funded dari owner di sini (kosong = tombol nonaktif) */
+var FUNDED_LINKS={forex:'',crypto:''};
+function $(i){return document.getElementById(i)}
+function st(){
+ var own=(typeof curUser!=='undefined'&&curUser&&typeof OWNER_EMAIL!=='undefined'&&curUser.email===OWNER_EMAIL);
+ if(own)return{k:'owner'};
+ if(window.isVip){var e=window.__vipExp;if(e===true)return{k:'perm'};if(typeof e==='number')return{k:'vip',end:e};return{k:'?'}}
+ if(typeof trialActive!=='undefined'&&trialActive&&typeof trialEndTime!=='undefined'&&trialEndTime)return{k:'trial',end:trialEndTime};
+ if(window.__trialLoaded)return{k:'expired'};
+ return{k:'?'}}
+function p2(n){return String(n).padStart(2,'0')}
+function parts(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms%864e5/36e5),m:Math.floor(ms%36e5/6e4),s:Math.floor(ms%6e4/1e3)}}
+function fmt(ms){var t=parts(ms);return(t.d?t.d+' hari ':'')+p2(t.h)+':'+p2(t.m)+':'+p2(t.s)}
+function col(ms){return ms<3*864e5?'#ef4444':ms<7*864e5?'#eab308':'#4ade80'}
+function dt(ts){return new Date(ts).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function ensureBanner(){var b=$('fs-status-banner');if(b)return b;var t=$('ticker-wrap');if(!t||!t.parentNode)return null;
+ b=document.createElement('div');b.id='fs-status-banner';b.style.cssText='padding:7px 12px;text-align:center;font-family:Orbitron;font-size:8px;flex-shrink:0;cursor:pointer;border-bottom:1px solid;display:none;line-height:1.6;background:rgba(0,0,0,.35)';
+ b.onclick=function(){openTab('vip-tab',document.querySelector('.nav-link.vip-nav'))};t.parentNode.insertBefore(b,t.nextSibling);return b}
+function ensureCard(){var c=$('fs-status-card');if(c)return c;var a=$('vip-my-status-box');if(!a||!a.parentNode)return null;
+ c=document.createElement('div');c.id='fs-status-card';c.style.cssText='margin-top:14px;padding:14px 10px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid #374151;text-align:center';a.parentNode.appendChild(c);return c}
+function tiles(ms,cl){var t=parts(ms);return'<div style="display:flex;justify-content:center;gap:8px">'+[['HARI',t.d],['JAM',p2(t.h)],['MENIT',p2(t.m)],['DETIK',p2(t.s)]].map(function(x){return'<div style="min-width:54px;padding:8px 4px;border-radius:10px;background:#0a0e14;border:1px solid '+cl+'55"><div style="font-family:Orbitron;font-size:20px;font-weight:900;color:'+cl+'">'+x[1]+'</div><div style="font-size:7px;color:#6b7280;letter-spacing:1px;margin-top:2px">'+x[0]+'</div></div>'}).join('')+'</div>'}
+function ensurePerm(){var p=$('vip-perm-info');if(p)return p;var r=$('vip-register-info');if(!r||!r.parentNode)return null;
+ var fb=function(l,n,c){return l?'<a href="'+l+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;padding:10px 6px;border-radius:10px;font-family:Orbitron;font-size:8px;font-weight:bold;color:'+c+';border:1px solid '+c+'66;background:'+c+'1a">'+n+'</a>':'<div style="text-align:center;padding:10px 6px;border-radius:10px;font-family:Orbitron;font-size:8px;color:#6b7280;border:1px dashed #374151">'+n+' · segera tersedia</div>'};
+ p=document.createElement('div');p.id='vip-perm-info';
+ p.innerHTML='<div class="vip-section-title">♾️ DAPATKAN AKSES PERMANEN</div><div style="background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(234,179,8,.06));border:1px solid rgba(168,85,247,.35);border-radius:16px;padding:16px;margin-bottom:16px">'
+ +'<div style="font-size:11px;color:#e5e7eb;font-weight:700;margin-bottom:6px">Cara 1 · Lewat akun Funded dari owner</div>'
+ +'<p style="font-size:10px;color:#9ca3af;line-height:1.7;margin:0 0 10px">Daftar akun funded <b>forex / crypto</b> memakai <b>link dari owner</b> di bawah. Kirim bukti pendaftaran lewat form upload bukti di bawah (pilih paket ♾️ LIFETIME). Setelah diverifikasi, VIP kamu langsung <b style="color:#c084fc">PERMANEN</b>.</p>'
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">'+fb(FUNDED_LINKS.forex,'💱 FUNDED FOREX','#38bdf8')+fb(FUNDED_LINKS.crypto,'🪙 FUNDED CRYPTO','#f59e0b')+'</div>'
+ +'<div style="border-top:1px solid rgba(255,255,255,.08);padding-top:12px"><div style="font-size:11px;color:#e5e7eb;font-weight:700;margin-bottom:6px">Cara 2 · Bayar permanen sekali saja</div>'
+ +'<p style="font-size:10px;color:#9ca3af;line-height:1.7;margin:0 0 10px">Cukup <b style="color:#c084fc">$10</b> sekali bayar, akses VIP selamanya tanpa perpanjangan.</p>'
+ +'<button id="vp-perm-pick" style="width:100%;background:linear-gradient(135deg,#7e22ce,#c084fc);color:#fff;border:none;padding:11px;border-radius:10px;font-family:Orbitron;font-weight:900;font-size:9px;cursor:pointer">♾️ PILIH PAKET PERMANEN $10</button></div></div>';
+ r.parentNode.insertBefore(p,r);
+ $('vp-perm-pick').onclick=function(){var c=document.querySelector('.vip-price-card.lifetime');if(c){c.click();c.scrollIntoView({behavior:'smooth',block:'center'})}};return p}
+function tick(){
+ var s=st(),end=s.end||0,left=end?end-Date.now():0;
+ if(end&&left<=0){if(s.k==='vip'){try{window.__vipExp=null;_setVip(false);applyVipGates()}catch(e){}}else{try{trialActive=false}catch(e){}}s=st();end=0;left=0}
+ var b=ensureBanner(),k=s.k,c,html,cl;
+ if(k==='trial'){cl=col(left);html='⏳ TRIAL · sisa <b>'+fmt(left)+'</b> · berakhir '+dt(end)+' · <u style="color:#fff">UPGRADE VIP</u>'}
+ else if(k==='vip'){cl=col(left);html='👑 VIP · sisa <b>'+fmt(left)+'</b> · s/d '+dt(end)}
+ else if(k==='perm'){cl='#c084fc';html='♾️ VIP <b>PERMANEN</b> · akses selamanya'}
+ else if(k==='owner'){cl='#eab308';html='👑 OWNER · <b>PERMANEN</b>'}
+ else if(k==='expired'){cl='#ef4444';html='⛔ TRIAL HABIS · <u style="color:#fff">UPGRADE VIP</u> untuk membuka semua fitur'}
+ if(b){if(html){b.style.display='block';b.style.color=cl;b.style.borderColor=cl+'66';if(b._h!==html){b._h=html;b.innerHTML=html}}else b.style.display='none'}
+ c=ensureCard();
+ if(c){var h2='';
+  if(k==='trial'||k==='vip'){cl=col(left);h2='<div style="font-size:8px;color:#9ca3af;letter-spacing:1px;margin-bottom:8px;font-family:Orbitron">'+(k==='trial'?'MASA TRIAL BERAKHIR DALAM':'MASA VIP BERAKHIR DALAM')+'</div>'+tiles(left,cl)+'<div style="font-size:9px;color:#9ca3af;margin-top:8px">Berakhir: <b style="color:'+cl+'">'+dt(end)+'</b>'+(left<3*864e5?' · segera perpanjang!':'')+'</div>'}
+  else if(k==='perm'||k==='owner')h2='<div style="font-family:Orbitron;font-size:18px;font-weight:900;color:#c084fc">♾️ PERMANEN</div><div style="font-size:9px;color:#9ca3af;margin-top:4px">Akses selamanya, tanpa masa kadaluarsa</div>';
+  else if(k==='expired')h2='<div style="font-family:Orbitron;font-size:15px;font-weight:900;color:#ef4444">⛔ TRIAL HABIS</div><div style="font-size:9px;color:#9ca3af;margin-top:4px">Pilih paket VIP di bawah untuk membuka kembali semua fitur</div>';
+  c.style.display=h2?'block':'none';if(c._h!==h2){c._h=h2;c.innerHTML=h2}}
+ var p=ensurePerm();if(p)p.style.display=(k==='perm'||k==='owner'||k==='?')?'none':'block';
+ var sh=left>=864e5?Math.floor(left/864e5)+' HARI':fmt(left);
+ ['hm-badge','ac-badge'].forEach(function(id){var e=$(id);if(!e)return;var t=k==='perm'?'♾️ VIP PERMANEN':k==='vip'?'👑 VIP · '+sh:k==='trial'?'⏳ TRIAL · '+sh:'';if(t&&e.textContent!==t)e.textContent=t})}
+setInterval(tick,1000);
 })();
 </script>
 </body>
