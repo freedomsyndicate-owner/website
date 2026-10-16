@@ -928,13 +928,6 @@
             <a href="#" class="nav-link" onclick="openTab('account-tab', this); toggleNav()"><span class="nav-ico">🔗</span><span class="nav-txt">Account MT5</span></a>
             </div></div>
         </div>
-        <div class="nav-group" data-group="otomasi">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">⚙️</span><span class="ngh-title">Otomatisasi</span><span class="ngh-count">2</span><span class="ngh-chev">›</span></button>
-            <div class="nav-group-body"><div class="nav-group-inner">
-            <a href="#" class="nav-link" onclick="openTab('ea-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🤖</span><span class="nav-txt">EA</span></a>
-            <a href="#" class="nav-link" onclick="openTab('eabuilder-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🛠️</span><span class="nav-txt">EA Builder</span></a>
-            </div></div>
-        </div>
         <div class="nav-group" data-group="edukasi">
             <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎓</span><span class="ngh-title">Edukasi</span><span class="ngh-count">2</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
@@ -2138,39 +2131,6 @@
         </div></div>
 
         <!-- EA -->
-        <div id="ea-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🤖 EXPERT ADVISOR</h2></div>
-            <div class="fsx-warn">⚠️ Selalu uji EA di akun demo / Strategy Tester dulu. Tidak ada EA yang menjamin profit.</div>
-            <div id="ea-list"></div>
-            <button class="fsx-btn pri" style="width:100%;margin-bottom:12px" onclick="FSX.go('eabuilder-tab')">🛠 Buat EA sendiri di EA Builder ›</button>
-            <div class="fsx-card" id="ea-owner" style="display:none"><h3>👑 TAMBAH EA (OWNER)</h3>
-                <input class="fsx-in" id="ea-t" placeholder="Nama EA"><label class="fsx-lbl">Deskripsi</label><input class="fsx-in" id="ea-d"><label class="fsx-lbl">Link download</label><input class="fsx-in" id="ea-u">
-                <button class="fsx-btn gold" style="width:100%;margin-top:10px" onclick="FSX.content.add('eas',{title:'ea-t',desc:'ea-d',url:'ea-u'})">SIMPAN</button></div>
-        </div></div>
-
-        <!-- EA BUILDER -->
-        <div id="eabuilder-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('ea-tab')">‹</button><h2>🛠 EA BUILDER<small>Generator kode MQL5 (MT5)</small></h2></div>
-            <div class="fsx-card"><h3>PARAMETER</h3>
-                <label class="fsx-lbl">Strategi</label><select class="fsx-in" id="eb-strat" onchange="FSX.eb.gen()"><option value="ema">EMA Cross</option><option value="rsi">RSI Overbought/Oversold</option><option value="ema_rsi">EMA Cross + filter RSI</option></select>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                    <div><label class="fsx-lbl">EMA cepat</label><input class="fsx-in" type="number" id="eb-f" value="9" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">EMA lambat</label><input class="fsx-in" type="number" id="eb-s" value="21" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">RSI periode</label><input class="fsx-in" type="number" id="eb-rp" value="14" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">RSI level (OB)</label><input class="fsx-in" type="number" id="eb-ob" value="70" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">Risiko per trade (%)</label><input class="fsx-in" type="number" step="0.1" id="eb-risk" value="1" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">Lot tetap (0 = pakai risiko)</label><input class="fsx-in" type="number" step="0.01" id="eb-lot" value="0" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">SL (poin)</label><input class="fsx-in" type="number" id="eb-sl" value="300" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">TP (poin)</label><input class="fsx-in" type="number" id="eb-tp" value="600" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">Magic number</label><input class="fsx-in" type="number" id="eb-mg" value="190300" oninput="FSX.eb.gen()"></div>
-                    <div><label class="fsx-lbl">Max spread (poin)</label><input class="fsx-in" type="number" id="eb-sp" value="50" oninput="FSX.eb.gen()"></div>
-                </div></div>
-            <div class="fsx-card"><h3>KODE MQL5</h3><div class="fsx-code" id="eb-code"></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="fsx-btn pri" onclick="FSX.eb.copy()">📋 Salin</button><button class="fsx-btn" onclick="FSX.eb.dl()">⬇ Unduh .mq5</button></div>
-                <div class="fsx-note">Tempel di MetaEditor (MT5) → File › New › Expert Advisor → compile (F7). Hanya untuk edukasi; tidak ada jaminan profit.</div></div>
-        </div></div>
-
-        <!-- TRADING ARENA -->
         <div id="arena-tab" class="tab-content"><div class="inner-padding">
             <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🏟 TRADING ARENA<small>Paper trading $10.000 · ranking bersama</small></h2></div>
             <div class="fsx-card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center"><div><small class="m" style="font-size:8px">EQUITY</small><div class="b" style="font-family:Orbitron;font-size:16px" id="ar-eq">$10,000</div></div><div><small class="m" style="font-size:8px">CASH</small><div style="font-family:Orbitron;font-size:16px" id="ar-cash">$10,000</div></div></div></div>
@@ -2374,7 +2334,7 @@ function loadVipMembers(){
         <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
         <button onclick="revokeVipKey('${d.k}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
     list.innerHTML=html})}
-const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab','fundamental-tab','insider-tab','indikator-tab','monitor-tab','micin-tab','meme-tab','radar-tab','ea-tab','eabuilder-tab'];
+const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab','fundamental-tab','insider-tab','indikator-tab','monitor-tab','micin-tab','meme-tab','radar-tab'];
 
         function revokeVip() {
             const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
@@ -2716,7 +2676,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
 
         function setupTracker() { 
             if(!curUser) return;
-            rtdb.ref('members/' + curUser.uid).set({ email: curUser.email, lastSeen: firebase.database.ServerValue.TIMESTAMP });
+            rtdb.ref('members/' + curUser.uid).set({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
             const pRef = rtdb.ref('presence/' + curUser.uid); 
             rtdb.ref('.info/connected').on('value', snap => { 
                 if (snap.val() === true) { 
@@ -3118,7 +3078,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         }
 
         function openTab(id, el) {
-            if (!isVip && PREMIUM_TABS.includes(id)) { try{toast('🔒 Khusus VIP','Upgrade VIP untuk membuka fitur ini')}catch(e){} id = 'vip-tab'; el = document.querySelector('.nav-link.vip-nav'); }
+            if (!isVip && PREMIUM_TABS.includes(id)) { if (window.showVipPopup) showVipPopup(id); return; }
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
                 id = 'vip-tab';
@@ -4810,7 +4770,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         const CATS = [
             { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['AI Analisis', '✨', 'ai-tab'], ['Analisis', '📊', 'analisis-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
             { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender', '📅', 'kalender-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
-            { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab'], ['EA', '🤖', 'ea-tab'], ['EA Builder', '🛠', 'eabuilder-tab']] },
+            { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
             { k: 'com', n: 'Komunitas & Cuan', ic: '💬', th: 'th-com', isNew: true, items: [['Chat', '💬', 'community-tab'], ['Trading Arena', '🏟', 'arena-tab', 'new'], ['Affiliate', '🤝', 'affiliate-tab'], ['Video Campaign', '🎬', 'campaign-tab']] }
         ];
         function buildHub() {
@@ -4825,7 +4785,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         }
         function hubItems(k) {
             const c = CATS.find(x => x.k === k);
-            $('#fsx-hub .hub-box').innerHTML = `<div class="hub-head"><button class="fsx-back" onclick="FSX.hub()">‹</button><h3>${c.n}</h3><button class="hub-x" onclick="FSX.closeHub()">Tutup</button></div><div class="hub-items">${c.items.map(i => `<div class="hub-it" data-go="${i[2]}">${i[3] === 'new' ? '<span class="nw">NEW</span>' : ''}${(i[3] === 'vip' && !VIP()) ? '<span class="lock">🔒</span>' : ''}<div class="ic ${c.th}">${i[1]}</div>${esc(i[0])}</div>`).join('')}</div>${k === 'mkt' ? '<div class="fsx-warn" style="margin-top:16px;margin-bottom:0">⚠️ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>' : ''}`;
+            $('#fsx-hub .hub-box').innerHTML = `<div class="hub-head"><button class="fsx-back" onclick="FSX.hub()">‹</button><h3>${c.n}</h3><button class="hub-x" onclick="FSX.closeHub()">Tutup</button></div><div class="hub-items">${c.items.map(i => `<div class="hub-it" data-go="${i[2]}">${i[3] === 'new' ? '<span class="nw">NEW</span>' : ''}${(PREMIUM_TABS.includes(i[2]) && !VIP()) ? '<span class="lock">🔒</span>' : ''}<div class="ic ${c.th}">${i[1]}</div>${esc(i[0])}</div>`).join('')}</div>${k === 'mkt' ? '<div class="fsx-warn" style="margin-top:16px;margin-bottom:0">⚠️ Micin Radar bersifat eksperimental — risiko sangat tinggi.</div>' : ''}`;
             $('#fsx-hub .hub-box').onclick = e => { const i = e.target.closest('[data-go]'); if (i) FSX.go(i.dataset.go); };
         }
         function closeHub() { const h = $('#fsx-hub'); if (h) h.classList.remove('show'); }
@@ -5246,114 +5206,7 @@ const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab
         };
         FSX.video.play = FSX.video.play.bind(FSX.video);
         FSX.materi = { open() { showOwner('mt-owner'); FSX.content.sub('lessons', () => this.draw()); }, draw() { const ex = FSX.content.cache.lessons || []; $('#mt-list').innerHTML = BASIC_LESSONS.map(l => `<details class="fsx-lesson"><summary>📘 ${esc(l[0])}</summary><div class="bd">${l[1]}</div></details>`).join('') + ex.map(l => `<details class="fsx-lesson"><summary>📗 ${esc(l.title)}</summary><div class="bd">${delBtn('lessons', l.id)}${esc(l.body || '').replace(/\n/g, '<br>')}</div></details>`).join(''); } };
-        FSX.ea = { open() { showOwner('ea-owner'); FSX.content.sub('eas', () => this.draw()); }, draw() { const L = FSX.content.cache.eas || []; $('#ea-list').innerHTML = L.length ? L.map(e => `<div class="fsx-card">${delBtn('eas', e.id)}<h3>${esc(e.title)}</h3><div class="m" style="font-size:10px;margin-bottom:8px">${esc(e.desc || '')}</div>${e.url ? `<a class="fsx-btn pri" style="text-decoration:none;display:inline-block" href="${esc(e.url)}" target="_blank" rel="noopener">⬇ Unduh / Buka</a>` : ''}</div>`).join('') : '<div class="fsx-empty">Belum ada EA dari owner. Buat sendiri lewat EA Builder.</div>'; } };
 
-        /* ---------- EA BUILDER ---------- */
-        FSX.eb = {
-            code: '',
-            gen() {
-                const v = id => (document.getElementById(id) || {}).value, st = v('eb-strat');
-                const f = Math.max(1, parseInt(v('eb-f')) || 9), s = Math.max(1, parseInt(v('eb-s')) || 21), rp = Math.max(2, parseInt(v('eb-rp')) || 14), ob = Math.min(95, Math.max(55, parseInt(v('eb-ob')) || 70));
-                const risk = num(v('eb-risk')), lot = num(v('eb-lot')), sl = parseInt(v('eb-sl')) || 300, tp = parseInt(v('eb-tp')) || 600, mg = parseInt(v('eb-mg')) || 190300, sp = parseInt(v('eb-sp')) || 50;
-                const useEma = st !== 'rsi', useRsi = st !== 'ema';
-                let sig;
-                if (st === 'ema') sig = '   bool buy  = (fast[2] <= slow[2] && fast[1] > slow[1]);\n   bool sell = (fast[2] >= slow[2] && fast[1] < slow[1]);';
-                else if (st === 'rsi') sig = '   bool buy  = (rsi[2] < (100 - InpRsiOB) && rsi[1] >= (100 - InpRsiOB));\n   bool sell = (rsi[2] > InpRsiOB && rsi[1] <= InpRsiOB);';
-                else sig = '   bool buy  = (fast[2] <= slow[2] && fast[1] > slow[1] && rsi[1] > 50);\n   bool sell = (fast[2] >= slow[2] && fast[1] < slow[1] && rsi[1] < 50);';
-                this.code = `//+------------------------------------------------------------------+
-//| FS_EA.mq5 - dibuat oleh Freedom Syndicate EA Builder             |
-//| Strategi: ${st === 'ema' ? 'EMA Cross' : st === 'rsi' ? 'RSI' : 'EMA Cross + filter RSI'}
-//| Hanya untuk edukasi. Uji di akun demo / Strategy Tester dulu.    |
-//+------------------------------------------------------------------+
-#property strict
-#property version "1.00"
-#include <Trade/Trade.mqh>
-
-input int    InpFast    = ${f};      // EMA cepat
-input int    InpSlow    = ${s};      // EMA lambat
-input int    InpRsiPer  = ${rp};      // RSI periode
-input int    InpRsiOB   = ${ob};      // RSI overbought (oversold = 100 - nilai ini)
-input double InpRiskPct = ${risk};    // Risiko per trade (%)
-input double InpFixLot  = ${lot};     // Lot tetap (0 = pakai risiko %)
-input int    InpSL      = ${sl};     // Stop loss (poin)
-input int    InpTP      = ${tp};     // Take profit (poin)
-input int    InpMaxSpr  = ${sp};      // Maks spread (poin)
-input long   InpMagic   = ${mg};
-
-CTrade trade;
-int hFast = INVALID_HANDLE, hSlow = INVALID_HANDLE, hRsi = INVALID_HANDLE;
-
-int OnInit()
-{
-   trade.SetExpertMagicNumber(InpMagic);
-${useEma ? '   hFast = iMA(_Symbol, _Period, InpFast, 0, MODE_EMA, PRICE_CLOSE);\n   hSlow = iMA(_Symbol, _Period, InpSlow, 0, MODE_EMA, PRICE_CLOSE);\n' : ''}${useRsi ? '   hRsi  = iRSI(_Symbol, _Period, InpRsiPer, PRICE_CLOSE);\n' : ''}   return(INIT_SUCCEEDED);
-}
-
-void OnDeinit(const int reason)
-{
-   if(hFast != INVALID_HANDLE) IndicatorRelease(hFast);
-   if(hSlow != INVALID_HANDLE) IndicatorRelease(hSlow);
-   if(hRsi  != INVALID_HANDLE) IndicatorRelease(hRsi);
-}
-
-bool HasPosition()
-{
-   for(int i = PositionsTotal() - 1; i >= 0; i--)
-   {
-      ulong t = PositionGetTicket(i);
-      if(t == 0) continue;
-      if(PositionGetString(POSITION_SYMBOL) == _Symbol && PositionGetInteger(POSITION_MAGIC) == InpMagic) return true;
-   }
-   return false;
-}
-
-double CalcLot()
-{
-   double minL = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
-   double maxL = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
-   double stepL = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
-   double lot = InpFixLot;
-   if(lot <= 0)
-   {
-      double risk = AccountInfoDouble(ACCOUNT_BALANCE) * InpRiskPct / 100.0;
-      double tv = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
-      double ts = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE);
-      double perLot = (ts > 0) ? (InpSL * _Point / ts) * tv : 0;
-      lot = (perLot > 0) ? risk / perLot : minL;
-   }
-   lot = MathFloor(lot / stepL) * stepL;
-   return NormalizeDouble(MathMax(minL, MathMin(maxL, lot)), 2);
-}
-
-void OnTick()
-{
-   static datetime lastBar = 0;
-   datetime bar = iTime(_Symbol, _Period, 0);
-   if(bar == lastBar) return;      // hanya sekali per candle baru
-   lastBar = bar;
-
-   if(HasPosition()) return;
-   if(SymbolInfoInteger(_Symbol, SYMBOL_SPREAD) > InpMaxSpr) return;
-
-   double fast[], slow[], rsi[];
-   ArraySetAsSeries(fast, true); ArraySetAsSeries(slow, true); ArraySetAsSeries(rsi, true);
-${useEma ? '   if(CopyBuffer(hFast, 0, 0, 4, fast) < 4 || CopyBuffer(hSlow, 0, 0, 4, slow) < 4) return;\n' : ''}${useRsi ? '   if(CopyBuffer(hRsi, 0, 0, 4, rsi) < 4) return;\n' : ''}
-${sig}
-
-   double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
-   double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
-   double lot = CalcLot();
-   if(buy)
-      trade.Buy(lot, _Symbol, ask, ask - InpSL * _Point, ask + InpTP * _Point, "FS EA");
-   else if(sell)
-      trade.Sell(lot, _Symbol, bid, bid + InpSL * _Point, bid - InpTP * _Point, "FS EA");
-}
-`;
-                const c = $('#eb-code'); if (c) c.textContent = this.code;
-            },
-            copy() { this.gen(); try { navigator.clipboard.writeText(this.code).then(() => toast('✅ Disalin', 'Kode MQL5 ada di clipboard')); } catch (e) { toast('Gagal menyalin', 'Pilih teks lalu salin manual'); } },
-            dl() { this.gen(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([this.code], { type: 'text/plain' })); a.download = 'FS_EA.mq5'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
-        };
 
         /* ---------- TRADING ARENA ---------- */
         const AR0 = { cash: 10000, pos: [] };
@@ -5413,10 +5266,11 @@ ${sig}
             'saham-tab': () => FSX.saham.open(), 'crypto-tab': () => FSX.crypto.load(), 'micin-tab': () => FSX.micin.load(), 'meme-tab': () => FSX.meme.load(), 'radar-tab': () => FSX.radar.init(),
             'riwayat-tab': () => FSX.riwayat.open(), 'ai-tab': openAI, 'analisis-tab': () => FSX.analisis.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
             'intraday-tab': () => FSX.intraday.open(), 'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open(),
-            'ea-tab': () => FSX.ea.open(), 'eabuilder-tab': () => FSX.eb.gen(), 'arena-tab': () => FSX.arena.init(), 'affiliate-tab': () => FSX.aff.open(), 'campaign-tab': () => FSX.camp.open()
+            'arena-tab': () => FSX.arena.init(), 'affiliate-tab': () => FSX.aff.open(), 'campaign-tab': () => FSX.camp.open()
         };
         const _openTab = window.openTab;
         window.openTab = function (id, el) {
+            if (!window.isVip && PREMIUM_TABS.includes(id)) { closeHub(); if (window.showVipPopup) showVipPopup(id); return; }
             _openTab(id, el);
             setTimeout(() => { syncNav(); try { if (INIT[id]) INIT[id](); } catch (e) { console.error(e); } const sc = document.getElementById(id); if (sc) sc.scrollTop = 0; }, 200);
         };
@@ -5648,6 +5502,25 @@ setInterval(()=>{const vis=isAct('analisis-tab')&&$('#an-of')&&$('#an-of').style
 setInterval(()=>{if(!document.hidden)prices()},8000);setInterval(scanAll,3e4);
 const boot=()=>{initSig();initSeg();setTimeout(()=>{prices();scanFull()},2500)};
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
+})();
+</script>
+<script>
+(function(){
+var css=document.createElement('style');css.textContent='.fs-lk{margin-left:6px;font-size:11px;filter:drop-shadow(0 0 4px rgba(234,179,8,.6))}.nav-link.vip-locked{opacity:.78}.fsx-bnav button .fs-lk{position:absolute;top:0;right:calc(50% - 22px);margin:0;font-size:9px}#vip-popup{position:fixed;inset:0;z-index:20000;background:rgba(3,7,14,.88);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}#vip-popup.show{display:flex}#vip-popup .vip-lock-card{position:relative;max-height:92vh;overflow:auto}';document.head.appendChild(css);
+var NAMES={'signal-tab':'Live Signal ICT','ai-tab':'AI Analisis','analisis-tab':'Analisis','intraday-tab':'Intraday','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
+window.showVipPopup=function(id){
+ var p=document.getElementById('vip-popup');if(!p){p=document.createElement('div');p.id='vip-popup';p.onclick=function(e){if(e.target===p)p.classList.remove('show')};document.body.appendChild(p)}
+ p.innerHTML='<div class="vip-lock-card"><div class="vip-lock-icon">🔒</div><h2 class="vip-lock-title">KHUSUS VIP</h2><p class="vip-lock-sub">Fitur <b>'+(NAMES[id]||'ini')+'</b> hanya bisa dibuka oleh member <b>VIP Freedom Syndicate</b>.</p><div class="vip-price-grid"><div class="vip-price-card"><div class="vip-price-duration">1 BULAN</div><div class="vip-price-val">Rp 9.000</div></div><div class="vip-price-card popular"><div class="vip-price-duration">3 BULAN</div><div class="vip-price-val">Rp 27.000</div></div><div class="vip-price-card"><div class="vip-price-duration">6 BULAN</div><div class="vip-price-val">Rp 50.000</div></div><div class="vip-price-card"><div class="vip-price-duration">12 BULAN</div><div class="vip-price-val">$5</div></div><div class="vip-price-card lifetime"><div class="vip-price-duration">♾️ LIFETIME</div><div class="vip-price-val lifetime-val">$10</div></div></div><button id="vp-go" style="width:100%;background:linear-gradient(135deg,#b45309,#eab308);color:#000;border:none;padding:13px;border-radius:12px;font-family:Orbitron;font-weight:900;font-size:11px;cursor:pointer;margin-bottom:8px">👑 UPGRADE VIP</button><button id="vp-x" style="width:100%;background:transparent;color:#9ca3af;border:1px solid #374151;padding:10px;border-radius:12px;font-family:Orbitron;font-size:9px;cursor:pointer">NANTI SAJA</button><p class="vip-note" style="margin-top:10px">Akses diaktifkan owner setelah bukti pembayaran terverifikasi.</p></div>';
+ p.classList.add('show');
+ document.getElementById('vp-x').onclick=function(){p.classList.remove('show')};
+ document.getElementById('vp-go').onclick=function(){p.classList.remove('show');var l=document.querySelector('.nav-link.vip-nav');openTab('vip-tab',l)};
+};
+function lock(el,on){var k=el.querySelector(':scope > .fs-lk,:scope .fs-lk');if(on&&!k){k=document.createElement('span');k.className='fs-lk';k.textContent='🔒';el.appendChild(k)}else if(!on&&k)k.remove();el.classList.toggle('vip-locked',on)}
+function apply(){var v=!!window.isVip,P=window.PREMIUM_TABS||[];
+ document.querySelectorAll('.nav-link').forEach(function(a){var m=(a.getAttribute('onclick')||'').match(/openTab\('([^']+)'/);if(m)lock(a.querySelector('.nav-txt')||a,!v&&P.indexOf(m[1])>-1)});
+ document.querySelectorAll('.fsx-bnav button').forEach(function(b){var t=b.dataset.t;var o=b.querySelector('.lk');if(o)o.style.display='none';lock(b,!v&&P.indexOf(t)>-1)});
+ document.querySelectorAll('.hub-it[data-go]').forEach(function(h){if(!v&&P.indexOf(h.dataset.go)>-1&&!h.querySelector('.lock')){var s=document.createElement('span');s.className='lock';s.textContent='🔒';h.appendChild(s)}})}
+setInterval(apply,1000);document.addEventListener('click',function(){setTimeout(apply,50)},true);
 })();
 </script>
 </body>
