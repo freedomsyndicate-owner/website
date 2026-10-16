@@ -45,6 +45,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
     <style>
+        #analisis-tab, #kalender-tab { display:none !important; }
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         
@@ -895,7 +896,6 @@
             <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()"><span class="nav-ico">📡</span><span class="nav-txt">Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></span></a>
-            <a href="#" class="nav-link" onclick="openTab('analisis-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📊</span><span class="nav-txt">Analisis</span></a>
             <a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚡</span><span class="nav-txt">Intraday</span></a>
             <a href="#" class="nav-link" onclick="openTab('war-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚔️</span><span class="nav-txt">WAR</span></a>
             <a href="#" class="nav-link" onclick="openTab('fundamental-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Fundamental</span></a>
@@ -908,7 +908,6 @@
             <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🌐</span><span class="ngh-title">Pasar & Berita</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('news-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📰</span><span class="nav-txt">Berita</span></a>
-            <a href="#" class="nav-link" onclick="openTab('kalender-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📅</span><span class="nav-txt">Kalender</span></a>
             <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()"><span class="nav-ico">📅</span><span class="nav-txt">Economic Calendar</span></a>
             <a href="#" class="nav-link" onclick="openTab('sesi-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🕒</span><span class="nav-txt">Sesi</span></a>
             <a href="#" class="nav-link" onclick="openTab('radar-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🛰️</span><span class="nav-txt">Radar Dunia</span></a>
@@ -2321,7 +2320,8 @@ function loadVipMembers(){
         <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
         <button onclick="revokeVipKey('${d.k}','${d.email}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
     list.innerHTML=html})}
-const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
+const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab','chart-tab','economic-tab','sesi-tab','video-tab','materi-tab'];
+const REMOVED_TABS=['analisis-tab','kalender-tab'];
 
         /* ===== DIALOG KUSTOM (pengganti confirm/prompt/alert yang bisa diblokir browser) ===== */
         function fsModal(html) {
@@ -2592,7 +2592,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
         // Tabs yang TIDAK terkunci saat trial habis:
         const ALWAYS_UNLOCKED_TABS = ['terminal-tab','announce-tab','community-tab','broker-tab','donasi-tab','account-tab'];
         // Semua tab yang bisa di-lock (VIP tab TIDAK dikunci — harus tetap bisa diakses untuk upgrade):
-        const LOCKABLE_TABS = ['signal-tab','chart-tab','economic-tab','journal-tab','monitor-tab'];
+        const LOCKABLE_TABS = ['signal-tab','journal-tab','monitor-tab'];
 
         let trialActive = false;
         let trialEndTime = null;
@@ -2659,7 +2659,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
                 // Redirect to announce if currently on locked tab
                 const activeTab = document.querySelector('.tab-content.active');
                 if (activeTab && LOCKABLE_TABS.includes(activeTab.id)) {
-                    openTab('terminal-tab', document.querySelector('.nav-link'));
+                    openTab('home-tab', document.querySelector('#nav-home-link'));
                 }
             }
         }
@@ -3107,6 +3107,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
         }
 
         function openTab(id, el) {
+            if (typeof REMOVED_TABS !== 'undefined' && REMOVED_TABS.includes(id)) { id = 'home-tab'; el = document.querySelector('#nav-home-link'); }
             if (!isVip && !trialActive && !FREE_TABS.includes(id)) { if (window.showVipPopup) showVipPopup(id); return; }
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
@@ -4797,8 +4798,8 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
 
         /* ---------- hub "Semua fitur" ---------- */
         const CATS = [
-            { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['Analisis', '📊', 'analisis-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
-            { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender', '📅', 'kalender-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
+            { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['Chart', '📈', 'chart-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
+            { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender Ekonomi', '📅', 'economic-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
             { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
             { k: 'com', n: 'Komunitas & Cuan', ic: '💬', th: 'th-com', isNew: true, items: [['Chat', '💬', 'community-tab'], ['Trading Arena', '🏟', 'arena-tab', 'new']] }
         ];
@@ -4822,7 +4823,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
         FSX.hub = function () { buildHub(); hubCats(); $('#fsx-hub').classList.add('show'); };
 
         /* ---------- BERANDA ---------- */
-        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender', 'kalender-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['₿', 'Crypto', 'crypto-tab'], ['🏟', 'Arena', 'arena-tab']];
+        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender Ekonomi', 'economic-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['₿', 'Crypto', 'crypto-tab'], ['🏟', 'Arena', 'arena-tab']];
         FSX.renderHome = function () {
             const u = U();
             if (u) {
@@ -5299,6 +5300,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab'];
         };
         const _openTab = window.openTab;
         window.openTab = function (id, el) {
+            if (REMOVED_TABS.includes(id)) id = 'home-tab';
             if (!window.isVip && !trialActive && !FREE_TABS.includes(id)) { closeHub(); if (window.showVipPopup) showVipPopup(id); return; }
             _openTab(id, el);
             setTimeout(() => { syncNav(); try { if (INIT[id]) INIT[id](); } catch (e) { console.error(e); } const sc = document.getElementById(id); if (sc) sc.scrollTop = 0; }, 200);
@@ -5526,7 +5528,7 @@ function initOF(){const r=$('#an-of');if(!r||r.dataset.i)return;r.dataset.i=1;pi
 function initSeg(){const s=$('#an-seg');if(!s||s.dataset.i)return;s.dataset.i=1;s.onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#an-seg button').forEach(x=>x.classList.toggle('on',x===b));const of=b.dataset.v==='of';$('#an-tech').style.display=of?'none':'block';$('#an-of').style.display=of?'block':'none';if(of)initOF()}}
 
 /* ================= lifecycle ================= */
-const _ot=window.openTab;window.openTab=function(id,el){_ot&&_ot(id,el);setTimeout(()=>{if(id==='signal-tab'){initSig();render()}if(id==='analisis-tab')initSeg()},260)};
+const _ot=window.openTab;window.openTab=function(id,el){if(id==='analisis-tab'||id==='kalender-tab')id='home-tab';_ot&&_ot(id,el);setTimeout(()=>{if(id==='signal-tab'){initSig();render()}if(id==='analisis-tab')initSeg()},260)};
 setInterval(()=>{const vis=isAct('analisis-tab')&&$('#an-of')&&$('#an-of').style.display!=='none'&&!document.hidden;if(vis&&!O.on)ofStart();else if(!vis&&O.on)ofStop()},1000);
 setInterval(()=>{if(!document.hidden)prices()},8000);setInterval(scanAll,3e4);
 const boot=()=>{initSig();initSeg();setTimeout(()=>{prices();scanFull()},2500)};
