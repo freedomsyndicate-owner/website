@@ -1359,7 +1359,7 @@
             <div class="chat-premium">
                 <div id="chat-messages"></div>
                 <div style="display:flex; padding:15px; gap:10px; border-top:1px solid #1f2937; background:#0d1117;">
-                    <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
+                    <input type="text" id="chat-input" placeholder="Ketik pesan..." enterkeyhint="send" autocomplete="off" onkeydown="if(event.key==='Enter') sendMsg()" style="background:#050a14; border:1px solid #374151; color:white; border-radius:12px; padding:12px; flex-grow:1; outline:none;">
                     <button onclick="sendMsg()" style="background:var(--blue); border:none; color:black; border-radius:12px; padding:0 20px; font-weight:900; font-family:'Orbitron'; cursor:pointer;">SEND</button>
                 </div>
             </div>
@@ -1897,6 +1897,7 @@
                             <button onclick="grantVip()" class="vip-action-btn btn-grant">✅ GRANT</button>
                             <button onclick="revokeVip()" class="vip-action-btn btn-revoke">❌ REVOKE</button>
                         </div>
+                        <select aria-label="Durasi VIP" id="vip-plan-input" style="background:#050a14;border:1px solid #374151;color:#eab308;border-radius:12px;padding:12px;font-family:Orbitron;font-size:10px;width:100%;margin-bottom:8px"><option value="1">1 Bulan · Rp 9.000</option><option value="3">3 Bulan · Rp 27.000</option><option value="6">6 Bulan · Rp 50.000</option><option value="12">12 Bulan · $5</option><option value="0">Lifetime · $10</option></select>
                         <div id="vip-admin-msg" style="font-size:10px; color:#4ade80; min-height:16px; margin-top:4px;"></div>
                     </div>
                 </div>
@@ -2269,9 +2270,7 @@
                     if (!idxSnap.exists()) {
                         // Cek apakah email ada di vip_members
                         rtdb.ref('vip_members').orderByChild('email').equalTo(u.email.toLowerCase()).once('value', vmSnap => {
-                            if (vmSnap.exists()) {
-                                rtdb.ref('vip_index/' + u.uid).set(true);
-                            }
+                            if (vmSnap.exists()) { let ex=null,ok=false; vmSnap.forEach(c=>{const d=c.val(); if(d.expiresAt==null||d.expiresAt>Date.now()){ok=true;ex=d.expiresAt==null?null:d.expiresAt}}); if(ok) rtdb.ref('vip_index/' + u.uid).set(ex==null?true:ex); }
                         });
                     }
                 });
@@ -2292,7 +2291,7 @@
             try {
                 if (!curUser) return false;
                 const snap = await rtdb.ref('vip_index/' + curUser.uid).once('value');
-                return snap.val() === true;
+                const v=snap.val();if(typeof v==='number'&&v<=Date.now()){rtdb.ref('vip_index/'+curUser.uid).remove();return false}return v===true||typeof v==='number';
             } catch(e) { return false; }
         }
 
@@ -2338,49 +2337,44 @@
             }
         }
 
-        function loadVipMembers() {
-            const list = document.getElementById('vip-members-list');
-            rtdb.ref('vip_members').on('value', snap => {
-                if (!snap.exists()) {
-                    list.innerHTML = '<div style="text-align:center;padding:20px;font-size:10px;color:#374151;">Belum ada member VIP</div>';
-                    return;
-                }
-                let html = '';
-                snap.forEach(child => {
-                    const d = child.val();
-                    const since = d.grantedAt ? new Date(d.grantedAt).toLocaleDateString('id-ID') : '-';
-                    html += `<div class="vip-member-card">
-                        <div>
-                            <div class="vip-member-email">👑 ${d.email}</div>
-                            <div class="vip-member-since">Aktif sejak: ${since}</div>
-                        </div>
-                        <button onclick="revokeVipKey('${child.key}')" class="vip-action-btn btn-revoke">REVOKE</button>
-                    </div>`;
-                });
-                list.innerHTML = html;
-            });
-        }
-
-        function grantVip() {
-            const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
-            const msg   = document.getElementById('vip-admin-msg');
-            if (!email || !email.includes('@')) { msg.style.color='#ef4444'; msg.textContent = '❌ Email tidak valid!'; return; }
-            // Simpan ke vip_members (list lengkap untuk owner)
-            rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
-                .then(() => {
-                    msg.style.color='#4ade80';
-                    msg.textContent = `✅ ${email} berhasil dijadikan VIP!`;
-                    document.getElementById('vip-email-input').value='';
-                    // Coba cari UID dari /uid_registry jika sudah pernah login
-                    rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value', snap => {
-                        snap.forEach(child => {
-                            const uid = child.key;
-                            rtdb.ref('vip_index/' + uid).set(true);
-                        });
-                    });
-                })
-                .catch(e => { msg.style.color='#ef4444'; msg.textContent = '❌ Error: ' + e.message; });
-        }
+const VIP_PLANS={1:'1 Bulan',3:'3 Bulan',6:'6 Bulan',12:'12 Bulan',0:'Lifetime'};
+const addMonths=(base,m)=>{const d=new Date(base);d.setMonth(d.getMonth()+m);return d.getTime()};
+const vipOk=v=>v===true||(typeof v==='number'&&v>Date.now());
+const vipLeft=e=>e==null?'♾️ Lifetime':e<=Date.now()?'⛔ Kadaluarsa':'Sisa '+Math.ceil((e-Date.now())/864e5)+' hari · s/d '+new Date(e).toLocaleDateString('id-ID');
+function syncIndex(email,exp){rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value',s=>s.forEach(c=>rtdb.ref('vip_index/'+c.key).set(exp==null?true:exp)))}
+function grantPlan(email,months,msg){
+  email=(email||'').trim().toLowerCase();
+  if(!email.includes('@')){if(msg){msg.style.color='#ef4444';msg.textContent='❌ Email tidak valid!'}return Promise.resolve()}
+  return rtdb.ref('vip_members').orderByChild('email').equalTo(email).once('value').then(snap=>{
+    const now=Date.now();let key=null,old=null;snap.forEach(c=>{key=c.key;old=c.val()});
+    let base=now;if(old&&old.expiresAt&&old.expiresAt>now)base=old.expiresAt;
+    const lifetime=+months===0||(old&&old.plan==='lifetime'&&old.expiresAt==null&&old.grantedAt);
+    const exp=(+months===0||(old&&old.expiresAt==null&&old.lifetime))?null:addMonths(base,+months);
+    const rec={email,plan:+months===0?'lifetime':months+' bulan',months:+months,grantedAt:old&&old.grantedAt||now,updatedAt:now,grantedBy:curUser.email,expiresAt:exp,lifetime:exp==null};
+    const p=key?rtdb.ref('vip_members/'+key).update(rec):rtdb.ref('vip_members').push(rec);
+    return p.then(()=>{syncIndex(email,exp);if(msg){msg.style.color='#4ade80';msg.textContent=`✅ ${email} VIP ${VIP_PLANS[+months]} · ${exp==null?'selamanya':'s/d '+new Date(exp).toLocaleDateString('id-ID')}`}})
+  }).catch(e=>{if(msg){msg.style.color='#ef4444';msg.textContent='❌ '+e.message}});
+}
+function grantVip(){const msg=document.getElementById('vip-admin-msg'),pl=document.getElementById('vip-plan-input');grantPlan(document.getElementById('vip-email-input').value,pl?pl.value:1,msg).then(()=>{document.getElementById('vip-email-input').value=''})}
+function extendVipKey(email,m){grantPlan(email,m,document.getElementById('vip-admin-msg'))}
+function loadVipMembers(){
+  const list=document.getElementById('vip-members-list');
+  rtdb.ref('vip_members').on('value',snap=>{
+    if(!snap.exists()){list.innerHTML='<div style="text-align:center;padding:20px;font-size:10px;color:#374151;">Belum ada member VIP</div>';return}
+    const rows=[];snap.forEach(c=>{rows.push({k:c.key,...c.val()})});rows.sort((a,b)=>(b.updatedAt||b.grantedAt||0)-(a.updatedAt||a.grantedAt||0));
+    const act=rows.filter(d=>d.expiresAt==null||d.expiresAt>Date.now()).length;
+    let html=`<div style="font-size:9px;color:#9ca3af;margin-bottom:8px">Total ${rows.length} member · ${act} aktif · ${rows.length-act} kadaluarsa</div>`;
+    rows.forEach(d=>{const exp=d.expiresAt!=null&&d.expiresAt<=Date.now();
+      if(exp)rtdb.ref('uid_registry').orderByChild('email').equalTo(d.email).once('value',s=>s.forEach(c=>rtdb.ref('vip_index/'+c.key).remove()));
+      html+=`<div class="vip-member-card" style="flex-direction:column;align-items:stretch;gap:8px;${exp?'opacity:.6':''}">
+        <div><div class="vip-member-email">👑 ${d.email}</div>
+        <div class="vip-member-since">Paket: <b style="color:#eab308">${d.plan||'-'}</b> · Mulai ${d.grantedAt?new Date(d.grantedAt).toLocaleDateString('id-ID'):'-'}</div>
+        <div class="vip-member-since" style="color:${exp?'#ef4444':'#4ade80'}">${vipLeft(d.expiresAt)}</div></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${[1,3,6,12].map(m=>`<button onclick="extendVipKey('${d.email}',${m})" class="vip-action-btn" style="background:rgba(234,179,8,.15);color:#eab308;border:1px solid rgba(234,179,8,.4)">+${m}bln</button>`).join('')}
+        <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
+        <button onclick="revokeVipKey('${d.k}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
+    list.innerHTML=html})}
+const PREMIUM_TABS=['signal-tab','ai-tab','analisis-tab','intraday-tab','war-tab','fundamental-tab','insider-tab','indikator-tab','monitor-tab','micin-tab','meme-tab','radar-tab','ea-tab','eabuilder-tab'];
 
         function revokeVip() {
             const email = document.getElementById('vip-email-input').value.trim().toLowerCase();
@@ -2586,7 +2580,7 @@
         function approveProof(proofKey, email) {
             if (!email || !email.includes('@')) { alert('Email tidak valid'); return; }
             if (!confirm('Approve & Grant VIP untuk ' + email + '?')) return;
-            rtdb.ref('vip_members').push({ email: email, grantedAt: Date.now(), grantedBy: curUser.email })
+            grantPlan(email, (()=>{const x=prompt('Durasi VIP untuk '+email+'? ketik 1, 3, 6, 12 (bulan) atau 0 (lifetime)','1');return ['0','1','3','6','12'].includes((x||'').trim())?+x:1})())
                 .then(() => {
                     rtdb.ref('payment_proofs/' + proofKey).update({ status: 'approved', approvedAt: Date.now(), approvedBy: curUser.email });
                     alert('✅ VIP granted untuk ' + email);
@@ -2734,8 +2728,24 @@
             rtdb.ref('members').on('value', snap => { document.getElementById('total-users').innerText = snap.numChildren(); }); 
         }
         
-        function sendMsg() { const input = document.getElementById('chat-input'); if(!input.value.trim()) return; rtdb.ref('chat').push({ uid: curUser.uid, name: curUser.email.split('@')[0], msg: input.value, ts: firebase.database.ServerValue.TIMESTAMP }); input.value = ''; }
-        function loadChat() { rtdb.ref('chat').limitToLast(50).on('value', snap => { const box = document.getElementById('chat-messages'); box.innerHTML = ''; snap.forEach(child => { const d = child.val(); const isM = d.uid === curUser.uid; const div = document.createElement('div'); div.className = `msg-bubble ${isM ? 'mine' : ''}`; div.innerHTML = `<div style="font-size:8px; color:var(--blue); margin-bottom:2px;"><b>${d.name}</b></div><div>${d.msg}</div>`; box.appendChild(div); }); box.scrollTop = box.scrollHeight; }); }
+        function sendMsg() {
+            const input = document.getElementById('chat-input'), txt = input.value.trim();
+            if (!txt || !curUser) return;
+            input.disabled = true;
+            rtdb.ref('chat').push({ uid: curUser.uid, name: (curUser.email||'user').split('@')[0], msg: txt.slice(0, 500), ts: firebase.database.ServerValue.TIMESTAMP })
+                .then(() => { input.value = ''; })
+                .catch(e => alert('Pesan gagal terkirim: ' + e.message + (/permission/i.test(e.message) ? '\n\nOwner: izinkan write di path /chat pada Firebase Rules.' : '')))
+                .finally(() => { input.disabled = false; input.focus(); });
+        }
+        function loadChat() {
+            const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+            rtdb.ref('chat').limitToLast(50).on('value', snap => {
+                const box = document.getElementById('chat-messages'); box.innerHTML = '';
+                if (!snap.exists()) box.innerHTML = '<div style="text-align:center;font-size:10px;color:#4b5563;margin:auto">Belum ada pesan. Mulai obrolan! 👋</div>';
+                snap.forEach(child => { const d = child.val(), div = document.createElement('div'); div.className = 'msg-bubble ' + (d.uid === curUser.uid ? 'mine' : ''); div.innerHTML = `<div style="font-size:8px;color:var(--blue);margin-bottom:2px"><b>${esc(d.name)}</b></div><div>${esc(d.msg)}</div>`; box.appendChild(div); });
+                box.scrollTop = box.scrollHeight;
+            }, e => { document.getElementById('chat-messages').innerHTML = '<div style="text-align:center;font-size:10px;color:#ef4444;margin:auto">Chat tidak bisa dimuat: ' + esc(e.message) + '<br>Cek Firebase Rules path /chat</div>'; });
+        }
 
         // ===================================================
         // === SIGNAL TAB - FIREBASE REAL-TIME LISTENER (UPDATED) ===
@@ -3108,6 +3118,7 @@
         }
 
         function openTab(id, el) {
+            if (!isVip && PREMIUM_TABS.includes(id)) { try{toast('🔒 Khusus VIP','Upgrade VIP untuk membuka fitur ini')}catch(e){} id = 'vip-tab'; el = document.querySelector('.nav-link.vip-nav'); }
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
                 id = 'vip-tab';
