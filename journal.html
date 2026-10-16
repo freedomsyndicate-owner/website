@@ -2186,7 +2186,8 @@
             const signalInner  = document.getElementById('signal-content-inner');
             const monitorLock  = document.getElementById('monitor-vip-lock');
             const monitorInner = document.getElementById('monitor-content-inner');
-            if (isVip) {
+            const hasAccess = !!isVip || (typeof trialActive !== 'undefined' && trialActive);
+            if (hasAccess) {
                 if(signalLock)   signalLock.style.display  = 'none';
                 if(signalInner)  signalInner.style.display = 'block';
                 if(monitorLock)  monitorLock.style.display  = 'none';
@@ -2553,6 +2554,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 }
                 window.__trialLoaded = true;
                 applyTrialLocks();
+                applyVipGates();
                 if (trialActive) startTrialCountdown();
             });
         }
@@ -2629,6 +2631,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     banner.remove();
                     trialActive = false;
                     applyTrialLocks();
+                    applyVipGates();
                     return;
                 }
                 const d = Math.floor(remaining / 86400000);
@@ -4690,6 +4693,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         const toast = (t, b, c) => { try { showToast(t, b, c); } catch (e) {} };
         const U = () => { try { return curUser; } catch (e) { return null; } };
         const VIP = () => { try { return !!window.isVip; } catch (e) { return false; } };
+        const ACCESS = () => { try { return !!window.isVip || (typeof trialActive !== 'undefined' && trialActive); } catch (e) { return false; } };
         const OWNER = () => { const u = U(); try { return !!u && u.email === OWNER_EMAIL; } catch (e) { return false; } };
         const active = id => { const t = document.getElementById(id); return !!t && t.classList.contains('active'); };
         const tvEmbed = (el, file, cfg) => { try { window.__fsTerm.ui.tvEmbed(el, file, cfg); } catch (e) { el.innerHTML = '<div class="fsx-empty">Widget gagal dimuat</div>'; } };
@@ -4731,7 +4735,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function syncNav() {
             const cur = (document.querySelector('.tab-content.active') || {}).id;
             $$('.fsx-bnav button').forEach(b => b.classList.toggle('on', b.dataset.t === cur));
-            const lk = $('.fsx-bnav .lk'); if (lk) lk.style.display = VIP() ? 'none' : '';
+            const lk = $('.fsx-bnav .lk'); if (lk) lk.style.display = ACCESS() ? 'none' : '';
         }
 
         /* ---------- hub "Semua fitur" ---------- */
@@ -4782,7 +4786,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             $('#hm-rec-sub').textContent = t.length ? `${t.length} trade · win rate ${Math.round(w / t.length * 100)}% (dari jurnal pribadi)` : 'Belum ada transaksi di jurnal.';
             // sinyal
             const box = $('#hm-signals');
-            if (!VIP()) box.innerHTML = '<div class="fsx-empty">🔐 Live signal khusus member VIP.<br><button class="fsx-btn gold" style="margin-top:10px" onclick="FSX.go(\'vip-tab\')">👑 Buka akses VIP</button></div>';
+            if (!ACCESS()) box.innerHTML = '<div class="fsx-empty">🔐 Live signal khusus member VIP.<br><button class="fsx-btn gold" style="margin-top:10px" onclick="FSX.go(\'vip-tab\')">👑 Buka akses VIP</button></div>';
             else {
                 let sg = []; try { sg = allIctSignals || []; } catch (e) {}
                 const td = new Date().toLocaleDateString('id-ID', { timeZone: 'Asia/Jakarta' });
@@ -5405,7 +5409,7 @@ setInterval(apply,1000);document.addEventListener('click',function(){setTimeout(
 <script>
 (function(){
 /* ISI link akun funded dari owner di sini (kosong = tombol nonaktif) */
-var FUNDED_LINKS={forex:'',crypto:''};
+var FUNDED_LINKS={};
 function $(i){return document.getElementById(i)}
 function st(){
  var own=(typeof curUser!=='undefined'&&curUser&&typeof OWNER_EMAIL!=='undefined'&&curUser.email===OWNER_EMAIL);
@@ -5426,20 +5430,21 @@ function ensureCard(){var c=$('fs-status-card');if(c)return c;var a=$('vip-my-st
  c=document.createElement('div');c.id='fs-status-card';c.style.cssText='margin-top:14px;padding:14px 10px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid #374151;text-align:center';a.parentNode.appendChild(c);return c}
 function tiles(ms,cl){var t=parts(ms);return'<div style="display:flex;justify-content:center;gap:8px">'+[['HARI',t.d],['JAM',p2(t.h)],['MENIT',p2(t.m)],['DETIK',p2(t.s)]].map(function(x){return'<div style="min-width:54px;padding:8px 4px;border-radius:10px;background:#0a0e14;border:1px solid '+cl+'55"><div style="font-family:Orbitron;font-size:20px;font-weight:900;color:'+cl+'">'+x[1]+'</div><div style="font-size:7px;color:#6b7280;letter-spacing:1px;margin-top:2px">'+x[0]+'</div></div>'}).join('')+'</div>'}
 function ensurePerm(){var p=$('vip-perm-info');if(p)return p;var r=$('vip-register-info');if(!r||!r.parentNode)return null;
- var fb=function(l,n,c){return l?'<a href="'+l+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;padding:10px 6px;border-radius:10px;font-family:Orbitron;font-size:8px;font-weight:bold;color:'+c+';border:1px solid '+c+'66;background:'+c+'1a">'+n+'</a>':'<div style="text-align:center;padding:10px 6px;border-radius:10px;font-family:Orbitron;font-size:8px;color:#6b7280;border:1px dashed #374151">'+n+' · segera tersedia</div>'};
+ var gb=function(sub,n,c){return'<button type="button" data-sub="'+sub+'" class="vp-go-bf" style="display:block;width:100%;text-align:center;padding:10px 4px;border-radius:10px;font-family:Orbitron;font-size:8px;font-weight:bold;color:'+c+';border:1px solid '+c+'66;background:'+c+'1a;cursor:pointer">'+n+'</button>'};
  p=document.createElement('div');p.id='vip-perm-info';
  p.innerHTML='<div class="vip-section-title">♾️ DAPATKAN AKSES PERMANEN</div><div style="background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(234,179,8,.06));border:1px solid rgba(168,85,247,.35);border-radius:16px;padding:16px;margin-bottom:16px">'
- +'<div style="font-size:11px;color:#e5e7eb;font-weight:700;margin-bottom:6px">Cara 1 · Lewat akun Funded dari owner</div>'
- +'<p style="font-size:10px;color:#9ca3af;line-height:1.7;margin:0 0 10px">Daftar akun funded <b>forex / crypto</b> memakai <b>link dari owner</b> di bawah. Kirim bukti pendaftaran lewat form upload bukti di bawah (pilih paket ♾️ LIFETIME). Setelah diverifikasi, VIP kamu langsung <b style="color:#c084fc">PERMANEN</b>.</p>'
- +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">'+fb(FUNDED_LINKS.forex,'💱 FUNDED FOREX','#38bdf8')+fb(FUNDED_LINKS.crypto,'🪙 FUNDED CRYPTO','#f59e0b')+'</div>'
+ +'<div style=\"font-size:11px;color:#e5e7eb;font-weight:700;margin-bottom:6px\">Cara 1 · Daftar lewat link owner (Broker &amp; Funded)</div>'
+ +'<p style=\"font-size:10px;color:#9ca3af;line-height:1.7;margin:0 0 10px\">Buka tab <b>Broker &amp; Funded</b>, lalu daftar akun <b>broker / exchange / funded</b> memakai <b>link dari owner</b>. Kirim bukti pendaftaran lewat form upload bukti di bawah (pilih paket ♾️ LIFETIME). Setelah diverifikasi, VIP kamu langsung <b style=\"color:#c084fc\">PERMANEN</b>.</p>'
+ +'<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px\">'+gb('forex-box','💱 FOREX BROKER','#38bdf8')+gb('crypto-box','🪙 CRYPTO EXCHANGE','#f59e0b')+gb('funded-box','🚀 FUNDED','#4ade80')+'</div>'
  +'<div style="border-top:1px solid rgba(255,255,255,.08);padding-top:12px"><div style="font-size:11px;color:#e5e7eb;font-weight:700;margin-bottom:6px">Cara 2 · Bayar permanen sekali saja</div>'
  +'<p style="font-size:10px;color:#9ca3af;line-height:1.7;margin:0 0 10px">Cukup <b style="color:#c084fc">$10</b> sekali bayar, akses VIP selamanya tanpa perpanjangan.</p>'
  +'<button id="vp-perm-pick" style="width:100%;background:linear-gradient(135deg,#7e22ce,#c084fc);color:#fff;border:none;padding:11px;border-radius:10px;font-family:Orbitron;font-weight:900;font-size:9px;cursor:pointer">♾️ PILIH PAKET PERMANEN $10</button></div></div>';
  r.parentNode.insertBefore(p,r);
+ p.querySelectorAll('.vp-go-bf').forEach(function(btn){btn.onclick=function(){var sub=btn.dataset.sub;openTab('broker-tab',null);setTimeout(function(){var i=sub==='forex-box'?0:sub==='crypto-box'?1:2,bs=document.querySelectorAll('#broker-tab .sub-tab-btn');if(bs[i])showSubBroker(sub,bs[i]);window.scrollTo(0,0)},320)}});
  $('vp-perm-pick').onclick=function(){var c=document.querySelector('.vip-price-card.lifetime');if(c){c.click();c.scrollIntoView({behavior:'smooth',block:'center'})}};return p}
 function tick(){
  var s=st(),end=s.end||0,left=end?end-Date.now():0;
- if(end&&left<=0){if(s.k==='vip'){try{window.__vipExp=null;_setVip(false);applyVipGates()}catch(e){}}else{try{trialActive=false}catch(e){}}s=st();end=0;left=0}
+ if(end&&left<=0){if(s.k==='vip'){try{window.__vipExp=null;_setVip(false);applyVipGates()}catch(e){}}else{try{trialActive=false;applyVipGates()}catch(e){}}s=st();end=0;left=0}
  var b=ensureBanner(),k=s.k,c,html,cl;
  if(k==='trial'){cl=col(left);html='⏳ TRIAL · sisa <b>'+fmt(left)+'</b> · berakhir '+dt(end)+' · <u style="color:#fff">UPGRADE VIP</u>'}
  else if(k==='vip'){cl=col(left);html='👑 VIP · sisa <b>'+fmt(left)+'</b> · s/d '+dt(end)}
