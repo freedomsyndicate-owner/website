@@ -45,7 +45,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        #analisis-tab, #kalender-tab { display:none !important; }
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
         :root { --blue: #38bdf8; --red: #ef4444; --green: #4ade80; --bg: #050a14; --card: #0d1117; --be: #eab308; }
         
@@ -782,7 +781,6 @@
         .fsx-lesson .bd b { color:#e5e7eb; }
         .fsx-vid { position:relative; padding-top:56.25%; border-radius:14px; overflow:hidden; background:#000; margin-bottom:10px; }
         .fsx-vid iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
-        .ar-pos { display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:#0a0e14; border:1px solid #1f2937; border-radius:12px; margin-bottom:6px; font-size:11px; }
         .fsx-lb { display:flex; align-items:center; gap:10px; padding:10px 12px; background:#0a0e14; border:1px solid #1f2937; border-radius:12px; margin-bottom:6px; font-size:11px; }
         .fsx-lb .rk { font-family:'Orbitron'; width:24px; color:var(--be); }
         .fsx-lb.me { border-color:var(--blue); }
@@ -828,15 +826,6 @@
 .ls-gd{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ls-gd>div{border:1px solid #1f2937;border-radius:14px;padding:10px;background:#0b0f16}.ls-gd h4{margin:0 0 8px;font:700 10px Orbitron,sans-serif}
 .ls-gd p{margin:0 0 7px;font-size:9px;line-height:1.4;color:#d1d5db}.ls-gd p span{color:#6b7280;display:block;font-size:8px}
 .ls-vd{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3);color:#fde68a;border-radius:10px;padding:10px;font-size:10px;font-weight:700;margin:10px 0}.ls-vd.g{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);color:#86efac}
-.of-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}.of-grid>div{background:#0d1117;border:1px solid #1f2937;border-radius:10px;padding:8px;text-align:center}
-.of-grid b{display:block;font-size:12px;color:#fff}.of-grid span{font-size:8px;color:#6b7280}.of-grid .g{color:#4ade80}.of-grid .r{color:#f87171}
-.of-cv{width:100%;display:block;border-radius:10px;background:#070b12}
-.of-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.of-two .fsx-card{padding:10px;margin-bottom:10px}
-.of-r{position:relative;display:flex;justify-content:space-between;font:10px monospace;padding:2px 4px;margin-bottom:1px;overflow:hidden}.of-r i{position:absolute;right:0;top:0;bottom:0;opacity:.25}
-.of-r.a i{background:#ef4444}.of-r.b i{background:#22c55e}.of-r span,.of-r b{position:relative;font-weight:400}.of-r.a span{color:#f87171}.of-r.b span{color:#4ade80}.of-r b{color:#d1d5db}
-.of-sp{text-align:center;font-size:9px;color:#eab308;padding:3px;border-top:1px dashed #374151;border-bottom:1px dashed #374151;margin:2px 0}
-.of-rd p{margin:0 0 7px;font-size:10px;line-height:1.5;color:#d1d5db;padding-left:10px;border-left:3px solid #374151}.of-rd p.g{border-color:#4ade80}.of-rd p.r{border-color:#ef4444}.of-rd p.y{border-color:#eab308}
-.of-leg{height:6px;border-radius:3px;background:linear-gradient(90deg,#0a1020,hsl(200 90% 25%),hsl(130 90% 40%),hsl(50 90% 55%),#fff);margin-top:6px}
 .ls-seg button i{font-style:normal;background:#eab308;color:#000;border-radius:10px;padding:0 5px;margin-left:4px;font-size:8px}.ls-seg button i:empty{display:none}
 #ls-cat button{font-size:8px}
 .ls-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.ls-top h2{font:900 13px Orbitron,sans-serif;color:#fff;margin:0}.ls-top small{font-size:8.5px;color:#6b7280;display:block;margin-top:3px}
@@ -893,7 +882,7 @@
             </div></div>
         </div>
         <div class="nav-group" data-group="analisis">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">7</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()"><span class="nav-ico">📡</span><span class="nav-txt">Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></span></a>
             <a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚡</span><span class="nav-txt">Intraday</span></a>
@@ -905,7 +894,7 @@
             </div></div>
         </div>
         <div class="nav-group" data-group="pasar">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🌐</span><span class="ngh-title">Pasar & Berita</span><span class="ngh-count">9</span><span class="ngh-chev">›</span></button>
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🌐</span><span class="ngh-title">Pasar & Berita</span><span class="ngh-count">8</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('news-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">📰</span><span class="nav-txt">Berita</span></a>
             <a href="#" class="nav-link" onclick="openTab('economic-tab', this); toggleNav()"><span class="nav-ico">📅</span><span class="nav-txt">Economic Calendar</span></a>
@@ -934,10 +923,8 @@
             </div></div>
         </div>
         <div class="nav-group" data-group="komunitas">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">👥</span><span class="ngh-title">Komunitas</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">👥</span><span class="ngh-title">Broker & Funded</span><span class="ngh-count">1</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
-            <a href="#" class="nav-link" onclick="openTab('community-tab', this); toggleNav()"><span class="nav-ico">👥</span><span class="nav-txt">Community</span></a>
-            <a href="#" class="nav-link" onclick="openTab('arena-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏆</span><span class="nav-txt">Trading Arena</span></a>
             <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Broker & Funded</span></a>
             </div></div>
         </div>
@@ -1956,14 +1943,6 @@
             <div id="nw-body"><div class="fsx-empty">Memuat berita dari berbagai media…</div></div>
         </div></div>
 
-        <!-- KALENDER -->
-        <div id="kalender-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>📅 KALENDER EKONOMI</h2></div>
-            <div class="fsx-card" style="padding:6px;height:560px"><div id="kal-embed" style="height:100%"></div></div>
-            <div class="fsx-note">Versi lain (Tradays & TV berita) ada di menu <b>Economic Calendar</b>.</div>
-            <button class="fsx-btn" style="width:100%;margin-top:10px" onclick="FSX.go('economic-tab')">Buka Economic Calendar lengkap ›</button>
-        </div></div>
-
         <!-- SESI -->
         <div id="sesi-tab" class="tab-content"><div class="inner-padding">
             <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🌍 SESI TRADING</h2></div>
@@ -2024,31 +2003,6 @@
             <div class="fsx-card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center" id="rw-stats"></div></div>
             <div class="fsx-pills"><button class="fsx-pill on" onclick="FSX.riwayat.f('all',this)">SEMUA</button><button class="fsx-pill" onclick="FSX.riwayat.f('BUY',this)">BUY</button><button class="fsx-pill" onclick="FSX.riwayat.f('SELL',this)">SELL</button></div>
             <div id="rw-body"><div class="fsx-empty">Memuat riwayat…</div></div>
-        </div></div>
-
-        <!-- AI ANALISIS -->
-        <!-- ANALISIS -->
-        <div id="analisis-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>📊 ANALISIS</h2></div>
-            <div class="ls-seg" id="an-seg"><button class="on" data-v="tech">📊 TEKNIKAL</button><button data-v="of">🌊 ORDER FLOW</button></div>
-            <div id="an-tech">
-            <div class="fsx-pills" id="an-pills"></div>
-            <div class="fsx-card" style="padding:4px;height:430px"><div id="an-embed" style="height:100%"></div></div>
-            <div class="fsx-card"><h3>🔍 PATTERN SCANNER</h3><div id="an-scan" class="tw-body"></div></div>
-            <button class="fsx-btn pri" style="width:100%" onclick="FSX.go('chart-tab')">Buka Chart Pribadi (gambar mapping tersimpan) ›</button>
-            </div>
-            <div id="an-of" style="display:none">
-                <div class="fsx-pills" id="of-pairs"></div>
-                <div class="fsx-card"><div id="of-top"><div class="fsx-empty">Menghubungkan ke order flow…</div></div></div>
-                <div class="fsx-card"><h3>🔥 LIQUIDITY HEATMAP <small id="of-meta" style="color:#6b7280;font-family:Poppins;font-weight:400;font-size:8px;float:right"></small></h3><canvas id="of-hm" class="of-cv"></canvas><div class="of-leg"></div><div style="display:flex;justify-content:space-between;font-size:8px;color:#6b7280;margin-top:3px"><span>likuiditas tipis</span><span>● beli agresif · ● jual agresif (bubble = market order besar)</span><span>tebal</span></div></div>
-                <div class="of-two">
-                    <div class="fsx-card"><h3>📖 DOM</h3><div id="of-dom"></div></div>
-                    <div class="fsx-card"><h3>📊 VOL PROFILE</h3><canvas id="of-pf" class="of-cv"></canvas><div style="font-size:8px;color:#6b7280;margin-top:3px">kuning = POC · biru = value area 70%</div></div>
-                </div>
-                <div class="fsx-card"><h3>📈 DELTA & CVD (1 menit)</h3><canvas id="of-dl" class="of-cv"></canvas></div>
-                <div class="fsx-card"><h3>🧠 PEMBACAAN ORDER FLOW</h3><div id="of-rd" class="of-rd"><div class="fsx-empty">Mengumpulkan data…</div></div></div>
-                <div class="fsx-card"><h3>⚙️ KONTEKS FUTURES</h3><div id="of-fut"></div></div>
-            </div>
         </div></div>
 
         <!-- WAR -->
@@ -2113,20 +2067,6 @@
             <div class="fsx-card" id="mt-owner" style="display:none"><h3>👑 TAMBAH MATERI (OWNER)</h3>
                 <input class="fsx-in" id="mt-t" placeholder="Judul"><label class="fsx-lbl">Isi</label><textarea class="fsx-in" id="mt-b" rows="6"></textarea>
                 <button class="fsx-btn gold" style="width:100%;margin-top:10px" onclick="FSX.content.add('lessons',{title:'mt-t',body:'mt-b'})">SIMPAN</button></div>
-        </div></div>
-
-        <!-- EA -->
-        <div id="arena-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🏟 TRADING ARENA<small>Paper trading $10.000 · ranking bersama</small></h2></div>
-            <div class="fsx-card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center"><div><small class="m" style="font-size:8px">EQUITY</small><div class="b" style="font-family:Orbitron;font-size:16px" id="ar-eq">$10,000</div></div><div><small class="m" style="font-size:8px">CASH</small><div style="font-family:Orbitron;font-size:16px" id="ar-cash">$10,000</div></div></div></div>
-            <div class="fsx-card"><h3>ORDER</h3>
-                <select class="fsx-in" id="ar-sym" onchange="FSX.arena.price()"><option value="BTCUSDT">BTC/USD</option><option value="ETHUSDT">ETH/USD</option><option value="PAXGUSDT">XAU (PAXG)</option><option value="SOLUSDT">SOL/USD</option><option value="BNBUSDT">BNB/USD</option></select>
-                <div class="y" style="font-family:Orbitron;font-size:14px;margin:8px 0" id="ar-px">—</div>
-                <label class="fsx-lbl">Nilai order ($)</label><input class="fsx-in" type="number" id="ar-amt" value="1000">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="fsx-btn pri" onclick="FSX.arena.open(1)">▲ BUY (LONG)</button><button class="fsx-btn bad" onclick="FSX.arena.open(-1)">▼ SELL (SHORT)</button></div></div>
-            <div class="fsx-card"><h3>POSISI TERBUKA</h3><div id="ar-pos"><div class="fsx-empty">Belum ada posisi.</div></div></div>
-            <div class="fsx-card"><h3>🏆 PAPAN PERINGKAT</h3><div id="ar-lb"><div class="fsx-empty">Memuat…</div></div>
-                <button class="fsx-btn bad" style="margin-top:8px" onclick="FSX.arena.reset()">↺ Reset akun arena</button></div>
         </div></div>
 
         <!-- AFFILIATE -->
@@ -2320,8 +2260,7 @@ function loadVipMembers(){
         <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
         <button onclick="revokeVipKey('${d.k}','${d.email}')" class="vip-action-btn btn-revoke" style="margin-left:auto">REVOKE</button></div></div>`});
     list.innerHTML=html})}
-const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab','chart-tab','economic-tab','sesi-tab','video-tab','materi-tab'];
-const REMOVED_TABS=['analisis-tab','kalender-tab'];
+const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab','chart-tab','economic-tab','sesi-tab','video-tab','materi-tab','broker-tab'];
 
         /* ===== DIALOG KUSTOM (pengganti confirm/prompt/alert yang bisa diblokir browser) ===== */
         function fsModal(html) {
@@ -3107,7 +3046,6 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
         }
 
         function openTab(id, el) {
-            if (typeof REMOVED_TABS !== 'undefined' && REMOVED_TABS.includes(id)) { id = 'home-tab'; el = document.querySelector('#nav-home-link'); }
             if (!isVip && !trialActive && !FREE_TABS.includes(id)) { if (window.showVipPopup) showVipPopup(id); return; }
             // Check trial lock
             if (!isVip && !trialActive && LOCKABLE_TABS && LOCKABLE_TABS.includes(id)) {
@@ -4801,7 +4739,7 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
             { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['Chart', '📈', 'chart-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
             { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender Ekonomi', '📅', 'economic-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
             { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
-            { k: 'com', n: 'Komunitas & Cuan', ic: '💬', th: 'th-com', isNew: true, items: [['Chat', '💬', 'community-tab'], ['Trading Arena', '🏟', 'arena-tab', 'new']] }
+            { k: 'com', n: 'Broker & Funded', ic: '💬', th: 'th-com', isNew: true, items: [['Broker & Funded', '🏦', 'broker-tab']] }
         ];
         function buildHub() {
             if ($('#fsx-hub')) return;
@@ -4823,7 +4761,7 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
         FSX.hub = function () { buildHub(); hubCats(); $('#fsx-hub').classList.add('show'); };
 
         /* ---------- BERANDA ---------- */
-        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender Ekonomi', 'economic-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['₿', 'Crypto', 'crypto-tab'], ['🏟', 'Arena', 'arena-tab']];
+        const SC_ALL = [['📡', 'Signal', 'signal-tab'], ['📰', 'Berita', 'news-tab'], ['📅', 'Kalender Ekonomi', 'economic-tab'], ['🌍', 'Sesi', 'sesi-tab'], ['📓', 'Jurnal', 'journal-tab'], ['₿', 'Crypto', 'crypto-tab']];
         FSX.renderHome = function () {
             const u = U();
             if (u) {
@@ -4993,12 +4931,6 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
         };
         FSX.news.view = FSX.news.view.bind(FSX.news); FSX.news.load = FSX.news.load.bind(FSX.news);
 
-        /* ---------- KALENDER ---------- */
-        function openKalender() {
-            const el = $('#kal-embed'); if (el.dataset.done) return; el.dataset.done = 1;
-            tvEmbed(el, 'embed-widget-events.js', { colorTheme: 'dark', isTransparent: true, width: '100%', height: '100%', locale: 'id', importanceFilter: '-1,0,1', countryFilter: 'us,eu,gb,jp,au,ca,ch,nz,cn,id' });
-        }
-
         /* ---------- SAHAM GLOBAL ---------- */
         const SH = {
             heat: ['Heatmap', 'embed-widget-stock-heatmap.js', { exchanges: [], dataSource: 'SPX500', grouping: 'sector', blockSize: 'market_cap_basic', blockColor: 'change', locale: 'id', symbolUrl: '', colorTheme: 'dark', hasTopBar: false, isDataSetEnabled: false, isZoomEnabled: true, hasSymbolTooltip: true, isMonoSize: false, width: '100%', height: '100%' }],
@@ -5136,9 +5068,7 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
         FSX.riwayat.f = FSX.riwayat.f.bind(FSX.riwayat);
 
         /* ---------- AI & ANALISIS ---------- */
-        function openAI() { const h = $('#ai-host'); if (h.dataset.done) return; h.dataset.done = 1; try { window.__fsTerm.W.ai.mount(h, { cfg: {} }, { save() {} }); } catch (e) { h.innerHTML = '<div class="fsx-empty">AI Analyst gagal dimuat.</div>'; } }
         const ANS = [['XAUUSD', 'XAUUSD'], ['BTCUSD', 'BTC'], ['EURUSD', 'EURUSD'], ['GBPUSD', 'GBPUSD'], ['USDJPY', 'USDJPY'], ['NAS100', 'NAS100'], ['US30', 'US30'], ['ETHUSD', 'ETH']];
-        FSX.analisis = { cur: lsG('fsx_an', 'XAUUSD'), open() { $('#an-pills').innerHTML = pillsHtml(ANS, this.cur); bindPills('an-pills', k => { this.cur = k; lsS('fsx_an', k); this.draw(); }); this.draw(); const s = $('#an-scan'); if (!s.dataset.done) { s.dataset.done = 1; try { window.__fsTerm.W.scanner.mount(s, { cfg: {} }, { save() {} }); } catch (e) {} } }, draw() { tvEmbed($('#an-embed'), 'embed-widget-technical-analysis.js', { interval: '1h', width: '100%', height: '100%', isTransparent: true, symbol: tvSym(this.cur), showIntervalTabs: true, displayMode: 'single', locale: 'id', colorTheme: 'dark' }); } };
 
         /* ---------- WAR ROOM ---------- */
         const WQ = [['all', 'SEMUA', '(war OR conflict OR missile OR airstrike OR ceasefire)'], ['me', 'TIMUR TENGAH', '(Israel OR Iran OR Gaza OR Houthi OR Lebanon OR Syria)'], ['ua', 'UKRAINA–RUSIA', '(Ukraine OR Russia OR Kremlin OR NATO)'], ['as', 'ASIA', '(Taiwan OR "South China Sea" OR "North Korea" OR Myanmar)'], ['en', 'ENERGI & SANKSI', '(sanctions OR OPEC OR "oil supply" OR blockade OR embargo)']];
@@ -5238,32 +5168,6 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
         FSX.materi = { open() { showOwner('mt-owner'); FSX.content.sub('lessons', () => this.draw()); }, draw() { const ex = FSX.content.cache.lessons || []; $('#mt-list').innerHTML = BASIC_LESSONS.map(l => `<details class="fsx-lesson"><summary>📘 ${esc(l[0])}</summary><div class="bd">${l[1]}</div></details>`).join('') + ex.map(l => `<details class="fsx-lesson"><summary>📗 ${esc(l.title)}</summary><div class="bd">${delBtn('lessons', l.id)}${esc(l.body || '').replace(/\n/g, '<br>')}</div></details>`).join(''); } };
 
 
-        /* ---------- TRADING ARENA ---------- */
-        const AR0 = { cash: 10000, pos: [] };
-        FSX.arena = {
-            st: null, px: {}, timer: null, lastSave: 0, ref: null,
-            open() { const u = U(); if (!u) return; if (!this.st) { this.ref = rtdb.ref('arena/' + u.uid); this.ref.once('value', s => { const v = s.val(); this.st = v && typeof v.cash === 'number' ? { cash: v.cash, pos: v.pos || [] } : JSON.parse(JSON.stringify(AR0)); this.start(); }, () => { this.st = JSON.parse(JSON.stringify(AR0)); this.start(); }); } else this.start(); this.lb(); },
-            start() { this.price(); clearInterval(this.timer); this.timer = setInterval(() => { if (!active('arena-tab')) return clearInterval(this.timer); this.price(); }, 5000); },
-            async price() { try { const j = await jget('https://api.binance.com/api/v3/ticker/price?symbols=' + encodeURIComponent(JSON.stringify(['BTCUSDT', 'ETHUSDT', 'PAXGUSDT', 'SOLUSDT', 'BNBUSDT']))); j.forEach(x => this.px[x.symbol] = +x.price); } catch (e) {} const s = $('#ar-sym').value; $('#ar-px').textContent = this.px[s] ? usd(this.px[s]) : '—'; this.draw(); },
-            equity() { return this.st.cash + this.st.pos.reduce((a, p) => a + p.n + this.pnl(p), 0); },
-            pnl(p) { const c = this.px[p.sym]; return c ? p.n * p.dir * (c / p.entry - 1) : 0; },
-            save() { const u = U(); if (!u || !this.st) return; const eq = this.equity(); try { rtdb.ref('arena/' + u.uid).set({ cash: this.st.cash, pos: this.st.pos }); rtdb.ref('arena_lb/' + u.uid).set({ name: (u.displayName || u.email.split('@')[0]).split(' ')[0], equity: Math.round(eq * 100) / 100, ts: Date.now() }); } catch (e) {} },
-            draw() {
-                if (!this.st) return; const eq = this.equity(); $('#ar-eq').textContent = usd(eq); $('#ar-eq').className = eq >= 10000 ? 'g' : 'r'; $('#ar-cash').textContent = usd(this.st.cash);
-                $('#ar-pos').innerHTML = this.st.pos.length ? this.st.pos.map((p, i) => { const pl = this.pnl(p); return `<div class="ar-pos"><div><b>${p.dir > 0 ? '▲' : '▼'} ${esc(p.sym.replace('USDT', ''))}</b> <span class="m">${usd(p.n)} @ ${usd(p.entry)}</span></div><div><b class="${pl >= 0 ? 'g' : 'r'}">${pl >= 0 ? '+' : ''}${usd(pl)}</b> <button class="fsx-btn bad" style="padding:4px 9px;font-size:8px" onclick="FSX.arena.close(${i})">TUTUP</button></div></div>`; }).join('') : '<div class="fsx-empty">Belum ada posisi.</div>';
-                if (Date.now() - this.lastSave > 20000) { this.lastSave = Date.now(); this.save(); }
-            },
-            openPos(dir) { if (!this.st) return; const sym = $('#ar-sym').value, n = num($('#ar-amt').value), p = this.px[sym]; if (!p) return toast('Harga belum tersedia', ''); if (n <= 0 || n > this.st.cash) return toast('Saldo tidak cukup', 'Cash ' + usd(this.st.cash)); this.st.cash -= n; this.st.pos.push({ sym, dir, n, entry: p, ts: Date.now() }); this.save(); this.draw(); },
-            close(i) { const p = this.st.pos[i]; if (!p) return; this.st.cash += p.n + this.pnl(p); this.st.pos.splice(i, 1); this.save(); this.draw(); this.lb(); },
-            reset() { if (!confirm('Reset akun arena ke $10.000?')) return; this.st = JSON.parse(JSON.stringify(AR0)); this.save(); this.draw(); this.lb(); },
-            lb() { rtdb.ref('arena_lb').orderByChild('equity').limitToLast(20).once('value', s => { const L = []; s.forEach(c => L.unshift(Object.assign({ id: c.key }, c.val()))); const me = U() && U().uid; $('#ar-lb').innerHTML = (L.length ? L.map((x, i) => `<div class="fsx-lb ${x.id === me ? 'me' : ''}"><span class="rk">${i + 1}</span><b style="flex:1">${esc(x.name)}</b><b class="${x.equity >= 10000 ? 'g' : 'r'}" style="font-family:Orbitron">${usd(x.equity)}</b></div>`).join('') : '<div class="fsx-empty">Belum ada peserta.</div>') + '<button class="fsx-btn bad" style="margin-top:8px" onclick="FSX.arena.reset()">↺ Reset akun arena</button>'; }, () => { $('#ar-lb').innerHTML = '<div class="fsx-empty">Papan peringkat tidak bisa dibaca.</div>'; }); }
-        };
-        FSX.arena.open = FSX.arena.open.bind(FSX.arena); FSX.arena.price = FSX.arena.price.bind(FSX.arena);
-        FSX.arena.openPos = FSX.arena.openPos.bind(FSX.arena); FSX.arena.close = FSX.arena.close.bind(FSX.arena); FSX.arena.reset = FSX.arena.reset.bind(FSX.arena);
-        const _arOpen = FSX.arena.open; // tombol di HTML memanggil FSX.arena.open(dir) → posisi
-        FSX.arena.open = function (dir) { if (dir === 1 || dir === -1) return FSX.arena.openPos(dir); return _arOpen(); };
-        FSX.arena.init = _arOpen;
-
         /* ---------- AFFILIATE ---------- */
         FSX.aff = {
             link() { const u = U(); return u ? location.origin + location.pathname + '?ref=' + u.uid : ''; },
@@ -5292,15 +5196,13 @@ const REMOVED_TABS=['analisis-tab','kalender-tab'];
 
         /* ---------- router lazy-init per tab ---------- */
         const INIT = {
-            'home-tab': () => FSX.renderHome(), 'account2-tab': () => FSX.renderHome(), 'news-tab': () => FSX.news.load(), 'kalender-tab': openKalender, 'sesi-tab': () => FSX.sesi.open(),
+            'home-tab': () => FSX.renderHome(), 'account2-tab': () => FSX.renderHome(), 'news-tab': () => FSX.news.load(), 'sesi-tab': () => FSX.sesi.open(),
             'saham-tab': () => FSX.saham.open(), 'crypto-tab': () => FSX.crypto.load(), 'micin-tab': () => FSX.micin.load(), 'meme-tab': () => FSX.meme.load(), 'radar-tab': () => FSX.radar.init(),
-            'riwayat-tab': () => FSX.riwayat.open(), 'analisis-tab': () => FSX.analisis.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
-            'intraday-tab': () => FSX.intraday.open(), 'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open(),
-            'arena-tab': () => FSX.arena.init()
+            'riwayat-tab': () => FSX.riwayat.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
+            'intraday-tab': () => FSX.intraday.open(), 'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open()
         };
         const _openTab = window.openTab;
         window.openTab = function (id, el) {
-            if (REMOVED_TABS.includes(id)) id = 'home-tab';
             if (!window.isVip && !trialActive && !FREE_TABS.includes(id)) { closeHub(); if (window.showVipPopup) showVipPopup(id); return; }
             _openTab(id, el);
             setTimeout(() => { syncNav(); try { if (INIT[id]) INIT[id](); } catch (e) { console.error(e); } const sc = document.getElementById(id); if (sc) sc.scrollTop = 0; }, 200);
@@ -5472,73 +5374,18 @@ function initSig(){const root=$('#ls-live');if(!root||root.dataset.i)return;root
  $('#ls-seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#ls-seg button').forEach(x=>x.classList.toggle('on',x===b));$('#ls-live').style.display=b.dataset.v==='live'?'block':'none';$('#sig-legacy').style.display=b.dataset.v==='live'?'none':'block'};
  liveWS();clk();setInterval(clk,1000);prices();scanFull()}
 
-/* ================= ORDER FLOW ================= */
-const O={k:ls('fs_of_pair','XAUUSD'),ws:null,on:false,bars:[],prof:new Map,bub:[],cols:[],R:0,tick:1,avg:0,last:0,book:null,fut:{},ft:0,dt:null,mid:0};
-if(!PAIRS[O.k]||!PAIRS[O.k].b)O.k='XAUUSD';
-const nice=x=>{const e=Math.pow(10,Math.floor(Math.log10(x))),m=x/e;return(m<1.5?1:m<3.5?2:m<7.5?5:10)*e};
-function onTrade(m){const p=+m.p,q=+m.q,T=+m.T,b=!m.m,u=p*q,mt=Math.floor(T/6e4)*6e4;O.last=p;let B=O.bars[O.bars.length-1];
- if(!B||B.t!==mt){B={t:mt,o:p,h:p,l:p,c:p,b:0,s:0};O.bars.push(B);if(O.bars.length>90)O.bars.shift()}
- B.c=p;B.h=Math.max(B.h,p);B.l=Math.min(B.l,p);b?B.b+=u:B.s+=u;
- const key=+(Math.round(p/O.tick)*O.tick).toFixed(8),e=O.prof.get(key)||{b:0,s:0};b?e.b+=u:e.s+=u;O.prof.set(key,e);
- O.avg=O.avg?O.avg*.995+u*.005:u;if(u>O.avg*10){O.bub.push({t:T,p,u,b});if(O.bub.length>150)O.bub.shift()}}
-async function ofStart(){if(O.on)return;O.on=true;Object.assign(O,{bars:[],prof:new Map,bub:[],cols:[],R:0,avg:0,book:null,ft:0,fut:{}});const s=PAIRS[O.k].b;
- try{const t=await bget(`/api/v3/aggTrades?symbol=${s}&limit=1000`);O.tick=nice(+t[t.length-1].p*1.5e-4);t.forEach(onTrade)}catch(e){}
- if(!O.on)return;const sock=()=>{if(!O.on)return;const w=new WebSocket(`wss://stream.binance.com:9443/ws/${s.toLowerCase()}@aggTrade`);O.ws=w;w.onmessage=e=>{try{onTrade(JSON.parse(e.data))}catch(x){}};w.onclose=()=>{if(O.on)setTimeout(sock,1500)}};sock();loop()}
-function ofStop(){O.on=false;clearTimeout(O.dt);try{O.ws&&O.ws.close()}catch(e){}O.ws=null}
-async function loop(){if(!O.on)return;try{const d=await bget(`/api/v3/depth?symbol=${PAIRS[O.k].b}&limit=500`),bids=d.bids.map(x=>[+x[0],+x[1]]),asks=d.asks.map(x=>[+x[0],+x[1]]),mid=(bids[0][0]+asks[0][0])/2;
- if(!O.R||Math.abs(mid-O.mid)>O.R*.8)O.R=Math.max(Math.min(mid-bids[bids.length-1][0],asks[asks.length-1][0]-mid),mid*4e-4);
- O.mid=mid;O.book={bids,asks,mid};O.cols.push({t:Date.now(),mid,bids,asks});if(O.cols.length>120)O.cols.shift();
- if(Date.now()-O.ft>3e4){O.ft=Date.now();const f=PAIRS[O.k].f;if(f)fut(f).then(x=>{O.fut=x}).catch(()=>{})}
- drawAll()}catch(e){}O.dt=setTimeout(loop,2000)}
-const cv=(id,h)=>{const c=document.getElementById(id);if(!c||!c.clientWidth)return null;const r=window.devicePixelRatio||1;c.width=c.clientWidth*r;c.height=h*r;c.style.height=h+'px';const x=c.getContext('2d');x.scale(r,r);x.clearRect(0,0,c.clientWidth,h);return{x,W:c.clientWidth,H:h}};
-function drawHM(){const g=cv('of-hm',250);if(!g||O.cols.length<2||!O.R)return;const{x,W,H}=g,NR=50,lo=O.mid-O.R,hi=O.mid+O.R,rh=2*O.R/NR,cw=Math.max(2,Math.ceil((W-46)/120)),W2=W-46,all=[];
- O.cols.forEach(c=>{const a=new Float32Array(NR);c.bids.concat(c.asks).forEach(l=>{if(l[0]>=lo&&l[0]<hi)a[Math.floor((l[0]-lo)/rh)]+=l[1]});c._r=a;a.forEach(v=>v&&all.push(v))});
- all.sort((a,b)=>a-b);const mx=all[Math.floor(all.length*.985)]||1,n=O.cols.length,t0=O.cols[0].t,t1=O.cols[n-1].t||t0+1,X=t=>(t-t0)/(t1-t0||1)*(W2-cw),Y=p=>H-(p-lo)/(hi-lo)*H;
- O.cols.forEach((c,i)=>{for(let r=0;r<NR;r++){const v=c._r[r];if(!v)continue;const k=Math.min(1,Math.sqrt(v/mx));x.fillStyle=`hsl(${225-k*180} 90% ${8+k*58}%)`;x.fillRect(X(c.t),H-(r+1)*H/NR,Math.ceil(cw)+1,H/NR+.5)}});
- x.strokeStyle='#fff';x.lineWidth=1.3;x.beginPath();O.cols.forEach((c,i)=>{i?x.lineTo(X(c.t)+cw/2,Y(c.mid)):x.moveTo(X(c.t)+cw/2,Y(c.mid))});x.stroke();
- O.bub.forEach(b=>{if(b.t<t0||b.p<lo||b.p>hi)return;x.fillStyle=b.b?'rgba(34,197,94,.65)':'rgba(239,68,68,.65)';x.strokeStyle='#fff';x.lineWidth=.6;x.beginPath();x.arc(X(b.t),Y(b.p),Math.min(13,3+Math.sqrt(b.u/O.avg)*1.4),0,7);x.fill();x.stroke()});
- x.fillStyle='rgba(5,10,20,.85)';x.fillRect(W2,0,46,H);x.fillStyle='#9ca3af';x.font='9px monospace';for(let i=0;i<=5;i++){const p=hi-(hi-lo)*i/5;x.fillText(p.toFixed(PAIRS[O.k].d>3?4:PAIRS[O.k].d>1?1:0),W2+2,Math.min(H-2,Math.max(9,i/5*H+3)))}
- x.fillStyle='#fff';x.fillRect(W2,Y(O.mid)-6,46,12);x.fillStyle='#000';x.fillText(O.mid.toFixed(PAIRS[O.k].d>3?4:PAIRS[O.k].d>1?1:0),W2+2,Y(O.mid)+3)}
-function drawDOM(){if(!O.book)return;const a=O.book.asks.slice(0,10).reverse(),b=O.book.bids.slice(0,10),mx=Math.max(...a.map(x=>x[1]),...b.map(x=>x[1])),d=PAIRS[O.k].d,fq=q=>q>=1e3?(q/1e3).toFixed(1)+'K':q>=10?q.toFixed(1):q.toFixed(3),R=(l,c)=>`<div class="of-r ${c}"><i style="width:${l[1]/mx*100}%"></i><span>${l[0].toFixed(d)}</span><b>${fq(l[1])}</b></div>`,sp=O.book.asks[0][0]-O.book.bids[0][0];
- $('#of-dom').innerHTML=a.map(l=>R(l,'a')).join('')+`<div class="of-sp">Spread ${sp.toFixed(d)} (${(sp/O.mid*1e4).toFixed(1)} bps)</div>`+b.map(l=>R(l,'b')).join('')}
-function drawProf(){const g=cv('of-pf',250);if(!g||!O.prof.size)return;const{x,W,H}=g;let k=[...O.prof.keys()].sort((a,b)=>b-a);const m=Math.ceil(k.length/36),rows=[];
- for(let i=0;i<k.length;i+=m){let b=0,s=0;for(let j=i;j<Math.min(k.length,i+m);j++){const e=O.prof.get(k[j]);b+=e.b;s+=e.s}rows.push({p:k[i],b,s,t:b+s})}
- const mx=Math.max(...rows.map(r=>r.t)),tot=rows.reduce((a,r)=>a+r.t,0),poc=rows.reduce((a,r)=>r.t>a.t?r:a,rows[0]),srt=[...rows].sort((a,b)=>b.t-a.t);let acc=0;const va=new Set;for(const r of srt){if(acc>=tot*.7)break;acc+=r.t;va.add(r)}
- const rh=H/rows.length,d=PAIRS[O.k].d;x.font='8px monospace';rows.forEach((r,i)=>{const y=i*rh,w=r.t/mx*(W-44);x.fillStyle=va.has(r)?'rgba(56,189,248,.1)':'transparent';x.fillRect(0,y,W,rh);x.fillStyle='rgba(239,68,68,.75)';x.fillRect(0,y+1,w*r.s/r.t,rh-1.5);x.fillStyle='rgba(34,197,94,.75)';x.fillRect(w*r.s/r.t,y+1,w*r.b/r.t,rh-1.5);if(r===poc){x.strokeStyle='#eab308';x.lineWidth=1;x.strokeRect(0,y,W,rh)}
-  if(i%Math.ceil(rows.length/8)===0){x.fillStyle='#9ca3af';x.fillText(r.p.toFixed(d>3?4:d>1?1:0),W-42,y+rh)}});O.poc=poc.p}
-function drawDelta(){const g=cv('of-dl',110);if(!g||!O.bars.length)return;const{x,W,H}=g,B=O.bars.slice(-40),de=B.map(b=>b.b-b.s),mx=Math.max(...de.map(Math.abs),1),bw=W/B.length;let c=0;const cv_=de.map(v=>c+=v),cm=Math.min(...cv_),cM=Math.max(...cv_);
- x.strokeStyle='#1f2937';x.beginPath();x.moveTo(0,H/2);x.lineTo(W,H/2);x.stroke();de.forEach((v,i)=>{x.fillStyle=v>=0?'#22c55e':'#ef4444';const h=Math.abs(v)/mx*(H/2-4);x.fillRect(i*bw+1,v>=0?H/2-h:H/2,bw-2,h)});
- x.strokeStyle='#38bdf8';x.lineWidth=1.5;x.beginPath();cv_.forEach((v,i)=>{const y=H-4-(v-cm)/((cM-cm)||1)*(H-8);i?x.lineTo(i*bw+bw/2,y):x.moveTo(i*bw+bw/2,y)});x.stroke()}
-function drawStats(){const B=O.bars,w=n=>{const l=B.slice(-n),b=l.reduce((a,x)=>a+x.b,0),s=l.reduce((a,x)=>a+x.s,0);return{b,s,p:b+s?b/(b+s)*100:50,d:b-s}},w1=w(1),w5=w(5),w15=w(15),cvd=B.reduce((a,x)=>a+x.b-x.s,0),bk=O.book;let im=50;if(bk){const bq=bk.bids.slice(0,20).reduce((a,l)=>a+l[1],0),aq=bk.asks.slice(0,20).reduce((a,l)=>a+l[1],0);im=bq/(bq+aq)*100}O.m={w1,w5,w15,im,cvd};
- const T=(l,v,c)=>`<div><b class="${c||''}">${v}</b><span>${l}</span></div>`,cl=p=>p>=55?'g':p<=45?'r':'',d=PAIRS[O.k].d,pr=O.last||O.mid;
- const ch=B.length>1?(pr/B[Math.max(0,B.length-6)].o-1)*100:0;
- $('#of-top').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="ls-px" style="font-size:22px;margin:0">${fx(pr,d)}<span class="ls-chg ${ch>=0?'g':'r'}">${ch>=0?'+':''}${fx(ch,2)}% 5m</span></div><small style="color:#4ade80;font-size:9px">● LIVE · ${O.bars.length?fm(O.bars.reduce((a,x)=>a+x.b+x.s,0)):'0'} vol</small></div><div class="of-grid">${T('Buy% 1m',fx(w1.p,0)+'%',cl(w1.p))}${T('Buy% 5m',fx(w5.p,0)+'%',cl(w5.p))}${T('Buy% 15m',fx(w15.p,0)+'%',cl(w15.p))}${T('Delta 5m',fm(w5.d),w5.d>=0?'g':'r')}${T('CVD sesi',fm(cvd),cvd>=0?'g':'r')}${T('Book bid/ask',fx(im,0)+'/'+fx(100-im,0),cl(im))}</div>`;
- const f=O.fut,hasF=!!PAIRS[O.k].f;$('#of-fut').innerHTML=hasF?`<div class="of-grid"><div><b class="${f.oi>=1?'g':''}">${f.oi==null?'--':(f.oi>=0?'+':'')+fx(f.oi,2)+'%'}</b><span>OI 1j</span></div><div><b>${f.ls==null?'--':'L'+fx(f.ls,0)+'/S'+fx(100-f.ls,0)}</b><span>Long/Short</span></div><div><b class="${f.fr>0?'g':f.fr<0?'r':''}">${f.fr==null?'--':fx(f.fr,4)+'%'}</b><span>Funding</span></div></div>`:'<div class="fsx-empty">Pair spot — tidak ada data futures (OI / funding).</div>'}
-function drawRead(){const m=O.m;if(!m||!O.bars.length){return}const n=[],B=O.bars,pr=O.last||O.mid,ch=B.length>5?pr-B[B.length-6].o:0,d=PAIRS[O.k].d;
- n.push(m.w5.p>=55?['g',`Agresor <b>beli dominan</b> (${fx(m.w5.p,0)}% dalam 5 menit) — tekanan beli aktif.`]:m.w5.p<=45?['r',`Agresor <b>jual dominan</b> (${fx(100-m.w5.p,0)}% dalam 5 menit) — tekanan jual aktif.`]:['y','Delta 5 menit seimbang — belum ada dominasi jelas.']);
- if(ch>0&&m.w5.d<0)n.push(['r','⚠️ <b>Divergensi bearish</b>: harga naik tapi delta negatif — indikasi absorpsi limit sell / kenaikan lemah.']);
- if(ch<0&&m.w5.d>0)n.push(['g','⚠️ <b>Divergensi bullish</b>: harga turun tapi delta positif — indikasi absorpsi limit buy / penurunan lemah.']);
- if(m.im>=60)n.push(['g',`Book condong ke <b>bid</b> (${fx(m.im,0)}%) — dukungan likuiditas di bawah harga.`]);else if(m.im<=40)n.push(['r',`Book condong ke <b>ask</b> (${fx(100-m.im,0)}%) — resistensi likuiditas di atas harga.`]);
- if(O.book){['bids','asks'].forEach(s=>{const L=O.book[s].slice(0,100),a=avg(L.map(x=>x[1])),mx=L.reduce((p,x)=>x[1]>p[1]?x:p,L[0]);if(mx[1]>a*6)n.push([s==='bids'?'g':'r',`Wall ${s==='bids'?'<b>bid</b>':'<b>ask</b>'} besar di <b>${mx[0].toFixed(d)}</b> (${fx(mx[1]/a,0)}× rata-rata) — potensi support/resistance (bisa spoofing).`])})}
- if(O.poc)n.push(['y',`POC sesi di <b>${O.poc.toFixed(d)}</b> — harga ${pr>O.poc?'di atas POC (bias bullish)':'di bawah POC (bias bearish)'}.`]);
- const bb=O.bub.filter(b=>Date.now()-b.t<3e5),nb=bb.filter(b=>b.b).reduce((a,b)=>a+b.u,0),ns=bb.filter(b=>!b.b).reduce((a,b)=>a+b.u,0);if(bb.length)n.push([nb>ns?'g':'r',`${bb.length} market order besar (5 mnt): beli ${fm(nb)} vs jual ${fm(ns)}.`]);
- $('#of-rd').innerHTML=n.map(x=>`<p class="${x[0]}">${x[1]}</p>`).join('')+'<p style="border-color:#374151;color:#6b7280;font-size:9px">Data: Binance spot (aggTrade + depth 500). Bukan saran finansial.</p>'}
-function drawAll(){if(!isAct('analisis-tab'))return;drawStats();drawHM();drawDOM();drawProf();drawDelta();drawRead();const e=$('#of-meta');if(e)e.textContent=`${O.cols.length} snapshot · ±${fx(O.R,PAIRS[O.k].d>3?4:2)}`}
-function initOF(){const r=$('#an-of');if(!r||r.dataset.i)return;r.dataset.i=1;pills('#of-pairs',O.k,k=>{ofStop();O.k=k;lsw('fs_of_pair',k);O.bars=[];O.cols=[];O.book=null;$('#of-dom').innerHTML='';ofStart()},BK)}
-function initSeg(){const s=$('#an-seg');if(!s||s.dataset.i)return;s.dataset.i=1;s.onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#an-seg button').forEach(x=>x.classList.toggle('on',x===b));const of=b.dataset.v==='of';$('#an-tech').style.display=of?'none':'block';$('#an-of').style.display=of?'block':'none';if(of)initOF()}}
 
 /* ================= lifecycle ================= */
-const _ot=window.openTab;window.openTab=function(id,el){if(id==='analisis-tab'||id==='kalender-tab')id='home-tab';_ot&&_ot(id,el);setTimeout(()=>{if(id==='signal-tab'){initSig();render()}if(id==='analisis-tab')initSeg()},260)};
-setInterval(()=>{const vis=isAct('analisis-tab')&&$('#an-of')&&$('#an-of').style.display!=='none'&&!document.hidden;if(vis&&!O.on)ofStart();else if(!vis&&O.on)ofStop()},1000);
+const _ot=window.openTab;window.openTab=function(id,el){_ot&&_ot(id,el);setTimeout(()=>{if(id==='signal-tab'){initSig();render()}},260)};
 setInterval(()=>{if(!document.hidden)prices()},8000);setInterval(scanAll,3e4);
-const boot=()=>{initSig();initSeg();setTimeout(()=>{prices();scanFull()},2500)};
+const boot=()=>{initSig();setTimeout(()=>{prices();scanFull()},2500)};
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
 })();
 </script>
 <script>
 (function(){
 var css=document.createElement('style');css.textContent='.fs-lk{margin-left:6px;font-size:11px;filter:drop-shadow(0 0 4px rgba(234,179,8,.6))}.nav-link.vip-locked{opacity:.78}.fsx-bnav button .fs-lk{position:absolute;top:0;right:calc(50% - 22px);margin:0;font-size:9px}#vip-popup{position:fixed;inset:0;z-index:20000;background:rgba(3,7,14,.88);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}#vip-popup.show{display:flex}#vip-popup .vip-lock-card{position:relative;max-height:92vh;overflow:auto}';document.head.appendChild(css);
-var NAMES={'signal-tab':'Live Signal ICT','ai-tab':'AI Analisis','analisis-tab':'Analisis','intraday-tab':'Intraday','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
+var NAMES={'signal-tab':'Live Signal ICT','intraday-tab':'Intraday','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
 window.__trialEnded=function(){return typeof trialEndTime!=='undefined'&&!!trialEndTime&&!trialActive};
 window.showVipPopup=function(id){
  var p=document.getElementById('vip-popup');if(!p){p=document.createElement('div');p.id='vip-popup';p.onclick=function(e){if(e.target===p)p.classList.remove('show')};document.body.appendChild(p)}
