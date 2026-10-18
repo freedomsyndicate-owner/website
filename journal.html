@@ -3968,6 +3968,49 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
 
 
+        /* ---------- AI CONTEXT: data pasar live + statistik jurnal ---------- */
+        const AI_HTF = { '15m': '1h', '1h': '4h', '4h': '1d', '1d': '1w' };
+        const fx = x => (x >= 100 ? x.toFixed(2) : x >= 1 ? x.toFixed(4) : x.toFixed(6));
+        const emaArr = (a, p) => { const k = 2 / (p + 1); let e = a[0]; return a.map((v, i) => i ? (e = v * k + e * (1 - k)) : e); };
+        const rsiOf = (c, p) => { p = p || 14; if (c.length <= p) return 50; let g = 0, l = 0; for (let i = 1; i <= p; i++) { const d = c[i] - c[i - 1]; d >= 0 ? g += d : l -= d; } g /= p; l /= p; for (let i = p + 1; i < c.length; i++) { const d = c[i] - c[i - 1]; g = (g * (p - 1) + Math.max(d, 0)) / p; l = (l * (p - 1) + Math.max(-d, 0)) / p; } return l === 0 ? 100 : 100 - 100 / (1 + g / l); };
+        const atrOf = (k, p) => { p = p || 14; if (k.length <= p) return 0; const tr = i => Math.max(k[i].high - k[i].low, Math.abs(k[i].high - k[i - 1].close), Math.abs(k[i].low - k[i - 1].close)); let a = 0; for (let i = 1; i <= p; i++) a += tr(i); a /= p; for (let i = p + 1; i < k.length; i++) a = (a * (p - 1) + tr(i)) / p; return a; };
+        async function marketLine(sym, tf) {
+            const k = await klines(sym, tf, '&limit=250'); if (k.length < 30) throw new Error('data terlalu sedikit');
+            const c = k.map(x => x.close), n = c.length, last = c[n - 1];
+            const e20 = emaArr(c, 20)[n - 1], e50 = emaArr(c, 50)[n - 1], e200 = emaArr(c, 200)[n - 1];
+            const rs = k.slice(-50), hi = Math.max(...rs.map(x => x.high)), lo = Math.min(...rs.map(x => x.low));
+            const chg = (last / c[Math.max(0, n - 25)] - 1) * 100;
+            const bias = last > e50 && e50 > e200 ? 'bullish (harga > EMA50 > EMA200)' : last < e50 && e50 < e200 ? 'bearish (harga < EMA50 < EMA200)' : 'campuran/sideways';
+            return `${tf}: harga ${fx(last)} | EMA20 ${fx(e20)} EMA50 ${fx(e50)} EMA200 ${fx(e200)} | RSI14 ${rsiOf(c).toFixed(1)} | ATR14 ${fx(atrOf(k))} | high50 ${fx(hi)} low50 ${fx(lo)} | perubahan 24 candle ${chg.toFixed(2)}% | bias ${bias}`;
+        }
+        function journalCtx() {
+            const all = trades().filter(x => x && x.res); if (!all.length) return '[JURNAL] Belum ada trade tercatat.';
+            const t = all.slice().sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+            const P = x => num(x.pnl);
+            const agg = l => { const w = l.filter(x => x.res === 'TP').length, sl = l.filter(x => x.res === 'SL').length; const gp = l.reduce((a, x) => a + Math.max(P(x), 0), 0), gl = Math.abs(l.reduce((a, x) => a + Math.min(P(x), 0), 0)); return { n: l.length, w, sl, wr: w + sl ? w / (w + sl) * 100 : 0, pnl: l.reduce((a, x) => a + P(x), 0), pf: gl ? gp / gl : gp ? 99 : 0, aw: w ? gp / Math.max(1, l.filter(x => P(x) > 0).length) : 0, al: gl / Math.max(1, l.filter(x => P(x) < 0).length) }; };
+            const line = (k, a) => `  - ${k}: ${a.n} trade, WR ${a.wr.toFixed(0)}%, PnL ${money(a.pnl)}`;
+            const grp = (name, fn) => { const m = {}; t.forEach(x => { [].concat(fn(x) || []).forEach(k => { if (k && k !== 'N/A') (m[k] = m[k] || []).push(x); }); }); const rows = Object.entries(m).map(([k, l]) => [k, agg(l)]).sort((a, b) => b[1].pnl - a[1].pnl).slice(0, 8); return rows.length ? name + ':\n' + rows.map(r => line(r[0], r[1])).join('\n') : ''; };
+            const A = agg(t); let run = 0, maxL = 0; t.forEach(x => { if (x.res === 'SL') { run++; maxL = Math.max(maxL, run); } else if (x.res === 'TP') run = 0; });
+            const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const recent = t.slice(-8).map(x => `${x.date} ${x.pair} ${x.res} ${money(P(x))} RR ${x.rr || '-'} | ${String(x.reason || '-').slice(0, 70)}`).join('\n  ');
+            return ['[JURNAL] Total ' + A.n + ' trade | TP ' + A.w + ' SL ' + A.sl + ' BE ' + (A.n - A.w - A.sl) + ' | Winrate (TP vs SL) ' + A.wr.toFixed(1) + '% | Net PnL ' + money(A.pnl) + ' | Profit factor ' + A.pf.toFixed(2) + ' | rata-rata win ' + money(A.aw) + ' vs rata-rata loss ' + money(-A.al) + ' | losing streak terpanjang ' + maxL,
+                grp('Per pair', x => x.pair), grp('Per sesi', x => x.session), grp('Per entry style', x => x.entry_style), grp('Per POI', x => x.poi), grp('Per hari', x => x.date ? hari[new Date(x.date + 'T00:00:00').getDay()] : ''),
+                '8 trade terakhir:\n  ' + recent].filter(Boolean).join('\n');
+        }
+        async function buildCtx(o) {
+            const out = ['=== DATA NYATA (gunakan angka ini, jangan mengarang angka lain; jika data kurang, katakan) ==='];
+            out.push('Waktu: ' + new Date().toLocaleString('id-ID'));
+            if (o.market) {
+                const sym = (o.sym || 'BTCUSDT').toUpperCase().replace(/[^A-Z0-9]/g, '');
+                try { out.push('[PASAR] ' + sym + ' (Binance)\n' + await marketLine(sym, o.tf) + '\nHTF ' + await marketLine(sym, AI_HTF[o.tf] || '4h')); } catch (e) { out.push('[PASAR] Gagal ambil data ' + sym + ' (' + (e.message || e) + '). Cek simbol Binance, mis. BTCUSDT / PAXGUSDT.'); }
+                try { const j = await (await fetch('https://api.alternative.me/fng/')).json(); out.push('[SENTIMEN] Crypto Fear & Greed: ' + j.data[0].value + ' (' + j.data[0].value_classification + ')'); } catch (e) {}
+            }
+            if (o.journal) out.push(journalCtx());
+            out.push('=== AKHIR DATA ===');
+            return out.join('\n');
+        }
+        const REVIEW_Q = 'Review jurnal trading saya berdasarkan data [JURNAL] di atas. Jujur & spesifik: 1) kekuatan utama, 2) 3 kebocoran/kesalahan terbesar (lihat pair, sesi, entry style, POI, hari), 3) 3 aturan konkret untuk minggu depan, 4) apa yang sebaiknya dihentikan. Pakai angka dari data.';
+
         /* ---------- AI ANALYST (gratis via Puter.js, tanpa API key) ---------- */
         reg('ai', {
             t: 'AI Analyst', i: '🤖', cat: 'ANALISA & BERITA',
@@ -3987,17 +4030,20 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     <div class="c-custom" style="display:none"><label class="tw-lbl">URL endpoint (balasan JSON {reply})</label><input class="tw-in c-ep" placeholder="https://…/analyst" value="${esc(ls.get(K_EP, ''))}"></div>
                     <button class="tm-btn pri sm" data-a="savecfg" style="margin-top:8px">SIMPAN</button>
                 </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:8px 12px;border-bottom:1px solid #1f2937"><input class="tw-in ai-sym" placeholder="BTCUSDT" title="Simbol Binance: BTCUSDT, ETHUSDT, PAXGUSDT (proxy emas)" style="width:100px;font-size:12px"><select class="tw-sel ai-tf" style="width:68px"><option>15m</option><option>1h</option><option>4h</option><option>1d</option></select><label style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:4px"><input type="checkbox" class="ai-cm" checked>📈 Data live</label><label style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:4px"><input type="checkbox" class="ai-cj">📓 Jurnal</label></div>
                 <div class="ai-log"></div>
-                <div class="ai-sug">${['Analisa trend saat ini', 'Support & resistance key level', 'Outlook minggu ini', 'Risiko yang perlu diperhatikan'].map(s => `<button>✦ ${s}</button>`).join('')}</div>
+                <div class="ai-sug">${['Analisa trend saat ini', 'Support & resistance key level', 'Review Jurnal Saya', 'Risiko yang perlu diperhatikan'].map(s => `<button>✦ ${s}</button>`).join('')}</div>
                 <div class="ai-in"><label class="ai-ph"><span>🖼</span>Photo<input type="file" accept="image/*" style="display:none"></label><input class="tw-in" placeholder="Tanya apa saja…" style="font-size:14px"><button class="ai-send">➤</button></div>`;
                 const log = $('.ai-log', body), inp = $('.ai-in .tw-in', body);
+                const eSym = $('.ai-sym', body), eTf = $('.ai-tf', body), eCm = $('.ai-cm', body), eCj = $('.ai-cj', body); let ctx = '';
+                eSym.value = ls.get('fs_ai_sym', 'BTCUSDT'); eTf.value = ls.get('fs_ai_tf', '1h');
                 const cfgBox = $('.cf', body), selPv = $('.c-pv', body), selMd = $('.c-md', body);
                 const syncCfg = () => { $('.c-puter', body).style.display = selPv.value === 'puter' ? 'block' : 'none'; $('.c-custom', body).style.display = selPv.value === 'custom' ? 'block' : 'none'; };
                 selPv.value = provider(); selMd.value = ls.get(K_MD, MODELS[0][0]); if (!selMd.value) selMd.value = MODELS[0][0]; syncCfg();
                 selPv.onchange = syncCfg;
                 const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
                 const add = (who, html) => { const d = document.createElement('div'); d.className = 'ai-m' + (who === 'me' ? ' me' : ''); d.innerHTML = html; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; };
-                const hello = () => { log.innerHTML = ''; hist.length = 0; add('ai', 'Halo! Saya AI Analyst. Tanyakan apa saja — analisa teknikal, fundamental, gold, crypto, forex, saham, atau upload screenshot chart untuk dianalisa. 💹'); };
+                const hello = () => { log.innerHTML = ''; hist.length = 0; add('ai', 'Halo! Saya AI Analyst. Tanyakan apa saja — analisa teknikal, fundamental, gold, crypto, forex, saham, atau upload screenshot chart untuk dianalisa. Aktifkan 📈 Data live / 📓 Jurnal di atas supaya jawaban memakai data nyata. 💹'); };
                 hello();
                 const shrink = f => new Promise(ok => { const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1024 / Math.max(im.width, im.height)); const c = document.createElement('canvas'); c.width = im.width * k; c.height = im.height * k; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/jpeg', 0.82)); }; im.src = r.result; }; r.readAsDataURL(f); });
                 $('input[type=file]', body).onchange = async e => { const f = e.target.files[0]; if (!f) return; img = await shrink(f); $('.ai-ph', body).style.borderColor = '#22c55e'; toast('📷 Gambar siap', 'Ketik pertanyaan lalu kirim.'); };
@@ -4015,22 +4061,24 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     await loadScript(PUTER);
                     if (!window.puter || !puter.ai) throw new Error('Puter.js gagal dimuat');
                     const model = ls.get(K_MD, MODELS[0][0]);
-                    const msgs = [{ role: 'system', content: SYS }].concat(hist.slice(-12).map(m => ({ role: m.role, content: m.content })));
+                    const msgs = [{ role: 'system', content: SYS + (ctx ? '\n\n' + ctx : '') }].concat(hist.slice(-12).map(m => ({ role: m.role, content: m.content })));
                     if (sentImg) { const last = msgs[msgs.length - 1]; last.content = [{ type: 'text', text: last.content }, { type: 'image_url', image_url: { url: sentImg } }]; }
                     return textOf(await puter.ai.chat(msgs, { model }));
                 }
                 async function askCustom(sentImg) {
                     const url = customUrl(); if (!url) throw new Error('URL endpoint belum diisi (tekan ⚙).');
-                    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, app: 'freedom-syndicate' }) });
+                    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, app: 'freedom-syndicate', context: ctx }) });
                     const j = await r.json(); return j.reply || j.text || j.message || j.answer || JSON.stringify(j);
                 }
                 async function send(text) {
                     text = (text || inp.value).trim(); if (!text && !img) return; inp.value = '';
                     add('me', (img ? `<img src="${img}">` : '') + fmt(text || '(analisa gambar)'));
-                    hist.push({ role: 'user', content: text || 'Tolong analisa gambar chart ini.' });
+                    const isRev = /^review jurnal/i.test(text); const wantJ = isRev || eCj.checked; ls.set('fs_ai_sym', eSym.value.trim().toUpperCase()); ls.set('fs_ai_tf', eTf.value);
+                    hist.push({ role: 'user', content: isRev ? REVIEW_Q : (text || 'Tolong analisa gambar chart ini.') });
                     const sent = img; img = null; $('.ai-ph', body).style.borderColor = '';
                     const wait = add('ai', '<span class="m">Menganalisa…</span>');
                     try {
+                        ctx = await buildCtx({ market: eCm.checked && !isRev, journal: wantJ, sym: eSym.value, tf: eTf.value });
                         const out = provider() === 'custom' ? await askCustom(sent) : await askPuter(sent);
                         wait.innerHTML = fmt(out); hist.push({ role: 'assistant', content: out });
                     } catch (e) {
