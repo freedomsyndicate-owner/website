@@ -3968,6 +3968,20 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
 
 
+        /* ---------- SUMBER AI LANGSUNG (API key sendiri, tanpa perantara) ---------- */
+        const PROV = {
+            openai: { name: 'OpenAI', fmt: 'openai', url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini', note: 'Key: platform.openai.com/api-keys (berbayar, pakai saldo).' },
+            anthropic: { name: 'Claude', fmt: 'anthropic', url: 'https://api.anthropic.com/v1/messages', model: 'claude-sonnet-5-5', note: 'Key: console.anthropic.com (berbayar, pakai saldo).' },
+            gemini: { name: 'Gemini', fmt: 'gemini', url: 'https://generativelanguage.googleapis.com/v1beta/models/', model: 'gemini-2.5-flash', note: 'Key gratis: aistudio.google.com/apikey' },
+            openrouter: { name: 'OpenRouter', fmt: 'openai', url: 'https://openrouter.ai/api/v1/chat/completions', model: 'openrouter/auto', note: 'Satu key untuk ratusan model: openrouter.ai/keys. Isi Model dengan ID model apa pun dari daftar mereka.' },
+            groq: { name: 'Groq', fmt: 'openai', url: 'https://api.groq.com/openai/v1/chat/completions', model: 'llama-3.3-70b-versatile', note: 'Key gratis: console.groq.com/keys' },
+            deepseek: { name: 'DeepSeek', fmt: 'openai', url: 'https://api.deepseek.com/chat/completions', model: 'deepseek-chat', note: 'Key: platform.deepseek.com (jika diblokir browser, pakai OpenRouter).' }
+        };
+
+        /* ---------- FREEDOM AI: gratis untuk member lewat Cloudflare Worker (tempel URL Worker di bawah) ---------- */
+        const FS_AI_PROXY = 'https://fs-ai.pages.dev';
+        const fsOn = () => /^https:\/\//.test(FS_AI_PROXY);
+
         /* ---------- AI CONTEXT: data pasar live + statistik jurnal ---------- */
         const AI_HTF = { '15m': '1h', '1h': '4h', '4h': '1d', '1d': '1w' };
         const fx = x => (x >= 100 ? x.toFixed(2) : x >= 1 ? x.toFixed(4) : x.toFixed(6));
@@ -4020,13 +4034,14 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const MODELS = [['gpt-4.1-nano', 'GPT-4.1 nano (cepat, bisa baca gambar)'], ['gpt-4o-mini', 'GPT-4o mini'], ['deepseek-chat', 'DeepSeek Chat'], ['gemini-2.0-flash', 'Gemini 2.0 Flash']];
                 const SYS = 'Kamu adalah AI Analyst trading untuk platform Freedom Syndicate. Jawab dalam Bahasa Indonesia, ringkas dan terstruktur. Bantu analisa teknikal (ICT, price action, support/resistance), fundamental, gold, crypto, forex, dan saham. Jika diberi screenshot chart, jelaskan trend, struktur, level kunci, dan skenario. Selalu ingatkan bahwa ini bukan saran finansial dan sebutkan manajemen risiko.';
                 const hist = []; let img = null;
-                const provider = () => ls.get(K_PV, 'puter');
+                const provider = () => ls.get(K_PV, fsOn() ? 'fs' : 'poll');
                 const customUrl = () => (window.FS_AI_ENDPOINT || ls.get(K_EP, '') || '').trim();
                 body.innerHTML = `<div style="display:flex;justify-content:flex-end;gap:2px;padding:4px 8px;border-bottom:1px solid #1f2937"><button class="tw-hb" data-a="cfg" title="Pengaturan AI">⚙</button><button class="tw-hb" data-a="reset" title="Mulai ulang">↻</button></div>
                 <div class="cf" style="display:none;padding:10px 12px;border-bottom:1px solid #1f2937">
                     <label class="tw-lbl">Sumber AI</label>
-                    <select class="tw-sel c-pv" style="margin-bottom:8px"><option value="puter">Puter — GRATIS, tanpa API key (disarankan)</option><option value="custom">Endpoint sendiri (POST JSON)</option></select>
+                    <select class="tw-sel c-pv" style="margin-bottom:8px"><option value="fs">⭐ Freedom AI — gratis untuk member (tanpa API key)</option><option value="poll">Pollinations — langsung jawab, tanpa login &amp; tanpa API key</option><option value="gemini">Gemini — API key gratis (paling stabil)</option><option value="openai">OpenAI — API key sendiri</option><option value="anthropic">Claude (Anthropic) — API key sendiri</option><option value="openrouter">OpenRouter — 1 key, banyak model</option><option value="groq">Groq — API key gratis</option><option value="deepseek">DeepSeek — API key sendiri</option><option value="puter">Puter — butuh login Puter</option><option value="custom">Endpoint sendiri (POST JSON)</option></select>
                     <div class="c-puter"><label class="tw-lbl">Model</label><select class="tw-sel c-md">${MODELS.map(m => `<option value="${m[0]}">${esc(m[1])}</option>`).join('')}</select><div class="tw-note" style="margin-top:6px">Pertama kali dipakai akan muncul popup login/daftar Puter (gratis). Izinkan popup di browser.</div></div>
+                    <div class="c-gem" style="display:none"><label class="tw-lbl">API key</label><input class="tw-in c-gk" type="password" placeholder="Tempel API key…" autocomplete="off"><label class="tw-lbl" style="margin-top:6px">Model</label><input class="tw-in c-gm"><div class="tw-note c-gn" style="margin-top:6px"></div></div>
                     <div class="c-custom" style="display:none"><label class="tw-lbl">URL endpoint (balasan JSON {reply})</label><input class="tw-in c-ep" placeholder="https://…/analyst" value="${esc(ls.get(K_EP, ''))}"></div>
                     <button class="tm-btn pri sm" data-a="savecfg" style="margin-top:8px">SIMPAN</button>
                 </div>
@@ -4038,7 +4053,8 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const eSym = $('.ai-sym', body), eTf = $('.ai-tf', body), eCm = $('.ai-cm', body), eCj = $('.ai-cj', body); let ctx = '';
                 eSym.value = ls.get('fs_ai_sym', 'BTCUSDT'); eTf.value = ls.get('fs_ai_tf', '1h');
                 const cfgBox = $('.cf', body), selPv = $('.c-pv', body), selMd = $('.c-md', body);
-                const syncCfg = () => { $('.c-puter', body).style.display = selPv.value === 'puter' ? 'block' : 'none'; $('.c-custom', body).style.display = selPv.value === 'custom' ? 'block' : 'none'; };
+                const loadKeyFields = () => { const P = PROV[selPv.value]; if (!P) return; $('.c-gk', body).value = ls.get('fs_ai_key_' + selPv.value, ''); $('.c-gm', body).value = ls.get('fs_ai_model_' + selPv.value, P.model); $('.c-gn', body).textContent = P.note + ' Key hanya disimpan di browser ini.'; };
+                const syncCfg = () => { $('.c-puter', body).style.display = selPv.value === 'puter' ? 'block' : 'none'; $('.c-custom', body).style.display = selPv.value === 'custom' ? 'block' : 'none'; $('.c-gem', body).style.display = PROV[selPv.value] ? 'block' : 'none'; loadKeyFields(); };
                 selPv.value = provider(); selMd.value = ls.get(K_MD, MODELS[0][0]); if (!selMd.value) selMd.value = MODELS[0][0]; syncCfg();
                 selPv.onchange = syncCfg;
                 const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
@@ -4065,6 +4081,59 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     if (sentImg) { const last = msgs[msgs.length - 1]; last.content = [{ type: 'text', text: last.content }, { type: 'image_url', image_url: { url: sentImg } }]; }
                     return textOf(await puter.ai.chat(msgs, { model }));
                 }
+                async function askPoll(sentImg) {
+                    const msgs = [{ role: 'system', content: SYS + (ctx ? '\n\n' + ctx : '') }].concat(hist.slice(-12).map(m => ({ role: m.role, content: m.content })));
+                    if (sentImg) { const last = msgs[msgs.length - 1]; last.content = [{ type: 'text', text: last.content }, { type: 'image_url', image_url: { url: sentImg } }]; }
+                    let err;
+                    for (const model of ['openai', 'mistral']) {
+                        try {
+                            const r = await fetch('https://text.pollinations.ai/openai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model, messages: msgs }) });
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            const j = await r.json(); const t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+                            if (t) return t; throw new Error('balasan kosong');
+                        } catch (e) { err = e; }
+                    }
+                    throw err;
+                }
+                async function askFS(sentImg) {
+                    if (!fsOn()) throw new Error('Server Freedom AI belum diaktifkan oleh admin.');
+                    const u = auth.currentUser; if (!u) throw new Error('Silakan login dulu.');
+                    const tk = await u.getIdToken();
+                    const r = await fetch(FS_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, context: ctx }) });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+                    return j.reply || 'AI tidak memberi jawaban.';
+                }
+                async function askKey(pv, sentImg) {
+                    const P = PROV[pv], key = ls.get('fs_ai_key_' + pv, ''); if (!key) throw new Error('API key ' + P.name + ' belum diisi (tekan ⚙).');
+                    const model = ls.get('fs_ai_model_' + pv, P.model) || P.model;
+                    const sys = SYS + (ctx ? '\n\n' + ctx : '');
+                    const h = hist.slice(-12).map(m => ({ role: m.role, content: m.content }));
+                    while (h.length && h[0].role !== 'user') h.shift();
+                    const last = h[h.length - 1], b64 = sentImg ? sentImg.split(',')[1] : '';
+                    const headers = { 'Content-Type': 'application/json' }; let url = P.url, body, pick;
+                    if (P.fmt === 'gemini') {
+                        headers['x-goog-api-key'] = key; url = P.url + encodeURIComponent(model) + ':generateContent';
+                        const contents = h.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+                        if (b64) contents[contents.length - 1].parts.push({ inlineData: { mimeType: 'image/jpeg', data: b64 } });
+                        body = { systemInstruction: { parts: [{ text: sys }] }, contents };
+                        pick = j => ((j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).map(x => x.text || '').join('');
+                    } else if (P.fmt === 'anthropic') {
+                        headers['x-api-key'] = key; headers['anthropic-version'] = '2023-06-01'; headers['anthropic-dangerous-direct-browser-access'] = 'true';
+                        if (b64) last.content = [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: last.content }];
+                        body = { model, max_tokens: 1500, system: sys, messages: h };
+                        pick = j => (j.content || []).map(x => x.text || '').join('');
+                    } else {
+                        headers.Authorization = 'Bearer ' + key;
+                        if (b64) last.content = [{ type: 'text', text: last.content }, { type: 'image_url', image_url: { url: sentImg } }];
+                        body = { model, messages: [{ role: 'system', content: sys }].concat(h) };
+                        pick = j => j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+                    }
+                    const r = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+                    const j = await r.json().catch(() => ({}));
+                    if (!r.ok) throw new Error((j.error && (j.error.message || j.error)) || ('HTTP ' + r.status));
+                    return pick(j) || 'AI tidak memberi jawaban.';
+                }
                 async function askCustom(sentImg) {
                     const url = customUrl(); if (!url) throw new Error('URL endpoint belum diisi (tekan ⚙).');
                     const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, app: 'freedom-syndicate', context: ctx }) });
@@ -4079,11 +4148,11 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     const wait = add('ai', '<span class="m">Menganalisa…</span>');
                     try {
                         ctx = await buildCtx({ market: eCm.checked && !isRev, journal: wantJ, sym: eSym.value, tf: eTf.value });
-                        const out = provider() === 'custom' ? await askCustom(sent) : await askPuter(sent);
+                        const pv = provider(); const out = pv === 'custom' ? await askCustom(sent) : pv === 'fs' ? await askFS(sent) : PROV[pv] ? await askKey(pv, sent) : pv === 'puter' ? await askPuter(sent) : await askPoll(sent);
                         wait.innerHTML = fmt(out); hist.push({ role: 'assistant', content: out });
                     } catch (e) {
                         hist.pop();
-                        wait.innerHTML = '⚠️ AI gagal merespons: ' + esc(errOf(e)) + '<br><span class="m">Pastikan popup tidak diblokir &amp; sudah login Puter, atau ganti model di ⚙.</span>';
+                        wait.innerHTML = '⚠️ AI gagal merespons: ' + esc(errOf(e)) + '<br><span class="m">Coba ganti sumber AI di ⚙ (Gemini / OpenRouter paling stabil).</span>';
                     }
                     log.scrollTop = log.scrollHeight;
                 }
@@ -4092,7 +4161,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     if (a) {
                         if (a.dataset.a === 'reset') hello();
                         if (a.dataset.a === 'cfg') cfgBox.style.display = cfgBox.style.display === 'none' ? 'block' : 'none';
-                        if (a.dataset.a === 'savecfg') { ls.set(K_PV, selPv.value); ls.set(K_MD, selMd.value); ls.set(K_EP, $('.c-ep', body).value.trim()); toast('✅ Tersimpan', 'Pengaturan AI diperbarui.'); cfgBox.style.display = 'none'; }
+                        if (a.dataset.a === 'savecfg') { ls.set(K_PV, selPv.value); ls.set(K_MD, selMd.value); ls.set(K_EP, $('.c-ep', body).value.trim()); if (PROV[selPv.value]) { ls.set('fs_ai_key_' + selPv.value, $('.c-gk', body).value.trim()); ls.set('fs_ai_model_' + selPv.value, $('.c-gm', body).value.trim() || PROV[selPv.value].model); } toast('✅ Tersimpan', 'Pengaturan AI diperbarui.'); cfgBox.style.display = 'none'; }
                         return;
                     }
                     const s = e.target.closest('.ai-sug button'); if (s) return send(s.textContent.replace('✦', '').trim());
