@@ -2165,7 +2165,7 @@ function panels(){
   const L=S.c[S.c.length-1];if(!L)return;
   $('of-px').textContent=fP(L.c);$('of-px').className='big '+(L.c>=L.o?'g':'r');
   const sell=L.v-L.bv;$('of-stat').innerHTML=`<div class="row"><span>Buy vol</span><b class="g">${L.bv.toFixed(2)}</b></div><div class="row"><span>Sell vol</span><b class="r">${sell.toFixed(2)}</b></div><div class="row"><span>Delta</span><b class="${dl(L)>=0?'g':'r'}">${dl(L).toFixed(2)}</b></div><div class="row"><span>CVD</span><b class="b">${(S.cvd[S.cvd.length-1]||0).toFixed(1)}</b></div><div class="row"><span>Net ($)</span><b class="${dl(L)>=0?'g':'r'}">${sg(dl(L)*L.c)}</b></div>`;
-  const tm=t=>new Date(t).toLocaleTimeString('id',{hour12:false});
+  const tm=t=>new Date(t).toLocaleTimeString('id',{hour12:false,timeZone:'Asia/Jakarta'});
   $('of-liqs').innerHTML=`<div class="row"><span class="r">Long liq ${fM(S.lq[0])}</span><span class="g">Short liq ${fM(S.lq[1])}</span></div>`+(S.liq.map(l=>`<div class="row"><span class="m">${tm(l[0])}</span><span class="${l[1]?'r':'g'}">${l[1]?'LONG':'SHORT'} 💀 ${fM(l[2])}</span></div>`).join('')||'<div class="m">Menunggu likuidasi…</div>');
   $('of-big').innerHTML=S.big.map(l=>`<div class="row"><span class="m">${tm(l[0])}</span><span class="${l[1]==='B'?'g':'r'}">${l[1]==='B'?'BUY':'SELL'} ${fM(l[2])}</span><span>@ ${fP(l[3])}</span></div>`).join('')||'<div class="m">Menunggu transaksi besar…</div>';
   const ks=Object.keys(S.fp).map(Number).sort((a,b)=>b-a),i=ks.reduce((a,k,j)=>Math.abs(k-L.c)<Math.abs(ks[a]-L.c)?j:a,0),v=ks.slice(Math.max(0,i-8),i+9),mx=Math.max(...v.map(k=>Math.max(...S.fp[k])),1e-9);
@@ -2469,7 +2469,7 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
 const VIP_PLANS={1:'1 Bulan',3:'3 Bulan',6:'6 Bulan',12:'12 Bulan',0:'Permanen'};
 const addMonths=(base,m)=>{const d=new Date(base);d.setMonth(d.getMonth()+m);return d.getTime()};
 const vipOk=v=>v===true||(typeof v==='number'&&v>Date.now());
-const vipLeft=e=>e==null?'♾️ PERMANEN':e<=Date.now()?'⛔ Kadaluarsa':'Sisa '+Math.ceil((e-Date.now())/864e5)+' hari · s/d '+new Date(e).toLocaleDateString('id-ID');
+const vipLeft=e=>e==null?'♾️ PERMANEN':e<=Date.now()?'⛔ Kadaluarsa':'Sisa '+Math.ceil((e-Date.now())/864e5)+' hari · s/d '+new Date(e).toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta'});
 function syncIndex(email,exp){rtdb.ref('uid_registry').orderByChild('email').equalTo(email).once('value',s=>s.forEach(c=>rtdb.ref('vip_index/'+c.key).set(exp==null?true:exp)))}
 function grantPlan(email,months,msg){
   email=(email||'').trim().toLowerCase();
@@ -2481,7 +2481,7 @@ function grantPlan(email,months,msg){
     const exp=(+months===0||(old&&old.expiresAt==null&&old.lifetime))?null:addMonths(base,+months);
     const rec={email,plan:+months===0?'permanen':months+' bulan',months:+months,grantedAt:old&&old.grantedAt||now,updatedAt:now,grantedBy:curUser.email,expiresAt:exp,lifetime:exp==null};
     const p=key?rtdb.ref('vip_members/'+key).update(rec):rtdb.ref('vip_members').push(rec);
-    return p.then(()=>{syncIndex(email,exp);if(msg){msg.style.color='#4ade80';msg.textContent=`✅ ${email} VIP ${VIP_PLANS[+months]} · ${exp==null?'selamanya':'s/d '+new Date(exp).toLocaleDateString('id-ID')}`}})
+    return p.then(()=>{syncIndex(email,exp);if(msg){msg.style.color='#4ade80';msg.textContent=`✅ ${email} VIP ${VIP_PLANS[+months]} · ${exp==null?'selamanya':'s/d '+new Date(exp).toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta'})}`}})
   }).catch(e=>{if(msg){msg.style.color='#ef4444';msg.textContent='❌ '+e.message}});
 }
 function grantVip(){const msg=document.getElementById('vip-admin-msg'),pl=document.getElementById('vip-plan-input');grantPlan(document.getElementById('vip-email-input').value,pl?pl.value:1,msg).then(()=>{document.getElementById('vip-email-input').value=''})}
@@ -2497,7 +2497,7 @@ function loadVipMembers(){
       if(exp)rtdb.ref('uid_registry').orderByChild('email').equalTo(d.email).once('value',s=>s.forEach(c=>rtdb.ref('vip_index/'+c.key).remove()));
       html+=`<div class="vip-member-card" style="flex-direction:column;align-items:stretch;gap:8px;${exp?'opacity:.6':''}">
         <div><div class="vip-member-email">👑 ${d.email}</div>
-        <div class="vip-member-since">Paket: <b style="color:#eab308">${d.plan||'-'}</b> · Mulai ${d.grantedAt?new Date(d.grantedAt).toLocaleDateString('id-ID'):'-'}</div>
+        <div class="vip-member-since">Paket: <b style="color:#eab308">${d.plan||'-'}</b> · Mulai ${d.grantedAt?new Date(d.grantedAt).toLocaleDateString('id-ID',{timeZone:'Asia/Jakarta'}):'-'}</div>
         <div class="vip-member-since" style="color:${exp?'#ef4444':'#4ade80'}">${vipLeft(d.expiresAt)}</div></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">${[1,3,6,12].map(m=>`<button onclick="extendVipKey('${d.email}',${m})" class="vip-action-btn" style="background:rgba(234,179,8,.15);color:#eab308;border:1px solid rgba(234,179,8,.4)">+${m}bln</button>`).join('')}
         <button onclick="extendVipKey('${d.email}',0)" class="vip-action-btn" style="background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.4)">♾️</button>
@@ -3095,7 +3095,8 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             // Group signals by date
             const groups = {};
             signals.forEach(s => {
-                const dateKey = (s.timestamp || '').split('T')[0] || 'Unknown';
+                const _d = s.timestamp ? new Date(s.timestamp) : null;
+                const dateKey = (_d && !isNaN(_d)) ? _d.toLocaleDateString('en-CA', {timeZone:'Asia/Jakarta'}) : 'Unknown';
                 if (!groups[dateKey]) groups[dateKey] = [];
                 groups[dateKey].push(s);
             });
@@ -3103,7 +3104,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
             container.innerHTML = sortedDates.map(dateKey => {
                 let dateLabel = dateKey;
-                try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'}); } catch(e) {}
+                try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric', timeZone:'Asia/Jakarta'}); } catch(e) {}
 
                 const cards = groups[dateKey].map(s => {
                     const dir   = (s.direction || 'WAIT').toLowerCase();
@@ -3177,16 +3178,14 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const container = document.getElementById('fund-signals-container');
             let signals = allFundSignals;
 
-            // FILTER ONLY TODAY
-            const today = new Date().toLocaleDateString('id-ID', {timeZone:'Asia/Jakarta'});
-            signals = signals.filter(s => {
-                const d = s.date || (s.timestamp ? s.timestamp.split('T')[0] : null);
-                if (!d) return false;
-                const parts = d.split('-');
-                if (parts.length !== 3) return false;
-                const dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
-                return dateStr === today;
-            });
+            // FILTER ONLY TODAY (tanggal WIB, format YYYY-MM-DD)
+            const today = new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Jakarta'});
+            const wibDay = s => {
+                if (s.date && /^\d{4}-\d{2}-\d{2}$/.test(s.date)) return s.date;
+                const d = s.timestamp ? new Date(s.timestamp) : null;
+                return d && !isNaN(d) ? d.toLocaleDateString('en-CA', {timeZone:'Asia/Jakarta'}) : null;
+            };
+            signals = signals.filter(s => wibDay(s) === today);
 
             if (!signals.length) {
                 container.innerHTML = '<div class="sig-empty"><div class="sig-empty-icon">📰</div><p>BELUM ADA DATA FUNDAMENTAL</p></div>';
@@ -3196,15 +3195,16 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             // Group signals by date
             const groups = {};
             signals.forEach(s => {
-                const rawDate = s.date || (s.timestamp || '').split('T')[0] || 'Unknown';
+                const rawDate = wibDay(s) || 'Unknown';
                 if (!groups[rawDate]) groups[rawDate] = [];
                 groups[rawDate].push(s);
             });
+            Object.values(groups).forEach(g => g.sort((a, b) => (Date.parse(a.timestamp) || 0) - (Date.parse(b.timestamp) || 0)));
             const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
 
             container.innerHTML = sortedDates.map(dateKey => {
                 let dateLabel = dateKey;
-                try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'}); } catch(e) {}
+                try { dateLabel = new Date(dateKey).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric', timeZone:'Asia/Jakarta'}); } catch(e) {}
 
                 const cards = groups[dateKey].map(s => {
                     const impact = (s.impact || 'LOW').toUpperCase();
@@ -3373,7 +3373,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function save() { 
             if(!sRes || !curUser) return alert("❌ Pilih Result (TP/SL/BE) Dulu Doms!");
             const mUsed = parseFloat(document.getElementById('res-margin').innerText.replace('$ ','')) || 0;
-            const dataToSave = { date: document.getElementById('date').value || new Date().toISOString().split('T')[0], time: document.getElementById('time').value || new Date().toLocaleTimeString(), pair: document.getElementById('pair').value, session: sSession || 'N/A', poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle || 'N/A', reason: document.getElementById('reason').value || '-', rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
+            const dataToSave = { date: document.getElementById('date').value || new Date().toLocaleDateString('en-CA', {timeZone:'Asia/Jakarta'}), time: document.getElementById('time').value || new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}), pair: document.getElementById('pair').value, session: sSession || 'N/A', poi: Array.from(document.querySelectorAll('.poi-check:checked')).map(cb => cb.value), entry_style: sStyle || 'N/A', reason: document.getElementById('reason').value || '-', rr: document.getElementById('rr').value, pnl: parseFloat(document.getElementById('pnl').value) || 0, res: sRes, margin: mUsed, bef: bB, aft: bA };
             rtdb.ref('users/' + curUser.uid + '/trades').push(dataToSave).then(() => { alert("🚀 BERHASIL! Transaksi Disimpan ke Cloud Doms."); resetForm(); loadData(); }).catch(e => alert("Gagal Simpan: " + e.message));
         }
 
@@ -3452,7 +3452,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const iv = FC ? FC.tvInterval(prefs.tf) : '15';
                 const sym = encodeURIComponent(FC ? FC.tvSymbol(p) : p);
                 // sandbox tanpa allow-popups/top-navigation: klik di dalam chart tidak bisa melempar ke aplikasi/tab TradingView
-                box.innerHTML = `<iframe sandbox="allow-scripts allow-same-origin allow-forms" style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${sym}&interval=${iv}&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart"></iframe>`;
+                box.innerHTML = `<iframe sandbox="allow-scripts allow-same-origin allow-forms" style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${sym}&interval=${iv}&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Asia%2FJakarta&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart"></iframe>`;
             }
             const sContainer = document.getElementById('sentiment-widget-container');
             const script = document.createElement('script'); script.type = 'text/javascript'; script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js'; script.async = true;
@@ -4013,7 +4013,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         }
         async function buildCtx(o) {
             const out = ['=== DATA NYATA (gunakan angka ini, jangan mengarang angka lain; jika data kurang, katakan) ==='];
-            out.push('Waktu: ' + new Date().toLocaleString('id-ID'));
+            out.push('Waktu: ' + new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}));
             if (o.market) {
                 const sym = (o.sym || 'BTCUSDT').toUpperCase().replace(/[^A-Z0-9]/g, '');
                 try { out.push('[PASAR] ' + sym + ' (Binance)\n' + await marketLine(sym, o.tf) + '\nHTF ' + await marketLine(sym, AI_HTF[o.tf] || '4h')); } catch (e) { out.push('[PASAR] Gagal ambil data ' + sym + ' (' + (e.message || e) + '). Cek simbol Binance, mis. BTCUSDT / PAXGUSDT.'); }
@@ -4681,7 +4681,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                         <div style="padding:0 16px 9px 16px;border-bottom:1px solid rgba(255,255,255,.05);border-left:3px solid ${open ? z[5] : 'transparent'}"><div style="height:3px;background:#1f2937;border-radius:2px;overflow:hidden"><i style="display:block;height:100%;width:${pct.toFixed(1)}%;background:${z[5]}"></i></div><div style="margin-top:4px;font-size:10px;color:${open ? z[5] : '#6b7280'};font-weight:${open ? 600 : 400}">${label}</div></div>`;
                     }).join('');
                     const sum = act.length ? `Sesi aktif: <b style="color:#4ade80">${act.join(' + ')}</b>${act.length > 1 ? ' · overlap' : ''}` : 'Tidak ada sesi besar yang buka (akhir pekan / di luar jam).';
-                    body.innerHTML = rows + `<div class="ck-row" style="font-size:11px;color:#6b7280;border-bottom:none">🕒 Waktu kamu (${Intl.DateTimeFormat().resolvedOptions().timeZone}) <span class="sp" style="flex:1"></span><span class="tm" style="color:#9ca3af">${new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(d)}</span></div><div class="tw-pad" style="padding-top:0"><div style="font-size:11px;margin-bottom:8px">${sum}</div><div class="tw-note">Real-time per detik. Sesi dihitung dari jam kerja lokal tiap kota (Senin–Jumat, otomatis ikut DST); bar & hitung mundur mulai dari nol lagi setiap sesi baru dibuka, Sabtu–Minggu libur.</div></div>`;
+                    body.innerHTML = rows + `<div class="ck-row" style="font-size:11px;color:#6b7280;border-bottom:none">🕒 Waktu Jakarta (WIB) <span class="sp" style="flex:1"></span><span class="tm" style="color:#9ca3af">${new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(d)}</span></div><div class="tw-pad" style="padding-top:0"><div style="font-size:11px;margin-bottom:8px">${sum}</div><div class="tw-note">Real-time per detik. Sesi dihitung dari jam kerja lokal tiap kota (Senin–Jumat, otomatis ikut DST); bar & hitung mundur mulai dari nol lagi setiap sesi baru dibuka, Sabtu–Minggu libur.</div></div>`;
                 }
                 draw(); everySec(body, draw, 1000);
             }
@@ -5636,10 +5636,11 @@ const NYF=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle
 const nyT=t=>{const o={};NYF.formatToParts(new Date(t)).forEach(x=>o[x.type]=x.value);return{h:+o.hour,m:+o.minute,w:WD.indexOf(o.weekday)}};
 const QN=['Q1 Akumulasi (Asia)','Q2 Manipulasi (London)','Q3 Distribusi (NY AM)','Q4 Kontinuasi (NY PM)'],qd=h=>Math.floor(((h-18+24)%24)/6);
 function blk(m,h0){let e=-1;for(let i=m.length-1;i>=0;i--)if(nyT(m[i].t).h===23){e=i;break}if(e<0)return null;let s=e;while(s>0&&e-s<24&&nyT(m[s-1].t).h>=h0)s--;const b=m.slice(s,e+1);return b.length<4?null:{hi:Math.max(...b.map(x=>x.h)),lo:Math.min(...b.map(x=>x.l))}}
+const wibH=h=>{const w=+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Jakarta',hour:'numeric',hourCycle:'h23'}).format(new Date()),n=nyT(Date.now()).h;return String((h+((w-n+24)%24))%24).padStart(2,'0')};
 function ict(c,model,dir){const m=c.m15,n=m.length,a=avg(trs(m).slice(-14)),p=c.p,now=nyT(m[n-1].t),hr=now.h,d=PAIRS[c.k].d,R=[],row=(nm,ok,t)=>R.push({n:nm,ok:!!ok,t});
  let ref=null,gate=false,gt='';
- if(model==='Silver Bullet'){const b=m.slice(-56,-16);ref=b.length>20?{hi:Math.max(...b.map(x=>x.h)),lo:Math.min(...b.map(x=>x.l)),nm:'range pra-window'}:null;gate=[3,10,14].includes(hr);gt=gate?`Jendela Silver Bullet ${hr}:00 NY aktif`:`Di luar jendela SB (03/10/14 NY), sekarang ${hr}:${String(now.m).padStart(2,'0')} NY`}
- else if(model==='PO3'){ref=blk(m,20);if(ref)ref.nm='range Asia';const op=[...m].reverse().find(x=>{const t=nyT(x.t);return t.h===0&&t.m===0}),o=op?op.o:null;gate=!!ref&&hr>=2&&hr<11&&o!=null&&(dir>0?p<o:p>o);gt=o==null?'Midnight open belum tersedia':gate?`Manipulasi ${dir>0?'di bawah':'di atas'} midnight open ${fx(o,d)}, zona ${dir>0?'discount':'premium'}`:`Butuh jam 02–11 NY & harga ${dir>0?'di bawah':'di atas'} midnight open`}
+ if(model==='Silver Bullet'){const b=m.slice(-56,-16);ref=b.length>20?{hi:Math.max(...b.map(x=>x.h)),lo:Math.min(...b.map(x=>x.l)),nm:'range pra-window'}:null;gate=[3,10,14].includes(hr);gt=gate?`Jendela Silver Bullet ${wibH(hr)}:00 WIB aktif`:`Di luar jendela SB (${wibH(3)}/${wibH(10)}/${wibH(14)} WIB), sekarang ${new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'})} WIB`}
+ else if(model==='PO3'){ref=blk(m,20);if(ref)ref.nm='range Asia';const op=[...m].reverse().find(x=>{const t=nyT(x.t);return t.h===0&&t.m===0}),o=op?op.o:null;gate=!!ref&&hr>=2&&hr<11&&o!=null&&(dir>0?p<o:p>o);gt=o==null?'Midnight open belum tersedia':gate?`Manipulasi ${dir>0?'di bawah':'di atas'} midnight open ${fx(o,d)}, zona ${dir>0?'discount':'premium'}`:`Butuh jam ${wibH(2)}–${wibH(11)} WIB & harga ${dir>0?'di bawah':'di atas'} midnight open`}
  else{ref=blk(m,18);if(ref)ref.nm='range Q1';const q=qd(hr);gate=!!ref&&(q===1||q===2)&&now.w>=2&&now.w<=4;gt=gate?`${QN[q]} · weekly Q${now.w}`:`Butuh Q2/Q3 harian & Selasa–Kamis (sekarang ${QN[q].slice(0,2)})`}
  row('Gate',gate,gt);
  let k=-1;if(ref)for(let i=Math.max(0,n-16);i<n;i++)if(dir>0?m[i].l<ref.lo:m[i].h>ref.hi){if(k<0||(dir>0?m[i].l<m[k].l:m[i].h>m[k].h))k=i}
@@ -5714,8 +5715,8 @@ function histHtml(){const L=SC().filter(s=>cls(s)&&(FLT==='all'||s.sty===FLT)),G
   return`<details class="ls-day" data-d="${d}" ${(DO[d]!==undefined?DO[d]:i===0)?'open':''}><summary><b>${lb}</b><span class="w">${g.w}W</span><span class="l">${g.l}L</span><span class="b">${g.b}BE</span><span class="wr">${g.wr==null?'--':fx(g.wr,0)+'%'}</span><span class="p ${g.p>=0?'g':'r'}">${pf(g.p)}</span></summary>${G[d].map(s=>`<div class="ls-h"><span class="d ${s.dir.toLowerCase()}">${s.dir==='BUY'?'↑':'↓'}</span><b>${s.pair}</b><span class="ls-tag" style="margin:0">${s.sty}</span><span class="o">${resChip(s)}<span class="a">${new Date(s.ct).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'})}</span></span></div>`).join('')}</details>`}).join('')+'<button class="fsx-btn bad" id="ls-clr" style="width:100%;margin-top:10px">🗑 Hapus semua riwayat</button>'}
 function ctxHtml(){const c=CX[SEL];if(!c)return'<div class="fsx-empty">Memuat konteks pasar…</div>';const M=evalM(c),L=scoreOf(M.L),S=scoreOf(M.S),best=Math.max(L.n?L.ok/L.n:0,S.n?S.ok/S.n:0);
  const tile=(a,b)=>`<div><small>${a}</small><b>${b}</b></div>`,mk=(t,r,sc)=>`<div><h4 style="color:${t==='LONG (Buy)'?'#4ade80':'#f87171'}">${t==='LONG (Buy)'?'🟢':'🔴'} ${t}</h4>${r.map(x=>`<p>${x.ok==null?'➖':x.ok?'✅':'❌'} <b>${x.n}</b> ${esc(x.t)}</p>`).join('')}<p style="color:#9ca3af">Skor: ${sc.ok}/${sc.n} ${sc.n&&sc.ok/sc.n>=.8?'🟢 Layak':sc.n&&sc.ok/sc.n>=.6?'🟡 Butuh konfirmasi':'🔴 Belum layak'}</p></div>`;
-const nz=nyT(Date.now()),tg=tile('Sesi NY',nz.h+':'+String(nz.m).padStart(2,'0'))+tile('Quarter harian',QN[qd(nz.h)].slice(0,2)+' '+QN[qd(nz.h)].split('(')[1].replace(')',''))+tile('Silver Bullet',[3,10,14].includes(nz.h)?'AKTIF':'Tidak aktif')+tile('Weekly Q',nz.w>=1&&nz.w<=4?'Q'+nz.w:'Fri/Weekend')+tile('ATR H1',fx(c.atrPct,3)+'%')+tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}));
- return`<div class="sig-section-title">KONTEKS ICT SMC · ${SEL}</div><div class="ls-ctx">${tg||`${tile('Taker 1j','B '+fx(c.buy,0)+'% / S '+fx(100-c.buy,0)+'%')}${tile('OI 1j',c.oi==null?'n/a':(c.oi>=0?'Masuk +':'Keluar ')+fx(c.oi,2)+'%')}${tile('L/S',c.ls==null?'n/a':'L '+fx(c.ls,0)+'% / S '+fx(100-c.ls,0)+'%')}${tile('ATR H1',fx(c.atrPct,2)+'% ('+(c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL')+')')}${tile('Volume',fx(c.vr,2)+'× ('+(c.vr<.8?'SEPI':'OK')+')')}${tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}`}</div>
+const nz=nyT(Date.now()),tg=tile('Jam WIB',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'}))+tile('Quarter harian',QN[qd(nz.h)].slice(0,2)+' '+QN[qd(nz.h)].split('(')[1].replace(')',''))+tile('Silver Bullet',[3,10,14].includes(nz.h)?'AKTIF':'Tidak aktif')+tile('Weekly Q',nz.w>=1&&nz.w<=4?'Q'+nz.w:'Fri/Weekend')+tile('ATR H1',fx(c.atrPct,3)+'%')+tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'}));
+ return`<div class="sig-section-title">KONTEKS ICT SMC · ${SEL}</div><div class="ls-ctx">${tg||`${tile('Taker 1j','B '+fx(c.buy,0)+'% / S '+fx(100-c.buy,0)+'%')}${tile('OI 1j',c.oi==null?'n/a':(c.oi>=0?'Masuk +':'Keluar ')+fx(c.oi,2)+'%')}${tile('L/S',c.ls==null?'n/a':'L '+fx(c.ls,0)+'% / S '+fx(100-c.ls,0)+'%')}${tile('ATR H1',fx(c.atrPct,2)+'% ('+(c.ar<.6?'SEPI':c.ar>1.8?'TINGGI':'NORMAL')+')')}${tile('Volume',fx(c.vr,2)+'× ('+(c.vr<.8?'SEPI':'OK')+')')}${tile('Update',new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'}))}`}</div>
  <div class="sig-section-title">📋 CHECKLIST ICT: Gate · Sweep · MSS · FVG · P/D · Bias · RR</div><div class="ls-vd ${best>=.8?'g':''}">${best>=.8?'✅ SETUP LAYAK — cek sinyal aktif di atas':'⏳ TUNGGU — metrik belum selaras'}</div><div class="ls-gd">${mk('LONG (Buy)',M.L,L)}${mk('SHORT (Sell)',M.S,S)}</div>`}
 function render(){if(!isAct('signal-tab'))return;if(!$('#ls-live'))return;const c=CX[SEL],p=PX[SEL],P=PAIRS[SEL],h=c?c.h1.slice(-24).map(x=>x.c):[];
  let chg=c&&c.h1.length>24&&p?(p/c.h1[c.h1.length-25].c-1)*100:0,sp='';if(h.length>2){const mn=Math.min(...h),mx=Math.max(...h),pts=h.map((v,i)=>`${i/(h.length-1)*80},${28-(v-mn)/((mx-mn)||1)*26}`);sp=`<svg width="80" height="30"><polyline points="${pts.join(' ')}" fill="none" stroke="#eab308" stroke-width="1.5"/><circle cx="80" cy="${pts[pts.length-1].split(',')[1]}" r="3" fill="#eab308"/></svg>`}
@@ -5784,7 +5785,7 @@ function p2(n){return String(n).padStart(2,'0')}
 function parts(ms){ms=Math.max(0,ms);return{d:Math.floor(ms/864e5),h:Math.floor(ms%864e5/36e5),m:Math.floor(ms%36e5/6e4),s:Math.floor(ms%6e4/1e3)}}
 function fmt(ms){var t=parts(ms);return(t.d?t.d+' hari ':'')+p2(t.h)+':'+p2(t.m)+':'+p2(t.s)}
 function col(ms){return ms<3*864e5?'#ef4444':ms<7*864e5?'#eab308':'#4ade80'}
-function dt(ts){return new Date(ts).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function dt(ts){return new Date(ts).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'})}
 function ensureBanner(){var b=$('fs-status-banner');if(b)return b;var t=$('ticker-wrap');if(!t||!t.parentNode)return null;
  b=document.createElement('div');b.id='fs-status-banner';b.style.cssText='padding:7px 12px;text-align:center;font-family:Orbitron;font-size:8px;flex-shrink:0;cursor:pointer;border-bottom:1px solid;display:none;line-height:1.6;background:rgba(0,0,0,.35)';
  b.onclick=function(){openTab('vip-tab',document.querySelector('.nav-link.vip-nav'))};t.parentNode.insertBefore(b,t.nextSibling);return b}
