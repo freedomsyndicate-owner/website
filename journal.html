@@ -3031,7 +3031,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             if (!curUser) return;
 
             // ICT PREDATOR signals (public) 
-            rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(20).on('value', snap => {
+            rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(150).on('value', snap => {
                 allIctSignals = [];
                 snap.forEach(child => {
                     allIctSignals.unshift({ id: child.key, ...child.val() });
@@ -3040,7 +3040,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             });
 
             // FUNDAMENTAL signals (public)
-            rtdb.ref('signals/fundamental').orderByChild('timestamp').limitToLast(30).on('value', snap => {
+            rtdb.ref('signals/fundamental').orderByChild('timestamp').limitToLast(300).on('value', snap => {
                 allFundSignals = [];
                 snap.forEach(child => {
                     allFundSignals.unshift({ id: child.key, ...child.val() });
