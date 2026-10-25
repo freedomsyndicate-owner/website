@@ -931,10 +931,7 @@
             </div></div>
         </div>
         <div class="nav-group" data-group="komunitas">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">👥</span><span class="ngh-title">Broker & Funded</span><span class="ngh-count">1</span><span class="ngh-chev">›</span></button>
-            <div class="nav-group-body"><div class="nav-group-inner">
-            <a href="#" class="nav-link" onclick="openTab('broker-tab', this); toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Broker & Funded</span></a>
-            </div></div>
+            <button type="button" class="nav-group-head" onclick="openTab('broker-tab'); if(window.toggleNav)toggleNav()"><span class="ngh-ico">🏦</span><span class="ngh-title">Broker & Funded</span></button>
         </div>
         </div>
         <div class="sb-footer">
@@ -1056,8 +1053,7 @@
 
             <!-- FILTER -->
             <div class="sig-filter">
-                <button class="sig-filter-btn active" onclick="filterSignals('all', this)">ALL</button>
-                <button class="sig-filter-btn" onclick="filterSignals('ict', this)">ICT PREDATOR</button>
+                <button class="sig-filter-btn active" onclick="filterSignals('ict', this)">ICT PREDATOR</button>
                 <button class="sig-filter-btn" onclick="filterSignals('fundamental', this)">FUNDAMENTAL</button>
                 <button class="sig-filter-btn" onclick="filterSignals('buy', this)">🟢 BUY</button>
                 <button class="sig-filter-btn" onclick="filterSignals('sell', this)">🔴 SELL</button>
@@ -1065,6 +1061,7 @@
 
             <!-- ICT PREDATOR SIGNALS -->
             <div id="ict-signals-section">
+                <div id="ict-recap"></div>
                 <div class="sig-section-title">⚡ ICT PREDATOR SIGNALS</div>
                 <div id="ict-signals-container">
                     <div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MENUNGGU SINYAL ICT...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Bot akan push sinyal otomatis</p></div>
@@ -1072,7 +1069,7 @@
             </div>
 
             <!-- FUNDAMENTAL SIGNALS -->
-            <div id="fund-signals-section">
+            <div id="fund-signals-section" style="display:none">
                 <div class="sig-section-title">🌍 FUNDAMENTAL & NEWS</div>
                 <div id="fund-signals-container">
                     <div class="sig-empty"><div class="sig-empty-icon">📰</div><p>MENUNGGU DATA FUNDAMENTAL...</p><p style="font-size:8px;color:#1f2937;margin-top:4px;">Economic calendar & breaking news</p></div>
@@ -2926,7 +2923,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         // ===================================================
         // === SIGNAL TAB - FIREBASE REAL-TIME LISTENER (UPDATED) ===
         // ===================================================
-        let currentFilter = 'all';
+        let currentFilter = 'ict';
         let allIctSignals = [];
         let allFundSignals = [];
 
@@ -2948,9 +2945,11 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const container = document.getElementById('announcements-container');
             if (!container) return;
             if (!allAnnouncements.length) {
-                container.innerHTML = '<div class="sig-empty"><div class="sig-empty-icon">📰</div><p>BELUM ADA PENGUMUMAN</p></div>';
+                container.innerHTML = '';
+                container.style.display = 'none';
                 return;
             }
+            container.style.display = '';
             const kindIcon = { signal: '🎯', guarantee: '📋', blackout: '🚫', fundamental: '🌍', info: 'ℹ️' };
             const kindColor = { signal: '#4ade80', guarantee: '#38bdf8', blackout: '#ef4444', fundamental: '#eab308', info: '#6b7280' };
             container.innerHTML = allAnnouncements.map(a => {
@@ -3031,12 +3030,13 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             if (!curUser) return;
 
             // ICT PREDATOR signals (public) 
-            rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(150).on('value', snap => {
+            rtdb.ref('signals/ict').orderByChild('timestamp').limitToLast(600).on('value', snap => {
                 allIctSignals = [];
                 snap.forEach(child => {
                     allIctSignals.unshift({ id: child.key, ...child.val() });
                 });
                 renderIctSignals();
+                if (typeof ictRecapRender === 'function') ictRecapRender();
             });
 
             // FUNDAMENTAL signals (public)
@@ -5115,7 +5115,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         }
         function hubCats() {
             $('#fsx-hub .hub-box').innerHTML = `<div class="hub-head"><h3>Semua fitur</h3><button class="hub-x" onclick="FSX.closeHub()">Tutup</button></div><div class="hub-cats">${CATS.map(c => `<div class="hub-cat" data-c="${c.k}">${c.isNew ? '<span class="hub-new">NEW</span>' : ''}<div class="ic ${c.th}">${c.ic}</div><b>${c.n}</b><small>${c.items.length} fitur</small></div>`).join('')}</div>`;
-            $('#fsx-hub .hub-box').onclick = e => { const c = e.target.closest('[data-c]'); if (c) hubItems(c.dataset.c); };
+            $('#fsx-hub .hub-box').onclick = e => { const c = e.target.closest('[data-c]'); if (c) { const cat = CATS.find(x => x.k === c.dataset.c); if (cat && cat.items.length === 1) FSX.go(cat.items[0][2]); else hubItems(c.dataset.c); } };
         }
         function hubItems(k) {
             const c = CATS.find(x => x.k === k);
@@ -5824,6 +5824,200 @@ function tick(){
  var sh=left>=864e5?Math.floor(left/864e5)+' HARI':fmt(left);
  ['hm-badge','ac-badge'].forEach(function(id){var e=$(id);if(!e)return;var t=k==='perm'?'♾️ VIP PERMANEN':k==='vip'?'👑 VIP · '+sh:k==='trial'?'⏳ TRIAL · '+sh:'';if(t&&e.textContent!==t)e.textContent=t})}
 setInterval(tick,1000);
+})();
+</script>
+
+<script>
+/* ===== REKAP WINRATE ICT PREDATOR (hari ini + bulan berjalan, reset otomatis tiap tgl 1 WIB) ===== */
+(function(){
+var st=document.createElement('style');
+st.textContent='#ict-recap{background:linear-gradient(145deg,#0b1220,#0a0f1a);border:1px solid #1f2937;border-radius:16px;padding:14px;margin-bottom:14px}'
++'#ict-recap .rc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}'
++'#ict-recap .rc-ttl{font-family:Orbitron,sans-serif;font-size:9px;letter-spacing:1px;color:#38bdf8}'
++'#ict-recap .rc-seg{display:flex;gap:4px;background:#05080f;border:1px solid #1f2937;border-radius:10px;padding:3px}'
++'#ict-recap .rc-seg button{font-family:Orbitron,sans-serif;font-size:8px;padding:6px 10px;border:none;border-radius:7px;background:transparent;color:#6b7280;cursor:pointer}'
++'#ict-recap .rc-seg button.on{background:#38bdf8;color:#000;font-weight:700}'
++'#ict-recap .rc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}'
++'#ict-recap .rc-grid div{background:#05080f;border:1px solid #1f2937;border-radius:12px;padding:10px 4px;text-align:center}'
++'#ict-recap .rc-grid b{display:block;font-family:Orbitron,sans-serif;font-size:17px;color:#fff;line-height:1.2}'
++'#ict-recap .rc-grid small{display:block;font-size:7.5px;letter-spacing:.8px;color:#6b7280;margin-top:4px;font-family:Orbitron,sans-serif}'
++'#ict-recap .rc-grid .w b{color:#4ade80}#ict-recap .rc-grid .l b{color:#f87171}#ict-recap .rc-grid .b b{color:#eab308}'
++'#ict-recap .rc-sub{font-size:9px;color:#9ca3af;margin-top:10px;line-height:1.6}'
++'#ict-recap .rc-note{font-size:8px;color:#4b5563;margin-top:8px;line-height:1.6}';
+document.head.appendChild(st);
+
+var KEY='fs_ict_res_v1',RK='fs_ict_recap_rng',WIB=7*36e5;
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var cache=lsGet(KEY,{}),rng=lsGet(RK,'day'),mem={},busy=false,YC={};
+var BIN=['https://api.binance.com','https://data-api.binance.vision'];
+function tsOf(s){var d=s.timestamp?Date.parse(s.timestamp):NaN;return isNaN(d)?null:d}
+function dayKey(ms){return new Date(ms+WIB).toISOString().slice(0,10)}
+function num(v){var n=parseFloat(v);return isFinite(n)?n:null}
+
+/* hasil dari bot (jika field-nya ada) */
+function botOutcome(s){
+  var f=[s.result,s.outcome,s.status,s.res,s.state,s.final_result,s.close_reason];
+  for(var i=0;i<f.length;i++){
+    if(typeof f[i]!=='string')continue;
+    var v=f[i].toUpperCase();
+    if(/TP2|TP3|WIN|PROFIT/.test(v))return'win';
+    if(/BREAK|(^|[^A-Z])BE([^A-Z]|$)/.test(v))return'be';
+    if(/(^|[^A-Z])SL([^A-Z]|$)|STOP|LOSS|LOSE/.test(v))return'sl';
+  }
+  if(s.tp2_hit===true||s.tp2Hit===true)return'win';
+  if(s.sl_hit===true||s.slHit===true)return(s.tp1_hit||s.tp1Hit)?'be':'sl';
+  return null;
+}
+function params(s){
+  var dir=String(s.direction||'').toUpperCase();if(dir!=='BUY'&&dir!=='SELL')return null;
+  var z=[s.agresif,s.konfirm].map(num).filter(function(x){return x!=null});
+  if(!z.length){z=[s.entry_low,s.entry_high].map(num).filter(function(x){return x!=null})}
+  if(!z.length){var r=num(s.price!=null?s.price:s.entry!=null?s.entry:s.entry_price!=null?s.entry_price:s.zone_entry!=null?s.zone_entry:s.market_price);if(r!=null)z=[r]}
+  var sl=num(s.sl),tp1=num(s.tp1),tp2=num(s.tp2);
+  if(!z.length||sl==null||tp1==null)return null;
+  var lo=Math.min.apply(null,z),hi=Math.max.apply(null,z);
+  var e=s.konfirm!=null&&num(s.konfirm)!=null?num(s.konfirm):s.agresif!=null&&num(s.agresif)!=null?num(s.agresif):(lo+hi)/2;
+  var d=dir==='BUY'?1:-1;
+  if(d*(e-sl)<=0||d*(tp1-e)<=0)return null;
+  return{d:d,lo:lo,hi:hi,e:e,sl:sl,tp1:tp1,tp2:tp2};
+}
+/* sumber candle 5 menit */
+function sources(pair){
+  var p=String(pair||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var m=p.match(/^(BTC|ETH|BNB|SOL|XRP|ADA|DOGE|AVAX|LINK|LTC|DOT)(USDT|USD)$/);
+  if(m)return[{k:'b',s:m[1]+'USDT'}];
+  if(p==='XAUUSD'||p==='GOLD')return[{k:'y',s:'XAUUSD=X'},{k:'b',s:'PAXGUSDT'}];
+  if(p==='XAGUSD')return[{k:'y',s:'XAGUSD=X'}];
+  if(/^(USOIL|WTI|XTIUSD|USOUSD)$/.test(p))return[{k:'y',s:'CL=F'}];
+  if(/^(NAS100|US100|USTEC|NQ)$/.test(p))return[{k:'y',s:'NQ=F'}];
+  if(/^(US30|DJ30|DOW)$/.test(p))return[{k:'y',s:'YM=F'}];
+  if(/^(SPX500|US500|SP500)$/.test(p))return[{k:'y',s:'ES=F'}];
+  if(/^[A-Z]{6}$/.test(p))return[{k:'y',s:p+'=X'}];
+  return[];
+}
+function getJ(u){
+  var c=new AbortController(),tm=setTimeout(function(){c.abort()},12000);
+  return fetch(u,{signal:c.signal}).then(function(r){clearTimeout(tm);if(!r.ok)throw new Error(r.status);return r.json()});
+}
+function binC(sym,from){
+  var i=0;
+  function go(){return getJ(BIN[i]+'/api/v3/klines?symbol='+sym+'&interval=5m&startTime='+from+'&limit=1000').catch(function(e){if(++i<BIN.length)return go();throw e})}
+  return go().then(function(a){return a.map(function(k){return{t:k[0],h:+k[2],l:+k[3]}})});
+}
+function yahC(sym){
+  var c=YC[sym];if(c&&Date.now()-c.at<18e4)return Promise.resolve(c.d);
+  var u='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(sym)+'?interval=5m&range=1mo';
+  var px=['https://api.allorigins.win/raw?url='+encodeURIComponent(u),'https://corsproxy.io/?url='+encodeURIComponent(u)],i=0;
+  function go(){return getJ(px[i]).catch(function(e){if(++i<px.length)return go();throw e})}
+  return go().then(function(j){
+    var r=j.chart.result[0],q=r.indicators.quote[0],o=[];
+    r.timestamp.forEach(function(t,n){if(q.high[n]!=null&&q.low[n]!=null)o.push({t:t*1e3,h:q.high[n],l:q.low[n]})});
+    YC[sym]={at:Date.now(),d:o};return o;
+  });
+}
+function candles(s,ts){
+  var src=sources(s.pair),i=0;
+  function go(){
+    if(i>=src.length)return Promise.reject(new Error('nosrc'));
+    var x=src[i++];
+    return(x.k==='b'?binC(x.s,ts-3e5):yahC(x.s)).then(function(a){
+      a=a.filter(function(c){return c.t+3e5>ts});
+      if(!a.length)throw new Error('empty');return a;
+    }).catch(function(){return go()});
+  }
+  return go();
+}
+/* walk candle: WIN = TP2, BE = balik ke entry setelah TP1, SL = kena SL sebelum TP1 */
+function walk(P,ts,C){
+  var d=P.d,st=0; /* 0 menunggu entry, 1 aktif, 2 TP1 tercapai (SL geser ke entry) */
+  for(var i=0;i<C.length;i++){
+    var c=C[i],hi=c.h,lo=c.l;
+    if(st===0){
+      if(c.t>ts+864e5)return'x';
+      var touch=lo<=P.hi&&hi>=P.lo;
+      if(!touch){
+        if(d>0?(hi>=P.tp1||lo<=P.sl):(lo<=P.tp1||hi>=P.sl))return'x';
+        continue;
+      }
+      st=1;
+      if(d>0?lo<=P.sl:hi>=P.sl)return'sl';
+      continue;
+    }
+    if(st===1){
+      if(d>0?lo<=P.sl:hi>=P.sl)return'sl';
+      if(d>0?hi>=P.tp1:lo<=P.tp1){
+        if(P.tp2==null)return'win';
+        st=2;
+      }
+      continue;
+    }
+    if(st===2){
+      if(d>0?lo<=P.e:hi>=P.e)return'be';
+      if(d>0?hi>=P.tp2:lo<=P.tp2)return'win';
+    }
+  }
+  return st===0?'wait':'open';
+}
+function evalSig(s){
+  var ts=tsOf(s),P=params(s);
+  if(ts==null||!P)return Promise.resolve('x');
+  return candles(s,ts).then(function(C){return walk(P,ts,C)}).catch(function(){return null});
+}
+function outcome(s){
+  var b=botOutcome(s);if(b)return b;
+  if(cache[s.id])return cache[s.id];
+  var m=mem[s.id];return m&&m.o?m.o:null;
+}
+function queueEval(list){
+  if(busy)return;
+  var todo=list.filter(function(s){
+    if(botOutcome(s)||cache[s.id])return false;
+    var m=mem[s.id];return!(m&&Date.now()-m.at<3e5);
+  });
+  if(!todo.length)return;
+  busy=true;var idx=0,done=0;
+  function worker(){
+    if(idx>=todo.length)return Promise.resolve();
+    var s=todo[idx++];
+    return evalSig(s).then(function(o){
+      mem[s.id]={o:o,at:Date.now()};
+      if(o==='win'||o==='sl'||o==='be'||o==='x'){cache[s.id]=o}
+      if(++done%6===0)draw();
+    }).then(worker);
+  }
+  Promise.all([worker(),worker(),worker()]).then(function(){
+    busy=false;
+    lsSet(KEY,cache);draw();
+  });
+}
+function list(){return(typeof allIctSignals!=='undefined'&&allIctSignals)?allIctSignals:[]}
+function pick(){
+  var t=dayKey(Date.now()),m=t.slice(0,7);
+  return list().filter(function(s){var ts=tsOf(s);if(ts==null)return false;var k=dayKey(ts);return rng==='day'?k===t:k.slice(0,7)===m});
+}
+function draw(){
+  var box=document.getElementById('ict-recap');if(!box)return;
+  var L=pick(),w=0,l=0,b=0,run=0,skip=0;
+  L.forEach(function(s){var o=outcome(s);if(o==='win')w++;else if(o==='sl')l++;else if(o==='be')b++;else if(o==='x')skip++;else run++});
+  var wr=(w+l)?Math.round(w/(w+l)*100):null;
+  var mon=new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric',timeZone:'Asia/Jakarta'});
+  var lbl=rng==='day'?'HARI INI':'BULAN INI';
+  var wc=wr==null?'#fff':wr>=50?'#4ade80':'#f87171';
+  var html='<div class="rc-top"><div class="rc-ttl">📊 REKAP ICT · '+lbl+'</div><div class="rc-seg"><button data-r="day" class="'+(rng==='day'?'on':'')+'">HARI INI</button><button data-r="month" class="'+(rng==='month'?'on':'')+'">BULAN INI</button></div></div>'
+  +'<div class="rc-grid"><div><b style="color:'+wc+'">'+(wr==null?'--':wr+'%')+'</b><small>WINRATE</small></div><div class="w"><b>'+w+'</b><small>WIN</small></div><div class="l"><b>'+l+'</b><small>SL</small></div><div class="b"><b>'+b+'</b><small>BE</small></div></div>'
+  +'<div class="rc-sub">'+L.length+' sinyal'+(rng==='month'?' · '+mon:'')+(run?' · '+run+' masih berjalan/menunggu':'')+(skip?' · '+skip+' tidak terpicu':'')+'</div>'
+  +'<div class="rc-note">WIN = TP2 tercapai · BE = balik ke entry setelah TP1 · SL = kena stop loss. Winrate = WIN ÷ (WIN + SL), BE tidak dihitung. Rekap bulanan mulai dari 0 tiap tanggal 1 (WIB).</div>';
+  if(box._h!==html){box._h=html;box.innerHTML=html}
+}
+window.ictRecapRender=function(){draw();queueEval(pick())};
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('#ict-recap [data-r]');if(!b)return;
+  rng=b.dataset.r;lsSet(RK,rng);draw();queueEval(pick());
+});
+setInterval(function(){if(!document.hidden)window.ictRecapRender()},3e5);
+document.addEventListener('DOMContentLoaded',draw);
+draw();
 })();
 </script>
 </body>
