@@ -5631,7 +5631,7 @@ async function ctx(k){const P=PAIRS[k];if(!P.b)return ctxY(k);const [h1,m5,m15,f
  const p=m5[m5.length-1].c,l=m5.slice(-12),tv=l.reduce((s,x)=>s+x.v,0),tb=l.reduce((s,x)=>s+x.tb,0),T=trs(h1),a14=avg(T.slice(-14)),cl=h1.slice(0,-1);
  return{k,p,h1,m15,buy:tv?tb/tv*100:50,oi:f.oi,ls:f.ls,atr:a14,atrPct:a14/p*100,ar:a14/(avg(T.slice(-72,-14))||a14),vr:cl[cl.length-1].v/(avg(cl.slice(-25,-1).map(x=>x.v))||1)}}
 const row=(n,ok,t)=>({n,ok,t});
-const STY={'Silver Bullet':{ttl:36e5,life:72e5,cool:36e5},PO3:{ttl:108e5,life:432e5,cool:72e5},Quarterly:{ttl:144e5,life:576e5,cool:108e5}};
+const STY={'Silver Bullet':{ttl:36e5,life:72e5,cool:36e5},PO3:{ttl:108e5,life:432e5,cool:72e5},Quarterly:{ttl:144e5,life:576e5,cool:108e5},'Scalp Auto':{ttl:72e5,life:288e5,cool:72e5}};
 const NYF=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'numeric',minute:'numeric',weekday:'short'}),WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const nyT=t=>{const o={};NYF.formatToParts(new Date(t)).forEach(x=>o[x.type]=x.value);return{h:+o.hour,m:+o.minute,w:WD.indexOf(o.weekday)}};
 const QN=['Q1 Akumulasi (Asia)','Q2 Manipulasi (London)','Q3 Distribusi (NY AM)','Q4 Kontinuasi (NY PM)'],qd=h=>Math.floor(((h-18+24)%24)/6);
@@ -5661,9 +5661,29 @@ function ict(c,model,dir){const m=c.m15,n=m.length,a=avg(trs(m).slice(-14)),p=c.
 function evalM(c){const o={};[[1,'L'],[-1,'S']].forEach(([dr,k])=>{let b=null;Object.keys(STY).forEach(md=>{const r=ict(c,md,dr);if(!b||r.sc>b.sc)b=r});o[k]=b.R});return o}
 
 const scoreOf=r=>{const a=r.filter(x=>x.ok!=null);return{ok:a.filter(x=>x.ok).length,n:a.length}};
+function scalp(c){const m=c.m15,n=m.length,P=PAIRS[c.k],d=P.d,p=c.p;if(!m||n<60||!p)return null;
+ const cl=m.map(x=>x.c),r=rsi(cl.slice(-50)),rp=rsi(cl.slice(-51,-1)),e20=ema(cl.slice(-60),20),a=avg(trs(m).slice(-14));
+ if(!a||!isFinite(e20))return null;
+ if(c.ar!=null&&c.ar<0.5)return null;
+ const last=m[n-1],hi=Math.max(...m.slice(-25,-1).map(x=>x.h)),lo=Math.min(...m.slice(-25,-1).map(x=>x.l));
+ let dir=0,why='';const bBO=last.c>hi&&last.c>e20,bBD=last.c<lo&&last.c<e20;
+ if(bBO||(rp<55&&r>=55&&last.c>e20)){dir=1;why=bBO?`Breakout ${fx(hi,d)} + momentum M15`:`RSI ${fx(rp,0)}→${fx(r,0)} cross 55 di atas EMA20`}
+ else if(bBD||(rp>45&&r<=45&&last.c<e20)){dir=-1;why=bBD?`Breakdown ${fx(lo,d)} + momentum M15`:`RSI ${fx(rp,0)}→${fx(r,0)} cross 45 di bawah EMA20`}
+ if(!dir)return null;
+ const Rk=1.5*a,rd=v=>+v.toFixed(d);
+ return{dir:dir>0?'BUY':'SELL',e:rd(p),sl:rd(p-dir*Rk),tp:[1,2,3].map(k=>rd(p+dir*Rk*k)),why:`⚡ Scalp Auto M15: ${why}. SL 1.5×ATR, TP 1R/2R/3R.`}}
+let RADAR={};
+function updRadar(k){const c=CX[k];if(!c||!c.m15||c.m15.length<40)return;try{const M=evalM(c),L=scoreOf(M.L),S=scoreOf(M.S);
+ const pk=(L.ok/(L.n||1))>=(S.ok/(S.n||1))?{dr:'BUY',r:M.L,s:L}:{dr:'SELL',r:M.S,s:S};
+ RADAR[k]={t:Date.now(),dir:pk.dr,sc:pk.s.ok+'/'+pk.s.n,frac:pk.s.n?pk.s.ok/pk.s.n:0,miss:pk.r.filter(x=>x.ok===false).map(x=>x.n).slice(0,3)}}catch(e){}}
+function radarHtml(){const rk=Object.keys(RADAR).filter(k=>PAIRS[k]&&PAIRS[k].c===CAT&&Date.now()-RADAR[k].t<18e4).sort((a,b)=>RADAR[b].frac-RADAR[a].frac).slice(0,6);
+ const rows=rk.map(k=>{const r=RADAR[k],pc=Math.round(r.frac*100),col=pc>=70?'#4ade80':pc>=45?'#eab308':'#6b7280';
+  return`<div class="ls-h" style="margin-bottom:2px"><span class="d ${r.dir.toLowerCase()}">${r.dir==='BUY'?'↑':'↓'}</span><b>${k}</b><span class="ls-tag" style="margin:0">${r.dir} · skor ${r.sc}</span><span class="o"><span style="font-size:9px;font-weight:900;color:${col}">${pc}%</span></span></div><div style="font-size:8px;color:#6b7280;margin:0 0 8px 28px">butuh: ${r.miss.length?esc(r.miss.join(' · ')):'tinggal pemicu entry'}</div>`}).join('');
+ return`<div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MEMINDAI ${CK().length} PAIR ${CATS[CAT]}…</p><p style="font-size:8px;color:#4b5563;margin-top:4px">Sinyal ICT butuh Sweep + MSS + FVG selaras · Scalp Auto aktif 24/7 saat momentum muncul</p></div>`+(rk.length?`<div class="sig-section-title" style="margin-top:12px">🎯 RADAR — SKOR ICT TERTINGGI (BUKAN SINYAL)</div>${rows}<p style="font-size:8px;color:#4b5563;margin-top:6px">Skor dihitung live dari data M15. Tunggu checklist lengkap sebelum entry.</p>`:`<p style="font-size:8px;color:#4b5563;margin-top:8px">Radar terisi setelah pemindaian pertama (±1 menit).</p>`)}
 function scan(c){const now=Date.now(),d_=PAIRS[c.k].d;
  Object.keys(STY).forEach(sty=>{const S=STY[sty];if(SIG.some(s=>s.pair===c.k&&s.sty===sty&&(s.st==='active'||s.st==='pending')))return;
   const lc=SIG.find(s=>s.pair===c.k&&s.sty===sty&&s.ct);if(lc&&now-lc.ct<S.cool)return;
+  if(sty==='Scalp Auto'){const r=scalp(c);if(r)SIG.unshift({id:now+'_'+c.k+'_scalp_'+Math.floor(Math.random()*1e6),pair:c.k,sty,dir:r.dir,type:'Market',e:r.e,sl:r.sl,sl0:r.sl,tp:r.tp,st:'active',t:now,ft:now,sc:'AUTO',ttl:S.ttl,life:S.life,why:r.why});return}
   for(const dr of [1,-1]){const r=ict(c,sty,dr);if(!r.core||r.sc<6)continue;
    const a=avg(trs(c.m15).slice(-14)),mkt=(c.p>=r.fz.zl&&c.p<=r.fz.zh)||Math.abs(c.p-r.e)<.1*a,e=mkt?c.p:r.e,Rk=Math.abs(e-r.sl),T=Math.abs(r.tg-e),rd=v=>+v.toFixed(d_),tp=[Rk,(Rk+T)/2,T].map(x=>rd(e+dr*x));
    SIG.unshift({id:now+c.k+sty,pair:c.k,sty,dir:dr>0?'BUY':'SELL',type:mkt?'Market':(dr>0?'Buy Limit':'Sell Limit'),e:rd(e),zl:rd(r.fz.zl),zh:rd(r.fz.zh),sl:rd(r.sl),sl0:rd(r.sl),tp,st:mkt?'active':'pending',t:now,ft:mkt?now:0,sc:r.sc+'/7',ttl:S.ttl,life:S.life,why:r.why});break}})}
@@ -5681,7 +5701,7 @@ function step(s,p){if(!p)return;const d=s.dir==='BUY'?1:-1,now=Date.now(),P=PAIR
 async function prices(){try{const syms=[...new Set(BK.map(k=>PAIRS[k].b))],j=await bget('/api/v3/ticker/price?symbols='+encodeURIComponent(JSON.stringify(syms))),m={};j.forEach(x=>m[x.symbol]=+x.price);BK.forEach(k=>PX[k]=m[PAIRS[k].b]);YK.forEach(k=>{if((k===SEL||SIG.some(s=>s.pair===k&&(s.st==='active'||s.st==='pending')))&&Date.now()-(YT[k]||0)>25e3){YT[k]=Date.now();yget(PAIRS[k].y,'1m','1d').then(r=>{if(r.meta&&r.meta.regularMarketPrice)PX[k]=r.meta.regularMarketPrice}).catch(()=>{})}});
  SIG.forEach(s=>{if(s.st==='pending'||s.st==='active')step(s,PX[s.pair])});lsw('fs_ls_v1',SIG.slice(0,400));rollover();render()}catch(e){}}
 async function scanAll(){if(busy||document.hidden)return;busy=true;const pick=(a,n,i)=>Array.from({length:Math.min(n,a.length)},(_,j)=>a[(i+j)%a.length]),L=[...pick(BK,6,rrB),...pick(YK,3,rrY)];rrB=(rrB+6)%BK.length;rrY=(rrY+3)%YK.length;
- await Promise.all(L.map(async k=>{try{CX[k]=await ctx(k);PX[k]=CX[k].p;FAIL[k]=0;scan(CX[k]);SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active'))step(s,PX[k])})}catch(e){FAIL[k]=1}}));busy=false;SIG=SIG.slice(0,400);lsw('fs_ls_v1',SIG);render()}
+ await Promise.all(L.map(async k=>{try{CX[k]=await ctx(k);PX[k]=CX[k].p;FAIL[k]=0;scan(CX[k]);updRadar(k);SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active'))step(s,PX[k])})}catch(e){FAIL[k]=1}}));busy=false;SIG=SIG.slice(0,400);lsw('fs_ls_v1',SIG);render()}
 async function scanFull(){for(let i=0;i<5;i++){while(busy)await new Promise(r=>setTimeout(r,500));await scanAll()}}
 function session(){const h=new Date().getUTCHours();return h>=13&&h<21?'New York':h>=7&&h<13?'London':h<7?'Asia (Tokyo)':'Sydney'}
 function card(s,p){const P=PAIRS[s.pair],d=s.dir==='BUY'?1:-1,now=Date.now(),den=Math.abs(s.tp[2]-s.e)/P.pip,pend=s.st==='pending';
@@ -5709,7 +5729,7 @@ function hero(){const g=agg(SC().filter(inRng)),wr=g.wr,C=2*Math.PI*34,col=wr==n
  <div class="ls-sum"><span>${g.n} trade</span><b class="${g.p>=0?'g':'r'}">${pf(g.p)} pips</b></div></div></div></div>`}
 function resChip(s){const c=cls(s),t=c==='win'?'WIN':c==='lose'?'LOSE':'BE';return`<span class="ls-res ${c}">${t} ${pf(s.res)}</span>`}
 function histHtml(){const L=SC().filter(s=>cls(s)&&(FLT==='all'||s.sty===FLT)),G={};L.forEach(s=>(G[dk(s.t)]=G[dk(s.t)]||[]).push(s));const days=Object.keys(G).sort().reverse(),y=dk(Date.now()-864e5);
- const f=`<div class="ls-flt">${['all','Silver Bullet','PO3','Quarterly'].map(k=>`<button data-f="${k}" class="${FLT===k?'on':''}">${k==='all'?'Semua':k}</button>`).join('')}</div>`;
+ const f=`<div class="ls-flt">${['all','Silver Bullet','PO3','Quarterly','Scalp Auto'].map(k=>`<button data-f="${k}" class="${FLT===k?'on':''}">${k==='all'?'Semua':k}</button>`).join('')}</div>`;
  if(!days.length)return f+'<div class="fsx-empty">Belum ada trade selesai.<br>Riwayat tersimpan 30 hari, tiap hari papan sinyal otomatis bersih.</div>';
  return f+days.map((d,i)=>{const g=agg(G[d]),lb=d===today()?'Hari ini':d===y?'Kemarin':new Date(d+'T00:00:00Z').toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
   return`<details class="ls-day" data-d="${d}" ${(DO[d]!==undefined?DO[d]:i===0)?'open':''}><summary><b>${lb}</b><span class="w">${g.w}W</span><span class="l">${g.l}L</span><span class="b">${g.b}BE</span><span class="wr">${g.wr==null?'--':fx(g.wr,0)+'%'}</span><span class="p ${g.p>=0?'g':'r'}">${pf(g.p)}</span></summary>${G[d].map(s=>`<div class="ls-h"><span class="d ${s.dir.toLowerCase()}">${s.dir==='BUY'?'↑':'↓'}</span><b>${s.pair}</b><span class="ls-tag" style="margin:0">${s.sty}</span><span class="o">${resChip(s)}<span class="a">${new Date(s.ct).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',timeZone:'Asia/Jakarta'})}</span></span></div>`).join('')}</details>`}).join('')+'<button class="fsx-btn bad" id="ls-clr" style="width:100%;margin-top:10px">🗑 Hapus semua riwayat</button>'}
@@ -5727,7 +5747,7 @@ function render(){if(!isAct('signal-tab'))return;if(!$('#ls-live'))return;const 
  $$('#ls-cat button').forEach(b=>{const n=SIG.filter(s=>(s.st==='active'||s.st==='pending')&&PAIRS[s.pair]&&PAIRS[s.pair].c===b.dataset.c).length;b.querySelector('i').textContent=n||''});
  $$('#ls-sub button').forEach(b=>{b.classList.toggle('on',b.dataset.s===SUB);if(b.dataset.s==='act')b.querySelector('i').textContent=open.length||''});
  const B=$('#ls-body');
- setH(B,SUB==='act'?(open.length?open.map(s=>card(s,PX[s.pair])).join(''):`<div class="sig-empty"><div class="sig-empty-icon">📡</div><p>MEMINDAI ${CK().length} PAIR ${CATS[CAT]}…</p><p style="font-size:8px;color:#4b5563;margin-top:4px">Sinyal hanya muncul saat Sweep + MSS + FVG + target likuiditas selaras</p></div>`):SUB==='his'?histHtml():ctxHtml())}
+ setH(B,SUB==='act'?(open.length?open.map(s=>card(s,PX[s.pair])).join(''):radarHtml()):SUB==='his'?histHtml():ctxHtml())}
 function clk(){const e=$('#ls-clk');if(!e)return;const n=new Date(),w=new Date(n.getTime()+WIB),left=864e5-((w.getUTCHours()*60+w.getUTCMinutes())*60+w.getUTCSeconds())*1e3;e.textContent=w.toISOString().slice(11,19)+' WIB · reset harian 00:00 (−'+Math.floor(left/36e5)+'j '+Math.floor(left%36e5/6e4)+'m)';rollover()}
 let RT=0;const tr=()=>{const n=Date.now();if(n-RT>900){RT=n;render()}};
 function liveWS(){try{const w=new WebSocket('wss://stream.binance.com:9443/stream?streams='+[...new Set(BK.map(k=>PAIRS[k].b.toLowerCase()))].map(x=>x+'@miniTicker').join('/'));w.onmessage=e=>{try{const d=JSON.parse(e.data).data,pr=+d.c;let ch=0;BK.forEach(k=>{if(PAIRS[k].b===d.s){PX[k]=pr;SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active')){const o=s.st+(s.h1||0)+(s.h2||0);step(s,pr);if(s.st+(s.h1||0)+(s.h2||0)!==o)ch=1}})}});if(ch)lsw('fs_ls_v1',SIG);tr()}catch(x){}};w.onclose=()=>setTimeout(liveWS,3000)}catch(e){}}
