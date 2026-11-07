@@ -2170,7 +2170,7 @@
             <div class="tv-subtab-pane" id="pane-tvLive" style="padding:14px 14px 24px;">
                 <div style="background:linear-gradient(135deg,rgba(14,30,60,0.95),rgba(10,20,45,0.95));border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;">
                     <div style="font-size:0.78rem;font-weight:800;color:#fff;">📡 LIVE TV — Channel Gratis</div>
-                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org setiap kali tab ini dibuka, jadi channel ikut ter-update otomatis. Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org — Olahraga &amp; Indonesia saat tab dibuka, kategori lain saat dipilih — jadi channel ikut ter-update otomatis. Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
                 </div>
 
                 <!-- Player -->
@@ -2185,10 +2185,16 @@
                 <div id="tvLiveError" style="display:none;margin-top:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px 16px;text-align:center;font-size:0.7rem;color:#fca5a5;">⚠️ Stream tidak tersedia, coba channel lain.</div>
 
                 <!-- Filter kategori -->
-                <div style="display:flex;gap:6px;margin-top:12px;" id="tvLiveFilterBar">
+                <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;" id="tvLiveFilterBar">
                     <button class="fs-cat-btn active" onclick="tvLiveSetCat('all', this)">Semua</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('sports', this)">⚽ Olahraga</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('id', this)">🇮🇩 Indonesia</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('movies', this)">🎬 Film</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('news', this)">📰 Berita</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('music', this)">🎵 Musik</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('documentary', this)">🎥 Dokumenter</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('kids', this)">🧒 Anak</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('entertainment', this)">🎭 Hiburan</button>
                 </div>
 
                 <!-- Search -->
@@ -2210,11 +2216,29 @@
             // --- LIVE TV: playlist publik iptv-org (diambil tiap kunjungan, tanpa kunci) ---
             var TVLIVE_URLS = {
                 sports: 'https://iptv-org.github.io/iptv/categories/sports.m3u',
-                id: 'https://iptv-org.github.io/iptv/countries/id.m3u'
+                id: 'https://iptv-org.github.io/iptv/countries/id.m3u',
+                movies: 'https://iptv-org.github.io/iptv/categories/movies.m3u',
+                news: 'https://iptv-org.github.io/iptv/categories/news.m3u',
+                music: 'https://iptv-org.github.io/iptv/categories/music.m3u',
+                documentary: 'https://iptv-org.github.io/iptv/categories/documentary.m3u',
+                kids: 'https://iptv-org.github.io/iptv/categories/kids.m3u',
+                entertainment: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u'
+            };
+            // Label tampil per kategori (badge kartu + ringkasan status)
+            var TVLIVE_LABELS = {
+                sports: 'Olahraga', id: 'Indonesia', movies: 'Film', news: 'Berita',
+                music: 'Musik', documentary: 'Dokumenter', kids: 'Anak', entertainment: 'Hiburan'
+            };
+            var TVLIVE_BADGES = {
+                sports: '⚽ Olahraga', id: '🇮🇩 Indonesia', movies: '🎬 Film', news: '📰 Berita',
+                music: '🎵 Musik', documentary: '🎥 Dokumenter', kids: '🧒 Anak', entertainment: '🎭 Hiburan'
             };
             var _tvLiveAll = [];
             var _tvLiveLoaded = false;
             var _tvLiveLoading = false;
+            // Cache per kategori: kategori dimuat on-demand saat dipilih, lalu dipakai ulang
+            var _tvLiveLoadedCats = {};
+            var _tvLiveLoadingCats = {};
             var _tvLiveCat = 'all';
             var _tvLiveShown = 0;
             var _tvLivePage = 100;
@@ -2248,27 +2272,50 @@
                 return out;
             }
 
+            // Muat satu kategori playlist (on-demand; hasil di-cache, tap ganda saat loading tidak fetch ulang)
+            function tvLiveLoadCat(cat) {
+                if (_tvLiveLoadedCats[cat]) return Promise.resolve(true);
+                if (_tvLiveLoadingCats[cat]) return _tvLiveLoadingCats[cat];
+                var p = fetch(TVLIVE_URLS[cat]).then(function(r){
+                    if (!r.ok) throw new Error(cat + ' ' + r.status);
+                    return r.text();
+                }).then(function(text){
+                    var seen = {};
+                    _tvLiveAll.forEach(function(c){ seen[c.url] = 1; });
+                    tvLiveParseM3U(text, cat).forEach(function(ch){
+                        if (seen[ch.url]) return;
+                        seen[ch.url] = 1;
+                        _tvLiveAll.push(ch);
+                    });
+                    _tvLiveLoadedCats[cat] = true;
+                    return true;
+                });
+                _tvLiveLoadingCats[cat] = p;
+                p.then(function(){ _tvLiveLoadingCats[cat] = null; }, function(){ _tvLiveLoadingCats[cat] = null; });
+                return p;
+            }
+
+            function tvLiveStatusSummary() {
+                var parts = [];
+                Object.keys(TVLIVE_LABELS).forEach(function(cat){
+                    if (!_tvLiveLoadedCats[cat]) return;
+                    var n = _tvLiveAll.filter(function(c){ return c.src === cat; }).length;
+                    parts.push(n + ' ' + TVLIVE_LABELS[cat]);
+                });
+                return '📡 ' + parts.join(' · ') + ' · diperbarui ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            }
+
             function tvLiveInit() {
                 if (_tvLiveLoaded || _tvLiveLoading) return;
                 _tvLiveLoading = true;
                 var statusEl = document.getElementById('tvLiveStatus');
                 if (statusEl) statusEl.textContent = '⏳ Memuat playlist iptv-org...';
-                Promise.all([
-                    fetch(TVLIVE_URLS.sports).then(function(r){ if (!r.ok) throw new Error('sports ' + r.status); return r.text(); }),
-                    fetch(TVLIVE_URLS.id).then(function(r){ if (!r.ok) throw new Error('id ' + r.status); return r.text(); })
-                ]).then(function(texts){
+                // Kategori dasar (Olahraga + Indonesia) dimuat saat tab dibuka, seperti sebelumnya;
+                // kategori lain dimuat on-demand saat dipilih (lihat tvLiveSetCat).
+                Promise.all([tvLiveLoadCat('sports'), tvLiveLoadCat('id')]).then(function(){
                     _tvLiveLoading = false;
-                    var seen = {};
-                    _tvLiveAll = [];
-                    tvLiveParseM3U(texts[0], 'sports').concat(tvLiveParseM3U(texts[1], 'id')).forEach(function(ch){
-                        if (seen[ch.url]) return;
-                        seen[ch.url] = 1;
-                        _tvLiveAll.push(ch);
-                    });
                     _tvLiveLoaded = true;
-                    var nSports = _tvLiveAll.filter(function(c){ return c.src === 'sports'; }).length;
-                    var nId = _tvLiveAll.filter(function(c){ return c.src === 'id'; }).length;
-                    if (statusEl) statusEl.textContent = '📡 ' + nSports + ' channel olahraga · ' + nId + ' channel Indonesia · diperbarui ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    if (statusEl) statusEl.textContent = tvLiveStatusSummary();
                     tvLiveRender(true);
                 }).catch(function(){
                     _tvLiveLoading = false;
@@ -2300,7 +2347,7 @@
                     var logoHtml = ch.logo
                         ? '<img src="' + ch.logo.replace(/"/g, '') + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:36px;height:36px;object-fit:contain;border-radius:6px;background:#0f172a;flex-shrink:0;">'
                         : '<div style="width:36px;height:36px;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📺</div>';
-                    var srcBadge = ch.src === 'sports' ? '⚽ Olahraga' : '🇮🇩 Indonesia';
+                    var srcBadge = TVLIVE_BADGES[ch.src] || ch.src;
                     card.innerHTML = logoHtml
                         + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + ch.name.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
                         + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + ch.group.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '') + '</div></div>'
@@ -2309,7 +2356,7 @@
                 });
                 _tvLiveShown += batch.length;
                 if (moreBtn) moreBtn.style.display = (_tvLiveShown < items.length) ? 'inline-block' : 'none';
-                if (!items.length && _tvLiveLoaded && statusEl) {
+                if (!items.length && _tvLiveLoaded && !_tvLiveLoadingCats[_tvLiveCat] && statusEl) {
                     statusEl.textContent = '🔍 Tidak ada channel yang cocok. Coba kata kunci atau kategori lain.';
                 }
             }
@@ -2320,7 +2367,17 @@
                 _tvLiveCat = cat;
                 document.querySelectorAll('#tvLiveFilterBar .fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
                 if (btn) btn.classList.add('active');
-                tvLiveRender(true);
+                // Kategori sudah dimuat (atau 'Semua') -> langsung tampil.
+                // Belum dimuat -> fetch on-demand sekali, lalu tampil; hasil di-cache.
+                if (cat === 'all' || _tvLiveLoadedCats[cat]) { tvLiveRender(true); return; }
+                var statusEl = document.getElementById('tvLiveStatus');
+                if (statusEl) statusEl.textContent = '⏳ Memuat playlist ' + (TVLIVE_LABELS[cat] || cat) + '...';
+                tvLiveLoadCat(cat).then(function(){
+                    if (statusEl) statusEl.textContent = tvLiveStatusSummary();
+                    tvLiveRender(true);
+                }, function(){
+                    if (statusEl) statusEl.innerHTML = '⚠️ Gagal memuat playlist ' + (TVLIVE_LABELS[cat] || cat) + '. Cek koneksi lalu <a href="javascript:void(0)" onclick="tvLiveSetCat(\'' + cat + '\')" style="color:var(--primary);">coba lagi</a>.';
+                });
             }
 
             function tvLiveShowError(msg) {
