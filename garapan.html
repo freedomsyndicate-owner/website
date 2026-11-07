@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freedom Syndicate | Info Garapan</title>
+    <meta name="description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
+    <meta property="og:title" content="Freedom Syndicate | Info Garapan">
+    <meta property="og:description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freedomsyndicate.my.id/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -431,7 +436,7 @@
         <!-- Gratisan -->
         <div id="tab-gratisan" class="content-card tab-pane">
             <h2>🎁 Zona Gratisan</h2>
-            <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang yang sudah terbukti membayar. Semua sudah difilter — hanya yang benar-benar bermanfaat, bukan scam.</p>
+            <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang — klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Semua sudah difilter — hanya yang benar-benar bermanfaat, bukan scam.</p>
 
             <div class="link-card">
                 <div class="img-frame" id="img1-frame">
@@ -472,7 +477,7 @@
         <!-- Garapan Website -->
         <div id="tab-garapanweb" class="content-card tab-pane">
             <h2>💰 Garapan Website Penghasil Dollar</h2>
-            <p class="content-desc">Kumpulan website terpercaya yang sudah terbukti membayar anggota Freedom Syndicate. Daftar sekarang dan mulai hasilkan dollar dari mana saja — cukup modal HP dan internet!</p>
+            <p class="content-desc">Kumpulan website penghasil dollar — klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Daftar sekarang dan mulai hasilkan dollar dari mana saja — cukup modal HP dan internet!</p>
 
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-bolt"></i> InventMoney <span class="badge">Instant Pay</span></div>
@@ -501,11 +506,6 @@
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-university"></i> Krom Bank <span class="badge gold">0% Admin</span></div>
                 <div class="site-desc">🏅 Bank digital generasi baru dari grup Kredivo! Tabungan bunga kompetitif, transfer antar bank GRATIS tanpa batas, tampilan aplikasi modern. Buka rekening 100% online dalam 5 menit — tanpa antri, tanpa ribet!</div>
-                <div class="promo-box">
-                    🎁 <strong>PROMO SPESIAL!</strong><br>
-                    Daftar pakai link ini → Masukkan saldo <strong>Rp300.000</strong> → Simpan selama <strong>1 bulan</strong><br>
-                    💰 Langsung dapat reward <strong>Rp150.000</strong> gratis!
-                </div>
                 <a href="https://krom.id/referral/?code=LWLC9820" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
             </div>
 
@@ -609,11 +609,14 @@
                 status.textContent = '⚠️ Pesan tidak boleh kosong!';
                 return;
             }
-            const BOT_TOKEN = 'GANTI_BOT_TOKEN';
-            const CHAT_ID   = 'GANTI_CHAT_ID';
+            // Token bot dihapus dari kode browser — share diarahkan ke Telegram.
             const teks = `📢 *Share Garapan*\n👤 ${nama || 'Anonim'}\n\n${pesan}`;
             status.style.color = '#38bdf8';
             status.textContent = '⏳ Mengirim...';
+            status.style.color = '#38bdf8';
+            status.textContent = '🔗 Membuka Telegram — silakan bagikan garapanmu di grup Freedom Syndicate.';
+            window.open('https://t.me/freedomsyndicate', '_blank');
+            return;
             try {
                 const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
