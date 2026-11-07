@@ -1970,6 +1970,124 @@
                 }
                 </script>
             </div>
+
+            <!-- ===== FILM KLASIK GRATIS (Internet Archive — domain publik, tanpa kunci API) ===== -->
+            <div id="fsClassic" style="padding:16px 14px 24px;border-top:1px solid rgba(56,189,248,0.15);background:rgba(5,10,20,0.98);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                    <div>
+                        <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">🎞️ FILM KLASIK GRATIS</div>
+                        <div style="font-size:0.95rem;font-weight:900;letter-spacing:1px;color:#fff;line-height:1.2;">Film Klasik &amp; Domain Publik</div>
+                    </div>
+                    <button onclick="fsClassicLoad(true)" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.65rem;cursor:pointer;font-weight:700;font-family:inherit;">🔄 Refresh</button>
+                </div>
+                <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:10px;">Film klasik domain publik dari Internet Archive — gratis &amp; legal, tanpa kunci API. Ketuk poster untuk menonton.</div>
+                <!-- Player film klasik -->
+                <div id="fsClassicPlayer" style="display:none;margin-bottom:12px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <div id="fsClassicNow" style="font-size:0.72rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+                        <button onclick="fsClassicClose()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:8px;padding:4px 10px;font-size:0.65rem;cursor:pointer;font-family:inherit;">✕ Tutup</button>
+                    </div>
+                    <video id="fsClassicVideo" controls playsinline preload="none" style="width:100%;background:#000;border-radius:12px;max-height:60vh;"></video>
+                    <div id="fsClassicMeta" style="font-size:0.6rem;color:#64748b;margin-top:6px;"></div>
+                </div>
+                <div id="fsClassicStatus" style="font-size:0.65rem;color:#475569;text-align:center;padding:12px 0;">⏳ Memuat film klasik...</div>
+                <div id="fsClassicRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;"></div>
+                <div style="font-size:0.58rem;color:#475569;margin-top:8px;">Sumber: archive.org (koleksi feature_films) · Film baru di sini berarti film klasik yang paling banyak diunduh · Untuk film bioskop terbaru, gunakan pencarian FS Cinema di atas.</div>
+            </div>
+            <script>
+            // --- FILM KLASIK GRATIS (Internet Archive, tanpa kunci API) ---
+            var _fsClassicLoaded = false;
+            var _fsClassicLoading = false;
+            var _fsClassicBad = /sex|porn|xxx|erotic|nude|nudist|nudity|fetish|jesus-film/i;
+            function fsClassicLoad(force) {
+                if ((_fsClassicLoaded || _fsClassicLoading) && !force) return;
+                _fsClassicLoading = true;
+                var statusEl = document.getElementById('fsClassicStatus');
+                var row = document.getElementById('fsClassicRow');
+                if (statusEl) statusEl.textContent = '⏳ Memuat film klasik...';
+                var q = 'collection:feature_films AND mediatype:movies';
+                var url = 'https://archive.org/advancedsearch.php?q=' + encodeURIComponent(q)
+                    + '&fl[]=identifier&fl[]=title&fl[]=year&fl[]=downloads&sort[]=downloads+desc&rows=40&output=json';
+                fetch(url).then(function(r){ return r.json(); }).then(function(d){
+                    _fsClassicLoading = false;
+                    var docs = (d && d.response && d.response.docs) || [];
+                    var picks = [];
+                    docs.forEach(function(doc){
+                        if (picks.length >= 18) return;
+                        var title = (doc.title || '').trim();
+                        var id = doc.identifier || '';
+                        var year = String(doc.year || '').slice(0,4);
+                        if (!title || !id || !/^\d{4}$/.test(year)) return;
+                        if (_fsClassicBad.test(title + ' ' + id)) return;
+                        picks.push({ id: id, title: title, year: year });
+                    });
+                    if (!picks.length) {
+                        if (statusEl) statusEl.textContent = '⚠️ Film klasik belum bisa dimuat. Coba refresh.';
+                        return;
+                    }
+                    _fsClassicLoaded = true;
+                    if (statusEl) statusEl.style.display = 'none';
+                    row.innerHTML = '';
+                    picks.forEach(function(f){
+                        var card = document.createElement('div');
+                        card.style.cssText = 'flex:0 0 128px;cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid rgba(56,189,248,0.15);background:rgba(15,23,42,0.8);';
+                        card.onclick = function(){ fsClassicPlay(f.id, f.title, f.year); };
+                        var poster = 'https://archive.org/services/img/' + encodeURIComponent(f.id);
+                        card.innerHTML = '<img src="' + poster + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:100%;height:170px;object-fit:cover;display:block;background:#1e293b;">'
+                            + '<div style="padding:6px;font-size:0.62rem;color:#cbd5e1;font-weight:700;line-height:1.25;height:2.6em;overflow:hidden;">' + f.title.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+                            + '<div style="padding:0 6px 6px;font-size:0.58rem;color:#64748b;">' + f.year + ' · Archive.org</div>';
+                        row.appendChild(card);
+                    });
+                }).catch(function(){
+                    _fsClassicLoading = false;
+                    if (statusEl) statusEl.textContent = '⚠️ Gagal memuat film klasik. Cek koneksi lalu tekan Refresh.';
+                });
+            }
+            function fsClassicPlay(id, title, year) {
+                var player = document.getElementById('fsClassicPlayer');
+                var video = document.getElementById('fsClassicVideo');
+                var now = document.getElementById('fsClassicNow');
+                var meta = document.getElementById('fsClassicMeta');
+                if (now) now.textContent = '▶ ' + title + ' (' + year + ')';
+                if (meta) meta.textContent = '⏳ Mencari file video...';
+                player.style.display = 'block';
+                player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                fetch('https://archive.org/metadata/' + encodeURIComponent(id)).then(function(r){ return r.json(); }).then(function(d){
+                    var files = (d && d.files) || [];
+                    var mp4s = files.filter(function(f){ return /\.mp4$/i.test(f.name || ''); });
+                    var best = null;
+                    mp4s.forEach(function(f){ if (/_512kb\.mp4$/i.test(f.name)) best = f; });
+                    if (!best && mp4s.length) best = mp4s[0];
+                    if (!best) {
+                        if (meta) meta.textContent = '⚠️ File video tidak tersedia untuk film ini. Coba film lain.';
+                        return;
+                    }
+                    video.src = 'https://archive.org/download/' + encodeURIComponent(id) + '/' + encodeURIComponent(best.name);
+                    video.load();
+                    var p = video.play();
+                    if (p && p.catch) p.catch(function(){});
+                    if (meta) meta.innerHTML = 'Sumber: <a href="https://archive.org/details/' + encodeURIComponent(id) + '" target="_blank" rel="noopener" style="color:var(--primary);">archive.org/details/' + id.replace(/</g,'&lt;') + '</a> · File: ' + best.name.replace(/</g,'&lt;');
+                }).catch(function(){
+                    if (meta) meta.textContent = '⚠️ Gagal memuat video. Cek koneksi lalu coba lagi.';
+                });
+            }
+            function fsClassicClose() {
+                var video = document.getElementById('fsClassicVideo');
+                if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+                document.getElementById('fsClassicPlayer').style.display = 'none';
+            }
+            // Muat saat bagian ini terlihat (hemat kuota), fallback: muat setelah 4 detik
+            (function(){
+                var el = document.getElementById('fsClassic');
+                if ('IntersectionObserver' in window && el) {
+                    var io = new IntersectionObserver(function(entries){
+                        entries.forEach(function(e){ if (e.isIntersecting) { fsClassicLoad(false); io.disconnect(); } });
+                    }, { rootMargin: '200px' });
+                    io.observe(el);
+                }
+                setTimeout(function(){ fsClassicLoad(false); }, 4000);
+            })();
+            </script>
         </div>
 
         <div id="tvchannel" class="tab-content" style="padding:0;margin:0;">
@@ -1987,6 +2105,7 @@
                 <!-- Sub-tab buttons -->
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
                     <button class="tv-subtab-btn active" id="stv1" onclick="switchTvTab('tv1',this)">📺 TV1</button>
+                    <button class="tv-subtab-btn" id="stvLive" onclick="switchTvTab('tvLive',this)">📡 LIVE TV</button>
                     <button class="tv-subtab-btn" id="stv4" onclick="switchTvTab('tv4',this)">⚽ SPORT</button>
                     <button class="tv-subtab-btn" id="stvWorld" onclick="switchTvTab('tvWorld',this)">🌍 WORLD</button>
                 </div>
@@ -2046,6 +2165,214 @@
 
                 <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">© FREEDOM SYNDICATE TV1</p>
             </div>
+
+            <!-- ===== PANE: LIVE TV (playlist iptv-org, diambil langsung tiap kunjungan) ===== -->
+            <div class="tv-subtab-pane" id="pane-tvLive" style="padding:14px 14px 24px;">
+                <div style="background:linear-gradient(135deg,rgba(14,30,60,0.95),rgba(10,20,45,0.95));border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+                    <div style="font-size:0.78rem;font-weight:800;color:#fff;">📡 LIVE TV — Channel Gratis</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org setiap kali tab ini dibuka, jadi channel ikut ter-update otomatis. Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
+                </div>
+
+                <!-- Player -->
+                <div class="tv-iframe-wrap" id="tvLivePlayerWrap">
+                    <video id="tvLiveVideo" controls playsinline style="width:100%;height:100%;background:#000;display:none;"></video>
+                    <div class="tv-iframe-overlay" id="tvLiveOverlay">
+                        <div style="font-size:2.2rem;margin-bottom:8px;">📡</div>
+                        <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">PILIH CHANNEL</div>
+                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Cari channel, lalu tap untuk menonton</div>
+                    </div>
+                </div>
+                <div id="tvLiveError" style="display:none;margin-top:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px 16px;text-align:center;font-size:0.7rem;color:#fca5a5;">⚠️ Stream tidak tersedia, coba channel lain.</div>
+
+                <!-- Filter kategori -->
+                <div style="display:flex;gap:6px;margin-top:12px;" id="tvLiveFilterBar">
+                    <button class="fs-cat-btn active" onclick="tvLiveSetCat('all', this)">Semua</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('sports', this)">⚽ Olahraga</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('id', this)">🇮🇩 Indonesia</button>
+                </div>
+
+                <!-- Search -->
+                <div style="margin-top:10px;">
+                    <input type="text" id="tvLiveSearch" placeholder="🔍 Cari nama channel..." oninput="tvLiveOnSearch()" style="width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1px solid rgba(56,189,248,0.2);background:rgba(15,23,42,0.6);color:#fff;font-size:0.8rem;font-family:inherit;outline:none;">
+                </div>
+
+                <!-- Status -->
+                <div id="tvLiveStatus" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;">⏳ Buka tab ini untuk memuat playlist...</div>
+
+                <!-- Daftar channel -->
+                <div id="tvLiveList" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+                <div style="text-align:center;margin-top:12px;">
+                    <button id="tvLiveMoreBtn" onclick="tvLiveMore()" style="display:none;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--primary);font-size:0.72rem;padding:8px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-family:inherit;">Muat Lebih Banyak ↓</button>
+                </div>
+                <p style="font-size:0.6rem;color:#1e293b;text-align:center;margin-top:16px;">Sumber playlist: iptv-org (github.io) · © FREEDOM SYNDICATE</p>
+            </div>
+            <script>
+            // --- LIVE TV: playlist publik iptv-org (diambil tiap kunjungan, tanpa kunci) ---
+            var TVLIVE_URLS = {
+                sports: 'https://iptv-org.github.io/iptv/categories/sports.m3u',
+                id: 'https://iptv-org.github.io/iptv/countries/id.m3u'
+            };
+            var _tvLiveAll = [];
+            var _tvLiveLoaded = false;
+            var _tvLiveLoading = false;
+            var _tvLiveCat = 'all';
+            var _tvLiveShown = 0;
+            var _tvLivePage = 100;
+            var _tvLiveHls = null;
+            var _tvLiveCurrent = null;
+
+            function tvLiveParseM3U(text, src) {
+                var out = [];
+                var lines = text.split(/\r?\n/);
+                var pending = null;
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim();
+                    if (!line) continue;
+                    if (line.indexOf('#EXTINF') === 0) {
+                        var logo = '', group = '';
+                        var mLogo = line.match(/tvg-logo="([^"]*)"/);
+                        if (mLogo) logo = mLogo[1];
+                        var mGroup = line.match(/group-title="([^"]*)"/);
+                        if (mGroup) group = mGroup[1];
+                        var name = line.split(',').pop().trim();
+                        pending = { name: name, logo: logo, group: group, src: src };
+                    } else if (line.charAt(0) !== '#' && pending) {
+                        var url = line.split('|')[0].trim();
+                        if (/^https?:\/\//i.test(url)) {
+                            pending.url = url;
+                            out.push(pending);
+                        }
+                        pending = null;
+                    }
+                }
+                return out;
+            }
+
+            function tvLiveInit() {
+                if (_tvLiveLoaded || _tvLiveLoading) return;
+                _tvLiveLoading = true;
+                var statusEl = document.getElementById('tvLiveStatus');
+                if (statusEl) statusEl.textContent = '⏳ Memuat playlist iptv-org...';
+                Promise.all([
+                    fetch(TVLIVE_URLS.sports).then(function(r){ if (!r.ok) throw new Error('sports ' + r.status); return r.text(); }),
+                    fetch(TVLIVE_URLS.id).then(function(r){ if (!r.ok) throw new Error('id ' + r.status); return r.text(); })
+                ]).then(function(texts){
+                    _tvLiveLoading = false;
+                    var seen = {};
+                    _tvLiveAll = [];
+                    tvLiveParseM3U(texts[0], 'sports').concat(tvLiveParseM3U(texts[1], 'id')).forEach(function(ch){
+                        if (seen[ch.url]) return;
+                        seen[ch.url] = 1;
+                        _tvLiveAll.push(ch);
+                    });
+                    _tvLiveLoaded = true;
+                    var nSports = _tvLiveAll.filter(function(c){ return c.src === 'sports'; }).length;
+                    var nId = _tvLiveAll.filter(function(c){ return c.src === 'id'; }).length;
+                    if (statusEl) statusEl.textContent = '📡 ' + nSports + ' channel olahraga · ' + nId + ' channel Indonesia · diperbarui ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    tvLiveRender(true);
+                }).catch(function(){
+                    _tvLiveLoading = false;
+                    if (statusEl) statusEl.innerHTML = '⚠️ Gagal memuat playlist. Cek koneksi lalu <a href="javascript:void(0)" onclick="tvLiveInit()" style="color:var(--primary);">coba lagi</a>.';
+                });
+            }
+
+            function tvLiveFiltered() {
+                var q = (document.getElementById('tvLiveSearch').value || '').trim().toLowerCase();
+                return _tvLiveAll.filter(function(ch){
+                    if (_tvLiveCat !== 'all' && ch.src !== _tvLiveCat) return false;
+                    if (q && ch.name.toLowerCase().indexOf(q) === -1) return false;
+                    return true;
+                });
+            }
+
+            function tvLiveRender(reset) {
+                var list = document.getElementById('tvLiveList');
+                var moreBtn = document.getElementById('tvLiveMoreBtn');
+                var statusEl = document.getElementById('tvLiveStatus');
+                if (reset) { _tvLiveShown = 0; list.innerHTML = ''; }
+                var items = tvLiveFiltered();
+                var batch = items.slice(_tvLiveShown, _tvLiveShown + _tvLivePage);
+                batch.forEach(function(ch){
+                    var card = document.createElement('div');
+                    card.className = 'tv-ch-card';
+                    card.style.cssText += 'display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;';
+                    card.onclick = function(){ tvLivePlay(ch, card); };
+                    var logoHtml = ch.logo
+                        ? '<img src="' + ch.logo.replace(/"/g, '') + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:36px;height:36px;object-fit:contain;border-radius:6px;background:#0f172a;flex-shrink:0;">'
+                        : '<div style="width:36px;height:36px;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📺</div>';
+                    var srcBadge = ch.src === 'sports' ? '⚽ Olahraga' : '🇮🇩 Indonesia';
+                    card.innerHTML = logoHtml
+                        + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + ch.name.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+                        + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + ch.group.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '') + '</div></div>'
+                        + '<div style="font-size:0.9rem;color:var(--primary);flex-shrink:0;">▶</div>';
+                    list.appendChild(card);
+                });
+                _tvLiveShown += batch.length;
+                if (moreBtn) moreBtn.style.display = (_tvLiveShown < items.length) ? 'inline-block' : 'none';
+                if (!items.length && _tvLiveLoaded && statusEl) {
+                    statusEl.textContent = '🔍 Tidak ada channel yang cocok. Coba kata kunci atau kategori lain.';
+                }
+            }
+
+            function tvLiveMore() { tvLiveRender(false); }
+            function tvLiveOnSearch() { tvLiveRender(true); }
+            function tvLiveSetCat(cat, btn) {
+                _tvLiveCat = cat;
+                document.querySelectorAll('#tvLiveFilterBar .fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
+                if (btn) btn.classList.add('active');
+                tvLiveRender(true);
+            }
+
+            function tvLiveShowError(msg) {
+                var err = document.getElementById('tvLiveError');
+                if (err) { err.textContent = msg || '⚠️ Stream tidak tersedia, coba channel lain.'; err.style.display = 'block'; }
+            }
+            function tvLiveHideError() {
+                var err = document.getElementById('tvLiveError');
+                if (err) err.style.display = 'none';
+            }
+
+            function tvLivePlay(ch, cardEl) {
+                var video = document.getElementById('tvLiveVideo');
+                var overlay = document.getElementById('tvLiveOverlay');
+                var badge = document.getElementById('tvNowBadge');
+                var badgeName = document.getElementById('tvBadgeName');
+                tvLiveHideError();
+                if (_tvLiveHls) { _tvLiveHls.destroy(); _tvLiveHls = null; }
+                video.style.display = 'block';
+                if (overlay) overlay.classList.add('hidden');
+                document.querySelectorAll('#tvLiveList .tv-ch-card').forEach(function(c){ c.classList.remove('active-card'); });
+                if (cardEl) cardEl.classList.add('active-card');
+                if (badge) badge.style.display = 'block';
+                if (badgeName) badgeName.textContent = ch.name;
+                _tvLiveCurrent = ch;
+                var isM3U8 = ch.url.toLowerCase().indexOf('.m3u8') !== -1;
+                var onFail = function(){ tvLiveShowError('⚠️ Stream tidak tersedia, coba channel lain.'); };
+                video.onerror = onFail;
+                if (isM3U8 && window.Hls && Hls.isSupported()) {
+                    _tvLiveHls = new Hls({ enableWorker: true, lowLatencyMode: true, manifestLoadingMaxRetry: 1, levelLoadingMaxRetry: 1 });
+                    _tvLiveHls.loadSource(ch.url);
+                    _tvLiveHls.attachMedia(video);
+                    _tvLiveHls.on(Hls.Events.MANIFEST_PARSED, function(){
+                        var p = video.play();
+                        if (p && p.catch) p.catch(function(){});
+                    });
+                    _tvLiveHls.on(Hls.Events.ERROR, function(ev, data){
+                        if (data && data.fatal) { _tvLiveHls.destroy(); _tvLiveHls = null; onFail(); }
+                    });
+                } else {
+                    // Native HLS (Safari) atau file video langsung
+                    video.src = ch.url;
+                    video.load();
+                    var p2 = video.play();
+                    if (p2 && p2.catch) p2.catch(function(){});
+                }
+                // Jika 15 detik tidak ada gambar, anggap stream mati
+                setTimeout(function(){
+                    if (_tvLiveCurrent === ch && video.readyState < 2 && video.style.display !== 'none') onFail();
+                }, 15000);
+            }
+            </script>
 
             <!-- ===== PANE: WORLD (full iframe, lazy load) ===== -->
             <div class="tv-subtab-pane" id="pane-tvWorld" style="padding:0;">
@@ -2129,6 +2456,8 @@
             if (paneId === 'tvWorld') _lazyLoadIframe('tvWorld');
             // Muat jadwal & skor pertandingan mendatang saat tab Sport pertama kali dibuka
             if (paneId === 'tv4') tv4LoadLivescore(false);
+            // Muat playlist iptv-org saat tab LIVE TV pertama kali dibuka
+            if (paneId === 'tvLive') tvLiveInit();
         }
 
                 // =============================================
