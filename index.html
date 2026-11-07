@@ -1342,6 +1342,99 @@
             }
         }
     </style>
+
+    <!-- FS REDESIGN v2: topbar + bottomnav + header tab konsisten + glass lebih terasa -->
+    <style>
+        :root {
+            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));
+            --glass-border: rgba(255,255,255,0.16);
+            --glass-blur: blur(12px) saturate(1.25);
+        }
+        /* Judul besar di atas konten: cuma tampil di Beranda, tab lain tidak
+           perlu judul ganda (topbar sudah ada judulnya). */
+        .main-wrapper > h2 { display: none; }
+        .main-wrapper:has(#home.active) > h2 { display: block; }
+        /* Topbar kaca: hamburger + judul + jalan pintas Chat Ai */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 900;
+            display: flex; align-items: center; gap: 12px; padding: 0 12px;
+            background: rgba(2,6,23,0.72); backdrop-filter: blur(12px) saturate(1.25);
+            -webkit-backdrop-filter: blur(12px) saturate(1.25);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        .topbar .menu-toggle {
+            position: static; top: auto; left: auto; z-index: auto;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+            padding: 8px 12px; font-size: 1.25rem; border-radius: 10px; min-width: 44px; min-height: 44px;
+        }
+        .topbar-title { flex: 1; text-align: center; font-weight: 900; font-size: 0.82rem; letter-spacing: 3px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .topbar-title b { color: var(--primary); }
+        .topbar-ai {
+            background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #fff;
+            border-radius: 20px; padding: 8px 14px; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .main-wrapper { padding-top: 76px !important; }
+        /* Header konsisten di semua tab */
+        .tab-head { text-align: left; margin: 4px 2px 16px; }
+        .tab-head .tab-kicker { font-size: 0.62rem; letter-spacing: 4px; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+        .tab-head h3 { margin: 4px 0 4px !important; font-size: 1.35rem !important; letter-spacing: 2px; color: #fff !important; }
+        .tab-head p { margin: 0; font-size: 0.85rem; color: #94a3b8; line-height: 1.6; }
+        /* Kartu glass lebih terasa, tapi tetap 12px blur */
+        .intro-box, .content-box {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .content-box h3 { font-size: 1.25rem; letter-spacing: 2px; }
+        /* Header lengket di tab Komik/Movie/TV: dari solid jadi glass */
+        .tab-content [style*="position:sticky"] {
+            background: rgba(2,6,23,0.82) !important;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+        /* Sidebar: label grup + tombol tutup */
+        .side-label { padding: 18px 30px 6px; font-size: 0.62rem; letter-spacing: 3px; color: #64748b; font-weight: 700; }
+        .sidebar-close {
+            position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.14); color: #cbd5e1; border-radius: 10px;
+            width: 40px; height: 40px; font-size: 1rem; cursor: pointer;
+        }
+        /* Navigasi cepat di Beranda: 6 jalan pintas ke tab utama */
+        .quick-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 22px 0 6px; }
+        .quick-nav button {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); color: #e2e8f0;
+            border-radius: 14px; padding: 14px 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); min-height: 56px;
+        }
+        .quick-nav button span { display: block; font-size: 1.3rem; margin-bottom: 4px; }
+        .quick-nav button:active { transform: scale(0.96); }
+        /* Bottom nav HP: 5 tab utama, gampang dijangkau jempol */
+        .bottomnav {
+            display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+            background: rgba(2,6,23,0.82); backdrop-filter: blur(12px) saturate(1.25);
+            -webkit-backdrop-filter: blur(12px) saturate(1.25);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
+        }
+        .bottomnav-inner { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 560px; margin: 0 auto; }
+        .bottomnav button {
+            background: none; border: none; color: #94a3b8; font-size: 0.62rem; font-weight: 700;
+            padding: 6px 2px; cursor: pointer; min-height: 52px; letter-spacing: 0.5px;
+        }
+        .bottomnav button span { display: block; font-size: 1.35rem; margin-bottom: 2px; }
+        .bottomnav button.active { color: var(--primary); }
+        @media (max-width: 768px) {
+            .bottomnav { display: block; }
+            .main-wrapper { padding-bottom: 110px !important; }
+            .topbar-ai { padding: 8px 10px; }
+            .quick-nav { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 769px) {
+            .quick-nav { grid-template-columns: repeat(6, 1fr); }
+        }
+        button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+            outline: 2px solid var(--primary); outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
     <!-- === INTRO SPLASH SCREEN === -->
@@ -1464,23 +1557,27 @@
 
     <!-- === MAIN CONTENT === -->
 
-    <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="navTab('chatai')">🤖 Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
     <nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
         <ul class="sidebar-menu">
+            <li class="side-label">MENU UTAMA</li>
             <li><button onclick="openTab('home', this)" class="active-tab">🏠 Beranda</button></li>
             <li><button onclick="openTab('trading', this)">📈 Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
             <li><button onclick="openTab('keluhkesah', this)">🗣️ Keluh Kesah</button></li>
-            <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
+            <li class="side-label">HIBURAN</li>
             <li><button onclick="openTab('tvchannel', this)">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
             <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
             <li><button onclick="openTab('chatai', this)">🤖 Chat Ai</button></li>
             <li><button onclick="openTab('game', this)">🎮 Game</button></li>
-            <li><button onclick="openTab('dewasa', this)">🔞 成人向けコンテンツ</button></li>
+            <li class="side-label">LAINNYA</li>
+            <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
+            <li><button onclick="openTab('dewasa', this)">🔞 Konten Dewasa (18+)</button></li>
             <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
         </ul>
     </nav>
@@ -1502,9 +1599,18 @@
                 <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
                 <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
             </div>
+            <div class="quick-nav">
+                <button onclick="navTab('trading')"><span>📈</span>Trading</button>
+                <button onclick="navTab('movie')"><span>🎬</span>Movie</button>
+                <button onclick="navTab('tvchannel')"><span>📺</span>Live TV</button>
+                <button onclick="navTab('chatai')"><span>🤖</span>Chat Ai</button>
+                <button onclick="navTab('game')"><span>🎮</span>Game</button>
+                <button onclick="navTab('komik')"><span>📖</span>Komik</button>
+            </div>
         </div>
 
         <div id="trading" class="tab-content">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📈 MARKET HUB</h3><p>Analisa, jurnal trading, dan set-up teknikal khusus anggota.</p></div>
             <div class="content-box">
                 <h3 style="margin-top:0; color: var(--primary);">MARKET HUB</h3>
                 <p>Akses analisa, jurnal trading, dan set-up teknikal khusus untuk anggota Syndicate.</p>
@@ -1517,6 +1623,7 @@
         </div>
 
         <div id="garapan" class="tab-content">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>💰 INFO GARAPAN</h3><p>Website dan aplikasi penghasil uang terbaru — hanya yang gratis dan sudah dicek.</p></div>
             <div class="content-box">
                 <h3 style="margin-top:0; color: var(--primary);">INFO GARAPAN Cuan</h3>
                 <p>Daftar website dan aplikasi penghasil uang terbaru. (Update berkala)</p>
@@ -1526,6 +1633,7 @@
         </div>
 
         <div id="keluhkesah" class="tab-content">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🗣️ RUANG ANONIM</h3><p>Tumpahkan keluh kesahmu — identitasmu aman, link tidak diizinkan.</p></div>
             <div class="content-box">
                 <h3 style="margin-top:0; color: var(--primary);">RUANG ANONIM</h3>
                 <p>Tumpahkan keluh kesahmu di sini. Identitasmu aman. (Link tidak diizinkan)</p>
@@ -1540,6 +1648,7 @@
         </div>
 
         <div id="mod" class="tab-content">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📱 GUDANG MOD</h3><p>Aplikasi premium &amp; game modifikasi pilihan — gratis dan diperbarui.</p></div>
             <div class="content-box" style="text-align:center;">
                 <h3 style="margin-top:0; color: var(--primary); font-size:1.3rem; letter-spacing:2px;">⚡ GUDANG MOD SYNDICATE ⚡</h3>
                 <p style="color:#94a3b8; font-size:0.95rem; line-height:1.7; margin-bottom: 8px;">
@@ -1900,6 +2009,7 @@
         </div>
 
         <div id="download" class="tab-content">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>⬇️ DOWNLOAD APP</h3><p>Aplikasi resmi Freedom Syndicate — lebih cepat dan stabil di HP.</p></div>
             <div class="content-box" style="text-align:center;">
                 <div style="font-size:3rem; margin-bottom:6px; animation: float 3s infinite ease-in-out;">📲</div>
                 <h3 style="margin-top:0; color: var(--primary); font-size:1.3rem; letter-spacing:2px;">FREEDOM SYNDICATE APP</h3>
@@ -2664,6 +2774,16 @@
         <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 
+    <nav class="bottomnav" aria-label="Navigasi utama">
+        <div class="bottomnav-inner">
+            <button data-tab="home" class="active" onclick="navTab('home')"><span>🏠</span>Beranda</button>
+            <button data-tab="trading" onclick="navTab('trading')"><span>📈</span>Trading</button>
+            <button data-tab="movie" onclick="navTab('movie')"><span>🎬</span>Movie</button>
+            <button data-tab="tvchannel" onclick="navTab('tvchannel')"><span>📺</span>Live TV</button>
+            <button data-tab="chatai" onclick="navTab('chatai')"><span>🤖</span>Chat Ai</button>
+        </div>
+    </nav>
+
     <script>
         // --- LOGIC BUKA GARAPAN ---
         function bukaGarapan() {
@@ -3368,6 +3488,17 @@ let tv3Hls = null;
             overlay.classList.toggle('active');
         }
 
+        // --- LOGIC NAVIGASI CEPAT (topbar / quick-nav / bottomnav) ---
+        function navTab(tabId) {
+            var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + tabId + '\'"]');
+            if (btn) { openTab(tabId, btn); return; }
+            // Fallback kalau tombol sidebar tidak ketemu: ganti tab langsung
+            document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+            var el = document.getElementById(tabId); if (el) el.classList.add('active');
+            document.querySelectorAll('.bottomnav button').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tabId); });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // --- LOGIC GANTI TAB ---
         function openTab(tabId, btnElement) {
             // Sembunyikan semua tab
@@ -3380,15 +3511,20 @@ let tv3Hls = null;
 
             // Tampilkan tab yang dipilih
             document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active-tab');
+            if (btnElement) btnElement.classList.add('active-tab');
+            // Sinkronkan bottom nav + kembali ke atas halaman
+            document.querySelectorAll('.bottomnav button').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tabId); });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // Bug fix: pane ROSYSCANS sudah "active" dari awal jadi iframe-nya
             // tidak pernah dimuat kalau cuma nunggu klik sub-tab — muat sekarang
             if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
             if (tabId === 'game') { _lazyLoadIframe('emulator'); }
 
-            // Tutup sidebar setelah memilih (khusus mobile friendly)
-            toggleSidebar();
+            // Tutup sidebar setelah memilih (khusus mobile friendly) —
+            // hanya kalau sidebar memang sedang terbuka, supaya panggilan
+            // dari bottomnav/topbar tidak malah membukanya.
+            if (sidebar.classList.contains('active')) toggleSidebar();
         }
 
         // --- LOGIC KELUH KESAH (REAL TELEGRAM WEBHOOK) ---
