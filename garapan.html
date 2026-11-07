@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Info Garapan</title>
     <meta name="description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
     <meta property="og:title" content="Freedom Syndicate | Info Garapan">
@@ -507,7 +509,7 @@
         <div id="tab-airdrop" class="content-card tab-pane">
             <h2>🪂 Airdrop & Crypto</h2>
             <p class="content-desc">Semua garapan Airdrop, Testnet, Node, dan Cloud Mining dibagikan langsung di channel Telegram kami. Bergabung sekarang agar tidak ketinggalan update terbaru — hanya project dengan fundamental kuat yang kami pilihkan untuk anggota Syndicate.</p>
-            <a href="https://t.me/freedomsyndicate" target="_blank" class="visit-btn" style="margin-top:16px;">
+            <a href="https://t.me/freedomsyndicate" target="_blank" rel="noopener noreferrer" class="visit-btn" style="margin-top:16px;">
                 <i class="fab fa-telegram-plane"></i> Gabung Channel Telegram
             </a>
         </div>
@@ -539,7 +541,7 @@
                     ➖ Tinggal pasang eSIM → langsung aktif 🚀<br>
                 ⚠️ <em>Kuota 120GB / 1 tahun ini belum kami verifikasi sendiri — pastikan di halaman XL sebelum klaim.</em>
                 </div>
-                <a href="https://www.xl.co.id/produk/bundling/apple-iphone" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim Sekarang</a>
+                <a href="https://www.xl.co.id/produk/bundling/apple-iphone" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim Sekarang</a>
             </div>
 
             <div class="link-card">
@@ -556,7 +558,7 @@
                     ➖ Klik <strong style="color:#e2e8f0;">Try Free eSIM</strong><br>
                     ➖ Done! Gunakan HP yang support eSIM ✅
                 </div>
-                <a href="https://hyfe.id" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim di Hyfe.id</a>
+                <a href="https://hyfe.id" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim di Hyfe.id</a>
             </div>
         </div>
 
@@ -568,19 +570,19 @@
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-bolt"></i> InventMoney <span class="badge">Instant Pay</span></div>
                 <div class="site-desc">🚀 Financial SuperApp untuk internet earner di seluruh dunia! Selesaikan berbagai task online, dapatkan bayaran instan langsung ke akunmu. Cocok untuk pemula maupun yang berpengalaman — daftar gratis dan mulai hasilkan dollar hari ini juga!</div>
-                <a href="https://app.inventmoney.com/r/7QT7M4U4" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                <a href="https://app.inventmoney.com/r/7QT7M4U4" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
             </div>
 
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-star"></i> Swagbucks <span class="badge">Paling Populer</span></div>
                 <div class="site-desc">🌟 Platform penghasil poin (SBs) nomor 1 di dunia yang sudah membayar jutaan pengguna! Kumpulkan poin dari survey, nonton video, belanja online, sampai main game — tukar dengan PayPal Cash atau Gift Card. Terbukti LEGIT sejak 2008!</div>
-                <a href="https://www.swagbucks.com/p/register?rb=214943199&rp=1" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                <a href="https://www.swagbucks.com/p/register?rb=214943199&rp=1" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
             </div>
 
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-clock"></i> TimeBucks <span class="badge">Multi-Task</span></div>
                 <div class="site-desc">⏰ Manfaatkan waktu luang jadi dollar nyata! TimeBucks menawarkan ratusan cara menghasilkan uang: survei berbayar, nonton konten, follow akun sosmed, hingga task sederhana. Withdrawal via PayPal, Payoneer, dan banyak lagi.</div>
-                <a href="https://timebucks.com/?refID=228475587" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
+                <a href="https://timebucks.com/?refID=228475587" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
             </div>
         </div>
 
@@ -592,19 +594,19 @@
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-university"></i> Krom Bank <span class="badge gold">0% Admin</span></div>
                 <div class="site-desc">🏅 Bank digital generasi baru dari grup Kredivo! Tabungan bunga kompetitif, transfer antar bank GRATIS tanpa batas, tampilan aplikasi modern. Buka rekening 100% online dalam 5 menit — tanpa antri, tanpa ribet!</div>
-                <a href="https://krom.id/referral/?code=LWLC9820" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
+                <a href="https://krom.id/referral/?code=LWLC9820" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
             </div>
 
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-exchange-alt"></i> Wise <span class="badge gold">Multi-Valuta</span></div>
                 <div class="site-desc">🌍 Solusi terbaik transfer uang internasional dengan kurs real-time tanpa markup tersembunyi! Rekening multi-valuta — simpan, kirim, dan terima uang dalam 50+ mata uang termasuk USD, EUR, GBP. Wajib punya buat kamu yang punya penghasilan dollar!</div>
-                <a href="https://wise.com/invite/ahpc/muhammadikhsanm1" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Wise</a>
+                <a href="https://wise.com/invite/ahpc/muhammadikhsanm1" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Wise</a>
             </div>
 
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-gem"></i> Aladin Bank <span class="badge gold">Syariah</span></div>
                 <div class="site-desc">✨ Bank syariah digital pertama di Indonesia hadir 100% lewat aplikasi! Bagi hasil kompetitif, transfer gratis, bayar tagihan, hingga investasi reksa dana — semua dalam satu aplikasi. Halal, aman, dan praktis!</div>
-                <a href="https://account.aladinbank.id/gabung/OHG5FN" target="_blank" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
+                <a href="https://account.aladinbank.id/gabung/OHG5FN" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
             </div>
         </div>
 
@@ -701,26 +703,10 @@
             status.textContent = '⏳ Mengirim...';
             status.style.color = '#38bdf8';
             status.textContent = '🔗 Membuka Telegram — silakan bagikan garapanmu di grup Freedom Syndicate.';
-            window.open('https://t.me/freedomsyndicate', '_blank');
+            window.open('https://t.me/freedomsyndicate', '_blank', 'noopener');
             return;
-            try {
-                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: CHAT_ID, text: teks, parse_mode: 'Markdown' })
-                });
-                const data = await res.json();
-                if (data.ok) {
-                    status.style.color = '#4ade80';
-                    status.textContent = '✅ Berhasil dikirim! Terima kasih sudah berbagi.';
-                    document.getElementById('shareMsg').value = '';
-                    document.getElementById('shareNama').value = '';
-                } else { throw new Error(data.description); }
-            } catch(e) {
-                status.style.color = '#f87171';
-                status.textContent = '❌ Gagal kirim. Cek koneksi atau config bot.';
-            }
         }
+
     </script>
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
