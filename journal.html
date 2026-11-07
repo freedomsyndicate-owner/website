@@ -849,6 +849,86 @@
 .ls-day summary b{flex:1;color:#fff;font-size:11px}.ls-day summary .w{color:#4ade80}.ls-day summary .l{color:#f87171}.ls-day summary .b{color:#eab308;flex:none;font-size:10px}.ls-day summary .wr{color:#9ca3af}.ls-day summary .p{font-weight:700;min-width:40px;text-align:right}
 .ls-card{box-shadow:0 6px 24px rgba(0,0,0,.35)}
 </style>
+
+    <!-- FS REDESIGN v2: topbar kaca + bottomnav + kartu glass (surgical, tanpa ubah fungsi) -->
+    <style>
+        :root {
+            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));
+            --glass-border: rgba(255,255,255,0.16);
+            --glass-blur: blur(12px) saturate(1.25);
+        }
+        /* Topbar kaca: .fixed-top yang sudah ada dijadikan bar 56px.
+           Hamburger fixed di kiri atas tetap dipakai, diberi ruang padding. */
+        .fixed-top {
+            position: relative; min-height: 56px; padding: 10px 110px 10px 60px !important;
+            background: rgba(5,10,20,0.72) !important;
+            backdrop-filter: blur(12px) saturate(1.25); -webkit-backdrop-filter: blur(12px) saturate(1.25);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .menu-toggle {
+            background: rgba(255,255,255,0.06) !important;
+            border: 1px solid rgba(255,255,255,0.14) !important;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .fs-top-ai {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #fff;
+            border-radius: 20px; padding: 8px 12px; font-size: 0.78rem; font-weight: 700;
+            cursor: pointer; white-space: nowrap; text-decoration: none; font-family: 'Poppins', sans-serif;
+        }
+        /* Sidebar sudah berkelompok + ada tombol tutup: jadikan glass saja */
+        .sidebar {
+            background: rgba(13,17,23,0.82) !important;
+            backdrop-filter: blur(12px) saturate(1.25); -webkit-backdrop-filter: blur(12px) saturate(1.25);
+        }
+        /* Kartu-kartu utama jadi glass (blur tetap max 12px) */
+        .auth-card, .notion-form, .lot-calc-box, .broker-card, .widget-box, .chat-premium,
+        .fs-pop-card, .hub-box, .vip-lock-card, .trial-lock-card, .fs-mbox {
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border) !important;
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+        }
+        /* Kontras label form yang paling redup (#777 / #8b949e -> #94a3b8).
+           Ukuran font 7-9px di grid terminal TIDAK dinaikkan: menaikkannya
+           global akan merusak grid/chip/kalender terminal yang padat. */
+        .form-item label { color: #94a3b8 !important; }
+        .lot-input-item label { color: #94a3b8 !important; }
+        #display-user { color: #64748b !important; }
+        /* Desktop: batasi lebar konten supaya tidak melebar penuh di laptop */
+        @media (min-width: 1024px) {
+            .tab-content > .inner-padding, .tm-wrap { max-width: 1020px; margin-left: auto; margin-right: auto; }
+        }
+        /* Bottom nav HP: 5 tab utama ke index.html (hanya tampil <=768px) */
+        .fs-bottomnav {
+            display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 10002;
+            background: rgba(2,6,23,0.82); backdrop-filter: blur(12px) saturate(1.25);
+            -webkit-backdrop-filter: blur(12px) saturate(1.25);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
+        }
+        .fs-bottomnav-inner { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 560px; margin: 0 auto; }
+        .fs-bottomnav a {
+            color: #94a3b8; font-size: 0.62rem; font-weight: 700; text-decoration: none;
+            padding: 6px 2px; min-height: 52px; letter-spacing: 0.5px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .fs-bottomnav a span { font-size: 1.35rem; }
+        @media (max-width: 768px) {
+            .fs-bottomnav { display: block; }
+            .inner-padding { padding-bottom: 180px !important; }
+            /* Matikan animasi glow/pulse/rotate tak berujung di HP: sumber lag */
+            .anim-journal, .logo, .logo::before, .logo::after, .chip.active,
+            .auth-card::before, .vip-lock-card::before, .vip-lock-icon,
+            .signal-live-dot, .fixed-top::after, #display-user::after, .hr-circle.live { animation: none !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+        button:focus-visible, a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    </style>
 </head>
 <body>
 
@@ -995,6 +1075,7 @@
         <h2 class="logo">FREEDOM SYNDICATE</h2>
         <div class="anim-journal">( JOURNAL )</div>
         <div id="display-user" style="font-size: 7px; color: #444; margin-top: 5px;"></div>
+        <a class="fs-top-ai" href="index.html#chatai">🤖 Chat Ai</a>
     </div>
 
 
@@ -6066,5 +6147,14 @@ document.addEventListener('DOMContentLoaded',draw);
 draw();
 })();
 </script>
+    <nav class="fs-bottomnav" aria-label="Navigasi utama">
+        <div class="fs-bottomnav-inner">
+            <a href="index.html"><span>🏠</span>Beranda</a>
+            <a href="index.html#trading"><span>📈</span>Trading</a>
+            <a href="index.html#movie"><span>🎬</span>Movie</a>
+            <a href="index.html#tvchannel"><span>📺</span>Live TV</a>
+            <a href="index.html#chatai"><span>🤖</span>Chat Ai</a>
+        </div>
+    </nav>
 </body>
 </html>
