@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Official Hub</title>
     <meta name="description" content="Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.">
     <meta property="og:title" content="Freedom Syndicate | Official Hub">
@@ -119,6 +121,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" 
         onerror="window._hlsJsFailed=true;console.warn('HLS.js gagal dimuat dari CDN.');"></script>
     <script>
+    // FS-HARDEN: escape HTML untuk data pihak ketiga sebelum dimasukkan ke innerHTML (cegah XSS).
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
     // HLS.js fallback detector — jika CDN Cloudflare down/diblokir
     window.addEventListener('DOMContentLoaded', function(){
         if (window._hlsJsFailed || typeof Hls === 'undefined') {
@@ -133,7 +137,7 @@
                 if (statusEl) {
                     statusEl.innerHTML = '⚠️ <b>HLS.js gagal dimuat</b> — streaming .m3u8 tidak tersedia. ' +
                         'Coba matikan ekstensi pemblokir (AdBlock/VPN), atau gunakan channel tipe embed. ' +
-                        '<a href="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" target="_blank" ' +
+                        '<a href="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" target="_blank" rel="noopener noreferrer" ' +
                         'style="color:var(--primary);text-decoration:underline;">Cek CDN</a>';
                 }
             };
@@ -1657,7 +1661,7 @@
                 </p>
                 <p style="color:#64748b; font-size:0.78rem; letter-spacing:1px; margin-bottom: 28px;">🔒 KHUSUS ANGGOTA FREEDOM SYNDICATE</p>
 
-                <a href="https://1024terabox.com/s/1EC_s0LKaIsnUTp053nP2Bg" target="_blank" class="mod-btn mod-btn-app">
+                <a href="https://1024terabox.com/s/1EC_s0LKaIsnUTp053nP2Bg" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-app">
                     <span class="mod-btn-icon">📱</span>
                     <span class="mod-btn-text">
                         <span class="mod-btn-title">APLIKASI MOD</span>
@@ -1666,7 +1670,7 @@
                     <span class="mod-btn-arrow">→</span>
                 </a>
 
-                <a href="https://1024terabox.com/s/1s9YYzCiCaueE9ejiq-yFyA" target="_blank" class="mod-btn mod-btn-game">
+                <a href="https://1024terabox.com/s/1s9YYzCiCaueE9ejiq-yFyA" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-game">
                     <span class="mod-btn-icon">🎮</span>
                     <span class="mod-btn-text">
                         <span class="mod-btn-title">GAME MOD</span>
@@ -1961,7 +1965,7 @@
                     <div style="font-size:0.75rem; color:#94a3b8; line-height:1.7; margin-bottom:14px;">
                         PIN salah. Hubungi <b style="color:#fff;">Owner</b> untuk mendapatkan akses.
                     </div>
-                    <a href="https://t.me/freedom_syndicate_Bot" target="_blank" class="adult-join-btn btn-join-tg" style="margin:6px 0;">
+                    <a href="https://t.me/freedom_syndicate_Bot" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-tg" style="margin:6px 0;">
                         <span class="ajb-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg>
                         </span>
@@ -1971,7 +1975,7 @@
                         </span>
                         <span class="ajb-arrow">→</span>
                     </a>
-                    <a href="https://discord.gg/fAvemWFdm" target="_blank" class="adult-join-btn btn-join-dc" style="margin:6px 0;">
+                    <a href="https://discord.gg/fAvemWFdm" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-dc" style="margin:6px 0;">
                         <span class="ajb-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
                         </span>
@@ -2019,7 +2023,7 @@
                 </p>
                 <p style="color:#64748b; font-size:0.78rem; letter-spacing:1px; margin-bottom: 28px;">📥 GRATIS • RINGAN • ANTI LAG</p>
 
-                <a href="https://sfile.co/7W9RQvDNqR2" target="_blank" class="mod-btn mod-btn-app">
+                <a href="https://sfile.co/7W9RQvDNqR2" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-app">
                     <span class="mod-btn-icon">⬇️</span>
                     <span class="mod-btn-text">
                         <span class="mod-btn-title">DOWNLOAD SEKARANG</span>
@@ -2166,7 +2170,7 @@
                         return;
                     }
                     if (!allResults.length) {
-                        grid.innerHTML = '<div style="text-align:center;padding:20px;color:#fca5a5;font-size:0.75rem;">Tidak ada hasil untuk &quot;' + q.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '&quot;. Coba kata kunci lain.</div>';
+                        grid.innerHTML = '<div style="text-align:center;padding:20px;color:#fca5a5;font-size:0.75rem;">Tidak ada hasil untuk &quot;' + esc(q) + '&quot;. Coba kata kunci lain.</div>';
                         return;
                     }
                     _fsCurrentResults = allResults;
@@ -2189,8 +2193,8 @@
                         card.onmouseout=function(){this.style.transform='scale(1)';};
                         card.onclick=function(){fsPlay(item.id,title);};
                         card.innerHTML = poster
-                            ? '<img src="'+poster+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+title+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+year+'</div>'
-                            : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+title+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+year+'</div>';
+                            ? '<img src="'+esc(poster)+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>'
+                            : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>';
                         grid.appendChild(card);
                     });
                     // Tombol Load More / Prev
@@ -2331,8 +2335,8 @@
                         card.onclick = function(){ fsClassicPlay(f.id, f.title, f.year); };
                         var poster = 'https://archive.org/services/img/' + encodeURIComponent(f.id);
                         card.innerHTML = '<img src="' + poster + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:100%;height:170px;object-fit:cover;display:block;background:#1e293b;">'
-                            + '<div style="padding:6px;font-size:0.62rem;color:#cbd5e1;font-weight:700;line-height:1.25;height:2.6em;overflow:hidden;">' + f.title.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
-                            + '<div style="padding:0 6px 6px;font-size:0.58rem;color:#64748b;">' + f.year + ' · Archive.org</div>';
+                            + '<div style="padding:6px;font-size:0.62rem;color:#cbd5e1;font-weight:700;line-height:1.25;height:2.6em;overflow:hidden;">' + esc(f.title) + '</div>'
+                            + '<div style="padding:0 6px 6px;font-size:0.58rem;color:#64748b;">' + esc(f.year) + ' · Archive.org</div>';
                         row.appendChild(card);
                     });
                 }).catch(function(){
@@ -2363,7 +2367,7 @@
                     video.load();
                     var p = video.play();
                     if (p && p.catch) p.catch(function(){});
-                    if (meta) meta.innerHTML = 'Sumber: <a href="https://archive.org/details/' + encodeURIComponent(id) + '" target="_blank" rel="noopener" style="color:var(--primary);">archive.org/details/' + id.replace(/</g,'&lt;') + '</a> · File: ' + best.name.replace(/</g,'&lt;');
+                    if (meta) meta.innerHTML = 'Sumber: <a href="https://archive.org/details/' + encodeURIComponent(id) + '" target="_blank" rel="noopener noreferrer" style="color:var(--primary);">archive.org/details/' + esc(id) + '</a> · File: ' + esc(best.name);
                 }).catch(function(){
                     if (meta) meta.textContent = '⚠️ Gagal memuat video. Cek koneksi lalu coba lagi.';
                 });
@@ -2642,12 +2646,12 @@
                     card.style.cssText += 'display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;';
                     card.onclick = function(){ tvLivePlay(ch, card); };
                     var logoHtml = ch.logo
-                        ? '<img src="' + ch.logo.replace(/"/g, '') + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:36px;height:36px;object-fit:contain;border-radius:6px;background:#0f172a;flex-shrink:0;">'
+                        ? '<img src="' + esc(ch.logo) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:36px;height:36px;object-fit:contain;border-radius:6px;background:#0f172a;flex-shrink:0;">'
                         : '<div style="width:36px;height:36px;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📺</div>';
-                    var srcBadge = TVLIVE_BADGES[ch.src] || ch.src;
+                    var srcBadge = esc(TVLIVE_BADGES[ch.src] || ch.src);
                     card.innerHTML = logoHtml
-                        + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + ch.name.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
-                        + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + ch.group.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '') + '</div></div>'
+                        + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(ch.name) + '</div>'
+                        + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + esc(ch.group) : '') + '</div></div>'
                         + '<div style="font-size:0.9rem;color:var(--primary);flex-shrink:0;">▶</div>';
                     list.appendChild(card);
                 });
@@ -2989,7 +2993,7 @@
                 const header = document.createElement('div');
                 header.className = 'tv2-acc-header';
                 header.onclick = () => acc.classList.toggle('open');
-                header.innerHTML = `<span>${groupName}</span>
+                header.innerHTML = `<span>${esc(groupName)}</span>
                     <span style="display:flex;align-items:center;gap:8px;">
                         <span class="count">${groups[groupName].length}</span>
                         <span class="tv2-acc-arrow">▾</span>
@@ -3004,14 +3008,14 @@
                     item.onclick = () => playTv1Channel(ch, item);
 
                     const logoHtml = ch.logo
-                        ? `<img src="${ch.logo}" loading="lazy" onerror="this.parentElement.innerHTML='📺'">`
+                        ? `<img src="${esc(ch.logo)}" loading="lazy" onerror="this.parentElement.innerHTML='📺'">`
                         : '📺';
 
                     item.innerHTML = `
                         <div class="fs-ch-logo">${logoHtml}</div>
                         <div class="fs-ch-info">
-                            <div class="fs-ch-name">${ch.name}</div>
-                            <div class="fs-ch-cat">${groupName}</div>
+                            <div class="fs-ch-name">${esc(ch.name)}</div>
+                            <div class="fs-ch-cat">${esc(groupName)}</div>
                         </div>
                         <div class="fs-ch-live">▶ PLAY</div>
                     `;
@@ -3068,7 +3072,7 @@
                     <div style="font-size:1.8rem;margin-bottom:10px;">🌐</div>
                     <div style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:6px;">${ch.name}</div>
                     <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:12px;">Channel ini tidak bisa di-embed langsung</div>
-                    <button onclick="window.open('${ch.url}','_blank')" style="background:var(--primary);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;">▶ Buka Streaming</button>
+                    <button onclick="window.open('${ch.url}', '_blank', 'noopener')" style="background:var(--primary);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:0.8rem;cursor:pointer;">▶ Buka Streaming</button>
                 `;
                 document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
@@ -3437,22 +3441,22 @@ let tv3Hls = null;
                 card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid ' + (isLive ? 'rgba(74,222,128,0.4)' : 'rgba(56,189,248,0.15)') + ';border-radius:12px;padding:12px 14px;';
 
                 const statusBadge = isLive
-                    ? `<span style="color:#4ade80;font-weight:700;">🔴 LIVE ${ev.strProgress ? '· ' + ev.strProgress : ''}</span>`
+                    ? `<span style="color:#4ade80;font-weight:700;">🔴 LIVE ${ev.strProgress ? '· ' + esc(ev.strProgress) : ''}</span>`
                     : isFinished
-                        ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI ${dayDiff !== 0 ? '· ' + dateLabelTxt.trim() : ''}</span>`
-                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${dateLabelTxt}${(ev.strTime || '').slice(0, 5)} WIB</span>`;
+                        ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI ${dayDiff !== 0 ? '· ' + esc(dateLabelTxt.trim()) : ''}</span>`
+                        : `<span style="color:#38bdf8;font-weight:700;">⏳ ${esc(dateLabelTxt)}${esc((ev.strTime || '').slice(0, 5))} WIB</span>`;
 
                 card.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                        <span style="font-size:0.6rem;color:#475569;">${ev.strLeague || ''}</span>
+                        <span style="font-size:0.6rem;color:#475569;">${esc(ev.strLeague || '')}</span>
                         <span style="font-size:0.62rem;">${statusBadge}</span>
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                        <div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;text-align:right;">${ev.strHomeTeam || ''}</div>
+                        <div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;text-align:right;">${esc(ev.strHomeTeam || '')}</div>
                         <div style="font-size:0.95rem;font-weight:900;color:#fff;padding:2px 10px;background:rgba(56,189,248,0.08);border-radius:8px;min-width:50px;text-align:center;">
                             ${hasScore ? `${ev.intHomeScore} - ${ev.intAwayScore}` : 'vs'}
                         </div>
-                        <div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;">${ev.strAwayTeam || ''}</div>
+                        <div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;">${esc(ev.strAwayTeam || '')}</div>
                     </div>
                 `;
                 list.appendChild(card);
@@ -3559,56 +3563,12 @@ let tv3Hls = null;
             btn.textContent = 'Kirim Pesan';
             return;
 
-            // Pecah token & chat ID supaya tidak kelihatan utuh di source
-            const _t = ''; // Token bot dihapus dari kode publik — pengiriman dinonaktifkan sampai ada backend.
-            const _c = '';
-            const pesan = `🗣️ *KELUH KESAH ANONIM*\n\n${teks}\n\n⏰ ${new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})} WIB`;
-
-            try {
-                const res = await fetch(
-                    `https://api.telegram.org/bot${_t}/sendMessage`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chat_id: _c, text: pesan, parse_mode: 'Markdown' })
-                    }
-                );
-                const data = await res.json();
-                if (data.ok) {
-                    loadBox.style.display   = 'none';
-                    suksesBox.style.display = 'block';
-                    textarea.value = '';
-                    setTimeout(() => { suksesBox.style.display = 'none'; }, 3500);
-                } else {
-                    throw new Error(data.description || 'Gagal');
-                }
-            } catch (err) {
-                loadBox.style.display  = 'none';
-                alertBox.textContent   = '⚠️ Gagal mengirim pesan. Cek koneksi & coba lagi.';
-                alertBox.style.display = 'block';
-            } finally {
-                btn.disabled    = false;
-                btn.textContent = 'Kirim Pesan';
-            }
         }
 
         // --- LAPORAN CHANNEL MATI (kirim ke Telegram) ---
         async function laporkanChannelMati(nama, url) {
             document.getElementById('tv1Status').textContent = '⚠️ Pelaporan channel dinonaktifkan sementara.';
             return;
-            const _t = ''; // Token bot dihapus dari kode publik — pengiriman dinonaktifkan sampai ada backend.
-            const _c = '';
-            const pesan = `📢 *LAPORAN CHANNEL MATI*\n\n📺 Channel: ${nama}\n🔗 URL: ${url}\n⏰ ${new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})} WIB`;
-            try {
-                await fetch(`https://api.telegram.org/bot${_t}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: _c, text: pesan, parse_mode: 'Markdown' })
-                });
-                document.getElementById('tv1Status').textContent = `✅ Laporan "${nama}" berhasil dikirim ke admin. Terima kasih!`;
-            } catch(e) {
-                document.getElementById('tv1Status').textContent = `⚠️ Gagal kirim laporan. Cek koneksi.`;
-            }
         }
 
         // --- LAZY LOAD IFRAMES (komik, TV World & Game) ---
@@ -3685,17 +3645,17 @@ let tv3Hls = null;
             const _dcBase  = ['https://discord', '.gg/', 'fAvemWFdm'].join('');
             const _waBase  = ['https://whatsapp.com/channel/', '0029VanKWrx7oQhdS7iEh43l'].join('');
             wrap.innerHTML = `
-                <a href="${_tgBase}" target="_blank" class="adult-join-btn btn-join-tg">
+                <a href="${_tgBase}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-tg">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">TELEGRAM</span><span class="ajb-sub">Gabung Channel Sekarang</span></span>
                     <span class="ajb-arrow">→</span>
                 </a>
-                <a href="${_dcBase}" target="_blank" class="adult-join-btn btn-join-dc">
+                <a href="${_dcBase}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-dc">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">DISCORD</span><span class="ajb-sub">Masuk ke Server Rahasia</span></span>
                     <span class="ajb-arrow">→</span>
                 </a>
-                <a href="${_waBase}" target="_blank" class="adult-join-btn btn-join-wa">
+                <a href="${_waBase}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-wa">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">WHATSAPP</span><span class="ajb-sub">Ikuti Channel Eksklusif</span></span>
                     <span class="ajb-arrow">→</span>
