@@ -964,7 +964,6 @@
                 <p style="font-size:11px; color:#fff; font-weight:600; margin-top:10px;">Setiap hari <b>Sabtu</b>, website melakukan pembaruan berkala. Agar fitur terbaru muncul, silakan hapus history Google di pengaturan browser.</p>
                 <div style="text-align:right; margin-top:30px;"><b style="font-family:'Orbitron'; font-size:12px; color:var(--blue);">FREEDOM SYNDICATE</b></div>
             </div>
-            <div id="announcements-container" style="margin-top:14px;"></div>
             <button class="btn-save" style="margin-top:14px; padding:12px;" onclick="closeAnnouncePopup()">MENGERTI</button>
         </div>
     </div>
@@ -2510,7 +2509,7 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
                 checkVipStatus(u.email).then(vip => {
                     _setVip(vip || (u.email === OWNER_EMAIL));
                     applyVipGates();
-                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); loadAnnouncements(); setupRealtimeNotifications();
+                    loadData(); updateChart(); loadChat(); setupTracker(); loadSignals(); setupRealtimeNotifications();
                     loadVipTab();
                     if (!isVip) checkTrialStatus(u.uid);
                     watchVipLive(u);
@@ -3054,53 +3053,9 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         let allFundSignals = [];
 
         // ===================================================
-        // === NEWS TAB - FIREBASE ANNOUNCEMENTS ===
-        // ===================================================
-        let allAnnouncements = [];
-
-        function loadAnnouncements() {
-            if (!curUser) return;
-            rtdb.ref('announcements').orderByChild('timestamp').limitToLast(30).on('value', snap => {
-                allAnnouncements = [];
-                snap.forEach(child => { allAnnouncements.unshift({ id: child.key, ...child.val() }); });
-                renderAnnouncements();
-            });
-        }
-
-        function renderAnnouncements() {
-            const container = document.getElementById('announcements-container');
-            if (!container) return;
-            if (!allAnnouncements.length) {
-                container.innerHTML = '';
-                container.style.display = 'none';
-                return;
-            }
-            container.style.display = '';
-            const kindIcon = { signal: '🎯', guarantee: '📋', blackout: '🚫', fundamental: '🌍', info: 'ℹ️' };
-            const kindColor = { signal: '#4ade80', guarantee: '#38bdf8', blackout: '#ef4444', fundamental: '#eab308', info: '#6b7280' };
-            container.innerHTML = allAnnouncements.map(a => {
-                let timeDisplay = '';
-                try {
-                    const d = new Date(a.timestamp);
-                    timeDisplay = d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', timeZone:'Asia/Jakarta'})
-                                + ' · ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone:'Asia/Jakarta'}) + ' WIB';
-                } catch(e) {}
-                const icon = kindIcon[a.kind] || 'ℹ️';
-                const color = kindColor[a.kind] || '#6b7280';
-                return `<div class="ict-signal-card" style="border-left:3px solid ${color};">
-                    <div class="ict-card-top">
-                        <div><div style="font-family:'Orbitron';font-size:10px;color:#fff;">${icon} ${a.title || 'Update'}</div>
-                        <div class="ict-time">${timeDisplay}</div></div>
-                    </div>
-                    <p style="font-size:10px;color:#9ca3af;margin-top:8px;line-height:1.5;">${a.body || ''}</p>
-                </div>`;
-            }).join('');
-        }
-
-        // ===================================================
         // === TOAST + BADGE NOTIFICATIONS (signal & news) ===
         // ===================================================
-        let _notifReady = { ict: false, announcements: false };
+        let _notifReady = { ict: false };
 
         function showToast(title, body, cls) {
             const stack = document.getElementById('toast-stack');
@@ -3142,13 +3097,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const s = snap.val();
                 showToast(`🎯 Signal Baru: ${s.pair || ''}`, `${s.direction || ''} — Score ${s.score || 0}`, 'signal');
                 bumpBadge('badge-signal');
-            });
-            // Pengumuman/News baru → toast + badge
-            rtdb.ref('announcements').limitToLast(1).on('child_added', snap => {
-                if (!_notifReady.announcements) { _notifReady.announcements = true; return; }
-                const a = snap.val();
-                showToast(a.title || 'Update Baru', a.body || '', a.kind === 'blackout' ? 'blackout' : '');
-                bumpBadge('badge-news');
             });
         }
 
