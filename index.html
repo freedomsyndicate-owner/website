@@ -1526,6 +1526,7 @@
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
                     <button class="tv-subtab-btn active" id="skomik1" onclick="switchKomikTab('rosy',this)">📚 ROSYSCANS</button>
                     <button class="tv-subtab-btn" id="skomik2" onclick="switchKomikTab('ryzu',this)">📗 RYZUKOMIK</button>
+                    <button class="tv-subtab-btn" id="skomik3" onclick="switchKomikTab('firkaizen',this)">📖 MANGAWEB</button>
                 </div>
             </div>
 
@@ -1550,6 +1551,18 @@
                     <button onclick="_fbClose('ryzu')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
                     <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📗 Layar hitam / komik tidak muncul?</div>
                     <button onclick="_komikReload('ryzu')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+                </div>
+            </div>
+
+            <div class="komik-pane" id="pane-firkaizen" style="display:none;position:relative;height:calc(100vh - 140px);min-height:500px;">
+                <iframe id="iframeFirkaizen" src="" title="MangaWeb" loading="lazy"
+                    style="width:100%;height:100%;border:none;display:block;background:#000;"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                ></iframe>
+                <div id="firkaizenFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
+                    <button onclick="_fbClose('firkaizen')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
+                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📖 Layar hitam / komik tidak muncul?</div>
+                    <button onclick="_komikReload('firkaizen')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
                 </div>
             </div>
         </div>
@@ -3292,15 +3305,16 @@ let tv3Hls = null;
         const _iframeSrcs = {
             rosy:     'https://rosyscans.id/',
             ryzu:     'https://ryzukomik.my.id/',
+            firkaizen: 'https://manga.firkaizen.id/',
             tvWorld:  'https://tvgarden.world/',
             emulator: 'https://emulatorgamezone.com/',
             venge:    'https://venge.io/',
             crazy:    'https://www.crazygames.com/',
             quenq:    'https://quenq.com/'
         };
-        const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false, emulator: false, venge: false, crazy: false, quenq: false };
-        const _iframeIdMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', tvWorld: 'iframeTvWorld', emulator: 'iframeEmulator', venge: 'iframeVenge', crazy: 'iframeCrazy', quenq: 'iframeQuenq' };
-        const _fallbackIdMap = { rosy: 'rosyFallback', ryzu: 'ryzuFallback', tvWorld: 'tvWorldFallback', emulator: 'emulatorFallback', venge: 'vengeFallback', crazy: 'crazyFallback', quenq: 'quenqFallback' };
+        const _iframeLoaded = { rosy: false, ryzu: false, firkaizen: false, tvWorld: false, emulator: false, venge: false, crazy: false, quenq: false };
+        const _iframeIdMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', firkaizen: 'iframeFirkaizen', tvWorld: 'iframeTvWorld', emulator: 'iframeEmulator', venge: 'iframeVenge', crazy: 'iframeCrazy', quenq: 'iframeQuenq' };
+        const _fallbackIdMap = { rosy: 'rosyFallback', ryzu: 'ryzuFallback', firkaizen: 'firkaizenFallback', tvWorld: 'tvWorldFallback', emulator: 'emulatorFallback', venge: 'vengeFallback', crazy: 'crazyFallback', quenq: 'quenqFallback' };
 
         function _lazyLoadIframe(key) {
             if (_iframeLoaded[key]) return;
@@ -3310,7 +3324,7 @@ let tv3Hls = null;
             _armFallback(key);
         }
 
-        // Situs pihak ketiga (globe 3D tvgarden.world, RosyScans, RyzuKomik, game-game embed)
+        // Situs pihak ketiga (globe 3D tvgarden.world, RosyScans, RyzuKomik, MangaWeb, game-game embed)
         // kadang gagal render / layar hitam / lag di sebagian WebView Android (Kiwi Browser dll)
         // atau saat koneksi lambat. Tampilkan tombol "Muat Ulang" setelah 6 detik sebagai jalan keluar.
         function _armFallback(key) {
