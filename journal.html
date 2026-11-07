@@ -2336,7 +2336,20 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
             else { sidebar.style.width = "0"; sidebarOpen = false; }
         }
 
-        function login() {
+        async function login() {
+            // Di dalam APK: popup Google native lewat plugin Capacitor,
+            // tanpa keluar ke Chrome. Kalau plugin tidak ada / gagal,
+            // jatuh kembali ke redirect (tetap di dalam APK, tidak buka Chrome).
+            try {
+                if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication) {
+                    const r = await window.Capacitor.Plugins.FirebaseAuthentication.signInWithGoogle();
+                    if (r && r.credential && r.credential.idToken) {
+                        const cred = firebase.auth.GoogleAuthProvider.credential(r.credential.idToken);
+                        await auth.signInWithCredential(cred);
+                        return; // onAuthStateChanged akan handle
+                    }
+                }
+            } catch (e) { /* jatuh ke redirect di bawah */ }
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
