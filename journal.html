@@ -929,10 +929,23 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
         }
+        /* FS FIX sidebar HP (03:10 WIB): bottom nav tadinya z-index 10002, DI ATAS
+           sidebar (10001) sehingga menutupi tombol bawah sidebar; topbar & konten
+           di kanan sidebar juga masih bisa disentuh. Saat sidebar terbuka: sembunyikan
+           bottom nav, gelapkan konten di belakang, dan besarkan area sentuh. */
+        body.sb-open .fs-bottomnav, body.sb-open .fsx-bnav { display: none !important; }
+        #sb-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(2,6,14,0.65); display: none; }
+        body.sb-open #sb-overlay { display: block; }
+        .sidebar .closebtn { width: 44px !important; height: 44px !important; display: flex !important; align-items: center; justify-content: center; top: 8px !important; right: 8px !important; font-size: 26px !important; }
+        .sidebar .nav-group-head { padding: 14px 12px !important; min-height: 48px !important; }
+        .sidebar .nav-group-inner a { padding: 13px 12px !important; min-height: 46px !important; font-size: 12.5px !important; }
+        .sidebar .sb-footer a { padding: 13px 14px !important; min-height: 48px !important; font-size: 12.5px !important; }
+        .sidebar .ngh-title { white-space: normal !important; line-height: 1.35; }
         button:focus-visible, a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
     </style>
 </head>
 <body>
+    <div id="sb-overlay" onclick="toggleNav()"></div>
 
     <!-- MATRIX CANVAS -->
     <canvas id="matrix-canvas"></canvas>
@@ -2418,9 +2431,14 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
         let sidebarOpen = false;
         function toggleNav() {
             const sidebar = document.getElementById("mySidebar");
-            if (!sidebarOpen) { sidebar.style.width = "min(290px, 82vw)"; sidebarOpen = true; } 
+            if (!sidebarOpen) { sidebar.style.width = "min(290px, 82vw)"; sidebarOpen = true; }
             else { sidebar.style.width = "0"; sidebarOpen = false; }
+            document.body.classList.toggle('sb-open', sidebarOpen);
         }
+        // FS FIX: ketuk link di sidebar langsung menutup sidebar (biar tidak menutupi konten)
+        document.querySelectorAll('#mySidebar .nav-group-inner a, #mySidebar .sb-footer a').forEach(function(a) {
+            a.addEventListener('click', function() { if (sidebarOpen) toggleNav(); });
+        });
 
         async function login() {
             // Di dalam APK: popup Google native lewat plugin Capacitor,
