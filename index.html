@@ -3717,6 +3717,10 @@ let tv3Hls = null;
         function hideIntroSplash() {
             const s = document.getElementById('introSplash');
             if (s.classList.contains('hidden')) return;
+            // FS: ingat di sesi tab ini bahwa user sudah masuk, supaya pindah
+            // halaman (journal -> TV, garapan -> Movie, dst.) tidak memunculkan
+            // layar burung lagi.
+            try { sessionStorage.setItem('fs-entered', '1'); } catch (e) {}
             s.classList.add('hidden');
             // Setelah fade 1 detik: keluarkan splash dari render tree + hentikan
             // interval partikel, supaya seluruh animasi intro berhenti total
@@ -3727,10 +3731,21 @@ let tv3Hls = null;
             }, 1100);
         }
 
-        // Initialize intro on page load - ALWAYS show animation
+        // Initialize intro on page load - tampilkan animasi HANYA kalau belum masuk
+        // di sesi tab ini DAN bukan datang lewat link tab (#tvchannel, #movie, dst.)
+        // dari journal/garapan. Kalau salah satu benar, langsung lewati splash.
         window.addEventListener('DOMContentLoaded', () => {
-            createIntroStars();
-            createIntroParticles();
+            var _tabs = ['home','trading','garapan','keluhkesah','mod','tvchannel','movie','komik','chatai','game','dewasa','download'];
+            var _skipIntro = false;
+            try { _skipIntro = sessionStorage.getItem('fs-entered') === '1'; } catch (e) {}
+            if (!_skipIntro && _tabs.indexOf((location.hash || '').replace('#','')) !== -1) _skipIntro = true;
+            if (_skipIntro) {
+                var _s = document.getElementById('introSplash');
+                _s.classList.add('hidden'); _s.style.display = 'none';
+            } else {
+                createIntroStars();
+                createIntroParticles();
+            }
 
             // Muat genre "Nasional" secara default saat tab TV1 pertama kali dibuka
             const tv1DefaultBtn = document.querySelector('#tv1GenreBar .fs-cat-btn');
