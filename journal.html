@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FS | Freedom Syndicate SECURE</title>
     <meta name="description" content="Jurnal trading Freedom Syndicate: analisa, jurnal, dan sinyal untuk anggota.">
     <meta property="og:title" content="FS | Freedom Syndicate SECURE">
@@ -2341,17 +2341,21 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
             p.addScope('email');
             p.addScope('profile');
             p.setCustomParameters({ prompt: 'select_account' });
-            auth.signInWithPopup(p)
-                .then(result => { /* onAuthStateChanged akan handle */ })
-                .catch(e => {
-                    if(e.code !== 'auth/popup-closed-by-user') {
-                        alert('Login gagal: ' + e.message);
-                    }
-                });
+            // Redirect (bukan popup): popup diblokir di WebView/APK Android
+            // dengan error auth/popup-blocked, sedangkan redirect bekerja
+            // di browser maupun di APK. onAuthStateChanged akan handle
+            // setelah kembali dari Google.
+            auth.signInWithRedirect(p);
         }
+        // Tangani hasil kembali dari Google setelah redirect login.
+        auth.getRedirectResult()
+            .then(result => { /* onAuthStateChanged akan handle */ })
+            .catch(e => {
+                if (e.code !== 'auth/popup-closed-by-user') {
+                    alert('Login gagal: ' + e.message);
+                }
+            });
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
-
-        // Popup-only mode (no redirect fallback untuk kompatibilitas WebView)
 
         const OWNER_EMAIL = 'sanlana1903@gmail.com';
         // Protect isVip from easy console manipulation
