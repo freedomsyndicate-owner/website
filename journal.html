@@ -661,7 +661,10 @@
            FSX ADD-ON — Beranda, Semua Fitur, Bottom Nav, tab fitur baru
            (ditambahkan; tidak mengubah CSS lama)
            ===================================================== */
-        .fsx-bnav { position:fixed; left:0; right:0; bottom:0; z-index:9000; display:flex; background:rgba(8,12,22,0.96); backdrop-filter:blur(10px); border-top:1px solid #1f2937; padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)); }
+        /* backdrop-filter dihapus dari nav bawah: background sudah 96% opak
+           (tampilan sama), tapi blur pada elemen fixed memaksa browser
+           me-repaint backdrop di setiap frame saat scroll — biaya besar di HP. */
+        .fsx-bnav { position:fixed; left:0; right:0; bottom:0; z-index:9000; display:flex; background:rgba(8,12,22,0.96); border-top:1px solid #1f2937; padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)); }
         .fsx-bnav button { flex:1; background:none; border:none; color:#6b7280; font-family:'Poppins'; font-size:9px; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 0; cursor:pointer; position:relative; }
         .fsx-bnav button .ic { font-size:19px; line-height:1; }
         .fsx-bnav button.on { color:var(--blue); }
