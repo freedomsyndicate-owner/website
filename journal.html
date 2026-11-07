@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>FS | Freedom Syndicate SECURE</title>
     <meta name="description" content="Jurnal trading Freedom Syndicate: analisa, jurnal, dan sinyal untuk anggota.">
     <meta property="og:title" content="FS | Freedom Syndicate SECURE">
@@ -1459,7 +1461,7 @@
                             <li>🔒 Regulasi internasional paling ketat: FCA, CySEC, FSCA & lebih.</li>
                             <li>🇮🇩 Support penuh bank lokal Indonesia & e-wallet populer.</li>
                         </ul>
-                        <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px; font-size:10px;">DAFTAR EXNESS SEKARANG</button>
+                        <button onclick="window.open('https://one.exnessonelink.com/a/f4ntqgcba4', '_blank', 'noopener')" style="background:var(--blue); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; margin-top:10px; font-size:10px;">DAFTAR EXNESS SEKARANG</button>
                     </div>
 
                     <!-- 2. HEADWAY -->
@@ -1479,7 +1481,7 @@
                             <li>🇮🇩 Support lengkap bank lokal Indonesia untuk deposit & withdraw mudah.</li>
                             <li>📊 Tersedia akun Cent ideal untuk latihan strategi ICT/SMC dengan risiko mini.</li>
                         </ul>
-                        <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px; font-size:10px;">DAFTAR HEADWAY SEKARANG</button>
+                        <button onclick="window.open('https://headway.partners/user/signup?hwp=7c27db', '_blank', 'noopener')" style="background:white; color:black; border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; margin-top:10px; font-size:10px;">DAFTAR HEADWAY SEKARANG</button>
                     </div>
 
                     <!-- 3. MARKETS4YOU -->
@@ -1500,7 +1502,7 @@
                             <li>🎁 Program <b style="color:white;">cashback spread</b> & bonus deposit berkala untuk trader aktif (syarat bisa berubah).</li>
                             <li>📈 Ada fitur <b style="color:white;">Copy Trading</b> + instrumen lengkap: Forex, Emas, Indeks, Saham & Kripto (CFD).</li>
                         </ul>
-                        <button onclick="window.open('https://account.markets4you.online/en/user-registration/?affid=tsym2cb', '_blank')" style="background:linear-gradient(135deg,#059669,#34d399); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR MARKETS4YOU SEKARANG</button>
+                        <button onclick="window.open('https://account.markets4you.online/en/user-registration/?affid=tsym2cb', '_blank', 'noopener')" style="background:linear-gradient(135deg,#059669,#34d399); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR MARKETS4YOU SEKARANG</button>
                     </div>
 
                     <!-- 4. VALETAX -->
@@ -1520,7 +1522,7 @@
                             <li>🔐 Dana klien tersimpan aman di rekening terpisah (segregated account).</li>
                             <li>📈 Cocok untuk strategi scalping cepat maupun swing trading jangka panjang.</li>
                         </ul>
-                        <button onclick="window.open('https://ma.valetax.com/p/5330607', '_blank')" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR VALETAX SEKARANG</button>
+                        <button onclick="window.open('https://ma.valetax.com/p/5330607', '_blank', 'noopener')" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR VALETAX SEKARANG</button>
                     </div>
 
                     <!-- 5. OCTAFX -->
@@ -1540,7 +1542,7 @@
                             <li>🏆 Broker pemenang puluhan penghargaan internasional bergengsi.</li>
                             <li>💬 Support customer service 24/7 dalam Bahasa Indonesia yang ramah.</li>
                         </ul>
-                        <button onclick="window.open('https://elev8link.com/igpXhljJB5m', '_blank')" style="background:linear-gradient(135deg,#ff6b35,#f7931e); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR OCTAFX SEKARANG</button>
+                        <button onclick="window.open('https://elev8link.com/igpXhljJB5m', '_blank', 'noopener')" style="background:linear-gradient(135deg,#ff6b35,#f7931e); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR OCTAFX SEKARANG</button>
                     </div>
 
                     <!-- 6. TRADINGPRO -->
@@ -1560,7 +1562,7 @@
                             <li>🌍 Instrumen trading lengkap: Forex, Emas, Indices, & komoditas global.</li>
                             <li>🤝 Dedicated account manager untuk trader VIP — support personal terbaik.</li>
                         </ul>
-                        <button onclick="window.open('http://secure.tradingpro.com/links/go/16603', '_blank')" style="background:linear-gradient(135deg,#1e3a5f,#38bdf8); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR TRADINGPRO SEKARANG</button>
+                        <button onclick="window.open('http://secure.tradingpro.com/links/go/16603', '_blank', 'noopener')" style="background:linear-gradient(135deg,#1e3a5f,#38bdf8); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:white; margin-top:10px; font-size:10px;">DAFTAR TRADINGPRO SEKARANG</button>
                     </div>
 
                 </div>
@@ -1584,7 +1586,7 @@
                             <li>Fitur paling lengkap: Spot, Futures, Staking, NFT, Launchpad.</li>
                             <li>Biaya trading terendah mulai 0.1% dengan diskon BNB.</li>
                         </ul>
-                        <button onclick="window.open('https://www.bmwweb.biz/referral/earn-together/refer2earn-usdc/claim?hl=id&ref=GRO_28502_XAS8E&utm_source=referral_entrance', '_blank')" style="background:#F0B90B; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BINANCE</button>
+                        <button onclick="window.open('https://www.bmwweb.biz/referral/earn-together/refer2earn-usdc/claim?hl=id&ref=GRO_28502_XAS8E&utm_source=referral_entrance', '_blank', 'noopener')" style="background:#F0B90B; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BINANCE</button>
                     </div>
 
                     <!-- 2. BITGET WALLET -->
@@ -1601,7 +1603,7 @@
                             <li>🔄 Swap token & akses dApp/DeFi langsung dari wallet tanpa ganti aplikasi.</li>
                             <li style="list-style:none; margin-left:-18px; font-size:9px; color:#6b7280;">ℹ️ Pembayaran QRIS berjalan on-chain, siapkan sedikit saldo koin gas (mis. BNB). Ketersediaan fitur dapat berbeda tergantung versi aplikasi.</li>
                         </ul>
-                        <button onclick="window.open('https://web3.bgw.live/share/3MqgsNdi', '_blank')" style="background:linear-gradient(135deg,#0ea5e9,#22d3ee); border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BITGET WALLET</button>
+                        <button onclick="window.open('https://web3.bgw.live/share/3MqgsNdi', '_blank', 'noopener')" style="background:linear-gradient(135deg,#0ea5e9,#22d3ee); border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BITGET WALLET</button>
                     </div>
 
                     <!-- 3. BYBIT -->
@@ -1616,7 +1618,7 @@
                             <li>Copy trade, Grid Bot, DCA Bot tersedia lengkap dalam satu platform.</li>
                             <li>Event & bonus deposit rutin untuk pengguna baru maupun lama.</li>
                         </ul>
-                        <button onclick="window.open('https://www.bybitglobal.com/invite?ref=7NNYA', '_blank')" style="background:#FFD700; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BYBIT</button>
+                        <button onclick="window.open('https://www.bybitglobal.com/invite?ref=7NNYA', '_blank', 'noopener')" style="background:#FFD700; border:none; color:black; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BYBIT</button>
                     </div>
 
                     <!-- 4. MEXC -->
@@ -1631,7 +1633,7 @@
                             <li>Leverage futures hingga 200x untuk trader agresif.</li>
                             <li>Ribuan pasangan trading tersedia termasuk micro-cap gems.</li>
                         </ul>
-                        <button onclick="window.open('https://promote.mexc.fm/r/qXBbAfJn89', '_blank')" style="background:#2B6CB0; border:none; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR MEXC</button>
+                        <button onclick="window.open('https://promote.mexc.fm/r/qXBbAfJn89', '_blank', 'noopener')" style="background:#2B6CB0; border:none; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR MEXC</button>
                     </div>
 
                     <!-- 5. BINGX -->
@@ -1646,7 +1648,7 @@
                             <li>Bonus cashback menarik untuk pengguna baru yang aktif trading.</li>
                             <li>Platform sosial trading tumbuh pesat di Asia Tenggara.</li>
                         </ul>
-                        <button onclick="window.open('https://bingxdao.com/invite/ZDQSZH/', '_blank')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BINGX</button>
+                        <button onclick="window.open('https://bingxdao.com/invite/ZDQSZH/', '_blank', 'noopener')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BINGX</button>
                     </div>
 
                     <!-- 6. BITGET -->
@@ -1661,7 +1663,7 @@
                             <li>One-click copy follow trader berpengalaman di seluruh dunia.</li>
                             <li>Produk structured & earn dengan APY menarik untuk hodler.</li>
                         </ul>
-                        <button onclick="window.open('https://www.abcdstable.com/id/referral/register?clacCode=NLUJD8X0&from=%2Fid%2Fevents%2Freferral-all-program&source=events&utmSource=PremierInviter', '_blank')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BITGET</button>
+                        <button onclick="window.open('https://www.abcdstable.com/id/referral/register?clacCode=NLUJD8X0&from=%2Fid%2Fevents%2Freferral-all-program&source=events&utmSource=PremierInviter', '_blank', 'noopener')" style="background:#111827; border:1px solid #374151; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR BITGET</button>
                     </div>
 
                     <!-- 7. INDODAX -->
@@ -1676,7 +1678,7 @@
                             <li>Penarikan Rupiah instant ke semua bank lokal Indonesia.</li>
                             <li>Antarmuka Bahasa Indonesia, cocok untuk trader pemula.</li>
                         </ul>
-                        <button onclick="window.open('https://indodax.onelink.me/qyYY/referral?deep_link_value=page:register,id:recehlisan', '_blank')" style="background:linear-gradient(135deg,#1a56db,#0e9f6e); border:none; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR INDODAX</button>
+                        <button onclick="window.open('https://indodax.onelink.me/qyYY/referral?deep_link_value=page:register,id:recehlisan', '_blank', 'noopener')" style="background:linear-gradient(135deg,#1a56db,#0e9f6e); border:none; color:white; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR INDODAX</button>
                     </div>
 
                     <!-- 8. TOKOCRYPTO -->
@@ -1691,7 +1693,7 @@
                             <li>Deposit & withdraw Rupiah mudah via transfer bank & e-wallet.</li>
                             <li>Tersedia fitur Staking & Earn untuk passive income kripto.</li>
                         </ul>
-                        <button onclick="window.open('https://www.tokocrypto.com/app?scope=register&ref=42W3N17X', '_blank')" style="background:#111827; border:1px solid var(--blue); color:var(--blue); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR TOKOCRYPTO</button>
+                        <button onclick="window.open('https://www.tokocrypto.com/app?scope=register&ref=42W3N17X', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--blue); color:var(--blue); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR TOKOCRYPTO</button>
                     </div>
 
                     <!-- 9. PLUANG -->
@@ -1706,7 +1708,7 @@
                             <li>Mulai investasi dari Rp 5.000 — sangat terjangkau untuk pemula.</li>
                             <li>Antarmuka sederhana & edukatif, cocok untuk investor muda Indonesia.</li>
                         </ul>
-                        <button onclick="window.open('https://pluang.onelink.me/jTjO/3bxan0ey', '_blank')" style="background:#111827; border:1px solid var(--green); color:var(--green); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR PLUANG</button>
+                        <button onclick="window.open('https://pluang.onelink.me/jTjO/3bxan0ey', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--green); color:var(--green); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR PLUANG</button>
                     </div>
 
                     <!-- 10. AJAIB -->
@@ -1721,7 +1723,7 @@
                             <li>Analisa pasar lengkap & notifikasi harga real-time tersedia.</li>
                             <li>Proses KYC cepat — bisa mulai trading dalam hitungan menit.</li>
                         </ul>
-                        <button onclick="window.open('https://ajaibcoin.onelink.me/XmRV/362s0vbs', '_blank')" style="background:#111827; border:1px solid var(--be); color:var(--be); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR AJAIB KRIPTO</button>
+                        <button onclick="window.open('https://ajaibcoin.onelink.me/XmRV/362s0vbs', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--be); color:var(--be); padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR AJAIB KRIPTO</button>
                     </div>
 
                     <!-- 11. FLOQ -->
@@ -1736,7 +1738,7 @@
                             <li>Interface modern & gamifikasi — trading terasa lebih engaging.</li>
                             <li>Cocok untuk pemula yang ingin belajar sambil investasi crypto.</li>
                         </ul>
-                        <button onclick="window.open('https://floq.go.link/1XYrX?inviteCode=floq64015423', '_blank')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR FLOQ</button>
+                        <button onclick="window.open('https://floq.go.link/1XYrX?inviteCode=floq64015423', '_blank', 'noopener')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:10px; width:100%; border-radius:10px; font-size:10px; font-family:'Orbitron'; cursor:pointer; font-weight:900;">DAFTAR FLOQ</button>
                     </div>
 
                 </div>
@@ -1759,7 +1761,7 @@
                             <li>Challenge 1 atau 2 tahap tersedia sesuai preferensi trader.</li>
                             <li>Support berbagai instrumen: Forex, Gold, dan Indices.</li>
                         </ul>
-                        <button onclick="window.open('https://sureleveragefunding.com/?ref=SANLANA1903-HNBBV', '_blank')" style="background:var(--green); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; font-size:10px; margin-top:8px;">DAFTAR SURE LEVERAGE</button>
+                        <button onclick="window.open('https://sureleveragefunding.com/?ref=SANLANA1903-HNBBV', '_blank', 'noopener')" style="background:var(--green); border:none; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; color:black; font-size:10px; margin-top:8px;">DAFTAR SURE LEVERAGE</button>
                     </div>
 
                     <!-- 2. Goat Funded -->
@@ -1771,7 +1773,7 @@
                             <li>Scaling plan tersedia: account bisa naik hingga $4 juta modal.</li>
                             <li>Refund biaya challenge setelah payout pertama berhasil dicairkan.</li>
                         </ul>
-                        <button onclick="window.open('https://checkout.goatfundedtrader.com/aff/Sanlana039/', '_blank')" style="background:#111827; border:1px solid var(--green); color:var(--green); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR GOAT FUNDED</button>
+                        <button onclick="window.open('https://checkout.goatfundedtrader.com/aff/Sanlana039/', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--green); color:var(--green); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR GOAT FUNDED</button>
                     </div>
 
                     <!-- 3. Aqua Funded -->
@@ -1783,7 +1785,7 @@
                             <li>Dashboard user-friendly dengan tracking performa real-time.</li>
                             <li>Tersedia akun instant funding tanpa melewati tahap evaluasi panjang.</li>
                         </ul>
-                        <button onclick="window.open('https://www.aquafunded.com/?afmc=3wr', '_blank')" style="background:#111827; border:1px solid var(--blue); color:var(--blue); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR AQUA FUNDED</button>
+                        <button onclick="window.open('https://www.aquafunded.com/?afmc=3wr', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--blue); color:var(--blue); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR AQUA FUNDED</button>
                     </div>
 
                     <!-- 4. Funding Traders -->
@@ -1795,7 +1797,7 @@
                             <li>Payout mingguan tersedia, cocok untuk cash flow yang konsisten.</li>
                             <li>Mendukung MetaTrader 4 &amp; 5 dengan eksekusi order yang instan.</li>
                         </ul>
-                        <button onclick="window.open('https://fundingtraders.com/?ref=wii13982181&promo=wii13982181', '_blank')" style="background:#111827; border:1px solid var(--be); color:var(--be); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING TRADERS</button>
+                        <button onclick="window.open('https://fundingtraders.com/?ref=wii13982181&promo=wii13982181', '_blank', 'noopener')" style="background:#111827; border:1px solid var(--be); color:var(--be); padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING TRADERS</button>
                     </div>
 
                     <!-- 5. TX3 Funding -->
@@ -1811,7 +1813,7 @@
                             <li>Payout on-demand — request kapanpun setelah syarat terpenuhi.</li>
                             <li>Platform modern dengan analitik performa trading yang lengkap.</li>
                         </ul>
-                        <button onclick="window.open('https://dashboard.fx.tx3funding.com/new-challenge?referral=AFR_30F72B30EF', '_blank')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR TX3 FUNDING</button>
+                        <button onclick="window.open('https://dashboard.fx.tx3funding.com/new-challenge?referral=AFR_30F72B30EF', '_blank', 'noopener')" style="background:#111827; border:1px solid #a78bfa; color:#a78bfa; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR TX3 FUNDING</button>
                     </div>
 
                     <!-- 6. Funding Pips -->
@@ -1823,7 +1825,7 @@
                             <li>Pilihan akun $5K hingga $200K dengan berbagai model challenge.</li>
                             <li>Komunitas trader aktif &amp; educational resources lengkap tersedia.</li>
                         </ul>
-                        <button onclick="window.open('https://app.fundingpips.com/register?ref=0ED7BC02', '_blank')" style="background:var(--blue); border:none; color:black; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING PIPS</button>
+                        <button onclick="window.open('https://app.fundingpips.com/register?ref=0ED7BC02', '_blank', 'noopener')" style="background:var(--blue); border:none; color:black; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FUNDING PIPS</button>
                     </div>
 
                     <!-- 7. Blue Guardian -->
@@ -1835,7 +1837,7 @@
                             <li>Reward konsisten bagi trader dengan performa stabil jangka panjang.</li>
                             <li>Mendukung EA/bot trading &amp; strategi overnight dan weekend holding.</li>
                         </ul>
-                        <button onclick="window.open('https://blueguardian.com/?afmc=223t', '_blank')" style="background:#111827; border:1px solid #38bdf8; color:#38bdf8; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR BLUE GUARDIAN</button>
+                        <button onclick="window.open('https://blueguardian.com/?afmc=223t', '_blank', 'noopener')" style="background:#111827; border:1px solid #38bdf8; color:#38bdf8; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR BLUE GUARDIAN</button>
                     </div>
 
                     <!-- 8. ForTraders -->
@@ -1850,7 +1852,7 @@
                             <li>Dashboard modern dengan tracking progres challenge secara real-time.</li>
                             <li>Proses payout cepat & andal — hasil kerja keras langsung bisa dicairkan.</li>
                         </ul>
-                        <button onclick="window.open('https://app.fortraders.com/trading/new-challenge?affiliateCode=VWBJN211QI', '_blank')" style="background:linear-gradient(135deg,#0369a1,#38bdf8); border:none; color:white; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FORTRADERS</button>
+                        <button onclick="window.open('https://app.fortraders.com/trading/new-challenge?affiliateCode=VWBJN211QI', '_blank', 'noopener')" style="background:linear-gradient(135deg,#0369a1,#38bdf8); border:none; color:white; padding:12px; width:100%; border-radius:12px; font-weight:900; font-family:'Orbitron'; cursor:pointer; font-size:10px; margin-top:8px;">DAFTAR FORTRADERS</button>
                     </div>
 
                 </div>
@@ -2129,8 +2131,8 @@
             <div id="in-body"><div class="fsx-empty">Memuat filing terbaru SEC…</div></div>
             <div class="fsx-note">Sumber: SEC EDGAR (feed Form 4). Pembelian oleh eksekutif sering dipantau sebagai sinyal sentimen, tapi bukan jaminan arah harga.</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-                <a class="fsx-btn" style="text-decoration:none;text-align:center" href="http://openinsider.com/" target="_blank" rel="noopener">OpenInsider ↗</a>
-                <a class="fsx-btn" style="text-decoration:none;text-align:center" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=4" target="_blank" rel="noopener">SEC Form 4 ↗</a>
+                <a class="fsx-btn" style="text-decoration:none;text-align:center" href="http://openinsider.com/" target="_blank" rel="noopener noreferrer">OpenInsider ↗</a>
+                <a class="fsx-btn" style="text-decoration:none;text-align:center" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=4" target="_blank" rel="noopener noreferrer">SEC Form 4 ↗</a>
             </div>
         </div></div>
 
@@ -3516,14 +3518,14 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function saveMt5Account(e) {
             e.preventDefault();
             if(!curUser) { alert('Login dulu.'); return false; }
+            // FS-HARDEN: password MT5 (investor) TIDAK lagi disimpan ke Firebase RTDB — sebelumnya plaintext di users/{uid}/mt5Account. Nilai field password tidak dikirim ke server.
             const data = {
                 broker: document.getElementById('mt5-broker').value.trim(),
                 login: document.getElementById('mt5-login').value.trim(),
-                password: document.getElementById('mt5-password').value,
                 server: document.getElementById('mt5-server').value.trim(),
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
             };
-            if(!data.broker || !data.login || !data.password || !data.server) { alert('Semua field wajib diisi.'); return false; }
+            if(!data.broker || !data.login || !data.server) { alert('Broker, login, dan server wajib diisi.'); return false; }
             rtdb.ref('users/' + curUser.uid + '/mt5Account').set(data)
                 .then(() => { alert('✅ Akun MT5 tersimpan.'); loadMt5Account(); })
                 .catch(err => alert('Gagal simpan: ' + err.message));
@@ -5480,7 +5482,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const chains = ['all', ...new Set(this.pairs.map(p => p.chainId))]; const box = $('#me-body');
                 let L = this.pairs.filter(p => this.chain === 'all' || p.chainId === this.chain).sort((a, b) => ((b.volume && b.volume.h24) || 0) - ((a.volume && a.volume.h24) || 0));
                 const chip = `<div class="fsx-pills" id="me-chains">${pillsHtml(chains.map(c => [c, c.toUpperCase()]), this.chain)}</div>`;
-                box.innerHTML = chip + (L.length ? L.map(p => { const pc = p.priceChange || {}; return `<div class="fsx-card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:14px">${esc(p.baseToken.symbol)}</b> <span class="m" style="font-size:10px">${esc(p.baseToken.name)}</span><br><span class="fsx-pill" style="font-size:7px;padding:2px 7px;cursor:default">${esc(p.chainId.toUpperCase())} · ${esc(p.dexId)}</span></div><div style="text-align:right"><b class="y" style="font-family:Orbitron">${usd(p.priceUsd)}</b><br>${pct(pc.h24)}</div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;font-size:9px;text-align:center"><div><span class="m">5M</span><br>${pct(pc.m5)}</div><div><span class="m">1J</span><br>${pct(pc.h1)}</div><div><span class="m">LIKUIDITAS</span><br>${big(p.liquidity && p.liquidity.usd)}</div><div><span class="m">VOL 24J</span><br>${big(p.volume && p.volume.h24)}</div></div><div style="margin-top:8px;display:flex;justify-content:space-between;font-size:9px"><span class="m">FDV ${big(p.fdv)}</span><a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--blue)">Buka di DexScreener ↗</a></div></div>`; }).join('') : '<div class="fsx-empty">Tidak ada data.</div>');
+                box.innerHTML = chip + (L.length ? L.map(p => { const pc = p.priceChange || {}; return `<div class="fsx-card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:14px">${esc(p.baseToken.symbol)}</b> <span class="m" style="font-size:10px">${esc(p.baseToken.name)}</span><br><span class="fsx-pill" style="font-size:7px;padding:2px 7px;cursor:default">${esc(p.chainId.toUpperCase())} · ${esc(p.dexId)}</span></div><div style="text-align:right"><b class="y" style="font-family:Orbitron">${usd(p.priceUsd)}</b><br>${pct(pc.h24)}</div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;font-size:9px;text-align:center"><div><span class="m">5M</span><br>${pct(pc.m5)}</div><div><span class="m">1J</span><br>${pct(pc.h1)}</div><div><span class="m">LIKUIDITAS</span><br>${big(p.liquidity && p.liquidity.usd)}</div><div><span class="m">VOL 24J</span><br>${big(p.volume && p.volume.h24)}</div></div><div style="margin-top:8px;display:flex;justify-content:space-between;font-size:9px"><span class="m">FDV ${big(p.fdv)}</span><a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Buka di DexScreener ↗</a></div></div>`; }).join('') : '<div class="fsx-empty">Tidak ada data.</div>');
                 bindPills('me-chains', k => { this.chain = k; this.draw(); });
             }
         };
@@ -5632,9 +5634,9 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         FSX.indikator = { open() { showOwner('ind-owner'); FSX.content.sub('indicators', () => this.draw()); this.draw(); }, draw() { const ex = FSX.content.cache.indicators || []; $('#ind-list').innerHTML = PINE.map(p => `<div class="fsx-card"><h3>${esc(p[0])}</h3><div class="m" style="font-size:10px">${esc(p[1])}</div>${codeBlock(p[2])}</div>`).join('') + ex.map(p => `<div class="fsx-card">${delBtn('indicators', p.id)}<h3>${esc(p.title)}</h3><div class="m" style="font-size:10px">${esc(p.desc || '')}</div>${p.code ? codeBlock(p.code) : ''}</div>`).join('') + '<div class="fsx-note">Cara pakai: buka TradingView → Pine Editor → tempel kode → "Add to chart".</div>'; } };
         FSX.video = {
             topics: ['ICT concepts', 'Smart Money Concepts', 'Price action', 'Manajemen risiko trading', 'Fundamental analysis forex', 'Trading psychology'],
-            open() { showOwner('vd-owner'); $('#vd-topics').innerHTML = this.topics.map(t => `<a class="fsx-pill" style="text-decoration:none" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(t)}">${esc(t)} ↗</a>`).join(''); FSX.content.sub('videos', () => this.draw()); },
+            open() { showOwner('vd-owner'); $('#vd-topics').innerHTML = this.topics.map(t => `<a class="fsx-pill" style="text-decoration:none" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/results?search_query=${encodeURIComponent(t)}">${esc(t)} ↗</a>`).join(''); FSX.content.sub('videos', () => this.draw()); },
             play() { const id = ytId($('#vd-url').value); if (!id) return toast('Link tidak valid', 'Tempel link YouTube'); $('#vd-player').innerHTML = `<div class="fsx-vid"><iframe src="https://www.youtube.com/embed/${id}?playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`; },
-            draw() { const L = FSX.content.cache.videos || []; $('#vd-list').innerHTML = L.length ? L.map(v => { const id = ytId(v.url); return `<div class="fsx-card">${delBtn('videos', v.id)}<h3>${esc(v.title)}</h3>${v.cat ? `<span class="fsx-pill" style="cursor:default">${esc(v.cat)}</span>` : ''}${id ? `<div class="fsx-vid" style="margin-top:10px"><iframe loading="lazy" src="https://www.youtube.com/embed/${id}?playsinline=1" allowfullscreen></iframe></div>` : `<a href="${esc(v.url)}" target="_blank" rel="noopener" style="color:var(--blue)">Buka video ↗</a>`}</div>`; }).join('') : '<div class="fsx-empty">Belum ada video dari owner. Gunakan kolom putar link / cari topik di atas.</div>'; }
+            draw() { const L = FSX.content.cache.videos || []; $('#vd-list').innerHTML = L.length ? L.map(v => { const id = ytId(v.url); return `<div class="fsx-card">${delBtn('videos', v.id)}<h3>${esc(v.title)}</h3>${v.cat ? `<span class="fsx-pill" style="cursor:default">${esc(v.cat)}</span>` : ''}${id ? `<div class="fsx-vid" style="margin-top:10px"><iframe loading="lazy" src="https://www.youtube.com/embed/${id}?playsinline=1" allowfullscreen></iframe></div>` : `<a href="${esc(v.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Buka video ↗</a>`}</div>`; }).join('') : '<div class="fsx-empty">Belum ada video dari owner. Gunakan kolom putar link / cari topik di atas.</div>'; }
         };
         FSX.video.play = FSX.video.play.bind(FSX.video);
         FSX.materi = { open() { showOwner('mt-owner'); FSX.content.sub('lessons', () => this.draw()); }, draw() { const ex = FSX.content.cache.lessons || []; $('#mt-list').innerHTML = BASIC_LESSONS.map(l => `<details class="fsx-lesson"><summary>📘 ${esc(l[0])}</summary><div class="bd">${l[1]}</div></details>`).join('') + ex.map(l => `<details class="fsx-lesson"><summary>📗 ${esc(l.title)}</summary><div class="bd">${delBtn('lessons', l.id)}${esc(l.body || '').replace(/\n/g, '<br>')}</div></details>`).join(''); } };
@@ -5660,7 +5662,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
         /* ---------- VIDEO CAMPAIGN ---------- */
         FSX.camp = {
-            open() { showOwner('cp-owner'); FSX.content.sub('campaigns', () => this.draw()); if (OWNER()) rtdb.ref('campaign_submissions').limitToLast(50).on('value', s => { const L = []; s.forEach(c => L.unshift(c.val())); $('#cp-subs').innerHTML = L.length ? L.map(x => `<div class="hm-ev"><span style="flex:1;word-break:break-all"><b>${esc(x.email)}</b><br><a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(x.url)}</a><br><span class="m">${esc(x.note || '')}</span></span></div>`).join('') : '<div class="fsx-empty">Belum ada kiriman.</div>'; }, () => {}); },
+            open() { showOwner('cp-owner'); FSX.content.sub('campaigns', () => this.draw()); if (OWNER()) rtdb.ref('campaign_submissions').limitToLast(50).on('value', s => { const L = []; s.forEach(c => L.unshift(c.val())); $('#cp-subs').innerHTML = L.length ? L.map(x => `<div class="hm-ev"><span style="flex:1;word-break:break-all"><b>${esc(x.email)}</b><br><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">${esc(x.url)}</a><br><span class="m">${esc(x.note || '')}</span></span></div>`).join('') : '<div class="fsx-empty">Belum ada kiriman.</div>'; }, () => {}); },
             draw() { const L = FSX.content.cache.campaigns || []; $('#cp-list').innerHTML = L.length ? L.map(c => `<div class="fsx-card">${delBtn('campaigns', c.id)}<h3>🎬 ${esc(c.title)}</h3><div style="font-size:11px;color:#9ca3af;line-height:1.6">${esc(c.body || '').replace(/\n/g, '<br>')}</div></div>`).join('') : '<div class="fsx-empty">Belum ada campaign aktif.</div>'; },
             submit() { const u = U(); const url = $('#cp-url').value.trim(); if (!u || !/^https?:\/\//.test(url)) return toast('Link tidak valid', 'Mulai dengan https://'); rtdb.ref('campaign_submissions').push({ uid: u.uid, email: u.email, url, note: $('#cp-note').value.trim(), ts: Date.now() }).then(() => { toast('✅ Terkirim', 'Menunggu tinjauan owner'); $('#cp-url').value = ''; $('#cp-note').value = ''; }).catch(e => toast('Gagal kirim', e.message)); }
         };
