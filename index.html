@@ -3912,5 +3912,20 @@ let tv3Hls = null;
             }
         }, false); // false = bubble phase, jalan setelah capture
     </script>
+    <!-- FS: buka tab dari hash (#trading, #movie, #tvchannel, #chatai, dst.)
+         dipakai oleh bottom nav di journal.html / garapan.html. -->
+    <script>
+    (function(){
+        var tabs = ['home','trading','garapan','keluhkesah','mod','tvchannel','movie','komik','chatai','game','dewasa','download'];
+        function openHash(){
+            var id = (location.hash || '').replace('#','');
+            if (tabs.indexOf(id) === -1) return;
+            if (typeof navTab === 'function') navTab(id);
+        }
+        window.addEventListener('hashchange', openHash);
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', openHash);
+        else openHash();
+    })();
+    </script>
 </body>
 </html>
