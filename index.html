@@ -1428,6 +1428,7 @@
             <li><button onclick="openTab('tvchannel', this)">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
             <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
+            <li><button onclick="openTab('chatai', this)">🤖 Chat Ai</button></li>
             <li><button onclick="openTab('game', this)">🎮 Game</button></li>
             <li><button onclick="openTab('dewasa', this)">🔞 成人向けコンテンツ</button></li>
             <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
@@ -1566,6 +1567,129 @@
                 </div>
             </div>
         </div>
+
+        <div id="chatai" class="tab-content" style="padding:14px 14px 24px;">
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">🤖 CHAT AI</div>
+                <div style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">Pilih AI, lalu tanya-balas di sini. Yang gratis tanpa kunci langsung jalan; yang SinarCloud (Gemini dll.) aktif setelah secret Worker dipasang.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+                <select id="aiModel" onchange="aiOnModelChange()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:10px;border-radius:10px;font-size:0.8rem;">
+                    <optgroup label="Gratis tanpa kunci — LLM7">
+                        <option value="llm7:default" selected>LLM7 — Otomatis (gratis, tanpa kunci)</option>
+                        <option value="llm7:gemini-3-flash">LLM7 — Gemini 3 Flash</option>
+                        <option value="llm7:gpt-oss:20b">LLM7 — GPT-OSS 20B</option>
+                        <option value="llm7:deepseek-v4.1-flash">LLM7 — DeepSeek V4.1 Flash</option>
+                    </optgroup>
+                    <optgroup label="SinarCloud — via FS (Gemini dll.)">
+                        <option value="sinar:google/gemini-3-1-pro">Gemini 3.1 Pro</option>
+                        <option value="sinar:deepseek/deepseek-v4-1-flash-free">DeepSeek V4.1 Flash (gratis)</option>
+                        <option value="sinar:openai/gpt-5-5">GPT-5.5</option>
+                        <option value="sinar:anthropic/claude-sonnet-5">Claude Sonnet 5</option>
+                        <option value="sinar:x-ai/grok-4-6">Grok 4.6</option>
+                        <option value="sinar:qwen/qwen3-8-flash">Qwen 3 Flash</option>
+                        <option value="sinar:z-ai/glm-5-3-flash">GLM 5.3 Flash</option>
+                    </optgroup>
+                </select>
+                <button onclick="aiClearChat()" style="background:#0a0e14;border:1px solid #30363d;color:#94a3b8;padding:10px 14px;border-radius:10px;font-size:0.8rem;cursor:pointer;">🗑️ Hapus</button>
+            </div>
+            <div id="aiChat" style="background:#050a14;border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px;height:calc(100vh - 380px);min-height:260px;overflow-y:auto;font-size:0.82rem;line-height:1.55;color:#e2e8f0;">
+                <div style="color:#94a3b8;">👋 Halo! Pilih AI di atas, lalu ketik pertanyaanmu di bawah. Jawaban muncul di sini.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <input id="aiInput" type="text" placeholder="Tanya apa saja..." autocomplete="off" onkeydown="if(event.key==='Enter')aiSend()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:11px 12px;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
+                <button id="aiSendBtn" onclick="aiSend()" style="background:var(--primary);color:#000;border:none;padding:11px 18px;border-radius:10px;font-weight:800;font-size:0.85rem;cursor:pointer;">Kirim</button>
+            </div>
+            <div id="aiStatus" style="font-size:0.68rem;color:#94a3b8;margin-top:10px;line-height:1.5;">ℹ️ Obrolan hanya tersimpan di HP kamu (tidak dikirim ke FS). Model SinarCloud memakai kuota key FS; model LLM7 gratis tanpa kunci tapi daftar modelnya bisa berubah.</div>
+        </div>
+        <script>
+        var AI_WORKER_URL = 'https://fs-ai.sanlana1903.workers.dev';
+        var AI_LLM7_URL = 'https://api.llm7.io/v1/chat/completions';
+        var aiHistory = [];
+        var aiBusy = false;
+        function aiBubble(role, text) {
+          var box = document.getElementById('aiChat');
+          var div = document.createElement('div');
+          div.style.margin = '10px 0';
+          div.style.padding = '10px 12px';
+          div.style.borderRadius = '10px';
+          div.style.whiteSpace = 'pre-wrap';
+          div.style.wordBreak = 'break-word';
+          if (role === 'user') {
+            div.style.background = 'rgba(56,189,248,0.15)';
+            div.style.textAlign = 'right';
+            div.textContent = text;
+          } else if (role === 'error') {
+            div.style.background = 'rgba(239,68,68,0.15)';
+            div.style.color = '#fca5a5';
+            div.textContent = text;
+          } else {
+            div.style.background = 'rgba(148,163,184,0.12)';
+            div.textContent = text;
+          }
+          box.appendChild(div);
+          box.scrollTop = box.scrollHeight;
+          return div;
+        }
+        function aiOnModelChange() { /* pilihan tersimpan otomatis lewat select */ }
+        function aiClearChat() {
+          aiHistory = [];
+          document.getElementById('aiChat').innerHTML = '<div style="color:#94a3b8;">👋 Obrolan dihapus. Silakan tanya lagi.</div>';
+        }
+        async function aiSend() {
+          if (aiBusy) return;
+          var input = document.getElementById('aiInput');
+          var text = (input.value || '').trim();
+          if (!text) return;
+          var sel = document.getElementById('aiModel').value || 'llm7:default';
+          var parts = sel.split(':');
+          var backend = parts[0];
+          var model = sel.slice(parts[0].length + 1);
+          input.value = '';
+          aiBubble('user', text);
+          aiHistory.push({ role: 'user', content: text });
+          if (aiHistory.length > 20) aiHistory = aiHistory.slice(-20);
+          var thinking = aiBubble('ai', '⏳ Mengetik...');
+          var btn = document.getElementById('aiSendBtn');
+          aiBusy = true;
+          btn.disabled = true;
+          try {
+            var url, body;
+            if (backend === 'sinar') {
+              url = AI_WORKER_URL + '/v1/chat/completions';
+              body = { model: model, messages: aiHistory.slice(), max_tokens: 800 };
+            } else {
+              url = AI_LLM7_URL;
+              body = { model: model, messages: aiHistory.slice(), max_tokens: 800 };
+            }
+            var res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            var data = await res.json();
+            if (!res.ok) {
+              var msg = (data && data.error && (data.error.message || data.error)) || ('HTTP ' + res.status);
+              throw new Error(String(msg));
+            }
+            var reply = data && data.choices && data.choices[0] && data.choices[0].message
+              ? data.choices[0].message.content : '';
+            if (!reply) throw new Error('Jawaban kosong dari AI.');
+            thinking.textContent = reply;
+            aiHistory.push({ role: 'assistant', content: reply });
+          } catch (e) {
+            thinking.remove();
+            var emsg = '⚠️ Gagal: ' + (e && e.message ? e.message : 'tidak bisa terhubung.');
+            if (backend === 'sinar') emsg += ' (Model SinarCloud butuh secret Worker yang sudah dipasang; coba model LLM7 gratis.)';
+            aiBubble('error', emsg);
+          }
+          aiBusy = false;
+          btn.disabled = false;
+          input.focus();
+        }
+        </script>
+
 
         <div id="game" class="tab-content" style="padding:0;margin:0;">
             <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
