@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+    <link rel="manifest" href="/manifest.webmanifest">
     <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Official Hub</title>
@@ -1576,6 +1578,7 @@
             <li class="side-label">HIBURAN</li>
             <li><button onclick="openTab('tvchannel', this)">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
+            <li><button onclick="openTab('musik', this)">🎵 Musik</button></li>
             <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
             <li><button onclick="openTab('chatai', this)">🤖 Chat Ai</button></li>
             <li><button onclick="openTab('game', this)">🎮 Game</button></li>
@@ -1606,6 +1609,7 @@
             <div class="quick-nav">
                 <button onclick="navTab('trading')"><span>📈</span>Trading</button>
                 <button onclick="navTab('movie')"><span>🎬</span>Movie</button>
+                <button onclick="navTab('musik')"><span>🎵</span>Musik</button>
                 <button onclick="navTab('tvchannel')"><span>📺</span>Live TV</button>
                 <button onclick="navTab('chatai')"><span>🤖</span>Chat Ai</button>
                 <button onclick="navTab('game')"><span>🎮</span>Game</button>
@@ -1854,6 +1858,167 @@
         </script>
 
 
+        <!-- ===== MUSIK TAB (Audius — open source, API publik gratis, tanpa kunci) ===== -->
+        <div id="musik" class="tab-content" style="padding:14px 14px 24px;">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Lagu dari artis independen di Audius — pilih lagu, tekan putar.</p></div>
+
+            <!-- Player -->
+            <div class="content-box" style="text-align:center;">
+                <div id="fsRadioNow" style="font-size:0.85rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🎵 Belum ada lagu diputar</div>
+                <div id="fsRadioMeta" style="font-size:0.68rem;color:#64748b;margin-top:4px;">Pilih lagu di bawah untuk mulai mendengarkan</div>
+                <audio id="fsRadioAudio" controls preload="none" style="width:100%;margin-top:12px;border-radius:10px;"></audio>
+                <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+                    <button onclick="fsRadioStop()" style="min-height:48px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:10px;padding:10px 22px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹ Stop</button>
+                </div>
+                <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
+            </div>
+
+            <!-- Cari lagu -->
+            <div style="margin-top:14px;">
+                <div style="display:flex;gap:8px;">
+                    <input id="fsRadioInput" type="text" placeholder="🔍 Cari lagu / artis..." 
+                        style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.9rem;outline:none;min-height:48px;"
+                        onkeydown="if(event.key==='Enter')fsRadioSearch()" />
+                    <button onclick="fsRadioSearch()" 
+                        style="background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:0.85rem;cursor:pointer;white-space:nowrap;min-height:48px;">CARI</button>
+                </div>
+                <div id="fsRadioChips" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+                    <button onclick="fsRadioGenre('trending',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">🔥 Trending</button>
+                    <button onclick="fsRadioGenre('pop',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Pop</button>
+                    <button onclick="fsRadioGenre('rock',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Rock</button>
+                    <button onclick="fsRadioGenre('dangdut',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Dangdut</button>
+                    <button onclick="fsRadioGenre('jazz',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Jazz</button>
+                    <button onclick="fsRadioGenre('lo-fi',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Lo-Fi</button>
+                    <button onclick="fsRadioGenre('k-pop',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">K-Pop</button>
+                    <button onclick="fsRadioGenre('indonesia',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">🇮🇩 Indonesia</button>
+                </div>
+            </div>
+
+            <!-- Daftar lagu -->
+            <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:14px 0 6px;">⏳ Memuat lagu trending...</div>
+            <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
+
+            <script>
+            // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
+            var _fsRadioInit = false;
+            var _fsRadioLoading = false;
+            var FS_AUDIUS = 'https://discoveryprovider.audius.co/v1';
+            var FS_AUDIUS_APP = 'app_name=FREEDOM_SYNDICATE';
+
+            function fsRadioInit() {
+                if (_fsRadioInit) return;
+                _fsRadioInit = true;
+                fsRadioLoadTrending();
+            }
+
+            function fsRadioFmtDur(sec) {
+                sec = Math.max(0, Math.round(sec || 0));
+                var m = Math.floor(sec / 60), s = sec % 60;
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+
+            function fsRadioRender(tracks, statusEl, list) {
+                if (!tracks.length) {
+                    if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                    list.innerHTML = '';
+                    return;
+                }
+                if (statusEl) statusEl.textContent = tracks.length + ' lagu ditemukan';
+                list.innerHTML = '';
+                tracks.forEach(function(t){
+                    var title = t.title || 'Tanpa judul';
+                    var artist = (t.user && t.user.name) || 'Artis tidak dikenal';
+                    var genre = t.genre || '';
+                    var dur = fsRadioFmtDur(t.duration);
+                    var plays = t.play_count || 0;
+                    var art = (t.artwork && (t.artwork['150x150'] || t.artwork['480x480'])) || '';
+                    var streamUrl = FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP;
+                    var item = document.createElement('div');
+                    item.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;';
+                    item.innerHTML =
+                        (art ? '<img src="' + esc(art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
+                        '<div style="flex:1;min-width:0;">' +
+                            '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(title) + '</div>' +
+                            '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(artist) + (genre ? ' • ' + esc(genre) : '') + '</div>' +
+                            '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">⏱ ' + esc(dur) + ' · ▶ ' + esc(String(plays)) + ' diputar</div>' +
+                        '</div>' +
+                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
+                    item.querySelector('button').onclick = function(){ fsRadioPlay(streamUrl, title, artist, genre); };
+                    list.appendChild(item);
+                });
+            }
+
+            function fsRadioFetch(url) {
+                if (_fsRadioLoading) return;
+                _fsRadioLoading = true;
+                var list = document.getElementById('fsRadioList');
+                var statusEl = document.getElementById('fsRadioStatus');
+                if (statusEl) statusEl.textContent = '⏳ Memuat lagu...';
+                fetch(url).then(function(r){ return r.json(); }).then(function(d){
+                    _fsRadioLoading = false;
+                    var tracks = (d && d.data) || [];
+                    fsRadioRender(tracks, statusEl, list);
+                }).catch(function(){
+                    _fsRadioLoading = false;
+                    if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
+                });
+            }
+
+            function fsRadioLoadTrending() {
+                fsRadioFetch(FS_AUDIUS + '/tracks/trending?' + FS_AUDIUS_APP + '&limit=20');
+            }
+
+            function fsRadioSearch() {
+                var q = document.getElementById('fsRadioInput').value.trim();
+                if (!q) { fsRadioLoadTrending(); return; }
+                fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(q) + '&' + FS_AUDIUS_APP + '&limit=30');
+            }
+
+            function fsRadioGenre(genre, btn) {
+                var chips = document.querySelectorAll('#fsRadioChips button');
+                chips.forEach(function(b){ b.style.background = 'rgba(56,189,248,0.08)'; b.style.color = '#94a3b8'; });
+                if (btn) { btn.style.background = 'var(--primary)'; btn.style.color = '#000'; }
+                if (genre === 'trending') {
+                    fsRadioLoadTrending();
+                } else if (genre === 'indonesia') {
+                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('Indonesia') + '&' + FS_AUDIUS_APP + '&limit=30');
+                } else {
+                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(genre) + '&' + FS_AUDIUS_APP + '&limit=30');
+                }
+            }
+
+            function fsRadioPlay(url, title, artist, genre) {
+                var audio = document.getElementById('fsRadioAudio');
+                var errEl = document.getElementById('fsRadioError');
+                if (errEl) errEl.style.display = 'none';
+                if (!url) return;
+                document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar: ' + title;
+                document.getElementById('fsRadioMeta').textContent = [artist, genre].filter(Boolean).join(' • ') || 'Audius';
+                try { audio.pause(); } catch(e) {}
+                audio.src = url;
+                var p = audio.play();
+                if (p && p.catch) p.catch(function(){
+                    if (errEl) errEl.style.display = 'block';
+                    document.getElementById('fsRadioNow').textContent = '⚠️ Lagu tidak bisa diputar';
+                });
+            }
+
+            function fsRadioStop() {
+                var audio = document.getElementById('fsRadioAudio');
+                try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch(e) {}
+                document.getElementById('fsRadioNow').textContent = '🎵 Belum ada lagu diputar';
+                document.getElementById('fsRadioMeta').textContent = 'Pilih lagu di bawah untuk mulai mendengarkan';
+            }
+
+            // Error stream (mis. server mati): beri tahu user, jangan diam saja
+            document.getElementById('fsRadioAudio').addEventListener('error', function(){
+                var errEl = document.getElementById('fsRadioError');
+                if (errEl && this.src) errEl.style.display = 'block';
+            });
+            </script>
+        </div>
+
         <div id="game" class="tab-content" style="padding:0;margin:0;">
             <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
                 <div style="margin-bottom:8px;">
@@ -2091,6 +2256,7 @@
 
                 <!-- Results grid -->
                 <div id="fsResults" style="display:none;padding:10px 14px;overflow-y:auto;max-height:340px;background:rgba(5,10,20,0.98);">
+                    <div id="fsSourceNote" style="font-size:0.62rem;color:#64748b;text-align:center;padding:4px 0 2px;"></div>
                     <div id="fsResultsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
                     <div id="fsPaginationNav"></div>
                 </div>
@@ -2132,6 +2298,12 @@
                 // demo publik OMDb (bukan kunci pribadi); kalau limit hariannya habis,
                 // pencarian menampilkan pesan coba lagi. Upgrade ke Worker TMDB bila perlu.
                 var _k = '';
+                // Pencarian FS Cinema: utama lewat Worker proxy TMDB (tanpa kunci di
+                // kode), fallback ke OMDb demo bila proxy error/kosong. Hasil TMDB tidak
+                // punya imdbID — imdbID baru diambil via OMDb SEKALI saat judul diklik
+                // (lihat fsPlayTmdb), bukan untuk seluruh daftar.
+                var _k = '';
+                var FS_CINEMA_PROXY = 'https://fs-cinema-search.sanlana1903.workers.dev/search';
                 var FS_SEARCH_API = 'https://www.omdbapi.com/';
                 var FS_SEARCH_KEY = 'thewdb';
 
@@ -2147,36 +2319,111 @@
                 var _fsCurrentPage = 0;
                 var _fsPageSize = 12;
 
+                // fetch JSON dengan batas waktu (ms); reject bila timeout
+                function _fsFetchJson(url, ms) {
+                    return new Promise(function(resolve, reject) {
+                        var done = false;
+                        var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 8000);
+                        fetch(url).then(function(r){
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            return r.json();
+                        }).then(function(d){
+                            if (!done) { done = true; clearTimeout(t); resolve(d); }
+                        }).catch(function(e){
+                            if (!done) { done = true; clearTimeout(t); reject(e); }
+                        });
+                    });
+                }
+
+                function _fsSetNote(txt) {
+                    var n = document.getElementById('fsSourceNote');
+                    if (n) n.textContent = txt || '';
+                }
+
                 async function fsSearch() {
                     var q = document.getElementById('fsSearchInput').value.trim();
                     if (!q) return;
                     var grid = document.getElementById('fsResultsGrid');
-                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:0.75rem;">🔍 Mencari...</div>';
+                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:0.75rem;">\uD83D\uDD0D Mencari...</div>';
                     document.getElementById('fsResults').style.display = 'block';
-                    // Cari sampai 3 halaman OMDb (10 hasil/halaman)
+                    _fsSetNote('');
                     var allResults = [];
+                    var viaTmdb = false;
+                    // 1) Coba proxy TMDB dulu (halaman 1-2, 20 hasil/halaman)
                     try {
-                        for (var p = 1; p <= 3; p++) {
-                            var res = await fetch(FS_SEARCH_API + '?s=' + encodeURIComponent(q) + '&type=' + (fsMediaType === 'tv' ? 'series' : 'movie') + '&page=' + p + '&apikey=' + FS_SEARCH_KEY);
-                            var data = await res.json();
-                            if (data.Response !== 'True' || !data.Search) break;
-                            data.Search.forEach(function(r) {
-                                allResults.push({ id: r.imdbID, title: r.Title, name: r.Title, poster_url: (r.Poster && r.Poster !== 'N/A') ? r.Poster : '', release_date: (r.Year || '').slice(0, 4), first_air_date: (r.Year || '').slice(0, 4) });
+                        for (var p = 1; p <= 2; p++) {
+                            var purl = FS_CINEMA_PROXY + '?q=' + encodeURIComponent(q)
+                                + '&type=' + (fsMediaType === 'tv' ? 'tv' : 'movie') + '&page=' + p;
+                            var pdata = await _fsFetchJson(purl, 8000);
+                            var list = (pdata && pdata.results) || [];
+                            if (!list.length) break;
+                            list.forEach(function(r) {
+                                var title = r.title || r.name || '';
+                                if (!title) return;
+                                allResults.push({
+                                    id: 'tmdb:' + r.id, tmdbId: r.id, source: 'tmdb',
+                                    title: title, name: title,
+                                    poster_url: r.poster_path ? 'https://image.tmdb.org/t/p/w500' + r.poster_path : '',
+                                    poster_path: r.poster_path || '',
+                                    release_date: (r.release_date || r.first_air_date || '').slice(0, 4),
+                                    first_air_date: (r.release_date || r.first_air_date || '').slice(0, 4),
+                                    overview: r.overview || ''
+                                });
                             });
-                            if (data.Search.length < 10) break; // halaman terakhir
+                            if (list.length < 20) break; // halaman terakhir
                         }
+                        viaTmdb = allResults.length > 0;
                     } catch(e) {
-                        grid.innerHTML = '<div style="text-align:center;padding:20px;color:#f87171;font-size:0.75rem;">⚠️ Gagal mencari. Cek koneksi.</div>';
-                        return;
+                        allResults = []; // proxy gagal -> fallback OMDb di bawah
+                    }
+                    // 2) Fallback OMDb (maks 3 halaman, 10 hasil/halaman)
+                    if (!allResults.length) {
+                        try {
+                            for (var p2 = 1; p2 <= 3; p2++) {
+                                var res = await fetch(FS_SEARCH_API + '?s=' + encodeURIComponent(q) + '&type=' + (fsMediaType === 'tv' ? 'series' : 'movie') + '&page=' + p2 + '&apikey=' + FS_SEARCH_KEY);
+                                var data = await res.json();
+                                if (data.Response !== 'True' || !data.Search) break;
+                                data.Search.forEach(function(r) {
+                                    allResults.push({ id: r.imdbID, source: 'omdb', title: r.Title, name: r.Title, poster_url: (r.Poster && r.Poster !== 'N/A') ? r.Poster : '', release_date: (r.Year || '').slice(0, 4), first_air_date: (r.Year || '').slice(0, 4) });
+                                });
+                                if (data.Search.length < 10) break; // halaman terakhir
+                            }
+                        } catch(e2) {
+                            grid.innerHTML = '<div style="text-align:center;padding:20px;color:#f87171;font-size:0.75rem;">\u26A0\uFE0F Gagal mencari. Cek koneksi.</div>';
+                            return;
+                        }
                     }
                     if (!allResults.length) {
                         grid.innerHTML = '<div style="text-align:center;padding:20px;color:#fca5a5;font-size:0.75rem;">Tidak ada hasil untuk &quot;' + esc(q) + '&quot;. Coba kata kunci lain.</div>';
                         return;
                     }
+                    _fsSetNote(viaTmdb ? 'Hasil dari TMDB \u2022 ketuk poster untuk memutar' : 'Hasil dari OMDb (fallback) \u2022 ketuk poster untuk memutar');
                     _fsCurrentResults = allResults;
                     _fsCurrentPage = 0;
                     grid.innerHTML = '';
                     _fsRenderPage();
+                }
+
+                // Hasil TMDB: ambil imdbID via OMDb SEKALI saat diklik, lalu putar.
+                // Kalau lookup gagal, pakai ID TMDB langsung (VidSrc/MultiEmbed menerima).
+                var _fsResolving = false;
+                async function fsPlayTmdb(item) {
+                    if (_fsResolving) return;
+                    _fsResolving = true;
+                    var title = item.title || item.name || '';
+                    var year = (item.release_date || item.first_air_date || '').slice(0, 4);
+                    _fsSetNote('\u23F3 Mengambil info pemutaran...');
+                    var imdbId = '';
+                    try {
+                        var u = FS_SEARCH_API + '?t=' + encodeURIComponent(title)
+                            + '&type=' + (fsMediaType === 'tv' ? 'series' : 'movie')
+                            + (year ? '&y=' + year : '') + '&apikey=' + FS_SEARCH_KEY;
+                        var d = await _fsFetchJson(u, 8000);
+                        if (d && d.Response === 'True' && d.imdbID) imdbId = d.imdbID;
+                    } catch(e) {}
+                    _fsResolving = false;
+                    _fsSetNote('Hasil dari TMDB \u2022 ketuk poster untuk memutar');
+                    fsPlay(imdbId || String(item.tmdbId), title);
                 }
 
                 function _fsRenderPage() {
@@ -2191,7 +2438,7 @@
                         card.style.cssText='cursor:pointer;border-radius:8px;overflow:hidden;border:1px solid rgba(56,189,248,0.15);background:rgba(15,23,42,0.8);transition:transform 0.2s;';
                         card.onmouseover=function(){this.style.transform='scale(1.04)';};
                         card.onmouseout=function(){this.style.transform='scale(1)';};
-                        card.onclick=function(){fsPlay(item.id,title);};
+                        card.onclick=function(){ if (item.source === 'tmdb') { fsPlayTmdb(item); } else { fsPlay(item.id,title); } };
                         card.innerHTML = poster
                             ? '<img src="'+esc(poster)+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>'
                             : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>';
@@ -2768,6 +3015,18 @@
                     <div id="tv4ScoreLeagueFilter" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none;"></div>
                     <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal pertandingan mendatang...</div>
                     <div id="tv4ScoreList" style="display:flex;flex-direction:column;gap:8px;"></div>
+                    <!-- Jadwal Pertandingan (openfootball/football.json, lisensi CC0, GitHub) -->
+                    <div id="fsSchedule" style="margin-top:18px;border-top:1px solid rgba(56,189,248,0.15);padding-top:14px;">
+                        <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">📅 JADWAL PERTANDINGAN</div>
+                        <div id="fsSchedLeagues" style="display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;scrollbar-width:none;"></div>
+                        <div id="fsSchedStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:8px 0;">⏳ Memuat jadwal...</div>
+                        <div id="fsSchedNext" style="display:flex;flex-direction:column;gap:8px;"></div>
+                        <div id="fsSchedPastWrap" style="display:none;margin-top:12px;">
+                            <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">✅ HASIL TERAKHIR</div>
+                            <div id="fsSchedPast" style="display:flex;flex-direction:column;gap:8px;"></div>
+                        </div>
+                        <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:14px;">Jadwal: openfootball (CC0, GitHub) · Skor live: TheSportsDB</p>
+                    </div>
                     <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:16px;">Data oleh TheSportsDB · Skor live diperbarui tiap 90 detik · Jadwal diperbarui otomatis setiap hari</p>
                 </div>
 
@@ -2823,7 +3082,7 @@
             // PANGGIL FUNGSINYA DI SINI — lazy load iframe tvWorld
             if (paneId === 'tvWorld') _lazyLoadIframe('tvWorld');
             // Muat jadwal & skor pertandingan mendatang saat tab Sport pertama kali dibuka
-            if (paneId === 'tv4') tv4LoadLivescore(false);
+            if (paneId === 'tv4') { tv4LoadLivescore(false); if (typeof fsSchedInit === 'function') fsSchedInit(); }
             // Muat playlist iptv-org saat tab LIVE TV pertama kali dibuka
             if (paneId === 'tvLive') tvLiveInit();
         }
@@ -3463,6 +3722,145 @@ let tv3Hls = null;
             });
         }
 
+// =============================================
+// JADWAL PERTANDINGAN — openfootball/football.json (CC0, GitHub, tanpa kunci)
+// =============================================
+const FS_SCHED_LEAGUES = [
+    { code: 'en.1', name: 'Premier League' },
+    { code: 'de.1', name: 'Bundesliga' },
+    { code: 'es.1', name: 'La Liga' },
+    { code: 'it.1', name: 'Serie A' },
+    { code: 'fr.1', name: 'Ligue 1' },
+];
+let _fsSchedInit = false;
+let _fsSchedActive = 'en.1';
+let _fsSchedLoading = false;
+const _fsSchedCache = {}; // kode liga -> { at: timestamp, matches: [...] }
+
+function fsSchedInit() {
+    if (_fsSchedInit) return;
+    _fsSchedInit = true;
+    const wrap = document.getElementById('fsSchedLeagues');
+    if (wrap) {
+        FS_SCHED_LEAGUES.forEach(function(lg){
+            const b = document.createElement('button');
+            b.textContent = lg.name;
+            b.style.cssText = 'flex-shrink:0;min-height:44px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:8px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;';
+            b.onclick = function(){ fsSchedLoad(lg.code); };
+            b.dataset.code = lg.code;
+            wrap.appendChild(b);
+        });
+    }
+    fsSchedLoad('en.1');
+}
+
+function fsSchedFmtDate(d) {
+    const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function fsSchedMatchDate(m) {
+    // openfootball: date "YYYY-MM-DD", time "HH:MM" (waktu setempat seperti di file)
+    const t = (m.time || '00:00').slice(0, 5);
+    const dt = new Date(m.date + 'T' + t + ':00');
+    return isNaN(dt.getTime()) ? null : dt;
+}
+
+function fsSchedLoad(code) {
+    _fsSchedActive = code;
+    document.querySelectorAll('#fsSchedLeagues button').forEach(function(b){
+        const on = b.dataset.code === code;
+        b.style.background = on ? 'var(--primary)' : 'rgba(56,189,248,0.08)';
+        b.style.color = on ? '#000' : '#94a3b8';
+    });
+    const cached = _fsSchedCache[code];
+    if (cached && (Date.now() - cached.at) < 3600000) {
+        fsSchedRender(cached.matches);
+        return;
+    }
+    if (_fsSchedLoading) return;
+    _fsSchedLoading = true;
+    const statusEl = document.getElementById('fsSchedStatus');
+    if (statusEl) statusEl.textContent = '⏳ Memuat jadwal...';
+    fetch('https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/' + code + '.json')
+        .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(d){
+            _fsSchedLoading = false;
+            const matches = (d && d.matches) || [];
+            _fsSchedCache[code] = { at: Date.now(), matches: matches };
+            fsSchedRender(matches);
+        })
+        .catch(function(){
+            _fsSchedLoading = false;
+            if (statusEl) statusEl.textContent = '⚠️ Jadwal tidak bisa dimuat, coba lagi nanti.';
+        });
+}
+
+function fsSchedRender(matches) {
+    const statusEl = document.getElementById('fsSchedStatus');
+    const nextEl = document.getElementById('fsSchedNext');
+    const pastWrap = document.getElementById('fsSchedPastWrap');
+    const pastEl = document.getElementById('fsSchedPast');
+    if (!nextEl || !pastEl) return;
+    const now = new Date();
+    const withDate = matches.map(function(m){
+        return { m: m, dt: fsSchedMatchDate(m) };
+    }).filter(function(x){ return x.dt; });
+    const upcoming = withDate
+        .filter(function(x){ return !(x.m.score && x.m.score.ft) && x.dt >= now; })
+        .sort(function(a, b){ return a.dt - b.dt; })
+        .slice(0, 10);
+    const past = withDate
+        .filter(function(x){ return x.m.score && x.m.score.ft; })
+        .sort(function(a, b){ return b.dt - a.dt; })
+        .slice(0, 5);
+    nextEl.innerHTML = '';
+    pastEl.innerHTML = '';
+    if (!upcoming.length && !past.length) {
+        if (statusEl) statusEl.textContent = 'Belum ada jadwal untuk liga ini.';
+        if (pastWrap) pastWrap.style.display = 'none';
+        return;
+    }
+    if (statusEl) statusEl.textContent = '';
+    upcoming.forEach(function(x){
+        const card = document.createElement('div');
+        card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px 14px;';
+        card.innerHTML =
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+                '<span style="font-size:0.6rem;color:#475569;">' + esc(x.m.round || '') + '</span>' +
+                '<span style="font-size:0.62rem;color:#38bdf8;font-weight:700;">⏳ ' + esc(fsSchedFmtDate(x.dt) + ' · ' + (x.m.time || '').slice(0, 5)) + '</span>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
+                '<div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;text-align:right;">' + esc(x.m.team1 || '') + '</div>' +
+                '<div style="font-size:0.95rem;font-weight:900;color:#fff;padding:2px 10px;background:rgba(56,189,248,0.08);border-radius:8px;min-width:50px;text-align:center;">vs</div>' +
+                '<div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;">' + esc(x.m.team2 || '') + '</div>' +
+            '</div>';
+        nextEl.appendChild(card);
+    });
+    if (past.length) {
+        if (pastWrap) pastWrap.style.display = 'block';
+        past.forEach(function(x){
+            const ft = x.m.score.ft;
+            const card = document.createElement('div');
+            card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px 14px;';
+            card.innerHTML =
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+                    '<span style="font-size:0.6rem;color:#475569;">' + esc(x.m.round || '') + '</span>' +
+                    '<span style="font-size:0.62rem;color:#64748b;font-weight:700;">✅ SELESAI · ' + esc(fsSchedFmtDate(x.dt)) + '</span>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
+                    '<div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;text-align:right;">' + esc(x.m.team1 || '') + '</div>' +
+                    '<div style="font-size:0.95rem;font-weight:900;color:#fff;padding:2px 10px;background:rgba(56,189,248,0.08);border-radius:8px;min-width:50px;text-align:center;">' + esc(String(ft[0])) + ' - ' + esc(String(ft[1])) + '</div>' +
+                    '<div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;">' + esc(x.m.team2 || '') + '</div>' +
+                '</div>';
+            pastEl.appendChild(card);
+        });
+    } else if (pastWrap) {
+        pastWrap.style.display = 'none';
+    }
+}
+
 // --- LOGIC MOVIE SUB-TABS ---
         function switchMovieTab(paneId, btnEl) {
             document.querySelectorAll('.movie-pane').forEach(p => p.classList.remove('active'));
@@ -3523,6 +3921,7 @@ let tv3Hls = null;
             // Bug fix: pane ROSYSCANS sudah "active" dari awal jadi iframe-nya
             // tidak pernah dimuat kalau cuma nunggu klik sub-tab — muat sekarang
             if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
+            if (tabId === 'musik' && typeof fsRadioInit === 'function') { fsRadioInit(); }
             if (tabId === 'game') { _lazyLoadIframe('emulator'); }
 
             // Tutup sidebar setelah memilih (khusus mobile friendly) —
@@ -3891,7 +4290,7 @@ let tv3Hls = null;
          dipakai oleh bottom nav di journal.html / garapan.html. -->
     <script>
     (function(){
-        var tabs = ['home','trading','garapan','keluhkesah','mod','tvchannel','movie','komik','chatai','game','dewasa','download'];
+        var tabs = ['home','trading','garapan','keluhkesah','mod','tvchannel','movie','musik','komik','chatai','game','dewasa','download'];
         function openHash(){
             var id = (location.hash || '').replace('#','');
             if (tabs.indexOf(id) === -1) return;
