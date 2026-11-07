@@ -146,15 +146,27 @@
             --primary-glow: rgba(56, 189, 248, 0.4);
             --bg-dark: #020617;
             --panel-bg: rgba(15, 23, 42, 0.6);
+            /* Glass ringan: blur tipis (10px), cuma di kartu utama + sidebar,
+               supaya tetap ringan di HP. Jangan naikkan blur di atas 12px. */
+            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(148,163,184,0.05));
+            --glass-border: rgba(255,255,255,0.12);
+            --glass-blur: blur(10px) saturate(1.25);
         }
+        html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+        img, video, iframe { max-width: 100%; }
+        *, *::before, *::after { box-sizing: border-box; }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--bg-dark); 
-            color: #FFFFFF; 
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(56,189,248,0.14), transparent),
+                              radial-gradient(ellipse 60% 40% at 90% 110%, rgba(56,189,248,0.08), transparent);
+            background-attachment: fixed;
+            color: #FFFFFF;
             margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh; overflow-x: hidden;
+            line-height: 1.65;
         }
 
         /* --- ANIMASI --- */
@@ -184,7 +196,8 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.5rem;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px) saturate(1.2);
+            -webkit-backdrop-filter: blur(8px) saturate(1.2);
             transition: all 0.3s ease;
         }
 
@@ -199,8 +212,9 @@
             left: -300px;
             width: 280px;
             height: 100vh;
-            background: rgba(10, 15, 28, 0.95);
-            backdrop-filter: blur(15px);
+            background: rgba(10, 15, 28, 0.82);
+            backdrop-filter: blur(10px) saturate(1.2);
+            -webkit-backdrop-filter: blur(10px) saturate(1.2);
             border-right: 1px solid rgba(56, 189, 248, 0.2);
             z-index: 1000;
             transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -242,18 +256,51 @@
 
         /* --- KONTEN UTAMA & TABS --- */
         .main-wrapper {
-            max-width: 500px;
+            max-width: 680px;
             width: 100%;
-            padding: 50px 25px;
+            padding: 64px clamp(16px, 4vw, 32px) 48px;
             text-align: center;
             transition: opacity 0.3s;
         }
+        .tab-content { width: 100%; }
 
-        /* TV tab gets full width, no side padding */
+        /* Tab lebar (TV, Movie, Chat Ai, Game, Komik) pakai kolom lebih lebar
+           supaya video / chat / grid tidak sempit di laptop. */
         #tvchannel.tab-content.active ~ * { padding: 0; }
-        .main-wrapper:has(#tvchannel.active) {
-            max-width: 100%;
-            padding: 50px 0 0;
+        .main-wrapper:has(#tvchannel.active),
+        .main-wrapper:has(#movie.active),
+        .main-wrapper:has(#chatai.active),
+        .main-wrapper:has(#game.active),
+        .main-wrapper:has(#komik.active) {
+            max-width: 1020px;
+            padding: 64px clamp(12px, 3vw, 28px) 48px;
+        }
+        @media (min-width: 1024px) {
+            .main-wrapper { max-width: 720px; }
+        }
+        /* HP: ruang aman dari tombol menu, padding kartu lebih lega,
+           tombol mudah ditekan (min. 48px). */
+        @media (max-width: 768px) {
+            .main-wrapper { padding: 76px 14px 40px; }
+            .main-wrapper:has(#tvchannel.active),
+            .main-wrapper:has(#movie.active),
+            .main-wrapper:has(#chatai.active),
+            .main-wrapper:has(#game.active),
+            .main-wrapper:has(#komik.active) { padding: 76px 10px 40px; }
+            h1 { font-size: 1.7rem; letter-spacing: 2px; }
+            .intro-box, .content-box { padding: 22px 18px; border-radius: 16px; }
+            .social-grid { gap: 10px; }
+            .social-btn { min-height: 52px; display: flex; align-items: center; justify-content: center; }
+            .sidebar { width: min(280px, 84vw); }
+            .sidebar-menu button { padding: 14px 22px; font-size: 1rem; }
+            /* Matikan animasi glow/pulse tak berujung di HP: ini sumber lag.
+               Tampilan tetap sama, cuma tidak berdenyut terus. */
+            .journal-btn, .mod-btn-app, .mod-btn-game,
+            .btn-join-tg, .btn-join-dc, .btn-join-wa,
+            .adult-fire, .adult-title, h1 { animation: none !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
 
         .tab-content {
@@ -279,15 +326,16 @@
         }
 
         .intro-box, .content-box {
-            background: var(--panel-bg);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             padding: 30px;
             border-radius: 20px;
             margin-bottom: 30px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
             text-align: left;
-            line-height: 1.6;
+            line-height: 1.65;
         }
         
         .intro-box { text-align: center; }
@@ -566,11 +614,13 @@
             color: #FFFFFF;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-align: center;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .social-btn:hover {
@@ -619,7 +669,7 @@
             border-radius: 10px; border-left: 3px solid var(--primary);
         }
 
-        footer { margin-top: 50px; text-align: center; font-size: 0.7rem; color: #475569; letter-spacing: 5px; font-weight: 700; }
+        footer { margin-top: 50px; text-align: center; font-size: 0.72rem; color: #94a3b8; letter-spacing: 5px; font-weight: 700; }
 
         /* --- PIN KEYPAD --- */
         .pin-dot {
