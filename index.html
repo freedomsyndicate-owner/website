@@ -120,7 +120,11 @@
     </script>
     <!-- END SECURITY SHIELD v3.0 -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" 
+    <!-- FS: Firebase untuk gate login tab dewasa (config sama seperti journal.html) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" integrity="sha384-f6/UpzjTjIXASlp20cArQsaRh1EvHVJd5kegy/gYR9W2D0a32TnEqUEiW4Zm/5O0" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" integrity="sha384-miJUhTuRucSoqFe3/VSB2sRghSMoev6wpPoEyj5fhF0PARehD+naPBsAkl5NqwPO" crossorigin="anonymous"
         onerror="window._hlsJsFailed=true;console.warn('HLS.js gagal dimuat dari CDN.');"></script>
     <script>
     // FS-HARDEN: escape HTML untuk data pihak ketiga sebelum dimasukkan ke innerHTML (cegah XSS).
@@ -2066,71 +2070,20 @@
 
         <div id="dewasa" class="tab-content">
 
-            <!-- ===== PIN LOCK SCREEN ===== -->
-            <div id="dewasaPinScreen" class="content-box" style="text-align:center; max-width:340px; margin:0 auto;">
+            <!-- ===== GATE LOGIN (Firebase Auth — ganti PIN) ===== -->
+            <div id="dewasaLoginScreen" class="content-box" style="text-align:center; max-width:340px; margin:0 auto;">
                 <div style="font-size:2.6rem; margin-bottom:4px; animation: fireFloat 2s infinite ease-in-out;">🔐</div>
                 <h3 style="margin:0 0 4px; font-size:1.1rem; font-weight:900; letter-spacing:3px; color:#f87171; animation: redGlow 2.5s infinite ease-in-out;">成人向けコンテンツ</h3>
-                <p style="font-size:0.72rem; color:#64748b; letter-spacing:2px; margin:0 0 20px;">AKSES TERBATAS • MASUKKAN PIN</p>
-
-                <!-- PIN Display -->
-                <div style="display:flex; justify-content:center; gap:12px; margin-bottom:20px;">
-                    <div class="pin-dot" id="pd1"></div>
-                    <div class="pin-dot" id="pd2"></div>
-                    <div class="pin-dot" id="pd3"></div>
-                    <div class="pin-dot" id="pd4"></div>
-                </div>
-
-                <!-- Status message -->
-                <div id="pinStatusMsg" style="min-height:22px; font-size:0.75rem; font-weight:700; letter-spacing:1px; margin-bottom:14px; transition:0.3s;"></div>
-
-                <!-- Numpad -->
-                <div class="pin-numpad" id="pinNumpad">
-                    <button class="pin-key" onclick="pinPress('1')">1</button>
-                    <button class="pin-key" onclick="pinPress('2')">2</button>
-                    <button class="pin-key" onclick="pinPress('3')">3</button>
-                    <button class="pin-key" onclick="pinPress('4')">4</button>
-                    <button class="pin-key" onclick="pinPress('5')">5</button>
-                    <button class="pin-key" onclick="pinPress('6')">6</button>
-                    <button class="pin-key" onclick="pinPress('7')">7</button>
-                    <button class="pin-key" onclick="pinPress('8')">8</button>
-                    <button class="pin-key" onclick="pinPress('9')">9</button>
-                    <button class="pin-key pin-key-clear" onclick="pinClear()">⌫</button>
-                    <button class="pin-key" onclick="pinPress('0')">0</button>
-                    <button class="pin-key pin-key-ok" onclick="pinSubmit()">OK</button>
-                </div>
-
-                <!-- Akses ditolak info -->
-                <div id="pinDeniedBox" style="display:none; margin-top:20px; background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.3); border-radius:16px; padding:18px 16px;">
-                    <div style="font-size:1.6rem; margin-bottom:6px;">🚫</div>
-                    <div style="font-size:0.85rem; font-weight:900; color:#f87171; letter-spacing:2px; margin-bottom:6px;">AKSES DITOLAK</div>
-                    <div style="font-size:0.75rem; color:#94a3b8; line-height:1.7; margin-bottom:14px;">
-                        PIN salah. Hubungi <b style="color:#fff;">Owner</b> untuk mendapatkan akses.
-                    </div>
-                    <a href="https://t.me/freedom_syndicate_Bot" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-tg" style="margin:6px 0;">
-                        <span class="ajb-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg>
-                        </span>
-                        <span class="ajb-text">
-                            <span class="ajb-title" style="font-size:0.9rem;">TELEGRAM OWNER</span>
-                            <span class="ajb-sub">Hubungi untuk minta akses</span>
-                        </span>
-                        <span class="ajb-arrow">→</span>
-                    </a>
-                    <a href="https://discord.gg/fAvemWFdm" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-dc" style="margin:6px 0;">
-                        <span class="ajb-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-                        </span>
-                        <span class="ajb-text">
-                            <span class="ajb-title" style="font-size:0.9rem;">DISCORD OWNER</span>
-                            <span class="ajb-sub">Hubungi untuk minta akses</span>
-                        </span>
-                        <span class="ajb-arrow">→</span>
-                    </a>
-                    <button onclick="pinReset()" style="margin-top:10px; background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.3); color:#f87171; font-size:0.72rem; font-weight:700; padding:8px 20px; border-radius:20px; cursor:pointer; letter-spacing:1px;">🔄 COBA LAGI</button>
-                </div>
+                <p style="font-size:0.72rem; color:#64748b; letter-spacing:2px; margin:0 0 20px;">AKSES TERBATAS • KHUSUS 18+</p>
+                <p style="font-size:0.85rem; color:#94a3b8; line-height:1.7; margin-bottom:18px;">Login dengan Google untuk membuka konten dewasa.</p>
+                <button id="dewasaLoginBtn" onclick="dewasaLoginGoogle()" style="background:#fff;color:#1f2937;border:none;padding:12px 22px;border-radius:10px;font-weight:800;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09A11.99 11.99 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29V6.62H1.29a12 12 0 0 0 0 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42A11.98 11.98 0 0 0 12 0 11.99 11.99 0 0 0 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
+                    Login dengan Google
+                </button>
+                <p id="dewasaLoginStatus" style="font-size:0.72rem; color:#64748b; margin-top:14px; min-height:18px;"></p>
             </div>
 
-            <!-- ===== KONTEN DEWASA (muncul setelah PIN benar, diisi via JS) ===== -->
+            <!-- ===== KONTEN DEWASA (muncul setelah login, link diisi via JS) ===== -->
             <div id="dewasaContent" style="display:none;">
                 <div class="content-box" style="text-align:center;">
                     <div class="adult-fire">🔥</div>
@@ -2145,7 +2098,7 @@
                         Bergabunglah sekarang dan dapatkan akses penuh ke konten yang tak akan kamu temukan di tempat lain — <span style="color:#f87171; font-weight:700;">tanpa sensor, tanpa batas.</span>
                     </p>
                     <p class="adult-cta">👇 Pilih platform favoritmu & langsung gabung 👇</p>
-                    <!-- Link diisi dinamis oleh JS setelah PIN terverifikasi -->
+                    <!-- Link diisi dinamis oleh JS setelah login (fungsi _injectDewasaLinks) -->
                     <div id="dewasaLinks"></div>
                     <p class="adult-note">⚠️ Dengan bergabung, kamu menyatakan bahwa kamu berusia <b>18 tahun ke atas</b>.</p>
                 </div>
@@ -2927,23 +2880,44 @@
                 if (badge) badge.style.display = 'block';
                 if (badgeName) badgeName.textContent = ch.name;
                 _tvLiveCurrent = ch;
-                var isM3U8 = ch.url.toLowerCase().indexOf('.m3u8') !== -1;
+                // FS-HARDEN: stream http:// -> coba https:// dulu (mixed content memblokir
+                // http di halaman https). Kalau https gagal, fallback ke http:// aslinya.
+                var _tvOrigUrl = ch.url;
+                var _tvHttpsUrl = /^http:\/\//i.test(_tvOrigUrl) ? _tvOrigUrl.replace(/^http:\/\//i, 'https://') : null;
+                var _tvUrl = _tvHttpsUrl || _tvOrigUrl;
+                var _tvTriedHttp = false;
+                var isM3U8 = _tvUrl.toLowerCase().indexOf('.m3u8') !== -1;
+                var _tvUsingHls = isM3U8 && window.Hls && Hls.isSupported();
                 var onFail = function(){ tvLiveShowError('⚠️ Stream tidak tersedia, coba channel lain.'); };
-                video.onerror = onFail;
-                if (isM3U8 && window.Hls && Hls.isSupported()) {
+                var _tvLoadHls = function(url) {
                     _tvLiveHls = new Hls({ enableWorker: true, lowLatencyMode: true, manifestLoadingMaxRetry: 1, levelLoadingMaxRetry: 1 });
-                    _tvLiveHls.loadSource(ch.url);
+                    _tvLiveHls.loadSource(url);
                     _tvLiveHls.attachMedia(video);
                     _tvLiveHls.on(Hls.Events.MANIFEST_PARSED, function(){
                         var p = video.play();
                         if (p && p.catch) p.catch(function(){});
                     });
                     _tvLiveHls.on(Hls.Events.ERROR, function(ev, data){
-                        if (data && data.fatal) { _tvLiveHls.destroy(); _tvLiveHls = null; onFail(); }
+                        if (data && data.fatal) {
+                            _tvLiveHls.destroy(); _tvLiveHls = null;
+                            if (_tvHttpsUrl && !_tvTriedHttp) { _tvTriedHttp = true; _tvLoadHls(_tvOrigUrl); }
+                            else onFail();
+                        }
                     });
+                };
+                video.onerror = function() {
+                    if (_tvUsingHls) return; // error HLS ditangani _tvLoadHls
+                    if (_tvHttpsUrl && !_tvTriedHttp) {
+                        _tvTriedHttp = true;
+                        video.src = _tvOrigUrl; video.load();
+                        var p3 = video.play(); if (p3 && p3.catch) p3.catch(function(){});
+                    } else onFail();
+                };
+                if (_tvUsingHls) {
+                    _tvLoadHls(_tvUrl);
                 } else {
                     // Native HLS (Safari) atau file video langsung
-                    video.src = ch.url;
+                    video.src = _tvUrl;
                     video.load();
                     var p2 = video.play();
                     if (p2 && p2.catch) p2.catch(function(){});
@@ -3298,6 +3272,21 @@
             if (itemEl) itemEl.classList.add('playing');
 
             if (tv1Hls) { tv1Hls.destroy(); tv1Hls = null; }
+            video.onerror = null;
+            // FS-HARDEN: stream http:// -> coba https:// dulu (mixed content memblokir
+            // http di halaman https). Kalau https gagal total, fallback ke http:// aslinya.
+            var _tvOrigUrl = ch.url;
+            var _tvHttpsUrl = /^http:\/\//i.test(_tvOrigUrl) ? _tvOrigUrl.replace(/^http:\/\//i, 'https://') : null;
+            var _tvUrl = _tvHttpsUrl || _tvOrigUrl;
+            var _tvTriedHttp = false;
+            var _tvNativeFallback = function() {
+                if (_tvHttpsUrl && !_tvTriedHttp) {
+                    _tvTriedHttp = true;
+                    document.getElementById('tv1Status').textContent = '🔄 Coba fallback http:// untuk "' + ch.name + '"...';
+                    video.src = _tvOrigUrl;
+                    video.play().catch(function(){});
+                }
+            };
 
             if (ch.type === 'page') {
                 video.style.display = 'none';
@@ -3317,7 +3306,7 @@
                 video.style.display = 'none';
                 if (video.pause) video.pause();
                 iframe.style.display = 'block';
-                iframe.src = ch.url;
+                iframe.src = _tvUrl;
                 document.getElementById('tvPlayerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             }
@@ -3328,7 +3317,7 @@
             video.style.display = 'block';
 
             // Cek apakah HLS.js berhasil dimuat
-            if (ch.url.toLowerCase().includes('.m3u8') && window._hlsJsFailed) {
+            if (_tvUrl.toLowerCase().includes('.m3u8') && window._hlsJsFailed) {
                 if (window._showHlsWarning) window._showHlsWarning(ch.name);
                 overlay.classList.remove('hidden');
                 overlay.innerHTML = '<div style="font-size:1.5rem;margin-bottom:8px;">⚠️</div>' +
@@ -3340,7 +3329,7 @@
                 return;
             }
 
-            if (ch.url.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
+            if (_tvUrl.toLowerCase().includes('.m3u8') && window.Hls && Hls.isSupported()) {
                 let _hlsRetry = 0;
                 const _maxRetry = 3;
 
@@ -3361,6 +3350,12 @@
                                 document.getElementById('tv1Status').textContent =
                                     `🔄 Retry ${_hlsRetry}/${_maxRetry} untuk "${ch.name}"...`;
                                 setTimeout(() => _hlsLoad(url), 2000 * _hlsRetry);
+                            } else if (_tvHttpsUrl && !_tvTriedHttp) {
+                                _tvTriedHttp = true;
+                                _hlsRetry = 0;
+                                document.getElementById('tv1Status').textContent =
+                                    `🔄 Coba fallback http:// untuk "${ch.name}"...`;
+                                _hlsLoad(_tvOrigUrl);
                             } else {
                                 document.getElementById('tv1Status').innerHTML =
                                     `⚠️ <b>"${ch.name}"</b> gagal setelah ${_maxRetry}x retry. Stream offline / link mati.` +
@@ -3372,12 +3367,14 @@
                         }
                     });
                 }
-                _hlsLoad(ch.url);
+                _hlsLoad(_tvUrl);
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = ch.url;
+                video.onerror = _tvNativeFallback;
+                video.src = _tvUrl;
                 video.play().catch(() => {});
             } else {
-                video.src = ch.url;
+                video.onerror = _tvNativeFallback;
+                video.src = _tvUrl;
                 video.play().catch(() => {});
             }
 
@@ -4006,7 +4003,7 @@ function fsSchedRender(matches) {
             _lazyLoadIframe(paneId);
         }
 
-        // --- INJECT LINK DEWASA SETELAH PIN BENAR ---
+        // --- INJECT LINK DEWASA SETELAH LOGIN ---
         // Nama fungsi di-obfuscate agar tidak bisa di-call via address bar javascript:
         var _0x4f2a = (function() {
             var _rendered = false;
@@ -4134,133 +4131,75 @@ function fsSchedRender(matches) {
             }, 12000);
         });
 
-        // --- LOGIC PIN DEWASA (SHA-256 HASHED) ---
-        // PIN asli tidak tersimpan di source — hanya hash-nya
-        // SHA-256 dari PIN yang benar
-        const _PIN_HASH = 'e2135c76ca7863e51154829de3d9cb0a8f6398d31518c7581d370ed9cc521811';
-        let pinCurrent = '';
-        let pinLocked = false;
+        // --- GATE DEWASA: LOGIN GOOGLE (Firebase Auth) ---
+        // PIN dihapus. Link dewasa HANYA ditampilkan kalau pengguna sudah login
+        // Firebase (dipanggil lewat _injectDewasaLinks yang sudah ada).
+        // Migrasi link ke RTDB /adultLinks DITUNDA (akses console belum pulih).
+        const FS_FIREBASE_CONFIG = { apiKey: "AIzaSyCAXjaw82F1gdZUZfpDi1_9-5-ISU0aDVs", authDomain: "freedomsyndicatecloud.firebaseapp.com", databaseURL: "https://freedomsyndicatecloud-default-rtdb.firebaseio.com", projectId: "freedomsyndicatecloud", storageBucket: "freedomsyndicatecloud.firebasestorage.app", messagingSenderId: "915558934014", appId: "1:915558934014:web:08442d20712f2010f58caf" };
 
-        // Fungsi hash SHA-256 via Web Crypto API (async)
-        async function _sha256(str) {
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-        }
-
-        function pinUpdateDots() {
-            for (let i = 1; i <= 4; i++) {
-                const dot = document.getElementById('pd' + i);
-                dot.classList.toggle('filled', i <= pinCurrent.length);
+        function _fsFirebaseInit() {
+            if (typeof firebase === 'undefined') return false;
+            if (!firebase.apps || !firebase.apps.length) {
+                try { firebase.initializeApp(FS_FIREBASE_CONFIG); } catch (e) { return false; }
             }
+            return true;
         }
 
-        function pinPress(digit) {
-            if (pinLocked || pinCurrent.length >= 4) return;
-            pinCurrent += digit;
-            pinUpdateDots();
-            // Auto submit when 4 digits entered
-            if (pinCurrent.length === 4) {
-                setTimeout(pinSubmit, 180);
+        function dewasaLoginGoogle() {
+            var st = document.getElementById('dewasaLoginStatus');
+            if (st) st.textContent = '⏳ Membuka login Google...';
+            if (!_fsFirebaseInit()) {
+                if (st) st.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
+                return;
             }
-        }
-
-        function pinClear() {
-            if (pinLocked) return;
-            pinCurrent = pinCurrent.slice(0, -1);
-            pinUpdateDots();
-            document.getElementById('pinStatusMsg').textContent = '';
-            document.getElementById('pinStatusMsg').style.color = '';
-        }
-
-        async function pinSubmit() {
-            if (pinCurrent.length === 0) return;
-            // Hash input user lalu bandingkan dengan stored hash
-            const inputHash = await _sha256(pinCurrent);
-            if (inputHash === _PIN_HASH) {
-                // Benar
-                document.getElementById('pinStatusMsg').textContent = '✅ Akses diberikan...';
-                document.getElementById('pinStatusMsg').style.color = '#4ade80';
-                for (let i = 1; i <= 4; i++) {
-                    const dot = document.getElementById('pd' + i);
-                    dot.style.background = '#4ade80';
-                    dot.style.borderColor = '#4ade80';
-                    dot.style.boxShadow = '0 0 10px rgba(74,222,128,0.7)';
-                }
-                pinLocked = true;
-                // PANGGIL FUNGSINYA DI SINI — inject link setelah PIN benar
-                _injectDewasaLinks();
-                setTimeout(() => {
-                    document.getElementById('dewasaPinScreen').style.display = 'none';
-                    document.getElementById('dewasaContent').style.display = 'block';
-                }, 700);
-            } else {
-                // Salah
-                pinLocked = true;
-                document.getElementById('pinStatusMsg').textContent = '❌ PIN SALAH!';
-                document.getElementById('pinStatusMsg').style.color = '#f87171';
-                const dots = document.querySelectorAll('.pin-dot');
-                dots.forEach(d => { d.classList.add('shake'); d.style.background = 'rgba(239,68,68,0.4)'; d.style.borderColor = '#ef4444'; });
-                setTimeout(() => {
-                    dots.forEach(d => d.classList.remove('shake'));
-                    document.getElementById('pinNumpad').style.display = 'none';
-                    document.getElementById('pinDeniedBox').style.display = 'block';
-                    document.getElementById('pinStatusMsg').textContent = '';
-                }, 500);
-            }
-        }
-
-        function pinReset() {
-            pinCurrent = '';
-            pinLocked = false;
-            pinUpdateDots();
-            const dots = document.querySelectorAll('.pin-dot');
-            dots.forEach(d => {
-                d.classList.remove('filled', 'shake');
-                d.style.background = '';
-                d.style.borderColor = '';
-                d.style.boxShadow = '';
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider).catch(function(err){
+                if (st) st.textContent = '⚠️ Gagal login: ' + (err && err.message ? err.message : err);
             });
-            document.getElementById('pinStatusMsg').textContent = '';
-            document.getElementById('pinStatusMsg').style.color = '';
-            document.getElementById('pinDeniedBox').style.display = 'none';
-            document.getElementById('pinNumpad').style.display = 'grid';
         }
 
-        // Reset PIN state setiap kali tab dewasa dibuka (inject ke openTab yang ada)
-        // Patch dilakukan setelah DOM ready via event listener
+        function dewasaGate() {
+            var loginScreen = document.getElementById('dewasaLoginScreen');
+            var content = document.getElementById('dewasaContent');
+            if (!loginScreen || !content) return;
+            if (!_fsFirebaseInit()) {
+                loginScreen.style.display = 'block';
+                content.style.display = 'none';
+                var st0 = document.getElementById('dewasaLoginStatus');
+                if (st0) st0.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
+                return;
+            }
+            var user = null;
+            try { user = firebase.auth().currentUser; } catch (e) { user = null; }
+            if (!user) {
+                loginScreen.style.display = 'block';
+                content.style.display = 'none';
+                return;
+            }
+            // Sudah login: tampilkan konten + inject link dewasa (fungsi yang sudah ada).
+            loginScreen.style.display = 'none';
+            content.style.display = 'block';
+            if (typeof _injectDewasaLinks === 'function') _injectDewasaLinks();
+        }
+
+        // Jalankan gate setiap kali tab dewasa dibuka (ganti patch PIN lama).
+        // Auth state dipulihkan async setelah redirect login — cek ulang saat berubah.
         document.addEventListener('DOMContentLoaded', () => {
             const origOpenTab = window.openTab;
             window.openTab = function(tabId, btnElement) {
                 origOpenTab(tabId, btnElement);
-                if (tabId === 'dewasa') {
-                    if (document.getElementById('dewasaContent').style.display !== 'block') {
-                        pinReset();
-                    }
-                }
+                if (tabId === 'dewasa') dewasaGate();
             };
+            if (typeof firebase !== 'undefined') {
+                _fsFirebaseInit();
+                try {
+                    firebase.auth().onAuthStateChanged(function(){
+                        var dw = document.getElementById('dewasa');
+                        if (dw && dw.classList.contains('active')) dewasaGate();
+                    });
+                } catch (e) {}
+            }
         });
-
-        // Keyboard support untuk PIN (bubble phase — setelah security capture layer)
-        document.addEventListener('keydown', (e) => {
-            const dewasaActive = document.getElementById('dewasa').classList.contains('active');
-            if (!dewasaActive) return;
-            if (document.getElementById('dewasaContent').style.display === 'block') return;
-            // Angka 0-9
-            if (e.key >= '0' && e.key <= '9') {
-                e.stopPropagation();
-                pinPress(e.key);
-            }
-            // Hapus digit terakhir
-            else if (e.key === 'Backspace') {
-                e.stopPropagation();
-                pinClear();
-            }
-            // Submit
-            else if (e.key === 'Enter') {
-                e.stopPropagation();
-                pinSubmit();
-            }
-        }, false); // false = bubble phase, jalan setelah capture
     </script>
     <!-- FS: buka tab dari hash (#trading, #movie, #tvchannel, #chatai, dst.)
          dipakai oleh bottom nav di journal.html / garapan.html. -->

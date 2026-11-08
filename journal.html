@@ -44,12 +44,12 @@
         };
     </script>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha384-ViccRjS0k/lvYsrtaKXk+ES61/4PAZlFI/mPHmLC1YWzK0AIbXbI5ZXDzcm3F8gH" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" integrity="sha384-f6/UpzjTjIXASlp20cArQsaRh1EvHVJd5kegy/gYR9W2D0a32TnEqUEiW4Zm/5O0" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js" integrity="sha384-QQBwnzmpf8eCm7WvgJ/dpvJ51cajsTkfDMgOq5QVBZav9687X5xjlZo8zroLyU3+" crossorigin="anonymous"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600&display=swap');
@@ -1395,9 +1395,6 @@
                 <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0; font-size:14px;">🔗 Account MT5</h2>
                 <p style="font-size:10px; color:#9ca3af; line-height:1.6;">Simpan detail akun MT5 kamu di sini. Data ini nantinya dipakai untuk menghubungkan Journal & Monitor dengan akun trading kamu secara otomatis (integrasi sinkronisasi real-time menyusul).</p>
 
-                <div style="background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.25); border-radius:12px; padding:12px 14px; margin:14px 0; font-size:9.5px; color:#eab308; line-height:1.6;">
-                    ⚠️ <b>Gunakan Investor Password (read-only)</b>, JANGAN pakai master/trading password. Investor password cuma bisa lihat data akun & history, nggak bisa buka/tutup posisi atau withdraw. Cek di MT5: <i>Tools → Options → Server</i> atau minta ke broker kamu.
-                </div>
 
                 <div id="mt5-status-badge" style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid #1f2937; border-radius:10px; padding:10px 14px; margin-bottom:16px; font-size:10px; color:#9ca3af;">
                     <span id="mt5-status-dot" style="width:8px; height:8px; border-radius:50%; background:#4b5563; flex-shrink:0;"></span>
@@ -1407,7 +1404,6 @@
                 <form id="mt5-form" onsubmit="return saveMt5Account(event)">
                     <div class="form-item"><label>🏦 Broker</label><input type="text" id="mt5-broker" placeholder="Contoh: Exness, XM, IC Markets" required></div>
                     <div class="form-item"><label>🆔 Account ID / Login</label><input type="text" id="mt5-login" inputmode="numeric" placeholder="Contoh: 12345678" required></div>
-                    <div class="form-item"><label>🔑 Investor Password</label><input type="password" id="mt5-password" placeholder="Investor password (read-only)" required></div>
                     <div class="form-item"><label>🌐 Server</label><input type="text" id="mt5-server" placeholder="Contoh: Exness-MT5Real8" required></div>
                     <button type="submit" class="btn-save">💾 SIMPAN AKUN</button>
                 </form>
@@ -2756,6 +2752,9 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const status = document.getElementById('proof-status');
             const btn    = document.getElementById('btn-send-proof');
 
+            // FS-HARDEN: bukti bayar wajib login dulu (sebelum upload ImgBB maupun tulis RTDB).
+            if (!curUser) { alert('Login dulu.'); return; }
+
             if (!proofImageFile) {
                 status.style.color = '#ef4444';
                 status.textContent = '❌ Upload foto bukti pembayaran dulu!';
@@ -2787,7 +2786,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 if (!data.success) throw new Error(data.error?.message || 'Upload ImgBB gagal');
 
                 const imageUrl  = data.data.url;
-                const deleteUrl = data.data.delete_url;
 
                 status.textContent = 'Menyimpan data...';
 
@@ -2796,7 +2794,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     package:     selectedPlan.label,
                     nominal:     selectedPlan.nominal,
                     imageUrl:    imageUrl,
-                    deleteUrl:   deleteUrl,
                     submittedAt: Date.now(),
                     status:      'pending'
                 };
@@ -3471,7 +3468,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     document.getElementById('mt5-broker').value = d.broker || '';
                     document.getElementById('mt5-login').value = d.login || '';
                     document.getElementById('mt5-server').value = d.server || '';
-                    document.getElementById('mt5-password').value = d.password || '';
                     dot.style.background = 'var(--green)'; dot.style.boxShadow = '0 0 6px var(--green)';
                     txt.innerHTML = `Tersimpan: <b>${d.login}</b> @ ${d.broker} (${d.server})`;
                 } else {
@@ -4112,6 +4108,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 const customUrl = () => (window.FS_AI_ENDPOINT || ls.get(K_EP, '') || '').trim();
                 body.innerHTML = `<div style="display:flex;justify-content:flex-end;gap:2px;padding:4px 8px;border-bottom:1px solid #1f2937"><button class="tw-hb" data-a="cfg" title="Pengaturan AI">⚙</button><button class="tw-hb" data-a="reset" title="Mulai ulang">↻</button></div>
                 <div class="cf" style="display:none;padding:10px 12px;border-bottom:1px solid #1f2937">
+                    <div class="tw-note" style="margin:0 0 8px;color:#fbbf24;border:1px solid rgba(251,191,36,0.35);background:rgba(251,191,36,0.08);border-radius:8px;padding:8px 10px;">⚠️ <b>Keamanan kunci:</b> API key yang kamu tempel hanya tersimpan di browser HP/komputer kamu sendiri — tidak dikirim ke server FS. Jangan tempel kunci milik orang lain, dan hapus jika sudah tidak dipakai. Paling aman: pakai <b>Freedom AI (gratis, tanpa key)</b>.</div>
                     <label class="tw-lbl">Sumber AI</label>
                     <select class="tw-sel c-pv" style="margin-bottom:8px"><option value="fs">⭐ Freedom AI — gratis untuk member (tanpa API key)</option><option value="poll">Pollinations — langsung jawab, tanpa login &amp; tanpa API key</option><option value="gemini">Gemini — API key gratis (paling stabil)</option><option value="openai">OpenAI — API key sendiri</option><option value="anthropic">Claude (Anthropic) — API key sendiri</option><option value="openrouter">OpenRouter — 1 key, banyak model</option><option value="groq">Groq — API key gratis</option><option value="deepseek">DeepSeek — API key sendiri</option><option value="puter">Puter — butuh login Puter</option><option value="custom">Endpoint sendiri (POST JSON)</option></select>
                     <div class="c-puter"><label class="tw-lbl">Model</label><select class="tw-sel c-md">${MODELS.map(m => `<option value="${m[0]}">${esc(m[1])}</option>`).join('')}</select><div class="tw-note" style="margin-top:6px">Pertama kali dipakai akan muncul popup login/daftar Puter (gratis). Izinkan popup di browser.</div></div>
