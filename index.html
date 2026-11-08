@@ -1726,8 +1726,8 @@
             <div style="display:flex;gap:8px;margin-bottom:10px;">
                 <select id="aiModel" onchange="aiOnModelChange()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:10px;border-radius:10px;font-size:0.8rem;">
                     <optgroup label="Gratis tanpa kunci — LLM7">
-                        <option value="llm7:default" selected>LLM7 — Otomatis (gratis, tanpa kunci)</option>
-                        <option value="llm7:gpt-oss:20b">LLM7 — GPT-OSS 20B</option>
+                        <option value="llm7:default">LLM7 — Otomatis (gratis, tanpa kunci)</option>
+                        <option value="llm7:gpt-oss:20b" selected>LLM7 — GPT-OSS 20B</option>
                     </optgroup>
                     <optgroup label="SinarCloud — via FS (Gemini dll.)">
                         <option value="sinar:google/gemini-3-1-pro">Gemini 3.1 Pro</option>
@@ -1755,6 +1755,35 @@
         var AI_LLM7_URL = 'https://api.llm7.io/v1/chat/completions';
         var aiHistory = [];
         var aiBusy = false;
+        var AI_SYS = 'Kamu adalah AI Assistant FREEDOM SYNDICATE. Jawab SELALU dalam Bahasa Indonesia, ringkas dan jelas. Jika ditanya harga kripto, pakai data harga live yang diberikan dan sebutkan harganya; jangan mengarang angka. Jika tidak ada data harga, katakan terus terang.';
+        var AI_COINS = ['BTC','ETH','SOL','XRP','BNB','DOGE','ADA','PAXG','TRX','LINK','AVAX','DOT','LTC'];
+        async function aiLivePrices(text) {
+          var found = [];
+          var up = (text || '').toUpperCase();
+          AI_COINS.forEach(function(c){ if (new RegExp('\\b' + c + '\\b').test(up) && found.indexOf(c) < 0) found.push(c); });
+          if (!found.length) return '';
+          var hosts = ['https://api.binance.com', 'https://data-api.binance.vision'];
+          var parts = [];
+          await Promise.all(found.slice(0, 5).map(async function(c){
+            var sym = c + 'USDT';
+            for (var i = 0; i < hosts.length; i++) {
+              try {
+                var r = await fetch(hosts[i] + '/api/v3/ticker/price?symbol=' + sym);
+                if (!r.ok) continue;
+                var j = await r.json();
+                if (j && j.price) { parts.push(c + ' $' + Number(j.price).toLocaleString('en-US', { maximumFractionDigits: 2 })); return; }
+              } catch (e) {}
+            }
+          }));
+          if (!parts.length) return '';
+          return '\n\n[HARGA LIVE Binance, ' + new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ']: ' + parts.join(', ') + '.';
+        }
+        function aiFmt(s) {
+          var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          e = e.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+          e = e.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:#38bdf8;">$1</a>');
+          return e;
+        }
         function aiBubble(role, text) {
           var box = document.getElementById('aiChat');
           var div = document.createElement('div');
@@ -1773,7 +1802,7 @@
             div.textContent = text;
           } else {
             div.style.background = 'rgba(148,163,184,0.12)';
-            div.textContent = text;
+            div.innerHTML = aiFmt(text);
           }
           box.appendChild(div);
           box.scrollTop = box.scrollHeight;
@@ -1803,12 +1832,14 @@
           btn.disabled = true;
           try {
             var url, body;
+            var priceCtx = await aiLivePrices(text);
+            var msgs = [{ role: 'system', content: AI_SYS + priceCtx }].concat(aiHistory.slice());
             if (backend === 'sinar') {
               url = AI_WORKER_URL + '/v1/chat/completions';
-              body = { model: model, messages: aiHistory.slice(), max_tokens: 800 };
+              body = { model: model, messages: msgs, max_tokens: 800 };
             } else {
               url = AI_LLM7_URL;
-              body = { model: model, messages: aiHistory.slice(), max_tokens: 800 };
+              body = { model: model, messages: msgs, max_tokens: 800 };
             }
             var res = await fetch(url, {
               method: 'POST',
@@ -1823,7 +1854,7 @@
             var reply = data && data.choices && data.choices[0] && data.choices[0].message
               ? data.choices[0].message.content : '';
             if (!reply) throw new Error('Jawaban kosong dari AI.');
-            thinking.textContent = reply;
+            thinking.innerHTML = aiFmt(reply);
             aiHistory.push({ role: 'assistant', content: reply });
           } catch (e) {
             thinking.remove();
