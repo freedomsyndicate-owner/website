@@ -697,13 +697,15 @@
                 status.textContent = '⚠️ Pesan tidak boleh kosong!';
                 return;
             }
-            // Token bot dihapus dari kode browser — share diarahkan ke Telegram.
-            const teks = `📢 *Share Garapan*\n👤 ${nama || 'Anonim'}\n\n${pesan}`;
+            // Tanpa token bot di browser: bagikan lewat link share Telegram
+            // (pesan sudah terisi, tinggal pilih grup/chat tujuan) + salin ke clipboard.
+            const teks = `📢 Share Garapan\n👤 ${nama || 'Anonim'}\n\n${pesan}`;
+            try { await navigator.clipboard.writeText(teks); } catch (e) {}
             status.style.color = '#38bdf8';
-            status.textContent = '⏳ Mengirim...';
-            status.style.color = '#38bdf8';
-            status.textContent = '🔗 Membuka Telegram — silakan bagikan garapanmu di grup Freedom Syndicate.';
-            window.open('https://t.me/freedomsyndicate', '_blank', 'noopener');
+            status.textContent = '🔗 Membuka Telegram — pesan sudah terisi & tersalin, tinggal pilih grup Freedom Syndicate lalu kirim.';
+            window.open('https://t.me/share/url?url=' + encodeURIComponent('https://freedomsyndicate.my.id') + '&text=' + encodeURIComponent(teks), '_blank', 'noopener');
+            document.getElementById('shareMsg').value = '';
+            document.getElementById('shareNama').value = '';
             return;
         }
 
