@@ -1756,22 +1756,34 @@
         var aiHistory = [];
         var aiBusy = false;
         var AI_SYS = 'Kamu adalah AI Assistant FREEDOM SYNDICATE. Jawab SELALU dalam Bahasa Indonesia, ringkas dan jelas. Jika ditanya harga kripto, pakai data harga live yang diberikan dan sebutkan harganya; jangan mengarang angka. Jika tidak ada data harga, katakan terus terang.';
-        var AI_COINS = ['BTC','ETH','SOL','XRP','BNB','DOGE','ADA','PAXG','TRX','LINK','AVAX','DOT','LTC'];
+        var AI_COINS = [
+          { code: 'BTC', sym: 'BTCUSDT' }, { code: 'ETH', sym: 'ETHUSDT' },
+          { code: 'SOL', sym: 'SOLUSDT' }, { code: 'XRP', sym: 'XRPUSDT' },
+          { code: 'BNB', sym: 'BNBUSDT' }, { code: 'DOGE', sym: 'DOGEUSDT' },
+          { code: 'ADA', sym: 'ADAUSDT' }, { code: 'PAXG', sym: 'PAXGUSDT' },
+          { code: 'TRX', sym: 'TRXUSDT' }, { code: 'LINK', sym: 'LINKUSDT' },
+          { code: 'AVAX', sym: 'AVAXUSDT' }, { code: 'DOT', sym: 'DOTUSDT' },
+          { code: 'LTC', sym: 'LTCUSDT' },
+          { code: 'XAU', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' },
+          { code: 'EMAS', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' },
+          { code: 'GOLD', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' }
+        ];
         async function aiLivePrices(text) {
           var found = [];
           var up = (text || '').toUpperCase();
-          AI_COINS.forEach(function(c){ if (new RegExp('\\b' + c + '\\b').test(up) && found.indexOf(c) < 0) found.push(c); });
+          AI_COINS.forEach(function(c){
+            if (new RegExp('\\b' + c.code + '(?:USDT|USD)?\\b').test(up) && !found.some(function(f){ return f.sym === c.sym; })) found.push(c);
+          });
           if (!found.length) return '';
           var hosts = ['https://api.binance.com', 'https://data-api.binance.vision'];
           var parts = [];
           await Promise.all(found.slice(0, 5).map(async function(c){
-            var sym = c + 'USDT';
             for (var i = 0; i < hosts.length; i++) {
               try {
-                var r = await fetch(hosts[i] + '/api/v3/ticker/price?symbol=' + sym);
+                var r = await fetch(hosts[i] + '/api/v3/ticker/price?symbol=' + c.sym);
                 if (!r.ok) continue;
                 var j = await r.json();
-                if (j && j.price) { parts.push(c + ' $' + Number(j.price).toLocaleString('en-US', { maximumFractionDigits: 2 })); return; }
+                if (j && j.price) { parts.push((c.label || c.code) + ' $' + Number(j.price).toLocaleString('en-US', { maximumFractionDigits: 2 })); return; }
               } catch (e) {}
             }
           }));
