@@ -1756,39 +1756,48 @@
         var aiHistory = [];
         var aiBusy = false;
         var AI_SYS = 'Kamu adalah AI Assistant FREEDOM SYNDICATE. Jawab SELALU dalam Bahasa Indonesia, ringkas dan jelas. Jika ditanya harga kripto, pakai data harga live yang diberikan dan sebutkan harganya; jangan mengarang angka. Jika tidak ada data harga, katakan terus terang.';
-        var AI_COINS = [
-          { code: 'BTC', sym: 'BTCUSDT' }, { code: 'ETH', sym: 'ETHUSDT' },
-          { code: 'SOL', sym: 'SOLUSDT' }, { code: 'XRP', sym: 'XRPUSDT' },
-          { code: 'BNB', sym: 'BNBUSDT' }, { code: 'DOGE', sym: 'DOGEUSDT' },
-          { code: 'ADA', sym: 'ADAUSDT' }, { code: 'PAXG', sym: 'PAXGUSDT' },
-          { code: 'TRX', sym: 'TRXUSDT' }, { code: 'LINK', sym: 'LINKUSDT' },
-          { code: 'AVAX', sym: 'AVAXUSDT' }, { code: 'DOT', sym: 'DOTUSDT' },
-          { code: 'LTC', sym: 'LTCUSDT' },
-          { code: 'XAU', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' },
-          { code: 'EMAS', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' },
-          { code: 'GOLD', sym: 'PAXGUSDT', label: 'XAUUSD (emas)' }
-        ];
+        // Harga live dari TradingView (scanner API, gratis, tanpa kunci) — simbol
+        // apa pun yang disebut user langsung dicoba: kripto via BINANCE, emas
+        // (XAU/EMAS/GOLD) via OANDA:XAUUSD, forex via OANDA, saham via NASDAQ/NYSE.
+        // Tidak ada daftar koin tetap.
+        var AI_GOLD = { XAU: 1, EMAS: 1, GOLD: 1 };
+        var AI_STOP = { HARGA:1, CEK:1, BERAPA:1, SAAT:1, INI:1, SEKARANG:1, TOLONG:1, APA:1, BAGAIMANA:1, GIMANA:1, DAN:1, ATAU:1, YANG:1, DI:1, KE:1, DARI:1, UNTUK:1, DENGAN:1, SAYA:1, KAMU:1, AKU:1, KITA:1, DIA:1, ITU:1, JIKA:1, KALAU:1, BISA:1, MOHON:1, MAU:1, INGIN:1, TIDAK:1, NGGAK:1, GAK:1, LAGI:1, MASIH:1, SUDAH:1, BELUM:1, DONG:1, YA:1, SIH:1, AJA:1, SAJA:1, TANYA:1, LIHAT:1, KASIH:1, BERIKAN:1, INFO:1, TERKINI:1, LIVE:1, UPDATE:1, SEMUA:1, HARUS:1, TAU:1, TAHU:1, KENAPA:1, ORANG:1, MEREKA:1 };
+        function aiTvTickers(w) {
+          var base = w.replace(/(USDT|USD)$/, '');
+          if (AI_GOLD[base] || AI_GOLD[w]) return { label: 'XAUUSD (emas)', tickers: ['OANDA:XAUUSD', 'FOREXCOM:XAUUSD'] };
+          if (/^(EUR|GBP|AUD|NZD|USD|CAD|CHF|JPY|CNY|SEK|NOK|DKK|PLN|CZK|HUF|TRY|ZAR|MXN|SGD|HKD)(USD|EUR|GBP|JPY|AUD|CAD|CHF|NZD)$/.test(w) && w.length === 6) return { label: w, tickers: ['OANDA:' + w] };
+          if (!base || base.length < 2) return null;
+          return { label: base, tickers: ['BINANCE:' + base + 'USDT', 'BINANCE:' + base + 'USD', 'NASDAQ:' + base, 'NYSE:' + base] };
+        }
+        function aiFmtPrice(p) {
+          if (p >= 10) return p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          if (p >= 0.01) return p.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+          return String(Number(p.toPrecision(4)));
+        }
         async function aiLivePrices(text) {
-          var found = [];
           var up = (text || '').toUpperCase();
-          AI_COINS.forEach(function(c){
-            if (new RegExp('\\b' + c.code + '(?:USDT|USD)?\\b').test(up) && !found.some(function(f){ return f.sym === c.sym; })) found.push(c);
-          });
-          if (!found.length) return '';
-          var hosts = ['https://api.binance.com', 'https://data-api.binance.vision'];
-          var parts = [];
-          await Promise.all(found.slice(0, 5).map(async function(c){
-            for (var i = 0; i < hosts.length; i++) {
+          if (!/HARGA|PRICE|CEK|BERAPA/.test(up) && up.trim().split(/\s+/).length > 2) return '';
+          var words = up.match(/\b[A-Z]{2,12}\b/g) || [];
+          var cands = [];
+          words.forEach(function(w){ if (!AI_STOP[w] && cands.indexOf(w) < 0) cands.push(w); });
+          if (!cands.length) return '';
+          var results = await Promise.all(cands.slice(0, 5).map(async function(w){
+            var t = aiTvTickers(w);
+            if (!t) return null;
+            for (var i = 0; i < t.tickers.length; i++) {
               try {
-                var r = await fetch(hosts[i] + '/api/v3/ticker/price?symbol=' + c.sym);
+                var r = await fetch('https://scanner.tradingview.com/symbol?symbol=' + encodeURIComponent(t.tickers[i]) + '&fields=close');
                 if (!r.ok) continue;
                 var j = await r.json();
-                if (j && j.price) { parts.push((c.label || c.code) + ' $' + Number(j.price).toLocaleString('en-US', { maximumFractionDigits: 2 })); return; }
+                if (j && typeof j.close === 'number') return { label: t.label, price: j.close, ticker: t.tickers[i] };
               } catch (e) {}
             }
+            return null;
           }));
+          var seen = {}, parts = [];
+          results.forEach(function(p){ if (p && !seen[p.ticker]) { seen[p.ticker] = 1; parts.push(p.label + ' $' + aiFmtPrice(p.price)); } });
           if (!parts.length) return '';
-          return '\n\n[HARGA LIVE Binance, ' + new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ']: ' + parts.join(', ') + '.';
+          return '\n\n[HARGA LIVE TradingView, ' + new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ']: ' + parts.join(', ') + '.';
         }
         function aiFmt(s) {
           var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
