@@ -4048,9 +4048,12 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             deepseek: { name: 'DeepSeek', fmt: 'openai', url: 'https://api.deepseek.com/chat/completions', model: 'deepseek-chat', note: 'Key: platform.deepseek.com (jika diblokir browser, pakai OpenRouter).' }
         };
 
-        /* ---------- FREEDOM AI: gratis untuk member lewat Cloudflare Worker (tempel URL Worker di bawah) ---------- */
-        const FS_AI_PROXY = 'https://fs-ai.pages.dev';
-        const fsOn = () => /^https:\/\//.test(FS_AI_PROXY);
+        /* ---------- FREEDOM AI: gratis untuk member, langsung ke LLM7 (tanpa key) ----------
+           Dulu lewat proxy fs-ai.pages.dev, tapi proxy itu menolak origin
+           freedomsyndicate.my.id (allowlist-nya hanya github.io) dan sumber
+           kodenya tidak ada di mana pun — jadi sekarang langsung ke LLM7
+           gpt-oss:20b, sama seperti tab Chat Ai. Login member tetap wajib. */
+        const fsOn = () => true;
 
         /* ---------- AI CONTEXT: data pasar live + statistik jurnal ---------- */
         const AI_HTF = { '15m': '1h', '1h': '4h', '4h': '1d', '1d': '1w' };
@@ -4167,13 +4170,21 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     throw err;
                 }
                 async function askFS(sentImg) {
-                    if (!fsOn()) throw new Error('Server Freedom AI belum diaktifkan oleh admin.');
+                    // Freedom AI langsung ke LLM7 (gratis, tanpa key). Login member tetap wajib.
                     const u = auth.currentUser; if (!u) throw new Error('Silakan login dulu.');
-                    const tk = await u.getIdToken();
-                    const r = await fetch(FS_AI_PROXY, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tk }, body: JSON.stringify({ messages: hist.slice(-12), image: sentImg, context: ctx }) });
+                    // LLM7 gpt-oss:20b tidak bisa baca gambar — chart dikirim lewat Pollinations (gratis, bisa baca gambar).
+                    if (sentImg) return askPoll(sentImg);
+                    const msgs = [{ role: 'system', content: SYS + (ctx ? '\n\n' + ctx : '') }].concat(hist.slice(-12).map(m => ({ role: m.role, content: m.content })));
+                    const r = await fetch('https://api.llm7.io/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'gpt-oss:20b', messages: msgs, max_tokens: 1200 }) });
                     const j = await r.json().catch(() => ({}));
-                    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-                    return j.reply || 'AI tidak memberi jawaban.';
+                    if (!r.ok) {
+                        const msg = (j.error && (j.error.message || j.error)) || ('HTTP ' + r.status);
+                        if (/quota/i.test(msg)) throw new Error('Kuota harian LLM7 habis, coba lagi nanti atau ganti sumber AI di ⚙ (Pollinations / Gemini).');
+                        throw new Error(msg);
+                    }
+                    const t = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+                    if (!t) throw new Error('balasan kosong');
+                    return t;
                 }
                 async function askKey(pv, sentImg) {
                     const P = PROV[pv], key = ls.get('fs_ai_key_' + pv, ''); if (!key) throw new Error('API key ' + P.name + ' belum diisi (tekan ⚙).');
