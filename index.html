@@ -1404,15 +1404,6 @@
             border: 1px solid rgba(255,255,255,0.14); color: #cbd5e1; border-radius: 10px;
             width: 40px; height: 40px; font-size: 1rem; cursor: pointer;
         }
-        /* Navigasi cepat di Beranda: 6 jalan pintas ke tab utama */
-        .quick-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 22px 0 6px; }
-        .quick-nav button {
-            background: var(--glass-bg); border: 1px solid var(--glass-border); color: #e2e8f0;
-            border-radius: 14px; padding: 14px 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); min-height: 56px;
-        }
-        .quick-nav button span { display: block; font-size: 1.3rem; margin-bottom: 4px; }
-        .quick-nav button:active { transform: scale(0.96); }
         /* Bottom nav HP: 5 tab utama, gampang dijangkau jempol */
         .bottomnav {
             display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
@@ -1432,10 +1423,6 @@
             .bottomnav { display: block; }
             .main-wrapper { padding-bottom: 110px !important; }
             .topbar-ai { padding: 8px 10px; }
-            .quick-nav { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (min-width: 769px) {
-            .quick-nav { grid-template-columns: repeat(6, 1fr); }
         }
         button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
             outline: 2px solid var(--primary); outline-offset: 2px;
@@ -1595,7 +1582,7 @@
         <div id="home" class="tab-content active">
             <div class="intro-box">
                 <p class="description">
-                    <b>Freedom Syndicate</b> didirikan sebagai persekutuan jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b> dengan adrenalin <b>Bermain Game</b> dan harmoni <b>Musik</b> yang membebaskan. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
+                    <b>Freedom Syndicate</b> adalah rumah bagi jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b>, serunya <b>Game</b>, dan harmoni <b>Musik</b> yang membebaskan — ditambah <b>Movie</b>, <b>Live TV</b>, <b>Komik</b>, <b>Chat Ai</b>, dan <b>Garapan</b> gratis yang sudah dicek. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
                 </p>
             </div>
             <div class="social-grid">
@@ -1605,15 +1592,6 @@
                 <a href="https://www.tiktok.com/@freedom_syndicate" class="social-btn btn-tt">TIKTOK</a>
                 <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
                 <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
-            </div>
-            <div class="quick-nav">
-                <button onclick="navTab('trading')"><span>📈</span>Trading</button>
-                <button onclick="navTab('movie')"><span>🎬</span>Movie</button>
-                <button onclick="navTab('musik')"><span>🎵</span>Musik</button>
-                <button onclick="navTab('tvchannel')"><span>📺</span>Live TV</button>
-                <button onclick="navTab('chatai')"><span>🤖</span>Chat Ai</button>
-                <button onclick="navTab('game')"><span>🎮</span>Game</button>
-                <button onclick="navTab('komik')"><span>📖</span>Komik</button>
             </div>
         </div>
 
@@ -3890,7 +3868,7 @@ function fsSchedRender(matches) {
             overlay.classList.toggle('active');
         }
 
-        // --- LOGIC NAVIGASI CEPAT (topbar / quick-nav / bottomnav) ---
+        // --- LOGIC NAVIGASI CEPAT (topbar / bottomnav) ---
         function navTab(tabId) {
             var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + tabId + '\'"]');
             if (btn) { openTab(tabId, btn); return; }
