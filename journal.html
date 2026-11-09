@@ -2017,7 +2017,7 @@
             <div class="hm-sec"><b>📰 Berita Terbaru</b><button class="hm-allbtn" onclick="FSX.go('news-tab')">Buka ›</button></div>
             <div class="fsx-card" id="hm-news"><div class="fsx-empty">Memuat berita…</div></div>
 
-            <div class="hm-sec"><b>⏰ Sesi Pasar</b><button class="hm-allbtn" onclick="FSX.go('sesi-tab')">Buka ›</button></div>
+            <div class="hm-sec"><b>⏰ Sesi Quarter Theory</b><button class="hm-allbtn" onclick="FSX.go('sesi-tab')">Buka ›</button></div>
             <div class="fsx-card" id="hm-sess"></div>
         </div></div>
 
@@ -2055,7 +2055,7 @@
                 <div class="gl-leg" id="gl-leg"></div>
                 <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:9px;color:#9ca3af">Geser globe untuk memutar · beacon menyala = sesi buka</div></div>
             <div id="ss-list"></div>
-            <div class="fsx-note">Jam sesi adalah perkiraan (tanpa memperhitungkan DST). Overlap London–New York = volatilitas tertinggi.</div>
+            <div class="fsx-note">Sesi Quarter Theory (FS QT v4.9): Q1 Asia 06:00–12:00, Q2 London 12:00–18:00, Q3 New York 18:00–00:00, Q4 PM 00:00–06:00 WIB. Satu sesi buka dalam satu waktu — tidak ada lagi Tokyo terpisah, Tokyo masuk Q1 Asia.</div>
         </div></div>
 
         <!-- SAHAM GLOBAL -->
@@ -5248,14 +5248,15 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
         /* ---------- SESI + GLOBE ---------- */
         const pad = n => String(n).padStart(2, '0');
-        const SESS = [{ n: 'Sydney', f: '🇦🇺', s: 4, e: 13, lat: -33.87, lon: 151.21 }, { n: 'Tokyo', f: '🇯🇵', s: 7, e: 16, lat: 35.68, lon: 139.69 }, { n: 'London', f: '🇬🇧', s: 15, e: 24, lat: 51.5, lon: -0.12 }, { n: 'New York', f: '🇺🇸', s: 20, e: 29, lat: 40.71, lon: -74.0 }];
+        /* Sesi Quarter Theory (FS QT v4.9) — jam WIB, dihitung dari jam New York: Q1 Asia 06:00-12:00, Q2 London 12:00-18:00, Q3 New York 18:00-24:00, Q4 PM 00:00-06:00. Tokyo tidak berdiri sendiri, masuk Q1 Asia. */
+        const SESS = [{ n: 'Q1 Asia', f: '🌏', s: 6, e: 12, lat: 35.68, lon: 139.69 }, { n: 'Q2 London', f: '🇬🇧', s: 12, e: 18, lat: 51.5, lon: -0.12 }, { n: 'Q3 New York', f: '🇺🇸', s: 18, e: 24, lat: 40.71, lon: -74.0 }, { n: 'Q4 PM', f: '🌙', s: 0, e: 6, lat: 40.71, lon: -74.0 }];
         function wibNow() {
             const o = {}; new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jakarta', hourCycle: 'h23', hour: '2-digit', minute: '2-digit', second: '2-digit', weekday: 'short' }).formatToParts(new Date()).forEach(x => o[x.type] = x.value);
             return { h: (+o.hour) % 24, m: +o.minute, s: +o.second, wd: { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[o.weekday] };
         }
         function sessState() {
             const t = wibNow(); const hh = t.h + t.m / 60;
-            const closedWk = t.wd === 0 || (t.wd === 6 && t.h >= 5) || (t.wd === 1 && t.h < 4);
+            const closedWk = t.wd === 0 || (t.wd === 6 && t.h >= 5) || (t.wd === 1 && t.h < 6);
             return SESS.map(s => { const e = s.e, open = !closedWk && ((hh >= s.s && hh < e) || (hh + 24 >= s.s && hh + 24 < e)); return Object.assign({}, s, { open }); });
         }
         const GL = { on: false, lon0: 100, lat0: 15, tex: null, img: null, drag: null, last: 0, init: false };
@@ -5785,7 +5786,7 @@ async function prices(){try{const syms=[...new Set(BK.map(k=>PAIRS[k].b))],j=awa
 async function scanAll(){if(busy||document.hidden)return;busy=true;const pick=(a,n,i)=>Array.from({length:Math.min(n,a.length)},(_,j)=>a[(i+j)%a.length]),L=[...pick(BK,6,rrB),...pick(YK,3,rrY)];rrB=(rrB+6)%BK.length;rrY=(rrY+3)%YK.length;
  await Promise.all(L.map(async k=>{try{CX[k]=await ctx(k);PX[k]=CX[k].p;FAIL[k]=0;scan(CX[k]);updRadar(k);SIG.forEach(s=>{if(s.pair===k&&(s.st==='pending'||s.st==='active'))step(s,PX[k])})}catch(e){FAIL[k]=1}}));busy=false;SIG=SIG.slice(0,400);lsw('fs_ls_v1',SIG);render()}
 async function scanFull(){for(let i=0;i<5;i++){while(busy)await new Promise(r=>setTimeout(r,500));await scanAll()}}
-function session(){const h=new Date().getUTCHours();return h>=13&&h<21?'New York':h>=7&&h<13?'London':h<7?'Asia (Tokyo)':'Sydney'}
+function session(){const h=new Date().getUTCHours();return h>=23||h<5?'Q1 Asia':h<11?'Q2 London':h<17?'Q3 New York':'Q4 PM'}
 function card(s,p){const P=PAIRS[s.pair],d=s.dir==='BUY'?1:-1,now=Date.now(),den=Math.abs(s.tp[2]-s.e)/P.pip,pend=s.st==='pending';
  const tp1p=Math.abs(s.tp[0]-s.e)/P.pip,live=pend?0:(s.h1?tp1p/2+pipsOf(s,p)/2:pipsOf(s,p)),mv=pend?0:pipsOf(s,p)*P.pip/Math.abs(s.sl0-s.e);
  const st=pend?`<span class="ls-tag">⏳ Menunggu · ${ago(now-s.t)}</span>`:s.h1?`<span class="ls-tag" style="color:#4ade80">✓ TP1 hit · ${ago(now-s.t1)}</span>`:`<span class="ls-tag" style="color:#eab308">● Aktif · ${ago(now-s.ft)}</span>`;
