@@ -2447,8 +2447,14 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
                         await auth.signInWithCredential(cred);
                         return; // onAuthStateChanged akan handle
                     }
+                    // Plugin ada tapi tidak mengembalikan credential — laporkan
+                    // alasannya supaya bisa diperbaiki, lalu jatuh ke redirect.
+                    alert('Login native gagal (tidak ada credential). Coba lagi atau login lewat browser.');
+                } else {
+                    // Plugin tidak ditemukan di APK ini — laporkan sekali.
+                    alert('Plugin login native tidak ditemukan di APK ini. Pastikan APK versi terbaru terpasang. Login dialihkan ke halaman Google.');
                 }
-            } catch (e) { /* jatuh ke redirect di bawah */ }
+            } catch (e) { alert('Login native gagal: ' + (e && e.message ? e.message : e) + '. Dialihkan ke halaman Google.'); }
             const p = new firebase.auth.GoogleAuthProvider();
             p.addScope('email');
             p.addScope('profile');
