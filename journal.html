@@ -2647,8 +2647,11 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const v = await fsModal(`<div style="font-size:12px;line-height:1.6;margin-bottom:16px">${text}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${fsBtn('0', 'BATAL', '#9ca3af')}${fsBtn('1', okLabel || 'YA', '#ef4444')}</div>`);
             return v === '1';
         }
+        // FS-HARDEN: escape HTML untuk data yang diketik user sebelum dimasukkan ke
+        // innerHTML/modal (cegah stored XSS). Dipakai fsPick + daftar bukti pembayaran.
+        function escHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         async function fsPick(email) {
-            const v = await fsModal(`<div style="font-size:12px;line-height:1.6;margin-bottom:4px">Aktifkan VIP untuk</div><div style="font-size:11px;color:#eab308;margin-bottom:14px;word-break:break-all">${email}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">${fsBtn('1', '1 BULAN', '#eab308')}${fsBtn('3', '3 BULAN', '#eab308')}${fsBtn('6', '6 BULAN', '#eab308')}${fsBtn('12', '12 BULAN', '#eab308')}</div>${fsBtn('0', '♾️ PERMANEN', '#c084fc').replace('<button', '<button style="width:100%;margin-bottom:8px;padding:11px 6px;border-radius:10px;border:1px solid #c084fc88;background:#c084fc22;color:#c084fc;font-family:Orbitron;font-size:9px;font-weight:bold;cursor:pointer"').replace(/style="padding[^"]*"/, '')}${fsBtn('x', 'BATAL', '#9ca3af').replace('<button', '<button style="width:100%"')}`);
+            const v = await fsModal(`<div style="font-size:12px;line-height:1.6;margin-bottom:4px">Aktifkan VIP untuk</div><div style="font-size:11px;color:#eab308;margin-bottom:14px;word-break:break-all">${escHtml(email)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">${fsBtn('1', '1 BULAN', '#eab308')}${fsBtn('3', '3 BULAN', '#eab308')}${fsBtn('6', '6 BULAN', '#eab308')}${fsBtn('12', '12 BULAN', '#eab308')}</div>${fsBtn('0', '♾️ PERMANEN', '#c084fc').replace('<button', '<button style="width:100%;margin-bottom:8px;padding:11px 6px;border-radius:10px;border:1px solid #c084fc88;background:#c084fc22;color:#c084fc;font-family:Orbitron;font-size:9px;font-weight:bold;cursor:pointer"').replace(/style="padding[^"]*"/, '')}${fsBtn('x', 'BATAL', '#9ca3af').replace('<button', '<button style="width:100%"')}`);
             return (v === null || v === 'x') ? null : +v;
         }
         function fsNote(t, c) {
@@ -2766,7 +2769,9 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 status.textContent = '❌ Upload foto bukti pembayaran dulu!';
                 return;
             }
-            if (!email || !email.includes('@')) {
+            // FS-HARDEN: tolak karakter HTML/kutip di email (lapis pertahanan tambahan;
+            // pengaman utama tetap escHtml saat render di daftar owner).
+            if (!email || !email.includes('@') || /[<>"']/.test(email)) {
                 status.style.color = '#ef4444';
                 status.textContent = '❌ Email tidak valid!';
                 return;
@@ -2854,27 +2859,43 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     const statusBadge = item.status === 'approved' ? '<span class="badge-approved">✅ APPROVED</span>'
                                       : item.status === 'rejected' ? '<span class="badge-rejected">❌ REJECTED</span>'
                                       : '<span class="badge-pending">⏳ PENDING</span>';
+                    // FS-HARDEN: data bukti (email/paket/nominal/URL) diketik user — jangan
+                    // pernah diinterpolasi mentah ke HTML atau atribut onclick. Pakai escHtml
+                    // + data-attribute; aksi ditangani delegated listener di bawah.
+                    const safeImg = /^https:\/\//.test(item.imageUrl || '') ? escHtml(item.imageUrl) : '';
                     const actionBtns = item.status === 'pending' ? `
                         <div class="proof-card-status">
-                            <button class="btn-approve" onclick="approveProof('${item.key}','${item.email || ''}')">✅ APPROVE + GRANT VIP</button>
-                            <button class="btn-reject"  onclick="rejectProof('${item.key}')">❌ REJECT</button>
+                            <button class="btn-approve" data-proof-key="${escHtml(item.key)}" data-proof-action="approve">✅ APPROVE + GRANT VIP</button>
+                            <button class="btn-reject" data-proof-key="${escHtml(item.key)}" data-proof-action="reject">❌ REJECT</button>
                         </div>` : '';
                     return `
                     <div class="proof-card">
                         <div class="proof-card-header">
                             <div>
-                                <div class="proof-card-email">📧 ${item.email || '-'}</div>
+                                <div class="proof-card-email">📧 ${escHtml(item.email || '-')}</div>
                                 <div class="proof-card-time">${time} WIB</div>
                             </div>
                             <div style="text-align:right">
-                                <div class="proof-card-pkg">${item.package || '-'} · ${item.nominal || '-'}</div>
+                                <div class="proof-card-pkg">${escHtml(item.package || '-')} · ${escHtml(item.nominal || '-')}</div>
                                 <div style="margin-top:4px">${statusBadge}</div>
                             </div>
                         </div>
-                        ${item.imageUrl ? `<img src="${item.imageUrl}" class="proof-card-img" onclick="openZoom('${item.imageUrl}')">` : '<div style="font-size:10px;color:#374151;padding:10px;text-align:center;">No image</div>'}
+                        ${safeImg ? `<img src="${safeImg}" class="proof-card-img" data-proof-img="${safeImg}">` : '<div style="font-size:10px;color:#374151;padding:10px;text-align:center;">No image</div>'}
                         ${actionBtns}
                     </div>`;
                 }).join('');
+                // Delegated handler: satu listener untuk semua tombol/gambar di daftar ini.
+                // Assignment (bukan addEventListener) agar reload daftar tidak menumpuk handler.
+                list.onclick = (e) => {
+                    const img = e.target.closest('[data-proof-img]');
+                    if (img) { openZoom(img.getAttribute('data-proof-img')); return; }
+                    const btn = e.target.closest('[data-proof-action]');
+                    if (!btn) return;
+                    const item = items.find(i => i.key === btn.getAttribute('data-proof-key'));
+                    if (!item) return;
+                    if (btn.getAttribute('data-proof-action') === 'approve') approveProof(item.key, item.email || '');
+                    else rejectProof(item.key);
+                };
             });
         }
 
