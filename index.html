@@ -1915,7 +1915,7 @@
             <!-- Daftar lagu -->
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:14px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci artis dicari di Audius (lagu penuh) + iTunes (katalog) sekaligus · Lagu katalog iTunes diputar PENUH lewat pemutar resmi YouTube (bukan preview 30 detik) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci artis dicari di Audius (lagu penuh) + iTunes (katalog) sekaligus · Lagu katalog iTunes diputar PENUH TANPA IKLAN lewat stream audio YouTube · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
 
             <script>
             // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
@@ -2009,10 +2009,10 @@
                         url: r.previewUrl,
                         title: r.trackName,
                         artist: r.artistName || 'Artis tidak dikenal',
-                        genre: 'YouTube (penuh)',
+                        genre: 'Tanpa iklan',
                         source: 'itunes',
                         art: art,
-                        sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎥 Lagu penuh via YouTube'
+                        sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎧 Lagu penuh, tanpa iklan'
                     });
                 });
                 return items;
@@ -2123,17 +2123,39 @@
                 }
             }
 
-            // --- YouTube penuh (pemutar RESMI YouTube) ---
+            // --- YouTube penuh TANPA IKLAN (stream audio langsung) ---
+            // Seperti manusia yang memakai pemutar tanpa iklan: lagunya
+            // diputar dari stream audio YouTube-nya langsung, bukan dari
+            // pemutar embed resmi (yang menayangkan iklan).
             // Repo gratis yang dicari: Musike (Ernani1234/musike, MIT) memang
             // memutar katalog YouTube Music penuh, TAPI butuh server sendiri
-            // untuk menarik stream audio-nya (melanggar ToS YouTube, kata
-            // proyeknya sendiri) — tidak bisa dicopy ke website statis.
-            // Yang dipakai di sini: pemutar embed resmi YouTube (IFrame API),
-            // cara yang memang disediakan YouTube untuk website — lagu penuh,
-            // video resmi artis. Pencarian videonya lewat Invidious
-            // (API publik gratis, tanpa kunci, CORS terbuka).
+            // untuk menarik stream audio-nya — tidak bisa dicopy ke website
+            // statis. Yang dipakai di sini: Invidious (API publik gratis,
+            // tanpa kunci, CORS terbuka) yang mengembalikan URL stream audio
+            // siap putar (itag 251 opus / 140 m4a) — diambil dari HP user
+            // sendiri, jadi tidak perlu server. Jujur: cara ini tidak resmi,
+            // melawan aturan YouTube soal iklan, dan bisa mati sewaktu-waktu
+            // kalau mirror-nya mati — kalau gagal, jatuh ke pemutar resmi
+            // YouTube (ada iklan), lalu ke preview iTunes 30 dtk.
             var _fsYtPlayer = null, _fsYtApiLoading = false, _fsYtApiQueue = [], _fsYtToken = 0;
+            var _fsYtAudioVideoId = '', _fsYtEmbedTried = false;
             var FS_INVIDIOUS = 'https://yt.chocolatemoo53.com';
+            // Pilih stream audio-only terbaik (bitrate berupa string di JSON!).
+            function fsRadioPickAudioFormat(d) {
+                var fmts = (d && d.adaptiveFormats) || [];
+                var aud = [];
+                fmts.forEach(function(f){
+                    if (f && f.url && (f.type || '').indexOf('audio/') === 0) aud.push(f);
+                });
+                if (!aud.length) return null;
+                var byItag = {};
+                aud.forEach(function(f){ byItag[String(f.itag)] = f; });
+                if (byItag['251']) return byItag['251'];
+                if (byItag['140']) return byItag['140'];
+                var best = aud[0];
+                aud.forEach(function(f){ if (Number(f.bitrate || 0) > Number(best.bitrate || 0)) best = f; });
+                return best;
+            }
             function fsRadioYtEnsureApi(cb) {
                 if (window.YT && window.YT.Player) { cb(); return; }
                 _fsYtApiQueue.push(cb);
@@ -2153,6 +2175,8 @@
             }
             function fsRadioStopYt() {
                 _fsYtToken++;
+                _fsYtAudioVideoId = '';
+                _fsYtEmbedTried = false;
                 try { if (_fsYtPlayer && _fsYtPlayer.stopVideo) _fsYtPlayer.stopVideo(); } catch(e){}
                 var w = document.getElementById('fsYtWrap');
                 if (w) w.style.display = 'none';
@@ -2185,29 +2209,55 @@
             }
             function fsRadioPlayYoutube(title, artist) {
                 var token = ++_fsYtToken;
+                var vid = '';
+                _fsYtEmbedTried = false;
+                _fsYtAudioVideoId = '';
                 var audio = document.getElementById('fsRadioAudio');
                 var errEl = document.getElementById('fsRadioError');
                 if (errEl) errEl.style.display = 'none';
                 try { audio.pause(); } catch(e){}
-                document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar (YouTube, penuh): ' + title;
-                document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Mencari video YouTube...';
+                try { if (_fsYtPlayer && _fsYtPlayer.stopVideo) _fsYtPlayer.stopVideo(); } catch(e){}
+                var wrap0 = document.getElementById('fsYtWrap');
+                if (wrap0) wrap0.style.display = 'none';
+                document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar (tanpa iklan): ' + title;
+                document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Mencari audio YouTube...';
                 fsRadioLyrics(title, artist);
                 var q = (artist + ' ' + title).trim();
                 fetch(FS_INVIDIOUS + '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video')
                     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
                     .then(function(d){
-                        if (token !== _fsYtToken) return;
+                        if (token !== _fsYtToken) return null;
                         var v = null;
                         (d || []).forEach(function(x){ if (!v && x && x.type === 'video' && x.videoId) v = x; });
                         if (!v) throw new Error('no video');
-                        fsRadioYtLoad(v.videoId, token);
-                        document.getElementById('fsRadioMeta').textContent = artist + ' • YouTube (penuh)';
+                        vid = v.videoId;
+                        return fetch(FS_INVIDIOUS + '/api/v1/videos/' + encodeURIComponent(v.videoId))
+                            .then(function(r2){ if (!r2.ok) throw new Error('HTTP ' + r2.status); return r2.json(); })
+                            .then(function(vd){ return { videoId: v.videoId, data: vd }; });
+                    })
+                    .then(function(res){
+                        if (!res || token !== _fsYtToken) return;
+                        var fmt = fsRadioPickAudioFormat(res.data);
+                        if (!fmt) throw new Error('no audio format');
+                        _fsYtAudioVideoId = res.videoId;
+                        document.getElementById('fsRadioMeta').textContent = artist + ' • Tanpa iklan • Audio YouTube';
+                        audio.src = fmt.url;
+                        var p = audio.play();
+                        if (p && p.catch) p.catch(function(){
+                            if (token !== _fsYtToken) return;
+                            fsRadioYtLoad(res.videoId, token);
+                            document.getElementById('fsRadioMeta').textContent = artist + ' • YouTube (penuh)';
+                        });
                     })
                     .catch(function(){
                         if (token !== _fsYtToken) return;
-                        // YouTube tidak ketemu -> preview iTunes 30 dtk, jangan diam.
+                        // Audio langsung gagal -> pemutar resmi YouTube (bisa ada iklan),
+                        // kalau itu pun gagal -> preview iTunes 30 dtk, jangan diam.
                         var t = _fsRadioTracks[_fsRadioIndex];
-                        if (t && t.url) {
+                        if (vid) {
+                            fsRadioYtLoad(vid, token);
+                            document.getElementById('fsRadioMeta').textContent = artist + ' • YouTube (penuh)';
+                        } else if (t && t.url) {
                             document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar (preview 30 dtk): ' + title;
                             fsRadioPlay(t.url, t.title, t.artist, t.genre);
                         }
@@ -2285,8 +2335,17 @@
                 if (box) { box.style.display = 'none'; box.textContent = 'Lirik akan muncul di sini saat lagu diputar.'; }
             }
 
-            // Error stream (mis. server mati): beri tahu user, jangan diam saja
+            // Error stream: kalau ini stream audio YouTube tanpa iklan yang
+            // mati di tengah jalan, coba sekali pemutar resmi YouTube.
+            // Kalau bukan itu (mis. server mati), beri tahu user, jangan diam saja.
             document.getElementById('fsRadioAudio').addEventListener('error', function(){
+                if (_fsYtAudioVideoId && !_fsYtEmbedTried) {
+                    _fsYtEmbedTried = true;
+                    var t = _fsRadioTracks[_fsRadioIndex];
+                    fsRadioYtLoad(_fsYtAudioVideoId, _fsYtToken);
+                    if (t) document.getElementById('fsRadioMeta').textContent = t.artist + ' • YouTube (penuh)';
+                    return;
+                }
                 var errEl = document.getElementById('fsRadioError');
                 if (errEl && this.src) errEl.style.display = 'block';
             });
