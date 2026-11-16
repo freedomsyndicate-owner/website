@@ -1602,6 +1602,7 @@
             <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
             <li><button onclick="openTab('dewasa', this)">🔞 Konten Dewasa (18+)</button></li>
             <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
+            <li><button onclick="openTab('zenlink', this)">🔗 ZenLink</button></li>
         </ul>
     </nav>
 
@@ -3379,6 +3380,75 @@
                 window.scrollTo({ top: 0 });
             }
             </script>
+        </div>
+
+        <!-- ===== ZENLINK TAB ===== -->
+        <!-- ZenLink itu aplikasi desktop Windows native (Rust): kodenya TIDAK bisa
+             dijalankan di website statis. Tab ini adalah etalase + pusat unduhnya —
+             fitur, cara sambung, dan tautan resmi ke GitHub pembuatnya. -->
+        <div id="zenlink" class="tab-content" style="padding:14px 14px 24px;">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🔗 ZENLINK</h3><p>Mirroring iPhone, iPad &amp; Android di PC Windows — satu jendela untuk semua HP-mu.</p></div>
+
+            <div style="background:linear-gradient(135deg,rgba(56,189,248,0.16),rgba(168,85,247,0.12));border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:18px 16px;text-align:center;">
+                <div style="font-size:2rem;">🪞</div>
+                <div style="font-size:1.15rem;font-weight:900;color:#fff;margin-top:6px;">ZenLink 2.5</div>
+                <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;line-height:1.6;">iPhone, iPad, HP &amp; tablet Android tampil dan bisa dikontrol di PC Windows,<br>lewat kabel atau Wi-Fi. 60 fps di iPhone &amp; iPad, sampai 120 fps di Android.</div>
+                <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+                    <span style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#bae6fd;font-size:0.6rem;font-weight:800;padding:4px 10px;border-radius:14px;">Versi 2.5.16</span>
+                    <span style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#bae6fd;font-size:0.6rem;font-weight:800;padding:4px 10px;border-radius:14px;">Native Rust</span>
+                    <span style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);color:#bae6fd;font-size:0.6rem;font-weight:800;padding:4px 10px;border-radius:14px;">Unduhan ±60 MB</span>
+                    <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#86efac;font-size:0.6rem;font-weight:800;padding:4px 10px;border-radius:14px;">Gratis &amp; Open Source</span>
+                </div>
+                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
+                    <a href="https://github.com/zenvyzenshiro/zenlink/releases/latest" target="_blank" rel="noopener" style="background:var(--primary);color:#000;border-radius:10px;padding:12px 20px;font-weight:900;font-size:0.85rem;text-decoration:none;">⬇ Unduh untuk Windows</a>
+                    <a href="https://github.com/zenvyzenshiro/zenlink" target="_blank" rel="noopener" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:12px 18px;font-weight:800;font-size:0.85rem;text-decoration:none;">⭐ GitHub</a>
+                </div>
+                <div style="font-size:0.6rem;color:#64748b;margin-top:10px;">Aplikasi desktop Windows — unduh &amp; instal di PC, tidak bisa dijalankan dari browser.</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px;">
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">📱</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">Android, tanpa aplikasi di HP</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Memakai server scrcpy resmi &amp; adb resmi Google yang sudah ikut di ZenLink. Gambar, suara, mouse, keyboard, clipboard, plus Back, Home &amp; aplikasi terbaru. Android 5.0+ (suara 11+).</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">🍎</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">iPhone &amp; iPad</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">ZenLink Studio: resolusi native penuh, bitrate tinggi 12–30 Mbps. Wi-Fi lewat AirPlay — Pusat Kontrol → Pencerminan Layar → pilih ZenLinkStudio. Tanpa kabel, tanpa driver.</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">🔌</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">USB &amp; Wi-Fi</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Wi-Fi cukup pindai QR (Android 11+ Wireless debugging), kode 6 digit, atau sekali klik saat HP tercolok USB. H.264 default, H.265 kalau HP &amp; Windows sama-sama bisa.</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">🎥</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">Cocok buat OBS &amp; live</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Jendela native Rust yang ringan — Game Capture OBS tetap jalan saat layar diputar. Statistik live FPS, delay video &amp; audio di samping nama perangkat.</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">🖱️</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">Kontrol penuh</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Mouse jadi sentuhan, ketik dengan keyboard PC, Home, notifikasi, Pusat Kontrol, tombol volume. Suara perangkat keluar di speaker PC dengan lip sync.</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;">
+                    <div style="font-size:1.2rem;">✨</div>
+                    <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-top:4px;">UI Liquid Glass</div>
+                    <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Tampilan modern. Alt+C menyalin teks dari layar (OCR, jalan di PC tanpa internet). Alt+M mute. Buka kunci otomatis — kode tersimpan terenkripsi di PC ini saja.</div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:14px;padding:14px;">
+                <div style="font-size:0.8rem;font-weight:800;color:#fff;">🔧 Cara Sambung</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.9;margin-top:6px;">
+                    1️⃣ Unduh &amp; instal ZenLink di PC Windows<br>
+                    2️⃣ Colok HP lewat USB, atau pilih lewat Wi-Fi (pindai QR / kode 6 digit)<br>
+                    3️⃣ Pilih perangkat di ZenLink — langsung tampil &amp; bisa dikontrol<br>
+                    4️⃣ Untuk live: tambahkan jendela ZenLink sebagai Game Capture di OBS
+                </div>
+            </div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Sumber: <a href="https://zenvyzenshiro.github.io/zenlink" target="_blank" rel="noopener" style="color:#64748b;">zenvyzenshiro.github.io/zenlink</a> · Repo: <a href="https://github.com/zenvyzenshiro/zenlink" target="_blank" rel="noopener" style="color:#64748b;">github.com/zenvyzenshiro/zenlink</a> · Android memakai scrcpy &amp; adb resmi.</div>
         </div>
 
         <div id="game" class="tab-content" style="padding:0;margin:0;">
