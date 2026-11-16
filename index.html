@@ -1870,13 +1870,17 @@
 
         <!-- ===== MUSIK TAB (Audius — open source, API publik gratis, tanpa kunci) ===== -->
         <div id="musik" class="tab-content" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Lagu dari artis independen di Audius — pilih lagu, tekan putar.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Cari artis apa saja — lagu penuh dari Audius & YouTube, pilih lagu, tekan putar.</p></div>
 
             <!-- Player -->
             <div class="content-box" style="text-align:center;">
                 <div id="fsRadioNow" style="font-size:0.85rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🎵 Belum ada lagu diputar</div>
                 <div id="fsRadioMeta" style="font-size:0.68rem;color:#64748b;margin-top:4px;">Pilih lagu di bawah untuk mulai mendengarkan</div>
                 <audio id="fsRadioAudio" controls preload="none" style="width:100%;margin-top:12px;border-radius:10px;"></audio>
+                <div id="fsYtWrap" style="display:none;margin-top:12px;">
+                    <div id="fsYtPlayer" style="width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;"></div>
+                    <div style="font-size:0.6rem;color:#475569;margin-top:6px;">▶ Pemutar resmi YouTube — lagu penuh (video resmi artis)</div>
+                </div>
                 <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
                     <button onclick="fsRadioStep(-1)" style="min-height:48px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;border-radius:10px;padding:10px 18px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏮ Sebelumnya</button>
                     <button onclick="fsRadioStop()" style="min-height:48px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:10px;padding:10px 22px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹ Stop</button>
@@ -1911,7 +1915,7 @@
             <!-- Daftar lagu -->
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:14px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen — lagu penuh) · Kalau di Audius tidak ada, dicari ke iTunes (preview 30 detik) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci artis dicari di Audius (lagu penuh) + iTunes (katalog) sekaligus · Lagu katalog iTunes diputar PENUH lewat pemutar resmi YouTube (bukan preview 30 detik) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
 
             <script>
             // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
@@ -1948,9 +1952,9 @@
                 if (statusEl) statusEl.textContent = statusText || (items.length + ' lagu ditemukan');
                 list.innerHTML = '';
                 _fsRadioTracks = items.map(function(t){
-                    return { url: t.url, title: t.title, artist: t.artist, genre: t.genre || '' };
+                    return { url: t.url, title: t.title, artist: t.artist, genre: t.genre || '', source: t.source || 'audius' };
                 });
-                items.forEach(function(t){
+                items.forEach(function(t, idx){
                     var item = document.createElement('div');
                     item.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;';
                     item.innerHTML =
@@ -1960,68 +1964,77 @@
                             '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + (t.genre ? ' • ' + esc(t.genre) : '') + '</div>' +
                             '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">' + esc(t.sub || '') + '</div>' +
                         '</div>' +
-                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
-                    item.querySelector('button').onclick = function(){ fsRadioPlay(t.url, t.title, t.artist, t.genre); };
+                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">' + (t.source === 'itunes' ? '▶ YouTube' : '▶ Putar') + '</button>';
+                    item.querySelector('button').onclick = function(){ fsRadioPlayTrack(idx); };
                     list.appendChild(item);
                 });
             }
 
+            function fsRadioAudiusToItems(tracks) {
+                return (tracks || []).map(function(t){
+                    var title = t.title || 'Tanpa judul';
+                    var artist = (t.user && t.user.name) || 'Artis tidak dikenal';
+                    return {
+                        url: FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP,
+                        title: title, artist: artist, genre: t.genre || '', source: 'audius',
+                        art: (t.artwork && (t.artwork['150x150'] || t.artwork['480x480'])) || '',
+                        sub: '⏱ ' + fsRadioFmtDur(t.duration) + ' · ▶ ' + String(t.play_count || 0) + ' diputar'
+                    };
+                });
+            }
+
             function fsRadioRender(tracks, statusEl, list) {
-                if (!tracks.length) {
+                var items = fsRadioAudiusToItems(tracks);
+                if (!items.length) {
                     if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
                     list.innerHTML = '';
                     _fsRadioTracks = [];
                     return;
                 }
-                var items = tracks.map(function(t){
-                    var title = t.title || 'Tanpa judul';
-                    var artist = (t.user && t.user.name) || 'Artis tidak dikenal';
-                    return {
-                        url: FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP,
-                        title: title, artist: artist, genre: t.genre || '',
-                        art: (t.artwork && (t.artwork['150x150'] || t.artwork['480x480'])) || '',
-                        sub: '⏱ ' + fsRadioFmtDur(t.duration) + ' · ▶ ' + String(t.play_count || 0) + ' diputar'
-                    };
-                });
-                fsRadioRenderItems(items, statusEl, list, tracks.length + ' lagu ditemukan');
+                fsRadioRenderItems(items, statusEl, list, items.length + ' lagu ditemukan');
             }
 
-            // Fallback iTunes Search API (publik, gratis, tanpa kunci, country ID):
-            // dipakai HANYA kalau Audius kosong — mis. artis mainstream seperti
-            // Ajeng Febria yang memang tidak ada di Audius (artis independen saja).
+            // iTunes Search API (publik, gratis, tanpa kunci, country ID, limit 50):
+            // katalog mainstream — Ajeng Febria, Denny Caknan, Coldplay, dll.
             // Hasilnya preview 30 detik, bukan lagu penuh — ditulis jelas di daftar.
-            function fsRadioFetchItunes(q, statusEl, list) {
-                if (statusEl) statusEl.textContent = '⏳ Di Audius tidak ada — mencari di iTunes...';
+            // Deezer dicek 17 Nov 2026: ada hasilnya, tapi API-nya tidak mengizinkan
+            // CORS dari browser, jadi tidak dipakai.
+            function fsRadioItunesToItems(d) {
+                var results = (d && d.results) || [];
+                var items = [];
+                results.forEach(function(r){
+                    if (!r.previewUrl || !r.trackName) return;
+                    var art = r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb.jpg', '600x600bb.jpg') : '';
+                    items.push({
+                        url: r.previewUrl,
+                        title: r.trackName,
+                        artist: r.artistName || 'Artis tidak dikenal',
+                        genre: 'YouTube (penuh)',
+                        source: 'itunes',
+                        art: art,
+                        sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎥 Lagu penuh via YouTube'
+                    });
+                });
+                return items;
+            }
+            function fsRadioFetchItunesItems(q) {
                 var url = 'https://itunes.apple.com/search?term=' + encodeURIComponent(q)
-                    + '&media=music&entity=song&limit=30&country=ID';
-                fetch(url).then(function(r){
+                    + '&media=music&entity=song&limit=50&country=ID';
+                return fetch(url).then(function(r){
                     if (!r.ok) throw new Error('HTTP ' + r.status);
                     return r.json();
-                }).then(function(d){
-                    var results = (d && d.results) || [];
-                    var items = [];
-                    results.forEach(function(r){
-                        if (!r.previewUrl || !r.trackName) return;
-                        var art = r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb.jpg', '600x600bb.jpg') : '';
-                        items.push({
-                            url: r.previewUrl,
-                            title: r.trackName,
-                            artist: r.artistName || 'Artis tidak dikenal',
-                            genre: 'Preview iTunes',
-                            art: art,
-                            sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎧 Preview 30 dtk (iTunes)'
-                        });
-                    });
-                    if (!items.length) {
-                        if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
-                        list.innerHTML = '';
-                        _fsRadioTracks = [];
-                        return;
-                    }
-                    fsRadioRenderItems(items, statusEl, list, items.length + ' lagu ditemukan di iTunes (preview 30 detik)');
-                }).catch(function(){
-                    if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                }).then(function(d){ return fsRadioItunesToItems(d); });
+            }
+            // Gabung dua sumber, buang duplikat judul+artis yang sama (Audius dulu).
+            function fsRadioMergeItems(a, b) {
+                var seen = {}, out = [];
+                (a || []).concat(b || []).forEach(function(t){
+                    var k = (t.title + '|' + t.artist).toLowerCase();
+                    if (seen[k]) return;
+                    seen[k] = 1;
+                    out.push(t);
                 });
+                return out;
             }
 
             function fsRadioFetch(url) {
@@ -2030,18 +2043,58 @@
                 var list = document.getElementById('fsRadioList');
                 var statusEl = document.getElementById('fsRadioStatus');
                 if (statusEl) statusEl.textContent = '⏳ Memuat lagu...';
+                var m = url.match(/[?&]query=([^&]*)/);
+                var q = (m && m[1]) ? decodeURIComponent(m[1]) : '';
                 fetch(url).then(function(r){ return r.json(); }).then(function(d){
-                    _fsRadioLoading = false;
                     var tracks = (d && d.data) || [];
-                    // Pencarian Audius kosong -> coba iTunes (artismu mainstream).
-                    // Trending (tanpa query) tidak di-fallback.
-                    var m = url.match(/[?&]query=([^&]*)/);
-                    if (!tracks.length && m && m[1]) {
-                        fsRadioFetchItunes(decodeURIComponent(m[1]), statusEl, list);
+                    // Bukan pencarian (mis. Trending) -> Audius saja, seperti semula.
+                    if (!q) {
+                        _fsRadioLoading = false;
+                        fsRadioRender(tracks, statusEl, list);
                         return;
                     }
-                    fsRadioRender(tracks, statusEl, list);
+                    // Pencarian kata kunci: gabung Audius + iTunes, tanpa batasan satu sumber.
+                    var audiusItems = fsRadioAudiusToItems(tracks);
+                    if (statusEl) statusEl.textContent = '⏳ Mencari di Audius + iTunes...';
+                    fsRadioFetchItunesItems(q).then(function(itunesItems){
+                        _fsRadioLoading = false;
+                        var merged = fsRadioMergeItems(audiusItems, itunesItems);
+                        if (!merged.length) {
+                            if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                            list.innerHTML = '';
+                            _fsRadioTracks = [];
+                            return;
+                        }
+                        // Hitung dari hasil gabungan (bukan dari jumlah mentah),
+                        // karena duplikat judul+artis yang sama sudah dibuang.
+                        var nPrev = 0;
+                        merged.forEach(function(t){ if (t.source === 'itunes') nPrev++; });
+                        var nFull = merged.length - nPrev;
+                        fsRadioRenderItems(merged, statusEl, list,
+                            merged.length + ' lagu ditemukan'
+                            + (nFull ? ' — ' + nFull + ' lagu penuh' : '')
+                            + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''));
+                    }).catch(function(){
+                        // iTunes gagal -> tampilkan hasil Audius saja, jangan kosong.
+                        _fsRadioLoading = false;
+                        fsRadioRender(tracks, statusEl, list);
+                    });
                 }).catch(function(){
+                    // Audius gagal -> coba iTunes saja, jangan langsung error.
+                    if (q) {
+                        fsRadioFetchItunesItems(q).then(function(itunesItems){
+                            _fsRadioLoading = false;
+                            if (!itunesItems.length) {
+                                if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
+                                return;
+                            }
+                            fsRadioRenderItems(itunesItems, statusEl, list, itunesItems.length + ' lagu ditemukan di iTunes (preview 30 detik)');
+                        }).catch(function(){
+                            _fsRadioLoading = false;
+                            if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
+                        });
+                        return;
+                    }
                     _fsRadioLoading = false;
                     if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                 });
@@ -2054,7 +2107,7 @@
             function fsRadioSearch() {
                 var q = document.getElementById('fsRadioInput').value.trim();
                 if (!q) { fsRadioLoadTrending(); return; }
-                fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(q) + '&' + FS_AUDIUS_APP + '&limit=30');
+                fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(q) + '&' + FS_AUDIUS_APP + '&limit=50');
             }
 
             function fsRadioGenre(genre, btn) {
@@ -2064,10 +2117,109 @@
                 if (genre === 'trending') {
                     fsRadioLoadTrending();
                 } else if (genre === 'indonesia') {
-                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('Indonesia') + '&' + FS_AUDIUS_APP + '&limit=30');
+                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('Indonesia') + '&' + FS_AUDIUS_APP + '&limit=50');
                 } else {
-                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(genre) + '&' + FS_AUDIUS_APP + '&limit=30');
+                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(genre) + '&' + FS_AUDIUS_APP + '&limit=50');
                 }
+            }
+
+            // --- YouTube penuh (pemutar RESMI YouTube) ---
+            // Repo gratis yang dicari: Musike (Ernani1234/musike, MIT) memang
+            // memutar katalog YouTube Music penuh, TAPI butuh server sendiri
+            // untuk menarik stream audio-nya (melanggar ToS YouTube, kata
+            // proyeknya sendiri) — tidak bisa dicopy ke website statis.
+            // Yang dipakai di sini: pemutar embed resmi YouTube (IFrame API),
+            // cara yang memang disediakan YouTube untuk website — lagu penuh,
+            // video resmi artis. Pencarian videonya lewat Invidious
+            // (API publik gratis, tanpa kunci, CORS terbuka).
+            var _fsYtPlayer = null, _fsYtApiLoading = false, _fsYtApiQueue = [], _fsYtToken = 0;
+            var FS_INVIDIOUS = 'https://yt.chocolatemoo53.com';
+            function fsRadioYtEnsureApi(cb) {
+                if (window.YT && window.YT.Player) { cb(); return; }
+                _fsYtApiQueue.push(cb);
+                if (_fsYtApiLoading) return;
+                _fsYtApiLoading = true;
+                var s = document.createElement('script');
+                s.src = 'https://www.youtube.com/iframe_api';
+                s.onerror = function(){ _fsYtApiLoading = false; _fsYtApiQueue = []; };
+                document.head.appendChild(s);
+                var prev = window.onYouTubeIframeAPIReady;
+                window.onYouTubeIframeAPIReady = function(){
+                    if (prev) prev();
+                    _fsYtApiLoading = false;
+                    var q = _fsYtApiQueue; _fsYtApiQueue = [];
+                    q.forEach(function(f){ try { f(); } catch(e){} });
+                };
+            }
+            function fsRadioStopYt() {
+                _fsYtToken++;
+                try { if (_fsYtPlayer && _fsYtPlayer.stopVideo) _fsYtPlayer.stopVideo(); } catch(e){}
+                var w = document.getElementById('fsYtWrap');
+                if (w) w.style.display = 'none';
+            }
+            function fsRadioYtLoad(videoId, token) {
+                var wrap = document.getElementById('fsYtWrap');
+                if (wrap) wrap.style.display = 'block';
+                if (_fsYtPlayer) {
+                    try { _fsYtPlayer.loadVideoById(videoId); } catch(e){}
+                    return;
+                }
+                fsRadioYtEnsureApi(function(){
+                    if (token !== _fsYtToken || !document.getElementById('fsYtPlayer')) return;
+                    try {
+                        _fsYtPlayer = new YT.Player('fsYtPlayer', {
+                            videoId: videoId,
+                            playerVars: { autoplay: 1, rel: 0, modestbranding: 1, playsinline: 1 },
+                            events: {
+                                onStateChange: function(ev){
+                                    if (ev.data === YT.PlayerState.ENDED) fsRadioStep(1);
+                                },
+                                onError: function(){
+                                    var t = _fsRadioTracks[_fsRadioIndex];
+                                    if (t && t.url) fsRadioPlay(t.url, t.title, t.artist, t.genre);
+                                }
+                            }
+                        });
+                    } catch(e){}
+                });
+            }
+            function fsRadioPlayYoutube(title, artist) {
+                var token = ++_fsYtToken;
+                var audio = document.getElementById('fsRadioAudio');
+                var errEl = document.getElementById('fsRadioError');
+                if (errEl) errEl.style.display = 'none';
+                try { audio.pause(); } catch(e){}
+                document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar (YouTube, penuh): ' + title;
+                document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Mencari video YouTube...';
+                fsRadioLyrics(title, artist);
+                var q = (artist + ' ' + title).trim();
+                fetch(FS_INVIDIOUS + '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video')
+                    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                    .then(function(d){
+                        if (token !== _fsYtToken) return;
+                        var v = null;
+                        (d || []).forEach(function(x){ if (!v && x && x.type === 'video' && x.videoId) v = x; });
+                        if (!v) throw new Error('no video');
+                        fsRadioYtLoad(v.videoId, token);
+                        document.getElementById('fsRadioMeta').textContent = artist + ' • YouTube (penuh)';
+                    })
+                    .catch(function(){
+                        if (token !== _fsYtToken) return;
+                        // YouTube tidak ketemu -> preview iTunes 30 dtk, jangan diam.
+                        var t = _fsRadioTracks[_fsRadioIndex];
+                        if (t && t.url) {
+                            document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar (preview 30 dtk): ' + title;
+                            fsRadioPlay(t.url, t.title, t.artist, t.genre);
+                        }
+                    });
+            }
+            // Satu pintu putar antrean: Audius -> audio penuh, katalog iTunes -> YouTube penuh.
+            function fsRadioPlayTrack(i) {
+                if (i < 0 || i >= _fsRadioTracks.length) return;
+                _fsRadioIndex = i;
+                var t = _fsRadioTracks[i];
+                if (t.source === 'itunes') fsRadioPlayYoutube(t.title, t.artist);
+                else fsRadioPlay(t.url, t.title, t.artist, t.genre);
             }
 
             function fsRadioPlay(url, title, artist, genre) {
@@ -2075,6 +2227,7 @@
                 var errEl = document.getElementById('fsRadioError');
                 if (errEl) errEl.style.display = 'none';
                 if (!url) return;
+                fsRadioStopYt();
                 _fsRadioIndex = -1;
                 for (var i = 0; i < _fsRadioTracks.length; i++) {
                     if (_fsRadioTracks[i].url === url) { _fsRadioIndex = i; break; }
@@ -2118,13 +2271,13 @@
                 var next = _fsRadioIndex + dir;
                 if (next < 0) next = _fsRadioTracks.length - 1;
                 if (next >= _fsRadioTracks.length) next = 0;
-                var t = _fsRadioTracks[next];
-                if (t) fsRadioPlay(t.url, t.title, t.artist, t.genre);
+                fsRadioPlayTrack(next);
             }
 
             function fsRadioStop() {
                 var audio = document.getElementById('fsRadioAudio');
                 try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch(e) {}
+                fsRadioStopYt();
                 _fsRadioIndex = -1;
                 document.getElementById('fsRadioNow').textContent = '🎵 Belum ada lagu diputar';
                 document.getElementById('fsRadioMeta').textContent = 'Pilih lagu di bawah untuk mulai mendengarkan';
