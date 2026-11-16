@@ -1589,20 +1589,23 @@
             <li><button onclick="openTab('trading', this)">📈 Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
             <li><button onclick="openTab('keluhkesah', this)">🗣️ Keluh Kesah</button></li>
-            <li class="side-label">HIBURAN</li>
+            <li class="side-label">🎬 HIBURAN</li>
             <li><button onclick="openTab('tvchannel', this)">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
             <li><button onclick="openTab('musik', this)">🎵 Musik</button></li>
             <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
-            <li><button onclick="openTab('chatai', this)">🤖 Chat Ai</button></li>
             <li><button onclick="openTab('game', this)">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="openTab('chatai', this)">🤖 Chat Ai</button></li>
             <li class="side-label">🕌 IBADAH</li>
             <li><button onclick="openTab('quran', this)">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="openTab('tools', this)">🛠️ Tools</button></li>
+            <li><button onclick="openTab('zenlink', this)">🔗 ZenLink</button></li>
+            <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
             <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
             <li><button onclick="openTab('dewasa', this)">🔞 Konten Dewasa (18+)</button></li>
-            <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
-            <li><button onclick="openTab('zenlink', this)">🔗 ZenLink</button></li>
         </ul>
     </nav>
 
@@ -3449,6 +3452,465 @@
                 </div>
             </div>
             <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Sumber: <a href="https://zenvyzenshiro.github.io/zenlink" target="_blank" rel="noopener" style="color:#64748b;">zenvyzenshiro.github.io/zenlink</a> · Repo: <a href="https://github.com/zenvyzenshiro/zenlink" target="_blank" rel="noopener" style="color:#64748b;">github.com/zenvyzenshiro/zenlink</a> · Android memakai scrcpy &amp; adb resmi.</div>
+        </div>
+
+        <!-- ===== TOOLS TAB (PDF Tools + Open Gym + Podcast/Sound Center) ===== -->
+        <!-- Ketiga aplikasi itu native (Kotlin / React+Node / Flutter): kodenya TIDAK
+             bisa dipaste ke website statis. Yang diterapkan: FITUR intinya, ditulis
+             ulang sebagai web app yang jalan 100% di browser HP — tanpa instal,
+             tanpa daftar, tanpa iklan, file tidak diunggah ke server mana pun. -->
+        <div id="tools" class="tab-content" style="padding:14px 14px 24px;">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🛠️ TOOLS</h3><p>Tiga aplikasi open source, jalan langsung di browser — tanpa instal, tanpa daftar, tanpa iklan.</p></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+                <a href="#fsToolsPdf" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">📄 PDF Tools</a>
+                <a href="#fsToolsGym" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🏋️ Open Gym</a>
+                <a href="#fsToolsPod" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🎙️ Podcast</a>
+            </div>
+
+            <!-- ===== PDF TOOLS (ala sammyZi/pdf-tools, MIT) ===== -->
+            <div id="fsToolsPdf" style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(56,189,248,0.06));border:1px solid rgba(249,115,22,0.3);border-radius:14px;padding:14px;">
+                <div style="font-size:0.9rem;font-weight:900;color:#fff;">📄 PDF Tools</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Gabung, pisah &amp; foto jadi PDF — semuanya jalan di HP ini (pdf-lib), file tidak diunggah ke mana pun. <a href="https://github.com/sammyZi/pdf-tools" target="_blank" rel="noopener" style="color:var(--primary);">github.com/sammyZi/pdf-tools</a> (MIT)</div>
+                <input type="file" id="fsPdfFiles" accept="application/pdf,.pdf" multiple style="display:none;" onchange="fsPdfAddFiles(this.files); this.value='';">
+                <button onclick="document.getElementById('fsPdfFiles').click()" style="width:100%;margin-top:10px;background:#f97316;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">＋ Pilih File PDF</button>
+                <div id="fsPdfList" style="margin-top:10px;"></div>
+                <div style="display:flex;gap:6px;margin-top:10px;">
+                    <button onclick="fsPdfMerge()" style="flex:1;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.4);color:#fdba74;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🔗 Gabung PDF</button>
+                    <button onclick="fsPdfSplit()" style="flex:1;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.4);color:#fdba74;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">✂️ Pisah Halaman</button>
+                </div>
+                <input id="fsPdfRange" type="text" placeholder="Halaman untuk dipisah, cth: 1-3,5" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
+                <input type="file" id="fsPdfImages" accept="image/*" multiple style="display:none;" onchange="fsPdfImagesToPdf(this.files); this.value='';">
+                <input type="file" id="fsPdfScan" accept="image/*" capture="environment" style="display:none;" onchange="fsPdfImagesToPdf(this.files); this.value='';">
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                    <button onclick="document.getElementById('fsPdfImages').click()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🖼️ Gambar → PDF</button>
+                    <button onclick="document.getElementById('fsPdfScan').click()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">📷 Scan Dokumen</button>
+                </div>
+                <div id="fsPdfStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
+            </div>
+
+            <!-- ===== OPEN GYM (ala alexpcosta/opengym) ===== -->
+            <div id="fsToolsGym" style="background:linear-gradient(135deg,rgba(74,222,128,0.08),rgba(56,189,248,0.06));border:1px solid rgba(74,222,128,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+                <div style="font-size:0.9rem;font-weight:900;color:#fff;">🏋️ Open Gym</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Rencanakan latihan, catat set &amp; beban, pantau progres — data tersimpan di HP ini saja. <a href="https://github.com/alexpcosta/opengym" target="_blank" rel="noopener" style="color:var(--primary);">github.com/alexpcosta/opengym</a></div>
+                <div id="fsGymStats" style="display:flex;gap:8px;margin-top:10px;"></div>
+                <div style="font-size:0.72rem;font-weight:800;color:#fff;margin-top:12px;">Pilih Rutin</div>
+                <div id="fsGymRoutines" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
+                <div id="fsGymWorkout" style="margin-top:12px;"></div>
+                <div style="display:flex;gap:6px;margin-top:12px;">
+                    <input id="fsGymWeight" type="number" inputmode="decimal" placeholder="Berat badan (kg)" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;min-width:0;">
+                    <button onclick="fsGymSaveWeight()" style="background:#4ade80;color:#000;border:none;border-radius:8px;padding:10px 16px;font-weight:900;font-size:0.8rem;cursor:pointer;font-family:inherit;">Simpan</button>
+                </div>
+                <div id="fsGymWeightList" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;line-height:1.7;"></div>
+                <div style="font-size:0.72rem;font-weight:800;color:#fff;margin-top:12px;">Riwayat Latihan</div>
+                <div id="fsGymHistory" style="margin-top:6px;"></div>
+            </div>
+
+            <!-- ===== PODCAST (ala Sound Center — Azare77/sound_center, GPL-3.0) ===== -->
+            <div id="fsToolsPod" style="background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(56,189,248,0.06));border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+                <div style="font-size:0.9rem;font-weight:900;color:#fff;">🎙️ Podcast</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Streaming podcast &amp; dengarkan episode — ala Sound Center (Flutter, podcast streaming + background playback). <a href="https://github.com/Azare77/sound_center" target="_blank" rel="noopener" style="color:var(--primary);">github.com/Azare77/sound_center</a> (GPL-3.0)</div>
+                <div style="display:flex;gap:8px;margin-top:10px;">
+                    <input id="fsPodInput" type="text" placeholder="🔍 Cari podcast..." onkeydown="if(event.key==='Enter')fsPodSearch()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.9rem;outline:none;min-width:0;">
+                    <button onclick="fsPodSearch()" style="background:#a855f7;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">CARI</button>
+                </div>
+                <div id="fsPodNow" style="display:none;margin-top:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:10px;">
+                    <div id="fsPodNowTitle" style="font-size:0.72rem;font-weight:800;color:#fff;"></div>
+                    <audio id="fsPodAudio" controls preload="none" style="width:100%;margin-top:6px;height:36px;"></audio>
+                </div>
+                <div id="fsPodStatus" style="font-size:0.65rem;color:#94a3b8;text-align:center;padding:8px 0;"></div>
+                <div id="fsPodList" style="display:flex;flex-direction:column;gap:8px;"></div>
+                <div id="fsPodEps" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;"></div>
+            </div>
+
+            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">PDF: pdf-lib (MIT) via jsDelivr · Podcast: direktori Apple Podcasts (iTunes API, tanpa kunci) · Gym: data lokal di HP · Showcase apps: junaidjamel.com</div>
+
+            <script>
+            // ================= PDF TOOLS =================
+            var _fsPdfFiles = [];
+            var _fsPdfLibP = null;
+            function fsPdfLib() {
+                if (window.PDFLib) return Promise.resolve(window.PDFLib);
+                if (_fsPdfLibP) return _fsPdfLibP;
+                _fsPdfLibP = new Promise(function(resolve, reject){
+                    var s = document.createElement('script');
+                    s.src = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+                    s.onload = function(){ resolve(window.PDFLib); };
+                    s.onerror = function(){ reject(new Error('CDN gagal')); };
+                    document.head.appendChild(s);
+                    setTimeout(function(){ reject(new Error('timeout')); }, 15000);
+                });
+                return _fsPdfLibP;
+            }
+            function fsPdfStatus(txt) {
+                var st = document.getElementById('fsPdfStatus');
+                if (st) st.textContent = txt || '';
+            }
+            async function fsPdfAddFiles(files) {
+                if (!files || !files.length) return;
+                fsPdfStatus('⏳ Membaca ' + files.length + ' file...');
+                try {
+                    var lib = await fsPdfLib();
+                    for (var i = 0; i < files.length; i++) {
+                        var f = files[i];
+                        var buf = await f.arrayBuffer();
+                        var doc = await lib.PDFDocument.load(buf);
+                        _fsPdfFiles.push({ file: f, name: f.name, pages: doc.getPageCount() });
+                    }
+                    fsPdfRenderList();
+                    fsPdfStatus('✅ ' + _fsPdfFiles.length + ' file siap (' + _fsPdfFiles.reduce(function(a, x){ return a + x.pages; }, 0) + ' halaman).');
+                } catch(e) {
+                    fsPdfStatus('⚠️ Gagal membaca file: ' + (e && e.message ? e.message : e));
+                }
+            }
+            function fsPdfRenderList() {
+                var box = document.getElementById('fsPdfList');
+                if (!box) return;
+                box.innerHTML = '';
+                _fsPdfFiles.forEach(function(f, i){
+                    var row = document.createElement('div');
+                    row.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;margin-top:6px;';
+                    row.innerHTML = '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.name) + '</div><div style="font-size:0.6rem;color:#94a3b8;">' + f.pages + ' halaman</div></div>';
+                    var del = document.createElement('button');
+                    del.textContent = '✕';
+                    del.style.cssText = 'background:none;border:none;color:#94a3b8;font-size:0.9rem;cursor:pointer;font-family:inherit;';
+                    del.onclick = function(){ _fsPdfFiles.splice(i, 1); fsPdfRenderList(); };
+                    row.appendChild(del);
+                    box.appendChild(row);
+                });
+            }
+            function fsPdfDownload(bytes, filename) {
+                var blob = new Blob([bytes], { type: 'application/pdf' });
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a); a.click();
+                setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+            }
+            function fsPdfParseRange(txt, total) {
+                var out = [];
+                (String(txt || '').split(',')).forEach(function(part){
+                    part = part.trim();
+                    if (!part) return;
+                    var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+                    if (m) {
+                        var a = Math.max(1, parseInt(m[1], 10)), b = Math.min(total, parseInt(m[2], 10));
+                        for (var p = a; p <= b; p++) out.push(p - 1);
+                    } else {
+                        var n = parseInt(part, 10);
+                        if (n >= 1 && n <= total) out.push(n - 1);
+                    }
+                });
+                out = out.filter(function(v, i, arr){ return arr.indexOf(v) === i; });
+                return out.sort(function(a, b){ return a - b; });
+            }
+            async function fsPdfMerge() {
+                if (_fsPdfFiles.length < 2) { fsPdfStatus('Pilih minimal 2 file PDF untuk digabung.'); return; }
+                fsPdfStatus('⏳ Menggabungkan ' + _fsPdfFiles.length + ' file...');
+                try {
+                    var lib = await fsPdfLib();
+                    var out = await lib.PDFDocument.create();
+                    for (var i = 0; i < _fsPdfFiles.length; i++) {
+                        var buf = await _fsPdfFiles[i].file.arrayBuffer();
+                        var src = await lib.PDFDocument.load(buf);
+                        var pages = await out.copyPages(src, src.getPageIndices());
+                        pages.forEach(function(p){ out.addPage(p); });
+                    }
+                    var bytes = await out.save();
+                    fsPdfDownload(bytes, 'gabungan.pdf');
+                    fsPdfStatus('✅ Berhasil digabung — ' + out.getPageCount() + ' halaman, tersimpan sebagai gabungan.pdf.');
+                } catch(e) {
+                    fsPdfStatus('⚠️ Gagal menggabung: ' + (e && e.message ? e.message : e));
+                }
+            }
+            async function fsPdfSplit() {
+                if (!_fsPdfFiles.length) { fsPdfStatus('Pilih dulu 1 file PDF.'); return; }
+                var range = document.getElementById('fsPdfRange').value;
+                var f = _fsPdfFiles[0];
+                var idxs = fsPdfParseRange(range, f.pages);
+                if (!idxs.length) { fsPdfStatus('Isi halaman yang mau dipisah, cth: 1-3,5 (file pertama: ' + f.pages + ' halaman).'); return; }
+                fsPdfStatus('⏳ Memisah ' + idxs.length + ' halaman...');
+                try {
+                    var lib = await fsPdfLib();
+                    var buf = await f.file.arrayBuffer();
+                    var src = await lib.PDFDocument.load(buf);
+                    var out = await lib.PDFDocument.create();
+                    var pages = await out.copyPages(src, idxs);
+                    pages.forEach(function(p){ out.addPage(p); });
+                    var bytes = await out.save();
+                    fsPdfDownload(bytes, 'pisahan.pdf');
+                    fsPdfStatus('✅ Berhasil dipisah — ' + idxs.length + ' halaman, tersimpan sebagai pisahan.pdf.');
+                } catch(e) {
+                    fsPdfStatus('⚠️ Gagal memisah: ' + (e && e.message ? e.message : e));
+                }
+            }
+            async function fsPdfImagesToPdf(files) {
+                if (!files || !files.length) return;
+                fsPdfStatus('⏳ Membuat PDF dari ' + files.length + ' gambar...');
+                try {
+                    var lib = await fsPdfLib();
+                    var out = await lib.PDFDocument.create();
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        var buf = await file.arrayBuffer();
+                        var embedded;
+                        if (/png/i.test(file.type)) embedded = await out.embedPng(buf);
+                        else embedded = await out.embedJpg(buf);
+                        var w = embedded.width, h = embedded.height;
+                        var maxW = 595, maxH = 842, scale = Math.min(1, maxW / w, maxH / h);
+                        var page = out.addPage([w * scale, h * scale]);
+                        page.drawImage(embedded, { x: 0, y: 0, width: w * scale, height: h * scale });
+                    }
+                    var bytes = await out.save();
+                    fsPdfDownload(bytes, 'dokumen.pdf');
+                    fsPdfStatus('✅ PDF dibuat dari ' + files.length + ' gambar, tersimpan sebagai dokumen.pdf.');
+                } catch(e) {
+                    fsPdfStatus('⚠️ Gagal membuat PDF: ' + (e && e.message ? e.message : e));
+                }
+            }
+
+            // ================= OPEN GYM =================
+            var FS_GYM_ROUTINES = [
+                { name: 'Push Day', icon: '💪', ex: ['Bench Press', 'Overhead Press', 'Incline Dumbbell Press', 'Tricep Pushdown'] },
+                { name: 'Pull Day', icon: '🏋️', ex: ['Lat Pulldown', 'Barbell Row', 'Seated Cable Row', 'Bicep Curl'] },
+                { name: 'Leg Day', icon: '🦵', ex: ['Squat', 'Leg Press', 'Romanian Deadlift', 'Leg Curl', 'Calf Raise'] },
+                { name: 'Full Body', icon: '🔥', ex: ['Squat', 'Bench Press', 'Barbell Row', 'Plank (detik)'] }
+            ];
+            var _fsGymRoutine = -1;
+            var _fsGymSets = {};
+            function fsGymLoad(key, def) {
+                try { var v = JSON.parse(localStorage.getItem(key) || 'null'); return v == null ? def : v; } catch(e) { return def; }
+            }
+            function fsGymSave(key, val) {
+                try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+            }
+            function fsGymStats() {
+                var log = fsGymLoad('fsGymLog', []);
+                var totalVol = 0, totalSets = 0;
+                log.forEach(function(w){
+                    (w.sets || []).forEach(function(s){ totalVol += (s.w || 0) * (s.r || 0); totalSets++; });
+                });
+                var days = {};
+                log.forEach(function(w){ days[(w.date || '').slice(0, 10)] = true; });
+                var box = document.getElementById('fsGymStats');
+                if (!box) return;
+                var cards = [
+                    ['🏋️ Latihan', log.length + ' sesi'],
+                    ['📦 Volume', (totalVol >= 1000 ? (Math.round(totalVol / 100) / 10) + ' ton' : Math.round(totalVol) + ' kg')],
+                    ['📅 Hari aktif', Object.keys(days).length + ' hari'],
+                    ['🔢 Total set', totalSets + ' set']
+                ];
+                box.innerHTML = '';
+                cards.forEach(function(c){
+                    var d = document.createElement('div');
+                    d.style.cssText = 'flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:8px;text-align:center;';
+                    d.innerHTML = '<div style="font-size:0.58rem;color:#94a3b8;">' + c[0] + '</div><div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:2px;">' + esc(String(c[1])) + '</div>';
+                    box.appendChild(d);
+                });
+            }
+            function fsGymRenderRoutines() {
+                var box = document.getElementById('fsGymRoutines');
+                if (!box) return;
+                box.innerHTML = '';
+                FS_GYM_ROUTINES.forEach(function(r, i){
+                    var b = document.createElement('button');
+                    b.textContent = r.icon + ' ' + r.name;
+                    b.style.cssText = 'background:' + (i === _fsGymRoutine ? '#4ade80' : 'rgba(74,222,128,0.08)') + ';border:1px solid rgba(74,222,128,0.35);color:' + (i === _fsGymRoutine ? '#000' : '#86efac') + ';border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;';
+                    b.onclick = function(){ fsGymStartRoutine(i); };
+                    box.appendChild(b);
+                });
+            }
+            function fsGymStartRoutine(i) {
+                _fsGymRoutine = i;
+                _fsGymSets = {};
+                FS_GYM_ROUTINES[i].ex.forEach(function(name, ei){
+                    _fsGymSets[ei] = [ { w: '', r: '', done: false }, { w: '', r: '', done: false }, { w: '', r: '', done: false } ];
+                });
+                fsGymRenderRoutines();
+                fsGymRenderWorkout();
+            }
+            function fsGymRenderWorkout() {
+                var box = document.getElementById('fsGymWorkout');
+                if (!box) return;
+                box.innerHTML = '';
+                if (_fsGymRoutine < 0) return;
+                var r = FS_GYM_ROUTINES[_fsGymRoutine];
+                var head = document.createElement('div');
+                head.style.cssText = 'font-size:0.8rem;font-weight:800;color:#fff;margin-bottom:6px;';
+                head.textContent = r.icon + ' ' + r.name + ' — isi beban (kg) & repetisi tiap set, centang kalau selesai.';
+                box.appendChild(head);
+                r.ex.forEach(function(name, ei){
+                    var card = document.createElement('div');
+                    card.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;margin-top:6px;';
+                    var title = document.createElement('div');
+                    title.style.cssText = 'font-size:0.72rem;font-weight:800;color:#fff;margin-bottom:6px;';
+                    title.textContent = (ei + 1) + '. ' + name;
+                    card.appendChild(title);
+                    _fsGymSets[ei].forEach(function(set, si){
+                        var row = document.createElement('div');
+                        row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-top:4px;';
+                        var w = document.createElement('input');
+                        w.type = 'number'; w.inputMode = 'decimal'; w.placeholder = 'kg';
+                        w.value = set.w;
+                        w.style.cssText = 'flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(74,222,128,0.25);border-radius:8px;padding:8px;color:#fff;font-size:0.8rem;outline:none;min-width:0;';
+                        w.oninput = function(){ set.w = w.value; };
+                        var rp = document.createElement('input');
+                        rp.type = 'number'; rp.inputMode = 'numeric'; rp.placeholder = 'reps';
+                        rp.value = set.r;
+                        rp.style.cssText = 'flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(74,222,128,0.25);border-radius:8px;padding:8px;color:#fff;font-size:0.8rem;outline:none;min-width:0;';
+                        rp.oninput = function(){ set.r = rp.value; };
+                        var chk = document.createElement('button');
+                        chk.textContent = set.done ? '✅' : '⬜';
+                        chk.style.cssText = 'background:none;border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:8px 10px;font-size:0.85rem;cursor:pointer;font-family:inherit;';
+                        chk.onclick = function(){ set.done = !set.done; chk.textContent = set.done ? '✅' : '⬜'; };
+                        row.appendChild(w); row.appendChild(rp); row.appendChild(chk);
+                        var lbl = document.createElement('span');
+                        lbl.style.cssText = 'font-size:0.6rem;color:#64748b;width:28px;';
+                        lbl.textContent = 'Set ' + (si + 1);
+                        row.insertBefore(lbl, row.firstChild);
+                        card.appendChild(row);
+                    });
+                    box.appendChild(card);
+                });
+                var save = document.createElement('button');
+                save.textContent = '💾 Simpan Latihan';
+                save.style.cssText = 'width:100%;margin-top:10px;background:#4ade80;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;';
+                save.onclick = fsGymSaveWorkout;
+                box.appendChild(save);
+            }
+            function fsGymSaveWorkout() {
+                if (_fsGymRoutine < 0) return;
+                var r = FS_GYM_ROUTINES[_fsGymRoutine];
+                var sets = [];
+                r.ex.forEach(function(name, ei){
+                    _fsGymSets[ei].forEach(function(set){
+                        var w = parseFloat(set.w) || 0, rp = parseInt(set.r, 10) || 0;
+                        if (w > 0 || rp > 0) sets.push({ ex: name, w: w, r: rp, done: !!set.done });
+                    });
+                });
+                if (!sets.length) return;
+                var log = fsGymLoad('fsGymLog', []);
+                log.unshift({ date: new Date().toISOString(), routine: r.name, sets: sets });
+                fsGymSave('fsGymLog', log.slice(0, 50));
+                _fsGymRoutine = -1;
+                fsGymRenderRoutines();
+                fsGymRenderWorkout();
+                fsGymStats();
+                fsGymRenderHistory();
+            }
+            function fsGymRenderHistory() {
+                var box = document.getElementById('fsGymHistory');
+                if (!box) return;
+                var log = fsGymLoad('fsGymLog', []);
+                box.innerHTML = '';
+                if (!log.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#64748b;">Belum ada latihan tercatat.</div>'; return; }
+                log.slice(0, 10).forEach(function(w){
+                    var vol = 0;
+                    (w.sets || []).forEach(function(s){ vol += (s.w || 0) * (s.r || 0); });
+                    var d = document.createElement('div');
+                    d.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;margin-top:6px;';
+                    var date = new Date(w.date);
+                    d.innerHTML = '<div style="font-size:0.72rem;font-weight:800;color:#fff;">' + esc(w.routine) + '</div>'
+                        + '<div style="font-size:0.62rem;color:#94a3b8;margin-top:3px;">' + date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ' · ' + (w.sets || []).length + ' set tercatat · Volume ' + Math.round(vol) + ' kg</div>';
+                    box.appendChild(d);
+                });
+            }
+            function fsGymSaveWeight() {
+                var inp = document.getElementById('fsGymWeight');
+                var kg = parseFloat((inp.value || '').replace(',', '.'));
+                if (!kg || kg < 20 || kg > 300) return;
+                var arr = fsGymLoad('fsGymWeight', []);
+                arr.unshift({ date: new Date().toISOString(), kg: kg });
+                fsGymSave('fsGymWeight', arr.slice(0, 60));
+                inp.value = '';
+                fsGymRenderWeight();
+            }
+            function fsGymRenderWeight() {
+                var box = document.getElementById('fsGymWeightList');
+                if (!box) return;
+                var arr = fsGymLoad('fsGymWeight', []);
+                if (!arr.length) { box.textContent = 'Belum ada catatan berat badan.'; return; }
+                var last = arr[0], prev = arr[1];
+                var delta = prev ? (Math.round((last.kg - prev.kg) * 10) / 10) : 0;
+                var txt = 'Terakhir: ' + last.kg + ' kg (' + new Date(last.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ')';
+                if (prev) txt += ' · ' + (delta > 0 ? '+' : '') + delta + ' kg dari sebelumnya';
+                txt += ' · Riwayat: ' + arr.slice(0, 5).map(function(x){ return x.kg + 'kg'; }).join(' → ');
+                box.textContent = txt;
+            }
+            fsGymStats();
+            fsGymRenderRoutines();
+            fsGymRenderHistory();
+            fsGymRenderWeight();
+
+            // ================= PODCAST (Sound Center) =================
+            var _fsPodSearching = false;
+            async function fsPodSearch() {
+                if (_fsPodSearching) return;
+                var q = (document.getElementById('fsPodInput').value || '').trim();
+                if (!q) return;
+                _fsPodSearching = true;
+                var st = document.getElementById('fsPodStatus');
+                var list = document.getElementById('fsPodList');
+                var eps = document.getElementById('fsPodEps');
+                if (eps) eps.innerHTML = '';
+                if (st) st.textContent = '🔍 Mencari podcast...';
+                try {
+                    var d = await _fsFetchJson('https://itunes.apple.com/search?term=' + encodeURIComponent(q) + '&media=podcast&limit=12&country=ID', 10000);
+                    var res = (d && d.results) || [];
+                    if (!res.length) { if (st) st.textContent = 'Tidak ada podcast untuk "' + q + '".'; list.innerHTML = ''; _fsPodSearching = false; return; }
+                    if (st) st.textContent = res.length + ' podcast ditemukan — ketuk untuk lihat episode.';
+                    list.innerHTML = '';
+                    res.forEach(function(p){
+                        var row = document.createElement('div');
+                        row.style.cssText = 'display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.05);border:1px solid rgba(168,85,247,0.2);border-radius:12px;padding:10px;cursor:pointer;';
+                        var art = (p.artworkUrl600 || p.artworkUrl100 || '');
+                        row.innerHTML = (art ? '<img src="' + esc(art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(168,85,247,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🎙️</div>')
+                            + '<div style="flex:1;min-width:0;"><div style="font-size:0.78rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(p.collectionName || '') + '</div>'
+                            + '<div style="font-size:0.62rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(p.artistName || '') + (p.trackCount ? ' · ' + p.trackCount + ' episode' : '') + '</div></div>';
+                        row.onclick = function(){ fsPodOpen(p.collectionId, p.collectionName, art); };
+                        list.appendChild(row);
+                    });
+                } catch(e) {
+                    if (st) st.textContent = '⚠️ Gagal mencari podcast. Cek koneksi.';
+                }
+                _fsPodSearching = false;
+            }
+            async function fsPodOpen(id, name, art) {
+                var st = document.getElementById('fsPodStatus');
+                var eps = document.getElementById('fsPodEps');
+                if (st) st.textContent = '⏳ Memuat episode "' + name + '"...';
+                try {
+                    var d = await _fsFetchJson('https://itunes.apple.com/lookup?id=' + id + '&entity=podcastEpisode&limit=20&country=ID', 10000);
+                    var list = ((d && d.results) || []).filter(function(r){ return r.wrapperType === 'podcastEpisode' && r.episodeUrl; });
+                    if (!list.length) { if (st) st.textContent = 'Episode tidak tersedia untuk podcast ini.'; return; }
+                    if (st) st.textContent = '🎙️ ' + name + ' — ' + list.length + ' episode terbaru.';
+                    eps.innerHTML = '';
+                    list.forEach(function(ep){
+                        var mins = ep.trackTimeMillis ? Math.round(ep.trackTimeMillis / 60000) + ' mnt' : '';
+                        var row = document.createElement('div');
+                        row.style.cssText = 'display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;cursor:pointer;';
+                        row.innerHTML = '<button style="flex-shrink:0;width:40px;height:40px;background:#a855f7;color:#fff;border:none;border-radius:50%;font-size:0.9rem;cursor:pointer;font-family:inherit;">▶</button>'
+                            + '<div style="flex:1;min-width:0;"><div style="font-size:0.74rem;font-weight:700;color:#fff;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(ep.trackName || '') + '</div>'
+                            + '<div style="font-size:0.6rem;color:#94a3b8;margin-top:3px;">' + (ep.releaseDate ? esc(ep.releaseDate.slice(0, 10)) : '') + (mins ? ' · ' + mins : '') + '</div></div>';
+                        row.onclick = function(){ fsPodPlay(ep.episodeUrl, ep.trackName); };
+                        eps.appendChild(row);
+                    });
+                } catch(e) {
+                    if (st) st.textContent = '⚠️ Gagal memuat episode.';
+                }
+            }
+            function fsPodPlay(url, title) {
+                var a = document.getElementById('fsPodAudio');
+                var now = document.getElementById('fsPodNow');
+                var t = document.getElementById('fsPodNowTitle');
+                if (!a || !now) return;
+                a.src = url;
+                var p = a.play();
+                if (p && p.catch) p.catch(function(){});
+                if (t) t.textContent = '▶ ' + (title || 'Episode');
+                now.style.display = 'block';
+                now.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            </script>
         </div>
 
         <div id="game" class="tab-content" style="padding:0;margin:0;">
