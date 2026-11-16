@@ -771,54 +771,6 @@
             border-color: var(--primary);
             color: #fff;
         }
-        .fs-ch-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(56,189,248,0.12);
-            background: rgba(15,23,42,0.5);
-            cursor: pointer;
-            transition: all 0.25s;
-        }
-        .fs-ch-item:hover, .fs-ch-item.playing {
-            border-color: var(--primary);
-            background: rgba(56,189,248,0.08);
-        }
-        .fs-ch-item.playing { border-color: #4ade80; }
-        .fs-ch-logo {
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            background: rgba(56,189,248,0.08);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .fs-ch-logo img { width: 100%; height: 100%; object-fit: contain; }
-        .fs-ch-info { flex: 1; min-width: 0; }
-        .fs-ch-name {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: #e2e8f0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .fs-ch-cat {
-            font-size: 0.68rem;
-            color: #475569;
-            margin-top: 2px;
-        }
-        .fs-ch-live {
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: #4ade80;
-            letter-spacing: 1px;
-            flex-shrink: 0;
-        }
-
         /* --- TV SUB-TABS --- */
         .tv-subtab-bar {
             display: flex;
@@ -979,12 +931,26 @@
         }
         .tv2-acc.open .tv2-acc-arrow { transform: rotate(180deg); }
         .tv2-acc-body {
-            display: none;
-            flex-direction: column;
-            gap: 7px;
-            padding: 0 10px 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 2px 14px;
         }
-        .tv2-acc.open .tv2-acc-body { display: flex; }
+        .tv2-acc.open .tv2-acc-body { display: grid; }
+        .tv-tile {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px 6px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .tv-tile:hover { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.08); }
+        .tv-tile.playing { border-color: #4ade80; background: rgba(74,222,128,0.1); box-shadow: 0 0 0 1px #4ade80; }
+        .tv-tile .tv-tile-logo { height: 46px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; font-size: 1.6rem; }
+        .tv-tile .tv-tile-logo img { max-width: 64px; max-height: 46px; object-fit: contain; }
+        .tv-tile .tv-tile-name { font-size: 0.62rem; font-weight: 700; color: #e2e8f0; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 1.6em; }
         .tv-iframe-overlay {
             position: absolute;
             inset: 0;
@@ -4971,6 +4937,9 @@
                     </div>
                 </div>
 
+                <!-- Now Playing bar -->
+                <div id="tvNowBar" class="tv-now-bar" style="display:block;margin-top:8px;border-radius:10px;">📺 Pilih channel untuk mulai menonton</div>
+
                 <!-- Genre Selector -->
                 <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-top:12px;scrollbar-width:none;" id="tv1GenreBar">
                     <button class="fs-cat-btn active" onclick="loadTv1Genre('nasional', this)">📡 Nasional</button>
@@ -5071,7 +5040,7 @@
                 <div id="tvLiveStatus" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;">⏳ Buka tab ini untuk memuat playlist...</div>
 
                 <!-- Daftar channel -->
-                <div id="tvLiveList" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+                <div id="tvLiveList" style="margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
                 <div style="text-align:center;margin-top:12px;">
                     <button id="tvLiveMoreBtn" onclick="tvLiveMore()" style="display:none;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--primary);font-size:0.72rem;padding:8px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-family:inherit;">Muat Lebih Banyak ↓</button>
                 </div>
@@ -5270,21 +5239,19 @@
                 batch.forEach(function(ch){
                     var card = document.createElement('div');
                     card.className = 'tv-ch-card';
-                    card.style.cssText += 'display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;';
                     card.onclick = function(){ tvLivePlay(ch, card); };
                     var logoHtml = ch.logo
-                        ? '<img src="' + esc(ch.logo) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:36px;height:36px;object-fit:contain;border-radius:6px;background:#0f172a;flex-shrink:0;">'
-                        : '<div style="width:36px;height:36px;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📺</div>';
+                        ? '<img src="' + esc(ch.logo) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="max-width:64px;max-height:46px;object-fit:contain;border-radius:6px;">'
+                        : '<div class="ch-icon">📺</div>';
                     var srcBadge = esc(TVLIVE_BADGES[ch.src] || ch.src);
-                    card.innerHTML = logoHtml
-                        + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(ch.name) + '</div>'
-                        + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + esc(ch.group) : '') + '</div></div>'
-                        + '<div style="font-size:0.9rem;color:var(--primary);flex-shrink:0;">▶</div>';
+                    card.innerHTML = '<div style="height:46px;display:flex;align-items:center;justify-content:center;">' + logoHtml + '</div>'
+                        + '<div class="ch-name">' + esc(ch.name) + '</div>'
+                        + '<div class="ch-badge">' + srcBadge + (ch.group ? ' · ' + esc(ch.group) : '') + '</div>';
                     // Tombol ⭐ favorit (klik bintang saja, jangan ikut memutar channel)
                     var starBtn = document.createElement('button');
                     starBtn.textContent = tvLiveIsFav(ch.url) ? '★' : '☆';
                     starBtn.title = 'Simpan ke Favorit';
-                    starBtn.style.cssText = 'background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;flex-shrink:0;color:' + (tvLiveIsFav(ch.url) ? '#fbbf24' : '#475569') + ';font-family:inherit;';
+                    starBtn.style.cssText = 'position:absolute;top:2px;right:2px;z-index:2;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:' + (tvLiveIsFav(ch.url) ? '#fbbf24' : '#475569') + ';font-family:inherit;';
                     starBtn.onclick = function(ev){
                         if (ev) ev.stopPropagation();
                         tvLiveToggleFav(ch);
@@ -5293,7 +5260,7 @@
                         starBtn.style.color = fav ? '#fbbf24' : '#475569';
                         if (_tvLiveCat === 'fav') tvLiveRender(true);
                     };
-                    card.insertBefore(starBtn, card.lastChild);
+                    card.appendChild(starBtn);
                     list.appendChild(card);
                 });
                 _tvLiveShown += batch.length;
@@ -5665,15 +5632,13 @@
             sortedGroupNames.forEach(groupName => {
                 const acc = document.createElement('div');
                 acc.className = 'tv2-acc';
-                if (sortedGroupNames.length <= 4) acc.classList.add('open');
 
                 const header = document.createElement('div');
                 header.className = 'tv2-acc-header';
-                header.onclick = () => acc.classList.toggle('open');
+                header.style.cursor = 'default';
                 header.innerHTML = `<span>${esc(groupName)}</span>
                     <span style="display:flex;align-items:center;gap:8px;">
-                        <span class="count">${groups[groupName].length}</span>
-                        <span class="tv2-acc-arrow">▾</span>
+                        <span class="count">${groups[groupName].length} channel</span>
                     </span>`;
 
                 const body = document.createElement('div');
@@ -5681,7 +5646,7 @@
 
                 groups[groupName].forEach(ch => {
                     const item = document.createElement('div');
-                    item.className = 'fs-ch-item';
+                    item.className = 'tv-tile';
                     item.onclick = () => playTv1Channel(ch, item);
 
                     const logoHtml = ch.logo
@@ -5689,12 +5654,8 @@
                         : '📺';
 
                     item.innerHTML = `
-                        <div class="fs-ch-logo">${logoHtml}</div>
-                        <div class="fs-ch-info">
-                            <div class="fs-ch-name">${esc(ch.name)}</div>
-                            <div class="fs-ch-cat">${esc(groupName)}</div>
-                        </div>
-                        <div class="fs-ch-live">▶ PLAY</div>
+                        <div class="tv-tile-logo">${logoHtml}</div>
+                        <div class="tv-tile-name">${esc(ch.name)}</div>
                     `;
                     body.appendChild(item);
                 });
@@ -5736,7 +5697,10 @@
             if (badge) badge.style.display = 'block';
             if (badgeName) badgeName.textContent = ch.name;
 
-            document.querySelectorAll('#tv1Groups .fs-ch-item').forEach(c => c.classList.remove('playing'));
+            var nowBar = document.getElementById('tvNowBar');
+            if (nowBar) { nowBar.style.display = 'block'; nowBar.innerHTML = '🔴 LIVE &nbsp;·&nbsp; ' + esc(ch.name) + (ch.group ? ' &nbsp;·&nbsp; ' + esc(ch.group) : ''); }
+
+            document.querySelectorAll('#tv1Groups .tv-tile').forEach(c => c.classList.remove('playing'));
             if (itemEl) itemEl.classList.add('playing');
 
             if (tv1Hls) { tv1Hls.destroy(); tv1Hls = null; }
