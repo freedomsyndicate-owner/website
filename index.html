@@ -2183,6 +2183,53 @@
                 _fsYtToken++;
                 _fsYtAudioVideoId = '';
             }
+            // Prefetch: selagi lagu berjalan, siapkan audio lagu berikutnya
+            // di belakang layar, supaya tombol Berikutnya langsung bunyi
+            // (dulu ~20 dtk karena cari videonya dulu saat tombol ditekan).
+            var _fsRadioPrefetch = { index: -1, url: '' };
+            function fsRadioPrefetchNext() {
+                if (!_fsRadioTracks.length) return;
+                var next = _fsRadioIndex + 1;
+                if (next >= _fsRadioTracks.length) next = 0;
+                var t = _fsRadioTracks[next];
+                if (!t || t.source !== 'itunes') return;
+                if (_fsRadioPrefetch.index === next && _fsRadioPrefetch.url) return;
+                _fsRadioPrefetch = { index: next, url: '' };
+                var q = (t.artist + ' ' + t.title).trim();
+                fetch(FS_INVIDIOUS + '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video')
+                    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                    .then(function(d){
+                        var v = null;
+                        (d || []).forEach(function(x){ if (!v && x && x.type === 'video' && x.videoId) v = x; });
+                        if (!v) throw new Error('no video');
+                        return fetch(FS_INVIDIOUS + '/api/v1/videos/' + encodeURIComponent(v.videoId))
+                            .then(function(r2){ if (!r2.ok) throw new Error('HTTP ' + r2.status); return r2.json(); });
+                    })
+                    .then(function(vd){
+                        var fmt = fsRadioPickAudioFormat(vd);
+                        if (!fmt) return;
+                        if (_fsRadioPrefetch.index === next) _fsRadioPrefetch.url = fmt.url;
+                    })
+                    .catch(function(){});
+            }
+            // Putar URL audio YouTube yang sudah didapat (dari prefetch / cari),
+            // lalu siapkan lagu berikutnya.
+            function fsRadioPlayAudioUrl(url, title, artist, token) {
+                var audio = document.getElementById('fsRadioAudio');
+                document.getElementById('fsRadioMeta').textContent = artist + ' • Tanpa iklan • Audio YouTube';
+                audio.src = url;
+                var p = audio.play();
+                if (p && p.catch) p.catch(function(){
+                    if (token !== _fsYtToken) return;
+                    var t = _fsRadioTracks[_fsRadioIndex];
+                    if (t && t.url) {
+                        document.getElementById('fsRadioNow').textContent = title + ' (preview 30 dtk)';
+                        fsRadioPlay(t.url, t.title, t.artist, t.genre);
+                        document.getElementById('fsRadioMeta').textContent = artist + ' • Preview 30 dtk';
+                    }
+                });
+                fsRadioPrefetchNext();
+            }
             function fsRadioPlayYoutube(title, artist) {
                 var token = ++_fsYtToken;
                 _fsYtAudioVideoId = '';
@@ -2193,6 +2240,13 @@
                 document.getElementById('fsRadioNow').textContent = title;
                 document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Mencari audio YouTube...';
                 fsRadioLyrics(title, artist);
+                // Sudah disiapkan selagi lagu sebelumnya jalan -> langsung bunyi.
+                if (_fsRadioPrefetch.index === _fsRadioIndex && _fsRadioPrefetch.url) {
+                    var preUrl = _fsRadioPrefetch.url;
+                    _fsRadioPrefetch = { index: -1, url: '' };
+                    fsRadioPlayAudioUrl(preUrl, title, artist, token);
+                    return;
+                }
                 var q = (artist + ' ' + title).trim();
                 fetch(FS_INVIDIOUS + '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video')
                     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -2210,19 +2264,7 @@
                         var fmt = fsRadioPickAudioFormat(res.data);
                         if (!fmt) throw new Error('no audio format');
                         _fsYtAudioVideoId = res.videoId;
-                        document.getElementById('fsRadioMeta').textContent = artist + ' • Tanpa iklan • Audio YouTube';
-                        audio.src = fmt.url;
-                        var p = audio.play();
-                        if (p && p.catch) p.catch(function(){
-                            if (token !== _fsYtToken) return;
-                            // Audio gagal diputar -> preview iTunes 30 dtk, TIDAK PERNAH video.
-                            var t = _fsRadioTracks[_fsRadioIndex];
-                            if (t && t.url) {
-                                document.getElementById('fsRadioNow').textContent = title + ' (preview 30 dtk)';
-                                fsRadioPlay(t.url, t.title, t.artist, t.genre);
-                                document.getElementById('fsRadioMeta').textContent = artist + ' • Preview 30 dtk';
-                            }
-                        });
+                        fsRadioPlayAudioUrl(fmt.url, title, artist, token);
                     })
                     .catch(function(){
                         if (token !== _fsYtToken) return;
@@ -2242,6 +2284,14 @@
                 var t = _fsRadioTracks[i];
                 fsRadioSetArt(t.art);
                 fsRadioMarkPlaying();
+                // Reset seek bar langsung — jangan tampilkan waktu lagu lama
+                // selagi lagu baru dicari.
+                var _fill = document.getElementById('fsRadioSeekFill');
+                if (_fill) _fill.style.width = '0%';
+                var _tc = document.getElementById('fsRadioTimeCur');
+                if (_tc) _tc.textContent = '0:00';
+                var _tt = document.getElementById('fsRadioTimeTot');
+                if (_tt) _tt.textContent = '0:00';
                 if (t.source === 'itunes') fsRadioPlayYoutube(t.title, t.artist);
                 else fsRadioPlay(t.url, t.title, t.artist, t.genre);
             }
@@ -2317,6 +2367,7 @@
                     if (errEl) errEl.style.display = 'block';
                     document.getElementById('fsRadioNow').textContent = '⚠️ Lagu tidak bisa diputar';
                 });
+                fsRadioPrefetchNext();
             }
 
             // Lirik ala BitChord — LRCLIB (API publik gratis, tanpa kunci).
