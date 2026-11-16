@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
+    <title>Freedom Syndicate | Market Hub</title>
+    <meta name="description" content="Market Hub Freedom Syndicate: analisa, jurnal trading, dan set-up teknikal khusus anggota.">
+    <meta property="og:title" content="Freedom Syndicate | Market Hub">
+    <meta property="og:description" content="Market Hub Freedom Syndicate: analisa, jurnal trading, dan set-up teknikal khusus anggota.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freedomsyndicate.my.id/trading.html">
+
+    <script>
+    (function(){
+        'use strict';
+
+        // --- 1. DISABLE KLIK KANAN ---
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+
+        // --- 2. DISABLE TEXT SELECT ---
+        document.addEventListener('selectstart', function(e){
+            // Izinkan select di input & textarea
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        }, true);
+
+        // --- 3. DISABLE DRAG ---
+        document.addEventListener('dragstart', function(e){ e.preventDefault(); }, true);
+
+        // --- 4. DISABLE KEYBOARD SHORTCUTS BERBAHAYA ---
+        document.addEventListener('keydown', function(e){
+            var k = e.key ? e.key.toLowerCase() : '';
+            var ctrl = e.ctrlKey || e.metaKey;
+            var shift = e.shiftKey;
+
+            // F12
+            if(e.key === 'F12'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+U (view-source)
+            if(ctrl && k === 'u'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+S (save)
+            if(ctrl && k === 's'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+P (print)
+            if(ctrl && k === 'p'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C / Ctrl+Shift+K
+            if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
+                e.preventDefault(); e.stopPropagation(); return false;
+            }
+            // Ctrl+A — blokir hanya di luar input/textarea
+            if(ctrl && k === 'a'){
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+                    e.preventDefault(); e.stopPropagation(); return false;
+                }
+            }
+        }, true);
+
+        // --- 5. DEVTOOLS DETECTOR ---
+        // Metode: bandingkan window size. Threshold 200px agar tidak false-positive di mobile.
+        var _devOpen = false;
+        var _devCheckActive = true;
+
+        function _onDevToolsOpen(){
+            if(!_devCheckActive) return;
+            _devCheckActive = false; // jalankan sekali saja
+            document.addEventListener('DOMContentLoaded', function(){
+                _showBlocked();
+            });
+            // Jika DOM sudah ready, langsung tampilkan
+            if(document.body) _showBlocked();
+        }
+
+        function _showBlocked(){
+            document.body.innerHTML = [
+                '<div style="display:flex;flex-direction:column;align-items:center;',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
+                'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.0</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools & refresh halaman.</div>',
+                '</div>'
+            ].join('');
+        }
+
+        // Cek setiap 1.5 detik — hanya aktif di desktop (skip mobile kecil)
+        setInterval(function(){
+            if(!_devCheckActive) return;
+            // Mobile: outerWidth biasanya sama dengan innerWidth, skip
+            if(window.outerWidth < 500) return;
+            var wDiff = window.outerWidth - window.innerWidth;
+            var hDiff = window.outerHeight - window.innerHeight;
+            if(wDiff > 200 || hDiff > 200){
+                if(!_devOpen){ _devOpen = true; _onDevToolsOpen(); }
+            } else {
+                _devOpen = false;
+            }
+        }, 1500);
+
+        // --- 6. DISABLE PRINT ---
+        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
+
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        var _s = document.createElement('style');
+        _s.textContent = [
+            '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
+            '-ms-user-select:none!important; user-select:none!important;',
+            '-webkit-touch-callout:none!important; }',
+            'input, textarea, [contenteditable] {',
+            '-webkit-user-select:text!important; user-select:text!important; }'
+        ].join('');
+        document.head.appendChild(_s);
+
+    })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _fsFetchJson(url, ms) {
+                    return new Promise(function(resolve, reject) {
+                        var done = false;
+                        var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 8000);
+                        fetch(url).then(function(r){
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            return r.json();
+                        }).then(function(d){
+                            if (!done) { done = true; clearTimeout(t); resolve(d); }
+                        }).catch(function(e){
+                            if (!done) { done = true; clearTimeout(t); reject(e); }
+                        });
+                    });
+                }
+    </script>
+</head>
+<body>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+
+    <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
+        <ul class="sidebar-menu">
+            <li class="side-label">MENU UTAMA</li>
+            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
+            <li><button onclick="openTab('trading', this)" class="active-tab">📈 Trading</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
+            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="location.href='ai.html'">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
+            <li class="side-label">LAINNYA</li>
+            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+
+<div id="trading" class="tab-content active">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📈 MARKET HUB</h3><p>Analisa, jurnal trading, dan set-up teknikal khusus anggota.</p></div>
+            <div class="content-box">
+                <h3 style="margin-top:0; color: var(--primary);">MARKET HUB</h3>
+                <p>Akses analisa, jurnal trading, dan set-up teknikal khusus untuk anggota Syndicate.</p>
+                
+                <a href="journal.html" class="journal-btn">
+                    <span class="journal-title">FREEDOM SYNDICATE</span>
+                    <span class="journal-sub">Journal</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="bottomnav" aria-label="Navigasi utama">
+        <div class="bottomnav-inner">
+            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
+            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
+            <button onclick="location.href='hiburan.html#tvchannel'"><span>📺</span>Live TV</button>
+            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+        </div>
+    </nav>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        function toggleSidebar() {
+            var overlay = document.getElementById('pageOverlay');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        }
+        function openTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+            document.querySelectorAll('.sidebar-menu button').forEach(function(b){ b.classList.remove('active-tab'); });
+            var el = document.getElementById(tabId);
+            if (el) el.classList.add('active');
+            if (btnElement) btnElement.classList.add('active-tab');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (sidebar.classList.contains('active')) toggleSidebar();
+        }
+        function bukaGarapan() { window.location.href = 'garapan.html'; }
+        document.addEventListener('DOMContentLoaded', function(){
+            var h = (location.hash || '').replace('#', '');
+            if (h && document.getElementById(h)) {
+                var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + h + '\'"]');
+                openTab(h, btn);
+            }
+        });
+    </script>
+</body>
+</html>

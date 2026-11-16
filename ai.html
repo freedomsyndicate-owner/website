@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
+    <title>Freedom Syndicate | Chat Ai</title>
+    <meta name="description" content="Chat Ai Freedom Syndicate: tanya apa saja, analisa chart XAUUSD & BTC, tanpa login.">
+    <meta property="og:title" content="Freedom Syndicate | Chat Ai">
+    <meta property="og:description" content="Chat Ai Freedom Syndicate: tanya apa saja, analisa chart XAUUSD & BTC, tanpa login.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freedomsyndicate.my.id/ai.html">
+
+    <script>
+    (function(){
+        'use strict';
+
+        // --- 1. DISABLE KLIK KANAN ---
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+
+        // --- 2. DISABLE TEXT SELECT ---
+        document.addEventListener('selectstart', function(e){
+            // Izinkan select di input & textarea
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        }, true);
+
+        // --- 3. DISABLE DRAG ---
+        document.addEventListener('dragstart', function(e){ e.preventDefault(); }, true);
+
+        // --- 4. DISABLE KEYBOARD SHORTCUTS BERBAHAYA ---
+        document.addEventListener('keydown', function(e){
+            var k = e.key ? e.key.toLowerCase() : '';
+            var ctrl = e.ctrlKey || e.metaKey;
+            var shift = e.shiftKey;
+
+            // F12
+            if(e.key === 'F12'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+U (view-source)
+            if(ctrl && k === 'u'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+S (save)
+            if(ctrl && k === 's'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+P (print)
+            if(ctrl && k === 'p'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C / Ctrl+Shift+K
+            if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
+                e.preventDefault(); e.stopPropagation(); return false;
+            }
+            // Ctrl+A — blokir hanya di luar input/textarea
+            if(ctrl && k === 'a'){
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+                    e.preventDefault(); e.stopPropagation(); return false;
+                }
+            }
+        }, true);
+
+        // --- 5. DEVTOOLS DETECTOR ---
+        // Metode: bandingkan window size. Threshold 200px agar tidak false-positive di mobile.
+        var _devOpen = false;
+        var _devCheckActive = true;
+
+        function _onDevToolsOpen(){
+            if(!_devCheckActive) return;
+            _devCheckActive = false; // jalankan sekali saja
+            document.addEventListener('DOMContentLoaded', function(){
+                _showBlocked();
+            });
+            // Jika DOM sudah ready, langsung tampilkan
+            if(document.body) _showBlocked();
+        }
+
+        function _showBlocked(){
+            document.body.innerHTML = [
+                '<div style="display:flex;flex-direction:column;align-items:center;',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
+                'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.0</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools & refresh halaman.</div>',
+                '</div>'
+            ].join('');
+        }
+
+        // Cek setiap 1.5 detik — hanya aktif di desktop (skip mobile kecil)
+        setInterval(function(){
+            if(!_devCheckActive) return;
+            // Mobile: outerWidth biasanya sama dengan innerWidth, skip
+            if(window.outerWidth < 500) return;
+            var wDiff = window.outerWidth - window.innerWidth;
+            var hDiff = window.outerHeight - window.innerHeight;
+            if(wDiff > 200 || hDiff > 200){
+                if(!_devOpen){ _devOpen = true; _onDevToolsOpen(); }
+            } else {
+                _devOpen = false;
+            }
+        }, 1500);
+
+        // --- 6. DISABLE PRINT ---
+        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
+
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        var _s = document.createElement('style');
+        _s.textContent = [
+            '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
+            '-ms-user-select:none!important; user-select:none!important;',
+            '-webkit-touch-callout:none!important; }',
+            'input, textarea, [contenteditable] {',
+            '-webkit-user-select:text!important; user-select:text!important; }'
+        ].join('');
+        document.head.appendChild(_s);
+
+    })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _fsFetchJson(url, ms) {
+                    return new Promise(function(resolve, reject) {
+                        var done = false;
+                        var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 8000);
+                        fetch(url).then(function(r){
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            return r.json();
+                        }).then(function(d){
+                            if (!done) { done = true; clearTimeout(t); resolve(d); }
+                        }).catch(function(e){
+                            if (!done) { done = true; clearTimeout(t); reject(e); }
+                        });
+                    });
+                }
+    </script>
+</head>
+<body>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+
+    <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
+        <ul class="sidebar-menu">
+            <li class="side-label">MENU UTAMA</li>
+            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
+            <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
+            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="openTab('chatai', this)" class="active-tab">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
+            <li class="side-label">LAINNYA</li>
+            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+
+<div id="chatai" class="tab-content active" style="padding:14px 14px 24px;">
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">🤖 CHAT AI</div>
+                <div style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">Pilih AI, lalu tanya-balas di sini. Semua model di bawah gratis tanpa kunci, langsung jalan.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+                <select id="aiModel" onchange="aiOnModelChange()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:10px;border-radius:10px;font-size:0.8rem;">
+                    <optgroup label="Gratis tanpa kunci — LLM7">
+                        <option value="llm7:default">LLM7 — Otomatis (gratis, tanpa kunci)</option>
+                        <option value="llm7:gpt-oss:20b" selected>LLM7 — GPT-OSS 20B</option>
+                    </optgroup>
+                </select>
+                <button onclick="aiClearChat()" style="background:#0a0e14;border:1px solid #30363d;color:#94a3b8;padding:10px 14px;border-radius:10px;font-size:0.8rem;cursor:pointer;">🗑️ Hapus</button>
+            </div>
+            <div id="aiChat" style="background:#050a14;border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px;height:calc(100vh - 380px);min-height:260px;overflow-y:auto;font-size:0.82rem;line-height:1.55;color:#e2e8f0;">
+                <div style="color:#94a3b8;">👋 Halo! Pilih AI di atas, lalu ketik pertanyaanmu di bawah. Jawaban muncul di sini.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <input id="aiInput" type="text" placeholder="Tanya apa saja..." autocomplete="off" onkeydown="if(event.key==='Enter')aiSend()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:11px 12px;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
+                <button id="aiSendBtn" onclick="aiSend()" style="background:var(--primary);color:#000;border:none;padding:11px 18px;border-radius:10px;font-weight:800;font-size:0.85rem;cursor:pointer;">Kirim</button>
+            </div>
+            <div id="aiStatus" style="font-size:0.68rem;color:#94a3b8;margin-top:10px;line-height:1.5;">ℹ️ Obrolan hanya tersimpan di HP kamu (tidak dikirim ke FS). Model LLM7 gratis tanpa kunci tapi daftar modelnya bisa berubah.</div>
+        </div>
+        <script>
+        var AI_WORKER_URL = 'https://fs-ai.sanlana1903.workers.dev';
+        var AI_LLM7_URL = 'https://api.llm7.io/v1/chat/completions';
+        var aiHistory = [];
+        var aiBusy = false;
+        var AI_SYS = 'Kamu adalah AI Assistant FREEDOM SYNDICATE. Jawab SELALU dalam Bahasa Indonesia, ringkas dan jelas. Jika ditanya harga kripto, pakai data harga live yang diberikan dan sebutkan harganya; jangan mengarang angka. Jika tidak ada data harga, katakan terus terang.';
+        // Harga live dari TradingView (scanner API, gratis, tanpa kunci) — simbol
+        // apa pun yang disebut user langsung dicoba: kripto via BINANCE, emas
+        // (XAU/EMAS/GOLD) via OANDA:XAUUSD, forex via OANDA, saham via NASDAQ/NYSE.
+        // Tidak ada daftar koin tetap.
+        var AI_GOLD = { XAU: 1, EMAS: 1, GOLD: 1 };
+        var AI_STOP = { HARGA:1, CEK:1, BERAPA:1, SAAT:1, INI:1, SEKARANG:1, TOLONG:1, APA:1, BAGAIMANA:1, GIMANA:1, DAN:1, ATAU:1, YANG:1, DI:1, KE:1, DARI:1, UNTUK:1, DENGAN:1, SAYA:1, KAMU:1, AKU:1, KITA:1, DIA:1, ITU:1, JIKA:1, KALAU:1, BISA:1, MOHON:1, MAU:1, INGIN:1, TIDAK:1, NGGAK:1, GAK:1, LAGI:1, MASIH:1, SUDAH:1, BELUM:1, DONG:1, YA:1, SIH:1, AJA:1, SAJA:1, TANYA:1, LIHAT:1, KASIH:1, BERIKAN:1, INFO:1, TERKINI:1, LIVE:1, UPDATE:1, SEMUA:1, HARUS:1, TAU:1, TAHU:1, KENAPA:1, ORANG:1, MEREKA:1 };
+        function aiTvTickers(w) {
+          var base = w.replace(/(USDT|USD)$/, '');
+          if (AI_GOLD[base] || AI_GOLD[w]) return { label: 'XAUUSD (emas)', tickers: ['OANDA:XAUUSD', 'FOREXCOM:XAUUSD'] };
+          if (/^(EUR|GBP|AUD|NZD|USD|CAD|CHF|JPY|CNY|SEK|NOK|DKK|PLN|CZK|HUF|TRY|ZAR|MXN|SGD|HKD)(USD|EUR|GBP|JPY|AUD|CAD|CHF|NZD)$/.test(w) && w.length === 6) return { label: w, tickers: ['OANDA:' + w] };
+          if (!base || base.length < 2) return null;
+          return { label: base, tickers: ['BINANCE:' + base + 'USDT', 'BINANCE:' + base + 'USD', 'NASDAQ:' + base, 'NYSE:' + base] };
+        }
+        function aiFmtPrice(p) {
+          if (p >= 10) return p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          if (p >= 0.01) return p.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+          return String(Number(p.toPrecision(4)));
+        }
+        async function aiLivePrices(text) {
+          var up = (text || '').toUpperCase();
+          if (!/HARGA|PRICE|CEK|BERAPA/.test(up) && up.trim().split(/\s+/).length > 2) return '';
+          var words = up.match(/\b[A-Z]{2,12}\b/g) || [];
+          var cands = [];
+          words.forEach(function(w){ if (!AI_STOP[w] && cands.indexOf(w) < 0) cands.push(w); });
+          if (!cands.length) return '';
+          var results = await Promise.all(cands.slice(0, 5).map(async function(w){
+            var t = aiTvTickers(w);
+            if (!t) return null;
+            for (var i = 0; i < t.tickers.length; i++) {
+              try {
+                var r = await fetch('https://scanner.tradingview.com/symbol?symbol=' + encodeURIComponent(t.tickers[i]) + '&fields=close');
+                if (!r.ok) continue;
+                var j = await r.json();
+                if (j && typeof j.close === 'number') return { label: t.label, price: j.close, ticker: t.tickers[i] };
+              } catch (e) {}
+            }
+            return null;
+          }));
+          var seen = {}, parts = [];
+          results.forEach(function(p){ if (p && !seen[p.ticker]) { seen[p.ticker] = 1; parts.push(p.label + ' $' + aiFmtPrice(p.price)); } });
+          if (!parts.length) return '';
+          return '\n\n[HARGA LIVE TradingView, ' + new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ']: ' + parts.join(', ') + '.';
+        }
+        function aiFmt(s) {
+          var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          e = e.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+          e = e.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:#38bdf8;">$1</a>');
+          return e;
+        }
+        function aiBubble(role, text) {
+          var box = document.getElementById('aiChat');
+          var div = document.createElement('div');
+          div.style.margin = '10px 0';
+          div.style.padding = '10px 12px';
+          div.style.borderRadius = '10px';
+          div.style.whiteSpace = 'pre-wrap';
+          div.style.wordBreak = 'break-word';
+          if (role === 'user') {
+            div.style.background = 'rgba(56,189,248,0.15)';
+            div.style.textAlign = 'right';
+            div.textContent = text;
+          } else if (role === 'error') {
+            div.style.background = 'rgba(239,68,68,0.15)';
+            div.style.color = '#fca5a5';
+            div.textContent = text;
+          } else {
+            div.style.background = 'rgba(148,163,184,0.12)';
+            div.innerHTML = aiFmt(text);
+          }
+          box.appendChild(div);
+          box.scrollTop = box.scrollHeight;
+          return div;
+        }
+        function aiOnModelChange() { /* pilihan tersimpan otomatis lewat select */ }
+        function aiClearChat() {
+          aiHistory = [];
+          document.getElementById('aiChat').innerHTML = '<div style="color:#94a3b8;">👋 Obrolan dihapus. Silakan tanya lagi.</div>';
+        }
+        async function aiSend() {
+          if (aiBusy) return;
+          var input = document.getElementById('aiInput');
+          var text = (input.value || '').trim();
+          if (!text) return;
+          var sel = document.getElementById('aiModel').value || 'llm7:default';
+          var parts = sel.split(':');
+          var backend = parts[0];
+          var model = sel.slice(parts[0].length + 1);
+          input.value = '';
+          aiBubble('user', text);
+          aiHistory.push({ role: 'user', content: text });
+          if (aiHistory.length > 20) aiHistory = aiHistory.slice(-20);
+          var thinking = aiBubble('ai', '⏳ Mengetik...');
+          var btn = document.getElementById('aiSendBtn');
+          aiBusy = true;
+          btn.disabled = true;
+          try {
+            var url, body;
+            var priceCtx = await aiLivePrices(text);
+            var msgs = [{ role: 'system', content: AI_SYS + priceCtx }].concat(aiHistory.slice());
+            if (backend === 'sinar') {
+              url = AI_WORKER_URL + '/v1/chat/completions';
+              body = { model: model, messages: msgs, max_tokens: 800 };
+            } else {
+              url = AI_LLM7_URL;
+              body = { model: model, messages: msgs, max_tokens: 800 };
+            }
+            var res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body),
+            });
+            var data = await res.json();
+            if (!res.ok) {
+              var msg = (data && data.error && (data.error.message || data.error)) || ('HTTP ' + res.status);
+              throw new Error(String(msg));
+            }
+            var reply = data && data.choices && data.choices[0] && data.choices[0].message
+              ? data.choices[0].message.content : '';
+            if (!reply) throw new Error('Jawaban kosong dari AI.');
+            thinking.innerHTML = aiFmt(reply);
+            aiHistory.push({ role: 'assistant', content: reply });
+          } catch (e) {
+            thinking.remove();
+            var emsg = '⚠️ Gagal: ' + (e && e.message ? e.message : 'tidak bisa terhubung.');
+            if (backend === 'sinar') emsg += ' (Model SinarCloud butuh secret Worker yang sudah dipasang; coba model LLM7 gratis.)';
+            aiBubble('error', emsg);
+          }
+          aiBusy = false;
+          btn.disabled = false;
+          input.focus();
+        }
+        </script>
+
+
+        <!-- ===== MUSIK TAB (Audius — open source, API publik gratis, tanpa kunci) ===== -->
+
+    </div>
+
+    <nav class="bottomnav" aria-label="Navigasi utama">
+        <div class="bottomnav-inner">
+            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
+            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
+            <button onclick="location.href='hiburan.html#tvchannel'"><span>📺</span>Live TV</button>
+            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+        </div>
+    </nav>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        function toggleSidebar() {
+            var overlay = document.getElementById('pageOverlay');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        }
+        function openTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+            document.querySelectorAll('.sidebar-menu button').forEach(function(b){ b.classList.remove('active-tab'); });
+            var el = document.getElementById(tabId);
+            if (el) el.classList.add('active');
+            if (btnElement) btnElement.classList.add('active-tab');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (sidebar.classList.contains('active')) toggleSidebar();
+        }
+        function bukaGarapan() { window.location.href = 'garapan.html'; }
+        document.addEventListener('DOMContentLoaded', function(){
+            var h = (location.hash || '').replace('#', '');
+            if (h && document.getElementById(h)) {
+                var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + h + '\'"]');
+                openTab(h, btn);
+            }
+        });
+    </script>
+</body>
+</html>
