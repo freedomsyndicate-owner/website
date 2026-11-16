@@ -1911,7 +1911,7 @@
             <!-- Daftar lagu -->
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:14px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen — lagu penuh) · Kalau di Audius tidak ada, dicari ke iTunes (preview 30 detik) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
 
             <script>
             // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
@@ -1935,42 +1935,92 @@
                 return m + ':' + (s < 10 ? '0' : '') + s;
             }
 
+            // Render dari daftar ternormalisasi {url,title,artist,genre,art,sub}
+            // supaya Audius (lagu penuh) dan iTunes (preview 30 dtk) tampil sama,
+            // dan antrean Sebelumnya/Berikutnya jalan untuk keduanya.
+            function fsRadioRenderItems(items, statusEl, list, statusText) {
+                if (!items.length) {
+                    if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                    list.innerHTML = '';
+                    _fsRadioTracks = [];
+                    return;
+                }
+                if (statusEl) statusEl.textContent = statusText || (items.length + ' lagu ditemukan');
+                list.innerHTML = '';
+                _fsRadioTracks = items.map(function(t){
+                    return { url: t.url, title: t.title, artist: t.artist, genre: t.genre || '' };
+                });
+                items.forEach(function(t){
+                    var item = document.createElement('div');
+                    item.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;';
+                    item.innerHTML =
+                        (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
+                        '<div style="flex:1;min-width:0;">' +
+                            '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.title) + '</div>' +
+                            '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + (t.genre ? ' • ' + esc(t.genre) : '') + '</div>' +
+                            '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">' + esc(t.sub || '') + '</div>' +
+                        '</div>' +
+                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
+                    item.querySelector('button').onclick = function(){ fsRadioPlay(t.url, t.title, t.artist, t.genre); };
+                    list.appendChild(item);
+                });
+            }
+
             function fsRadioRender(tracks, statusEl, list) {
                 if (!tracks.length) {
                     if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
                     list.innerHTML = '';
+                    _fsRadioTracks = [];
                     return;
                 }
-                if (statusEl) statusEl.textContent = tracks.length + ' lagu ditemukan';
-                list.innerHTML = '';
-                _fsRadioTracks = tracks.map(function(t){
-                    return {
-                        url: FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP,
-                        title: t.title || 'Tanpa judul',
-                        artist: (t.user && t.user.name) || 'Artis tidak dikenal',
-                        genre: t.genre || ''
-                    };
-                });
-                tracks.forEach(function(t){
+                var items = tracks.map(function(t){
                     var title = t.title || 'Tanpa judul';
                     var artist = (t.user && t.user.name) || 'Artis tidak dikenal';
-                    var genre = t.genre || '';
-                    var dur = fsRadioFmtDur(t.duration);
-                    var plays = t.play_count || 0;
-                    var art = (t.artwork && (t.artwork['150x150'] || t.artwork['480x480'])) || '';
-                    var streamUrl = FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP;
-                    var item = document.createElement('div');
-                    item.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;';
-                    item.innerHTML =
-                        (art ? '<img src="' + esc(art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
-                        '<div style="flex:1;min-width:0;">' +
-                            '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(title) + '</div>' +
-                            '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(artist) + (genre ? ' • ' + esc(genre) : '') + '</div>' +
-                            '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">⏱ ' + esc(dur) + ' · ▶ ' + esc(String(plays)) + ' diputar</div>' +
-                        '</div>' +
-                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
-                    item.querySelector('button').onclick = function(){ fsRadioPlay(streamUrl, title, artist, genre); };
-                    list.appendChild(item);
+                    return {
+                        url: FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP,
+                        title: title, artist: artist, genre: t.genre || '',
+                        art: (t.artwork && (t.artwork['150x150'] || t.artwork['480x480'])) || '',
+                        sub: '⏱ ' + fsRadioFmtDur(t.duration) + ' · ▶ ' + String(t.play_count || 0) + ' diputar'
+                    };
+                });
+                fsRadioRenderItems(items, statusEl, list, tracks.length + ' lagu ditemukan');
+            }
+
+            // Fallback iTunes Search API (publik, gratis, tanpa kunci, country ID):
+            // dipakai HANYA kalau Audius kosong — mis. artis mainstream seperti
+            // Ajeng Febria yang memang tidak ada di Audius (artis independen saja).
+            // Hasilnya preview 30 detik, bukan lagu penuh — ditulis jelas di daftar.
+            function fsRadioFetchItunes(q, statusEl, list) {
+                if (statusEl) statusEl.textContent = '⏳ Di Audius tidak ada — mencari di iTunes...';
+                var url = 'https://itunes.apple.com/search?term=' + encodeURIComponent(q)
+                    + '&media=music&entity=song&limit=30&country=ID';
+                fetch(url).then(function(r){
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                }).then(function(d){
+                    var results = (d && d.results) || [];
+                    var items = [];
+                    results.forEach(function(r){
+                        if (!r.previewUrl || !r.trackName) return;
+                        var art = r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb.jpg', '600x600bb.jpg') : '';
+                        items.push({
+                            url: r.previewUrl,
+                            title: r.trackName,
+                            artist: r.artistName || 'Artis tidak dikenal',
+                            genre: 'Preview iTunes',
+                            art: art,
+                            sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎧 Preview 30 dtk (iTunes)'
+                        });
+                    });
+                    if (!items.length) {
+                        if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                        list.innerHTML = '';
+                        _fsRadioTracks = [];
+                        return;
+                    }
+                    fsRadioRenderItems(items, statusEl, list, items.length + ' lagu ditemukan di iTunes (preview 30 detik)');
+                }).catch(function(){
+                    if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
                 });
             }
 
@@ -1983,6 +2033,13 @@
                 fetch(url).then(function(r){ return r.json(); }).then(function(d){
                     _fsRadioLoading = false;
                     var tracks = (d && d.data) || [];
+                    // Pencarian Audius kosong -> coba iTunes (artismu mainstream).
+                    // Trending (tanpa query) tidak di-fallback.
+                    var m = url.match(/[?&]query=([^&]*)/);
+                    if (!tracks.length && m && m[1]) {
+                        fsRadioFetchItunes(decodeURIComponent(m[1]), statusEl, list);
+                        return;
+                    }
                     fsRadioRender(tracks, statusEl, list);
                 }).catch(function(){
                     _fsRadioLoading = false;
