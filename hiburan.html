@@ -115,6 +115,17 @@
 
     })();
     </script>
+    <script>
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    (function(){ try {
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        window.FS_THEMES = T;
+        var n = localStorage.getItem('fsTheme') || 'biru';
+        var th = T[n] || T.biru;
+        document.documentElement.style.setProperty('--primary', th[0]);
+        document.documentElement.style.setProperty('--primary-glow', th[1]);
+    } catch(e) {} })();
+    </script>
     <link rel="stylesheet" href="style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" integrity="sha384-miJUhTuRucSoqFe3/VSB2sRghSMoev6wpPoEyj5fhF0PARehD+naPBsAkl5NqwPO" crossorigin="anonymous"
         onerror="window._hlsJsFailed=true;console.warn('HLS.js gagal dimuat dari CDN.');"></script>
@@ -155,7 +166,7 @@
             <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
             <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
-            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
             <li class="side-label">🎬 HIBURAN</li>
             <li><button onclick="openTab('tvchannel', this)" class="active-tab">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
@@ -171,8 +182,8 @@
             <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
             <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
-            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
@@ -696,18 +707,6 @@
 
         </div>
 
-        <footer>BEYOND THE LIMITS &bull; 2026</footer>
-    </div>
-
-    <nav class="bottomnav" aria-label="Navigasi utama">
-        <div class="bottomnav-inner">
-            <button data-tab="home" class="active" onclick="navTab('home')"><span>🏠</span>Beranda</button>
-            <button data-tab="trading" onclick="navTab('trading')"><span>📈</span>Trading</button>
-            <button data-tab="movie" onclick="navTab('movie')"><span>🎬</span>Movie</button>
-            <button data-tab="tvchannel" onclick="navTab('tvchannel')"><span>📺</span>Live TV</button>
-            <button data-tab="chatai" onclick="navTab('chatai')"><span>🤖</span>Chat Ai</button>
-        </div>
-    </nav>
 
 <div id="movie" class="tab-content" style="padding:0;margin:0;">
             <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
@@ -1502,6 +1501,7 @@
                 <div id="fsClassicRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;"></div>
                 <div style="font-size:0.58rem;color:#475569;margin-top:8px;">Sumber: archive.org (koleksi feature_films) · Film baru di sini berarti film klasik yang paling banyak diunduh · Untuk film bioskop terbaru, gunakan pencarian FS Cinema di atas.</div>
             </div>
+</div>
 
 <div id="musik" class="tab-content" style="padding:14px 14px 24px;">
             <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Streaming lagu penuh &amp; MP3 dari HP — tanpa iklan, musik saja.</p></div>
@@ -1574,6 +1574,11 @@
                 </div>
             </div>
 
+            <!-- Rekomendasi untukmu (ala Flow: rekomendasi dari yang sering didengar) -->
+            <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:18px;">🎯 Rekomendasi untukmu</div>
+            <div id="fsRecStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">Putar beberapa lagu dulu — rekomendasi muncul dari artis yang sering kamu dengarkan.</div>
+            <div id="fsRecList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
+
             <!-- Daftar lagu -->
             <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:18px;">🎵 Daftar Lagu</div>
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat lagu trending...</div>
@@ -1607,6 +1612,17 @@
                         <button onclick="fsLocalFilter('top',this)" class="fs-cat-btn">🔥 Top 10</button>
                         <button onclick="fsLocalFilter('recent',this)" class="fs-cat-btn">🕒 Baru Ditambahkan</button>
                     </div>
+                </div>
+                <!-- Playlist (ala Sono: kumpulan lagu sendiri) -->
+                <div style="margin-top:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:10px;">
+                    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                        <span style="font-size:0.75rem;font-weight:800;">📂 Playlist</span>
+                        <button onclick="fsPlCreate()" style="background:var(--primary);color:#000;border:none;border-radius:8px;padding:8px 10px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;">＋ Buat</button>
+                        <button onclick="fsPlPlay()" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;border-radius:8px;padding:8px 10px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>
+                        <button onclick="fsPlDelete()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:8px;padding:8px 10px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;">🗑 Hapus</button>
+                    </div>
+                    <div id="fsPlChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;"></div>
+                    <div style="font-size:0.62rem;color:#64748b;margin-top:6px;">Pilih playlist, lalu ketuk ＋ pada lagu untuk menambahkannya. Putar jalan berurutan.</div>
                 </div>
                 <div id="fsLocalStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">Memuat pustaka...</div>
                 <div id="fsLocalList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
@@ -1672,6 +1688,7 @@
                 if (_fsRadioInit) return;
                 _fsRadioInit = true;
                 fsRadioLoadTrending();
+                fsRadioRecRender();
                 fsLocalInit();
                 window.addEventListener('beforeunload', fsRadioSaveState);
             }
@@ -2011,6 +2028,14 @@
                 _fsRadioQueue = 'stream';
                 _fsRadioIndex = i;
                 var t = _fsRadioTracks[i];
+                try {
+                    var _hist = JSON.parse(localStorage.getItem('fsRadioHistory') || '[]');
+                    _hist.unshift({ title: t.title, artist: t.artist, at: Date.now() });
+                    var _seen = {}, _hout = [];
+                    _hist.forEach(function(x){ var k = ((x.title || '') + '|' + (x.artist || '')).toLowerCase(); if (!_seen[k]) { _seen[k] = 1; _hout.push(x); } });
+                    localStorage.setItem('fsRadioHistory', JSON.stringify(_hout.slice(0, 50)));
+                } catch(e) {}
+                if (typeof fsRadioRecRender === 'function') fsRadioRecRender();
                 fsRadioSetArt(t.art);
                 fsRadioMarkPlaying();
                 // Reset seek bar langsung — jangan tampilkan waktu lagu lama
@@ -2024,6 +2049,71 @@
                 if (t.source === 'itunes') fsRadioPlayYoutube(t.title, t.artist);
                 else fsRadioPlay(t.url, t.title, t.artist, t.genre);
                 fsRadioSyncMini(); fsRadioSyncNp(); fsRadioRenderNpQueue();
+            }
+            // --- REKOMENDASI (ala Flow): artis paling sering didengar -> lagu sejenis via iTunes ---
+            var _fsRecTracks = [];
+            var _fsRecTop = null;
+            var _fsRecBusy = false;
+            function fsRadioRecRender() {
+                var list = document.getElementById('fsRecList');
+                var st = document.getElementById('fsRecStatus');
+                if (!list || !st) return;
+                var hist = [];
+                try { hist = JSON.parse(localStorage.getItem('fsRadioHistory') || '[]'); } catch(e) {}
+                if (!hist.length) {
+                    st.textContent = 'Putar beberapa lagu dulu — rekomendasi muncul dari artis yang sering kamu dengarkan.';
+                    list.innerHTML = ''; _fsRecTracks = []; _fsRecTop = null;
+                    return;
+                }
+                var counts = {};
+                hist.forEach(function(x){
+                    var a = (x.artist || '').trim();
+                    if (!a || a === 'Tidak dikenal' || a === 'Artis tidak dikenal') return;
+                    counts[a] = (counts[a] || 0) + 1;
+                });
+                var top = null, topN = 0;
+                Object.keys(counts).forEach(function(a){ if (counts[a] > topN) { topN = counts[a]; top = a; } });
+                if (!top) return;
+                if (top === _fsRecTop && _fsRecTracks.length) return;
+                if (_fsRecBusy) return;
+                _fsRecBusy = true; _fsRecTop = top;
+                st.textContent = '⏳ Mencari lagu ' + top + ' lainnya...';
+                fsRadioFetchItunesItems(top).then(function(items){
+                    _fsRecBusy = false;
+                    var seen = {};
+                    hist.forEach(function(x){ seen[((x.title || '') + '|' + (x.artist || '')).toLowerCase()] = 1; });
+                    var fresh = items.filter(function(t){ return !seen[((t.title || '') + '|' + (t.artist || '')).toLowerCase()]; }).slice(0, 5);
+                    if (!fresh.length) fresh = items.slice(0, 5);
+                    _fsRecTracks = fresh;
+                    st.textContent = 'Karena kamu suka ' + top + ' — ' + fresh.length + ' rekomendasi';
+                    list.innerHTML = '';
+                    fresh.forEach(function(t, idx){
+                        var row = document.createElement('div');
+                        row.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;cursor:pointer;';
+                        row.innerHTML =
+                            (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
+                            '<div style="flex:1;min-width:0;">' +
+                                '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.title) + '</div>' +
+                                '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + '</div>' +
+                                '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">' + esc(t.sub || '') + '</div>' +
+                            '</div>' +
+                            '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
+                        row.querySelector('button').onclick = function(ev){ if (ev) ev.stopPropagation(); fsRecPlay(idx); };
+                        row.onclick = function(){ fsRecPlay(idx); };
+                        list.appendChild(row);
+                    });
+                }).catch(function(){
+                    _fsRecBusy = false;
+                    st.textContent = 'Rekomendasi gagal dimuat — coba lagi nanti.';
+                });
+            }
+            function fsRecPlay(i) {
+                var t = _fsRecTracks[i];
+                if (!t) return;
+                // Masukkan ke antrean utama di posisi akhir supaya fallback preview
+                // + prefetch lagu berikutnya tetap jalan seperti lagu biasa.
+                _fsRadioTracks.push({ url: t.url, title: t.title, artist: t.artist, genre: t.genre || '', source: t.source || 'audius', art: t.art || '' });
+                fsRadioPlayTrack(_fsRadioTracks.length - 1);
             }
             // Cover lagu yang sedang diputar (player ala Spotify).
             function fsRadioSetArt(url) {
@@ -2374,6 +2464,7 @@
             function fsLocalInit() {
                 if (_fsLocalInit) return;
                 _fsLocalInit = true;
+                fsPlRender();
                 fsLocalDb().then(function(){ return fsLocalLoad(); }).catch(function(){
                     var st = document.getElementById('fsLocalStatus');
                     if (st) st.textContent = '⚠️ Browser ini tidak mendukung penyimpanan lokal (IndexedDB).';
@@ -2517,6 +2608,7 @@
             }
             function fsLocalFilter(f, btn) {
                 _fsLocalFilter = f;
+                if (f !== 'pl') { _fsPlActive = null; fsPlRender(); }
                 if (btn && btn.parentElement) btn.parentElement.querySelectorAll('.fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
                 if (btn) btn.classList.add('active');
                 fsLocalRender();
@@ -2534,6 +2626,13 @@
                     if (!q) return true;
                     return ((t.title || '') + ' ' + (t.artist || '') + ' ' + (t.album || '') + ' ' + (t.fileName || '')).toLowerCase().indexOf(q) !== -1;
                 });
+                if (_fsLocalFilter === 'pl') {
+                    fsPlLoad();
+                    var _pp = null; _fsPls.forEach(function(x){ if (x.id === _fsPlActive) _pp = x; });
+                    var _pids = (_pp && _pp.ids) || [];
+                    items = _fsLocalTracks.filter(function(t){ return _pids.indexOf(t.id) !== -1; });
+                    items.sort(function(a, b){ return _pids.indexOf(a.id) - _pids.indexOf(b.id); });
+                }
                 if (_fsLocalFilter === 'top') items = items.slice().sort(function(a, b){ return (b.playCount || 0) - (a.playCount || 0); }).slice(0, 10);
                 if (st) st.textContent = _fsLocalTracks.length
                     ? (items.length + ' dari ' + _fsLocalTracks.length + ' lagu di pustaka' + (q ? ' untuk "' + q + '"' : ''))
@@ -2551,13 +2650,15 @@
                             '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">⏱ ' + fsRadioFmtDur(t.duration) + (t.playCount ? ' · ▶ ' + t.playCount + ' diputar' : '') + '</div>' +
                         '</div>' +
                         '<button onclick="event.stopPropagation();fsLocalToggleFav(\'' + t.id + '\')" title="Favorit" style="flex-shrink:0;background:none;border:none;font-size:1.05rem;cursor:pointer;padding:6px;color:' + (t.fav ? '#fbbf24' : '#475569') + ';font-family:inherit;">' + (t.fav ? '★' : '☆') + '</button>' +
+                        '<button onclick="event.stopPropagation();fsPlAdd(\'' + t.id + '\')" title="Tambah ke playlist aktif" style="flex-shrink:0;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:#64748b;font-family:inherit;">＋</button>' +
                         '<button onclick="event.stopPropagation();fsLocalDelete(\'' + t.id + '\')" title="Hapus dari pustaka" style="flex-shrink:0;background:none;border:none;font-size:0.95rem;cursor:pointer;padding:6px;color:#64748b;font-family:inherit;">🗑</button>';
                     row.onclick = function(){ fsLocalPlayTrack(idx); };
                     list.appendChild(row);
                 });
             }
-            function fsLocalPlayTrack(i) {
+            function fsLocalPlayTrack(i, keepPl) {
                 if (i < 0 || i >= _fsLocalTracks.length) return;
+                if (!keepPl) _fsPlQueue = null;
                 _fsRadioQueue = 'local';
                 _fsLocalIndex = i;
                 var t = _fsLocalTracks[i];
@@ -2582,6 +2683,16 @@
             }
             function fsLocalStep(dir) {
                 if (!_fsLocalTracks.length) return;
+                if (_fsPlQueue && _fsPlQueue.length) {
+                    var _curId = (_fsLocalIndex >= 0 && _fsLocalTracks[_fsLocalIndex]) ? _fsLocalTracks[_fsLocalIndex].id : null;
+                    var _pos = _fsPlQueue.indexOf(_curId);
+                    var _np = _pos < 0 ? 0 : _pos + dir;
+                    if (_np < 0) _np = _fsPlQueue.length - 1;
+                    if (_np >= _fsPlQueue.length) _np = 0;
+                    var _ni = -1;
+                    _fsLocalTracks.forEach(function(t, i){ if (_ni < 0 && t.id === _fsPlQueue[_np]) _ni = i; });
+                    if (_ni >= 0) { fsLocalPlayTrack(_ni, true); return; }
+                }
                 var next;
                 if (dir > 0 && _fsRadioShuffle && _fsLocalTracks.length > 1) {
                     do { next = Math.floor(Math.random() * _fsLocalTracks.length); } while (next === _fsLocalIndex);
@@ -2594,6 +2705,14 @@
             }
             function fsLocalAutoNext() {
                 if (!_fsLocalTracks.length) return;
+                if (_fsPlQueue && _fsPlQueue.length) {
+                    if (_fsRadioRepeat === 'one' && _fsLocalIndex >= 0) { fsLocalPlayTrack(_fsLocalIndex, true); return; }
+                    var _cid = (_fsLocalIndex >= 0 && _fsLocalTracks[_fsLocalIndex]) ? _fsLocalTracks[_fsLocalIndex].id : null;
+                    var _cpos = _fsPlQueue.indexOf(_cid);
+                    if (_cpos >= _fsPlQueue.length - 1 && _fsRadioRepeat === 'off') { fsRadioStop(); return; }
+                    fsLocalStep(1);
+                    return;
+                }
                 if (_fsRadioRepeat === 'one' && _fsLocalIndex >= 0) { fsLocalPlayTrack(_fsLocalIndex); return; }
                 if (_fsLocalIndex >= _fsLocalTracks.length - 1 && _fsRadioRepeat === 'off') { fsRadioStop(); return; }
                 fsLocalStep(1);
@@ -2603,6 +2722,7 @@
                 _fsLocalTracks.forEach(function(x){ if (x.id === id) t = x; });
                 if (!t) return;
                 if (!confirm('Hapus "' + t.title + '" dari pustaka? File aslinya di HP tidak ikut terhapus.')) return;
+                fsPlRemoveTrack(id);
                 if (_fsLocalUrls[id]) { try { URL.revokeObjectURL(_fsLocalUrls[id]); } catch(e) {} delete _fsLocalUrls[id]; }
                 var wasPlaying = (_fsRadioQueue === 'local' && _fsLocalIndex >= 0 && _fsLocalTracks[_fsLocalIndex] && _fsLocalTracks[_fsLocalIndex].id === id);
                 fsLocalDb().then(function(db){
@@ -2616,6 +2736,89 @@
             function fsLocalToggleFav(id) {
                 _fsLocalTracks.forEach(function(t){ if (t.id === id) { t.fav = !t.fav; fsLocalSaveMeta(t); } });
                 fsLocalRender();
+            }
+            // --- PLAYLIST (ala Sono): kumpulan lagu lokal, tersimpan di HP ---
+            var _fsPls = [];
+            var _fsPlActive = null;
+            var _fsPlQueue = null;
+            function fsPlLoad() {
+                try { _fsPls = JSON.parse(localStorage.getItem('fsPlaylists') || '[]'); } catch(e) { _fsPls = []; }
+                if (!Array.isArray(_fsPls)) _fsPls = [];
+            }
+            function fsPlSave() {
+                try { localStorage.setItem('fsPlaylists', JSON.stringify(_fsPls)); } catch(e) {}
+            }
+            function fsPlRender() {
+                var wrap = document.getElementById('fsPlChips');
+                if (!wrap) return;
+                fsPlLoad();
+                wrap.innerHTML = '';
+                var all = document.createElement('button');
+                all.textContent = 'Semua';
+                all.className = 'fs-cat-btn' + (!_fsPlActive ? ' active' : '');
+                all.onclick = function(){ _fsPlActive = null; _fsLocalFilter = 'all'; fsLocalRender(); fsPlRender(); };
+                wrap.appendChild(all);
+                _fsPls.forEach(function(p){
+                    var b = document.createElement('button');
+                    b.textContent = p.name + ' (' + ((p.ids || []).length) + ')';
+                    b.className = 'fs-cat-btn' + (_fsPlActive === p.id ? ' active' : '');
+                    b.onclick = function(){ _fsPlActive = p.id; _fsLocalFilter = 'pl'; fsLocalRender(); fsPlRender(); };
+                    wrap.appendChild(b);
+                });
+            }
+            function fsPlCreate() {
+                var name = prompt('Nama playlist baru:');
+                if (!name) return;
+                name = String(name).trim().slice(0, 30);
+                if (!name) return;
+                fsPlLoad();
+                var p = { id: 'p' + Date.now(), name: name, ids: [] };
+                _fsPls.push(p);
+                fsPlSave();
+                _fsPlActive = p.id; _fsLocalFilter = 'pl';
+                fsPlRender(); fsLocalRender();
+            }
+            function fsPlDelete() {
+                if (!_fsPlActive) return;
+                var p = null; _fsPls.forEach(function(x){ if (x.id === _fsPlActive) p = x; });
+                if (!p) return;
+                if (!confirm('Hapus playlist "' + p.name + '"? Lagu di pustaka tidak ikut terhapus.')) return;
+                _fsPls = _fsPls.filter(function(x){ return x.id !== _fsPlActive; });
+                fsPlSave();
+                _fsPlActive = null; _fsPlQueue = null; _fsLocalFilter = 'all';
+                fsPlRender(); fsLocalRender();
+            }
+            function fsPlAdd(id) {
+                if (!_fsPlActive) {
+                    var st = document.getElementById('fsLocalStatus');
+                    if (st) st.textContent = 'Pilih playlist dulu di atas (atau buat baru).';
+                    return;
+                }
+                fsPlLoad();
+                var p = null; _fsPls.forEach(function(x){ if (x.id === _fsPlActive) p = x; });
+                if (!p) return;
+                p.ids = p.ids || [];
+                if (p.ids.indexOf(id) === -1) p.ids.push(id);
+                fsPlSave(); fsPlRender();
+                var st2 = document.getElementById('fsLocalStatus');
+                if (st2) st2.textContent = '✅ Ditambahkan ke playlist "' + p.name + '".';
+            }
+            function fsPlPlay() {
+                if (!_fsPlActive) return;
+                fsPlLoad();
+                var p = null; _fsPls.forEach(function(x){ if (x.id === _fsPlActive) p = x; });
+                if (!p || !(p.ids || []).length) return;
+                _fsPlQueue = p.ids.slice();
+                var firstIdx = -1;
+                _fsLocalTracks.forEach(function(t, i){ if (firstIdx < 0 && t.id === _fsPlQueue[0]) firstIdx = i; });
+                if (firstIdx < 0) { _fsPlQueue = null; return; }
+                fsLocalPlayTrack(firstIdx, true);
+            }
+            function fsPlRemoveTrack(id) {
+                fsPlLoad();
+                var changed = false;
+                _fsPls.forEach(function(p){ var i = (p.ids || []).indexOf(id); if (i !== -1) { p.ids.splice(i, 1); changed = true; } });
+                if (changed) { fsPlSave(); fsPlRender(); }
             }
             function fsLocalExport() {
                 if (!_fsLocalTracks.length) return;
@@ -2784,6 +2987,8 @@
                 </div>
             </div>
         </div>
+
+        <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 
                 <script>
@@ -4394,6 +4599,13 @@ function fsSchedRender(matches) {
             // Bug fix: pane ROSYSCANS sudah "active" dari awal jadi iframe-nya
             // tidak pernah dimuat kalau cuma nunggu klik sub-tab — muat sekarang
             if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
+            if (tabId === 'tvchannel' && typeof loadTv1Genre === 'function') {
+                var _g = document.getElementById('tv1Groups');
+                if (_g && !_g.children.length) {
+                    var _b = document.querySelector('#tv1GenreBar .fs-cat-btn.active') || document.querySelector('#tv1GenreBar .fs-cat-btn');
+                    if (_b) loadTv1Genre((typeof tv1CurrentGenre !== 'undefined' && tv1CurrentGenre) ? tv1CurrentGenre : 'nasional', _b);
+                }
+            }
             if (tabId === 'musik' && typeof fsRadioInit === 'function') { fsRadioInit(); }
             if (tabId === 'quran' && typeof fsQuranInit === 'function') { fsQuranInit(); }
             if (tabId === 'movie' && typeof fsCinemaHomeInit === 'function') { fsCinemaHomeInit(); }
@@ -4554,6 +4766,7 @@ function fsSchedRender(matches) {
         // === INTRO SPLASH SCREEN FUNCTIONS ===
         function createIntroStars() {
             const container = document.getElementById('introStarsContainer');
+            if (!container) return; // hiburan.html tidak punya splash intro
             // HP layar kecil: 40 bintang cukup (100 bintang = 100 layer animasi
             // yang jalan bersamaan). Tampilan tetap sama.
             const starCount = window.innerWidth < 600 ? 40 : 100;
@@ -4573,12 +4786,14 @@ function fsSchedRender(matches) {
         let _introParticleTimer = null;
         function createIntroParticles() {
             const container = document.getElementById('introParticleContainer');
+            if (!container) return; // hiburan.html tidak punya splash intro
             // HP layar kecil: spawn lebih jarang + batasi partikel yang hidup
             // (hemat DOM & paint).
             const _pInterval = window.innerWidth < 600 ? 350 : 200;
 
             _introParticleTimer = setInterval(() => {
-                if (document.getElementById('introSplash').classList.contains('hidden')) {
+                var _sp = document.getElementById('introSplash');
+                if (!_sp || _sp.classList.contains('hidden')) {
                     return;
                 }
                 if (container.childElementCount > 25) return;
@@ -4601,6 +4816,7 @@ function fsSchedRender(matches) {
 
         function hideIntroSplash() {
             const s = document.getElementById('introSplash');
+            if (!s) return; // hiburan.html tidak punya splash intro
             if (s.classList.contains('hidden')) return;
             // FS: ingat di sesi tab ini bahwa user sudah masuk, supaya pindah
             // halaman (journal -> TV, garapan -> Movie, dst.) tidak memunculkan
@@ -4624,12 +4840,14 @@ function fsSchedRender(matches) {
             var _skipIntro = false;
             try { _skipIntro = sessionStorage.getItem('fs-entered') === '1'; } catch (e) {}
             if (!_skipIntro && _tabs.indexOf((location.hash || '').replace('#','')) !== -1) _skipIntro = true;
-            if (_skipIntro) {
-                var _s = document.getElementById('introSplash');
-                _s.classList.add('hidden'); _s.style.display = 'none';
-            } else {
-                createIntroStars();
-                createIntroParticles();
+            var _introEl = document.getElementById('introSplash');
+            if (_introEl) {
+                if (_skipIntro) {
+                    _introEl.classList.add('hidden'); _introEl.style.display = 'none';
+                } else {
+                    createIntroStars();
+                    createIntroParticles();
+                }
             }
 
             // Muat genre "Nasional" secara default saat tab TV1 pertama kali dibuka
@@ -4637,8 +4855,8 @@ function fsSchedRender(matches) {
             if (tv1DefaultBtn) loadTv1Genre('nasional', tv1DefaultBtn);
 
             // Auto hide intro after 12 seconds if user doesn't click
-            setTimeout(() => {
-                if (!document.getElementById('introSplash').classList.contains('hidden')) {
+            if (_introEl) setTimeout(() => {
+                if (!_introEl.classList.contains('hidden')) {
                     hideIntroSplash();
                 }
             }, 12000);
@@ -4717,10 +4935,10 @@ function fsSchedRender(matches) {
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
             <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
-            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
-            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
-            <button onclick="location.href='hiburan.html#tvchannel'" class="active"><span>📺</span>Live TV</button>
-            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+            <button onclick="location.href='hiburan.html'" class="active"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 

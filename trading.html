@@ -115,6 +115,17 @@
 
     })();
     </script>
+    <script>
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    (function(){ try {
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        window.FS_THEMES = T;
+        var n = localStorage.getItem('fsTheme') || 'biru';
+        var th = T[n] || T.biru;
+        document.documentElement.style.setProperty('--primary', th[0]);
+        document.documentElement.style.setProperty('--primary-glow', th[1]);
+    } catch(e) {} })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script>
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
@@ -146,7 +157,7 @@ function _fsFetchJson(url, ms) {
             <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
             <li><button onclick="openTab('trading', this)" class="active-tab">📈 Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
-            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
             <li class="side-label">🎬 HIBURAN</li>
             <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
             <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
@@ -162,8 +173,8 @@ function _fsFetchJson(url, ms) {
             <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
             <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
-            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
@@ -189,10 +200,10 @@ function _fsFetchJson(url, ms) {
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
             <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
-            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
-            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
-            <button onclick="location.href='hiburan.html#tvchannel'"><span>📺</span>Live TV</button>
-            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 

@@ -115,6 +115,17 @@
 
     })();
     </script>
+    <script>
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    (function(){ try {
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        window.FS_THEMES = T;
+        var n = localStorage.getItem('fsTheme') || 'biru';
+        var th = T[n] || T.biru;
+        document.documentElement.style.setProperty('--primary', th[0]);
+        document.documentElement.style.setProperty('--primary-glow', th[1]);
+    } catch(e) {} })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script>
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
@@ -146,7 +157,7 @@ function _fsFetchJson(url, ms) {
             <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
             <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
             <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
-            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
             <li class="side-label">🎬 HIBURAN</li>
             <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
             <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
@@ -162,8 +173,8 @@ function _fsFetchJson(url, ms) {
             <li><button onclick="openTab('zenlink', this)">🔗 ZenLink</button></li>
             <li><button onclick="openTab('download', this)">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
-            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
@@ -176,11 +187,17 @@ function _fsFetchJson(url, ms) {
              ulang sebagai web app yang jalan 100% di browser HP — tanpa instal,
              tanpa daftar, tanpa iklan, file tidak diunggah ke server mana pun. -->
         <div id="tools" class="tab-content active" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🛠️ TOOLS</h3><p>Tiga aplikasi open source, jalan langsung di browser — tanpa instal, tanpa daftar, tanpa iklan.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🛠️ TOOLS</h3><p>Sembilan alat gratis, jalan langsung di browser — tanpa instal, tanpa daftar, tanpa iklan.</p></div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
                 <a href="#fsToolsPdf" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">📄 PDF Tools</a>
                 <a href="#fsToolsGym" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🏋️ Open Gym</a>
                 <a href="#fsToolsPod" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🎙️ Podcast</a>
+<a href="#fsToolsSub" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">💳 Langganan</a>
+<a href="#fsToolsFoot" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">⚽ Skor Bola</a>
+<a href="#fsToolsTrans" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🌐 Translator</a>
+<a href="#fsToolsIp" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🛡️ Cek IP &amp; VPN</a>
+<a href="#fsToolsWa" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">💬 Kirim WhatsApp</a>
+                <a href="#fsToolsTheme" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;text-decoration:none;">🎨 Tema</a>
             </div>
 
             <!-- ===== PDF TOOLS (ala sammyZi/pdf-tools, MIT) ===== -->
@@ -238,7 +255,179 @@ function _fsFetchJson(url, ms) {
                 <div id="fsPodEps" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;"></div>
             </div>
 
-            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">PDF: pdf-lib (MIT) via jsDelivr · Podcast: direktori Apple Podcasts (iTunes API, tanpa kunci) · Gym: data lokal di HP · Showcase apps: junaidjamel.com</div>
+<!-- ===== SUBSCRIPTION TRACKER (ala konsep "Subscription Tracker" — junaidjamel.com) ===== -->
+<!-- "Subscription Tracker" di thread junaidjamel.com itu KONSEP DESAIN UI, bukan
+     repo open source — tidak ada repo GitHub-nya di github.com/junaidjamel
+     (dicek 17 Nov 2026). Yang diterapkan: FITUR intinya, ditulis ulang sebagai
+     web app lokal. Data hanya tersimpan di HP ini (localStorage fsSubList). -->
+<div id="fsToolsSub" style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(56,189,248,0.06));border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+    <div style="font-size:0.9rem;font-weight:900;color:#fff;">💳 Subscription Tracker</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Catat semua langganan (Netflix, Spotify, dll) — total per bulan &amp; hitung mundur ke tanggal renewal. Data tersimpan di HP ini saja, tidak dikirim ke mana pun.</div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+        <input id="fsSubName" type="text" placeholder="Nama langganan (cth: Netflix)" style="flex:2;min-width:140px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
+        <input id="fsSubPrice" type="number" inputmode="decimal" min="0" placeholder="Harga (Rp)" style="flex:1;min-width:100px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        <select id="fsSubCycle" style="flex:1;min-width:110px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
+            <option value="monthly" style="color:#000;">🔁 Bulanan</option>
+            <option value="yearly" style="color:#000;">📅 Tahunan</option>
+        </select>
+        <input id="fsSubDate" type="date" style="flex:1;min-width:130px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
+        <button onclick="fsSubAdd()" style="flex:1;min-width:110px;background:#f59e0b;color:#000;border:none;border-radius:8px;padding:10px 14px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">＋ Tambah</button>
+    </div>
+    <div id="fsSubSummary" style="display:flex;gap:8px;margin-top:12px;"></div>
+    <div id="fsSubList" style="margin-top:6px;"></div>
+    <div id="fsSubStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
+</div>
+
+<!-- ===== SKOR BOLA (ala konsep "Football Match States" — junaidjamel.com) ===== -->
+<!-- "Football Match States" di thread itu juga KONSEP DESAIN UI, bukan repo.
+     Skor live diambil dari API publik ESPN (site.api.espn.com, tanpa kunci,
+     terverifikasi HTTP 200 dari VM 17 Nov 2026 untuk eng.1/esp.1/ita.1/ger.1/
+     uefa.champions). -->
+<div id="fsToolsFoot" style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(56,189,248,0.06));border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+    <div style="font-size:0.9rem;font-weight:900;color:#fff;">⚽ Skor Bola</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Skor live &amp; jadwal 5 liga top Eropa — data ESPN (tanpa kunci, tanpa daftar). Pilih liga di bawah, ketuk 🔄 untuk refresh.</div>
+    <div id="fsFootLeagues" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+        <button data-league="eng.1" onclick="fsFootLoad('eng.1', this)" style="background:#22c55e;border:1px solid rgba(34,197,94,0.4);color:#000;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🏴󐁧󐁢󐁥󐁮󐁧󐁿 EPL</button>
+        <button data-league="esp.1" onclick="fsFootLoad('esp.1', this)" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#86efac;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🇪🇸 La Liga</button>
+        <button data-league="ita.1" onclick="fsFootLoad('ita.1', this)" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#86efac;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🇮🇹 Serie A</button>
+        <button data-league="ger.1" onclick="fsFootLoad('ger.1', this)" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#86efac;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🇩🇪 Bundesliga</button>
+        <button data-league="uefa.champions" onclick="fsFootLoad('uefa.champions', this)" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#86efac;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">⭐ UCL</button>
+        <button onclick="fsFootLoad(_fsFootLeague || 'eng.1')" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🔄 Refresh</button>
+    </div>
+    <div id="fsFootStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:10px;"></div>
+    <div id="fsFootList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+</div>
+
+<!-- ===== TRANSLATOR (ala "Speaksy" — junaidjamel.com) ===== -->
+<!-- "Speaksy" di thread itu KONSEP DESAIN UI aplikasi translator (teks + suara).
+     Tidak ada repo open source-nya; speaksy.in yang asli adalah layanan AI phone
+     agent berbayar (bukan translator gratis). Yang diterapkan: FITUR intinya —
+     terjemahan teks via MyMemory (gratis, tanpa kunci) + suara via Web Speech API
+     bawaan browser. Batas gratis MyMemory ±5.000 karakter/hari per IP (anonim):
+     dari IP VM ini kuotanya sedang habis (HTTP 429, terverifikasi 17 Nov 2026),
+     dari HP San kuota IP-nya sendiri masih tersedia. Kalau MyMemory habis,
+     otomatis dicoba ke LibreTranslate (instance publik libretranslate.de). -->
+<div id="fsToolsTrans" style="background:linear-gradient(135deg,rgba(56,189,248,0.1),rgba(168,85,247,0.06));border:1px solid rgba(56,189,248,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+    <div style="font-size:0.9rem;font-weight:900;color:#fff;">🌐 Translator</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Terjemahkan teks &amp; suara, lalu dengarkan hasilnya — ala Speaksy. Gratis via MyMemory (tanpa kunci, batas ±5.000 karakter/hari per IP — kalau kuota IP kamu habis hari ini, coba lagi besok).</div>
+    <div style="display:flex;gap:6px;align-items:center;margin-top:10px;">
+        <select id="fsTransFrom" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:10px;color:#fff;font-size:0.85rem;outline:none;min-width:0;">
+            <option value="en" style="color:#000;" selected>🇬🇧 English</option>
+            <option value="id" style="color:#000;">🇮🇩 Indonesia</option>
+            <option value="ar" style="color:#000;">🇸🇦 Arab</option>
+            <option value="es" style="color:#000;">🇪🇸 Spanyol</option>
+            <option value="fr" style="color:#000;">🇫🇷 Prancis</option>
+            <option value="de" style="color:#000;">🇩🇪 Jerman</option>
+            <option value="it" style="color:#000;">🇮🇹 Italia</option>
+            <option value="ja" style="color:#000;">🇯🇵 Jepang</option>
+            <option value="ko" style="color:#000;">🇰🇷 Korea</option>
+            <option value="zh-CN" style="color:#000;">🇨🇳 Mandarin</option>
+            <option value="nl" style="color:#000;">🇳🇱 Belanda</option>
+            <option value="pt" style="color:#000;">🇵🇹 Portugis</option>
+            <option value="ru" style="color:#000;">🇷🇺 Rusia</option>
+            <option value="tr" style="color:#000;">🇹🇷 Turki</option>
+            <option value="vi" style="color:#000;">🇻🇳 Vietnam</option>
+            <option value="th" style="color:#000;">🇹🇭 Thailand</option>
+            <option value="ms" style="color:#000;">🇲🇾 Melayu</option>
+            <option value="hi" style="color:#000;">🇮🇳 Hindi</option>
+        </select>
+        <button onclick="fsTransSwap()" title="Tukar bahasa" style="background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);color:#fff;border-radius:8px;padding:10px 12px;font-size:0.9rem;cursor:pointer;font-family:inherit;flex-shrink:0;">⇄</button>
+        <select id="fsTransTo" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:10px;color:#fff;font-size:0.85rem;outline:none;min-width:0;">
+            <option value="en" style="color:#000;">🇬🇧 English</option>
+            <option value="id" style="color:#000;" selected>🇮🇩 Indonesia</option>
+            <option value="ar" style="color:#000;">🇸🇦 Arab</option>
+            <option value="es" style="color:#000;">🇪🇸 Spanyol</option>
+            <option value="fr" style="color:#000;">🇫🇷 Prancis</option>
+            <option value="de" style="color:#000;">🇩🇪 Jerman</option>
+            <option value="it" style="color:#000;">🇮🇹 Italia</option>
+            <option value="ja" style="color:#000;">🇯🇵 Jepang</option>
+            <option value="ko" style="color:#000;">🇰🇷 Korea</option>
+            <option value="zh-CN" style="color:#000;">🇨🇳 Mandarin</option>
+            <option value="nl" style="color:#000;">🇳🇱 Belanda</option>
+            <option value="pt" style="color:#000;">🇵🇹 Portugis</option>
+            <option value="ru" style="color:#000;">🇷🇺 Rusia</option>
+            <option value="tr" style="color:#000;">🇹🇷 Turki</option>
+            <option value="vi" style="color:#000;">🇻🇳 Vietnam</option>
+            <option value="th" style="color:#000;">🇹🇭 Thailand</option>
+            <option value="ms" style="color:#000;">🇲🇾 Melayu</option>
+            <option value="hi" style="color:#000;">🇮🇳 Hindi</option>
+        </select>
+    </div>
+    <textarea id="fsTransInput" rows="3" placeholder="Tulis atau ucapkan teks di sini..." style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;"></textarea>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+        <button onclick="fsTransGo()" style="flex:2;background:var(--primary);color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">🌐 Terjemahkan</button>
+        <button onclick="fsTransMic()" title="Bicara (mic)" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);color:#fff;border-radius:10px;padding:12px;font-size:0.85rem;font-weight:800;cursor:pointer;font-family:inherit;">🎤 Bicara</button>
+    </div>
+    <div id="fsTransOut" style="margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:12px;font-size:0.9rem;color:#fff;line-height:1.6;min-height:44px;white-space:pre-wrap;">Hasil terjemahan muncul di sini.</div>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+        <button onclick="fsTransSpeak()" style="flex:1;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);color:#bae6fd;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🔊 Dengarkan Hasil</button>
+        <button onclick="fsTransCopy()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;border-radius:8px;padding:10px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">📋 Salin Hasil</button>
+    </div>
+    <div id="fsTransStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
+</div>
+
+<!-- ===== CEK IP & VPN (ala Proxy Cloud — code3-dev/ProxyCloud, MIT) ===== -->
+<!-- ProxyCloud itu aplikasi VPN Flutter (Android): VPN TIDAK BISA jalan dari tab
+     browser — butuh aplikasi yang mengubah koneksi di level sistem. Seksi ini
+     JUJUR soal itu: hanya menampilkan IP/lokasi kamu + tautan unduh aplikasinya.
+     IP dicek via ipinfo.io (tanpa kunci, HTTP 200 terverifikasi 17 Nov 2026),
+     cadangan ipwho.is (HTTP 200 terverifikasi). -->
+<div id="fsToolsIp" style="background:linear-gradient(135deg,rgba(248,113,113,0.1),rgba(56,189,248,0.06));border:1px solid rgba(248,113,113,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+    <div style="font-size:0.9rem;font-weight:900;color:#fff;">🛡️ Cek IP &amp; VPN</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Lihat IP &amp; lokasi yang terlihat oleh internet — ala ProxyCloud. <a href="https://github.com/code3-dev/ProxyCloud" target="_blank" rel="noopener" style="color:var(--primary);">github.com/code3-dev/ProxyCloud</a> (Flutter, MIT)</div>
+    <div style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:10px;margin-top:10px;font-size:0.68rem;color:#fecaca;line-height:1.6;">⚠️ <b>IP asli kamu terlihat.</b> Setiap situs yang kamu kunjungi bisa melihat alamat IP, kota &amp; ISP kamu. Browser <b>tidak bisa</b> memberi VPN — VPN butuh aplikasi yang mengubah koneksi di level sistem HP/PC. Di bawah ini aplikasi VPN gratisnya.</div>
+    <div id="fsIpGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px;"></div>
+    <div style="display:flex;gap:6px;margin-top:10px;">
+        <button onclick="fsIpCheck()" style="flex:1;background:#f87171;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">🔄 Cek Ulang IP Saya</button>
+    </div>
+    <div id="fsIpStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;margin-top:10px;">
+        <div style="font-size:0.78rem;font-weight:800;color:#fff;">☁️ ProxyCloud — VPN Gratis (Flutter)</div>
+        <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">VPN open source untuk Android — sembunyikan IP asli &amp; buka situs yang diblokir. Unduh APK dari halaman Releases resmi, instal di HP (bukan dari browser ini).</div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+            <a href="https://github.com/code3-dev/ProxyCloud/releases" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#f87171;color:#000;border-radius:10px;padding:11px 12px;font-weight:900;font-size:0.8rem;text-decoration:none;min-width:140px;">⬇ Unduh ProxyCloud</a>
+            <a href="https://github.com/code3-dev/ProxyCloud" target="_blank" rel="noopener" style="flex:1;text-align:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:11px 12px;font-weight:800;font-size:0.8rem;text-decoration:none;min-width:110px;">⭐ GitHub</a>
+        </div>
+    </div>
+</div>
+
+<!-- ===== KIRIM WHATSAPP (ala Chat App Flutter — MoazSayed7) ===== -->
+<!-- Chat App-nya MoazSayed7 (Flutter-Chat-App-Firebase-Authentication-Messaging-
+     WhatsApp-Like) butuh Firebase Auth + Firestore + backend — TIDAK BISA jalan
+     di website statis, dan repo itu tidak punya file LICENSE. Yang diterapkan:
+     FITUR paling berguna tanpa backend: pembuat tautan wa.me — ketik nomor +
+     pesan, buka langsung di WhatsApp resmi. Bukan aplikasi chat, tidak
+     menyimpan pesan, tidak butuh login. -->
+<div id="fsToolsWa" style="background:linear-gradient(135deg,rgba(37,211,102,0.1),rgba(56,189,248,0.06));border:1px solid rgba(37,211,102,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+    <div style="font-size:0.9rem;font-weight:900;color:#fff;">💬 Kirim WhatsApp</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ketik nomor &amp; pesan → buka langsung di WhatsApp, tanpa simpan nomor dulu. Ala Chat App Flutter (MoazSayed7) — versi web ini hanya pembuat tautan wa.me, bukan aplikasi chat. <a href="https://github.com/MoazSayed7/Flutter-Chat-App-Firebase-Authentication-Messaging-WhatsApp-Like" target="_blank" rel="noopener" style="color:var(--primary);">Lihat repo aslinya</a></div>
+    <input id="fsWaPhone" type="tel" inputmode="tel" placeholder="Nomor tujuan, cth: 081234567890" style="width:100%;box-sizing:border-box;margin-top:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(37,211,102,0.3);border-radius:10px;padding:12px;color:#fff;font-size:0.9rem;outline:none;">
+    <textarea id="fsWaMsg" rows="3" placeholder="Tulis pesan..." style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(37,211,102,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;"></textarea>
+    <button onclick="fsWaMake()" style="width:100%;margin-top:8px;background:#25d366;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">💬 Buat Link WhatsApp</button>
+    <div id="fsWaResult" style="display:none;margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(37,211,102,0.3);border-radius:10px;padding:12px;">
+        <div style="font-size:0.65rem;color:#94a3b8;">Nomor tujuan (format internasional):</div>
+        <div id="fsWaNumber" style="font-size:0.85rem;font-weight:800;color:#fff;margin-top:2px;"></div>
+        <div id="fsWaLink" style="font-size:0.65rem;color:#86efac;word-break:break-all;margin-top:6px;"></div>
+        <div style="display:flex;gap:6px;margin-top:10px;">
+            <a id="fsWaOpen" href="#" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#25d366;color:#000;border-radius:8px;padding:11px;font-weight:900;font-size:0.8rem;text-decoration:none;">💬 Buka di WhatsApp</a>
+            <button onclick="fsWaCopy()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;border-radius:8px;padding:11px;font-size:0.8rem;font-weight:800;cursor:pointer;font-family:inherit;">📋 Salin Link</button>
+        </div>
+    </div>
+    <div id="fsWaStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
+</div>
+
+            <!-- ===== TEMA SITUS (ala Open Tune: ganti warna aksen) ===== -->
+            <!-- Open Tune itu pemutar YouTube Music (GPL-3.0): kodenya TIDAK bisa
+                 dipakai di website statis. Yang diambil: idenya — tema warna yang
+                 bisa diganti member. Tema tersimpan di HP, berlaku di semua halaman. -->
+            <div id="fsToolsTheme" style="background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(56,189,248,0.06));border:1px solid rgba(167,139,250,0.3);border-radius:14px;padding:14px;margin-top:12px;">
+                <div style="font-size:0.9rem;font-weight:900;color:#fff;">🎨 Tema Situs</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ganti warna aksen seluruh situs — tersimpan di HP ini dan langsung berlaku di semua halaman. Terinspirasi Open Tune: <a href="https://github.com/justshivv/Opentune" target="_blank" rel="noopener" style="color:var(--primary);">github.com/justshivv/Opentune</a> (GPL-3.0)</div>
+                <div id="fsThemeRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"></div>
+            </div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">PDF: pdf-lib (MIT) via jsDelivr · Podcast: iTunes API (tanpa kunci) · Skor bola: ESPN (tanpa kunci) · Terjemahan: MyMemory gratis (±5rb karakter/hari/IP) · Cek IP: ipinfo.io (tanpa kunci) · Gym &amp; Langganan: data lokal di HP · Showcase apps: junaidjamel.com</div>
 
             <script>
             // ================= PDF TOOLS =================
@@ -627,6 +816,481 @@ function _fsFetchJson(url, ms) {
                 now.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             </script>
+            <script>
+            // ===== 5 SEKSI BARU (batch 2, 17 Nov 2026) — di-inline dari tools-new-sections.js =====
+
+// ================= 1. SUBSCRIPTION TRACKER (fsSub*) =================
+function fsSubLoad() {
+    try {
+        var v = JSON.parse(localStorage.getItem('fsSubList') || 'null');
+        return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+}
+function fsSubSave(list) {
+    try { localStorage.setItem('fsSubList', JSON.stringify(list)); } catch (e) {}
+}
+function fsSubRupiah(n) {
+    return 'Rp ' + Number(n || 0).toLocaleString('id-ID');
+}
+// Tambah N bulan ke tanggal, dijepit ke hari terakhir bulan tujuan (31 Jan + 1 bln = 28/29 Feb, bukan 3 Mar).
+function fsSubAddCycle(d, months) {
+    var day = d.getDate();
+    var out = new Date(d.getFullYear(), d.getMonth() + months, 1);
+    var last = new Date(out.getFullYear(), out.getMonth() + 1, 0).getDate();
+    out.setDate(Math.min(day, last));
+    return out;
+}
+// Renewal berikutnya: majukan tanggal renewal per siklus sampai >= hari ini.
+function fsSubNextRenewal(dateStr, cycle) {
+    var start = new Date(dateStr + 'T00:00:00');
+    if (isNaN(start.getTime())) return null;
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var step = (cycle === 'yearly') ? 12 : 1;
+    var next = new Date(start);
+    var guard = 0;
+    while (next < today && guard < 1200) { next = fsSubAddCycle(next, step); guard++; }
+    return next;
+}
+function fsSubDaysLeft(next) {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Math.round((next - today) / 86400000);
+}
+function fsSubAdd() {
+    var nameEl = document.getElementById('fsSubName');
+    var priceEl = document.getElementById('fsSubPrice');
+    var cycleEl = document.getElementById('fsSubCycle');
+    var dateEl = document.getElementById('fsSubDate');
+    var st = document.getElementById('fsSubStatus');
+    var name = (nameEl.value || '').trim();
+    var price = parseFloat(String(priceEl.value || '').replace(',', '.'));
+    var cycle = cycleEl.value || 'monthly';
+    var date = dateEl.value || '';
+    if (!name) { if (st) st.textContent = 'Isi dulu nama langganannya.'; return; }
+    if (!price || price <= 0) { if (st) st.textContent = 'Isi harga per ' + (cycle === 'yearly' ? 'tahun' : 'bulan') + ' (angka, lebih dari 0).'; return; }
+    if (!date) { if (st) st.textContent = 'Pilih tanggal renewal (tanggal tagihan berikutnya / terakhir).'; return; }
+    var list = fsSubLoad();
+    list.push({ name: name, price: price, cycle: cycle, date: date });
+    fsSubSave(list);
+    nameEl.value = ''; priceEl.value = ''; dateEl.value = '';
+    if (st) st.textContent = '✅ "' + name + '" ditambahkan.';
+    fsSubRender();
+}
+function fsSubDel(i) {
+    var list = fsSubLoad();
+    if (i < 0 || i >= list.length) return;
+    var name = list[i].name;
+    if (!window.confirm('Hapus langganan "' + name + '"?')) return;
+    list.splice(i, 1);
+    fsSubSave(list);
+    var st = document.getElementById('fsSubStatus');
+    if (st) st.textContent = '🗑️ "' + name + '" dihapus.';
+    fsSubRender();
+}
+function fsSubRender() {
+    var box = document.getElementById('fsSubList');
+    var sum = document.getElementById('fsSubSummary');
+    if (!box) return;
+    var list = fsSubLoad();
+    var monthly = 0, yearly = 0;
+    list.forEach(function (s) {
+        if (s.cycle === 'yearly') { yearly += s.price; monthly += s.price / 12; }
+        else { monthly += s.price; yearly += s.price * 12; }
+    });
+    if (sum) {
+        var cards = [
+            ['💳 Langganan', list.length + ' aktif'],
+            ['📅 Total / bulan', fsSubRupiah(Math.round(monthly))],
+            ['🗓️ Total / tahun', fsSubRupiah(Math.round(yearly))]
+        ];
+        sum.innerHTML = '';
+        cards.forEach(function (c) {
+            var d = document.createElement('div');
+            d.style.cssText = 'flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:8px;text-align:center;min-width:0;';
+            d.innerHTML = '<div style="font-size:0.58rem;color:#94a3b8;">' + c[0] + '</div><div style="font-size:0.78rem;font-weight:800;color:#fff;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(String(c[1])) + '</div>';
+            sum.appendChild(d);
+        });
+    }
+    box.innerHTML = '';
+    if (!list.length) {
+        box.innerHTML = '<div style="font-size:0.65rem;color:#64748b;padding:6px 0;">Belum ada langganan. Contoh: Netflix Rp 54.000/bulan, renewal tiap tanggal 1.</div>';
+        return;
+    }
+    list.forEach(function (s, i) {
+        var next = fsSubNextRenewal(s.date, s.cycle);
+        var days = next ? fsSubDaysLeft(next) : null;
+        var when = '';
+        if (next) {
+            var dateTxt = next.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            if (days === 0) when = '🔴 Renewal HARI INI (' + dateTxt + ')';
+            else if (days === 1) when = '🟠 Renewal besok (' + dateTxt + ')';
+            else when = '⏳ Renewal ' + days + ' hari lagi (' + dateTxt + ')';
+        } else {
+            when = '⚠️ Tanggal renewal tidak valid';
+        }
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;margin-top:6px;';
+        row.innerHTML = '<div style="flex:1;min-width:0;">'
+            + '<div style="font-size:0.78rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(s.name) + '</div>'
+            + '<div style="font-size:0.62rem;color:#94a3b8;margin-top:3px;">' + fsSubRupiah(s.price) + ' / ' + (s.cycle === 'yearly' ? 'tahun' : 'bulan') + '</div>'
+            + '<div style="font-size:0.62rem;color:#fcd34d;margin-top:2px;">' + esc(when) + '</div></div>';
+        var del = document.createElement('button');
+        del.textContent = '✕';
+        del.style.cssText = 'background:none;border:none;color:#94a3b8;font-size:0.9rem;cursor:pointer;font-family:inherit;flex-shrink:0;';
+        del.onclick = function () { fsSubDel(i); };
+        row.appendChild(del);
+        box.appendChild(row);
+    });
+}
+
+// ================= 2. SKOR BOLA (fsFoot*) =================
+// Data: ESPN public scoreboard API (tanpa kunci). Terverifikasi HTTP 200
+// 17 Nov 2026: eng.1, esp.1, ita.1, ger.1, uefa.champions.
+var _fsFootLeague = 'eng.1';
+var _fsFootLoading = false;
+var FS_FOOT_LEAGUES = {
+    'eng.1': 'English Premier League',
+    'esp.1': 'La Liga',
+    'ita.1': 'Serie A',
+    'ger.1': 'Bundesliga',
+    'uefa.champions': 'UEFA Champions League'
+};
+function fsFootLeagueName(code) {
+    return FS_FOOT_LEAGUES[code] || code;
+}
+function fsFootMarkActive(code) {
+    var wrap = document.getElementById('fsFootLeagues');
+    if (!wrap) return;
+    var btns = wrap.querySelectorAll('button[data-league]');
+    for (var i = 0; i < btns.length; i++) {
+        var on = btns[i].getAttribute('data-league') === code;
+        btns[i].style.background = on ? '#22c55e' : 'rgba(34,197,94,0.08)';
+        btns[i].style.color = on ? '#000' : '#86efac';
+    }
+}
+async function fsFootLoad(league, btn) {
+    if (_fsFootLoading) return;
+    league = league || _fsFootLeague || 'eng.1';
+    _fsFootLeague = league;
+    fsFootMarkActive(league);
+    var st = document.getElementById('fsFootStatus');
+    var list = document.getElementById('fsFootList');
+    if (!list) return;
+    _fsFootLoading = true;
+    if (st) st.textContent = '⏳ Memuat skor ' + fsFootLeagueName(league) + '...';
+    try {
+        var d = await _fsFetchJson('https://site.api.espn.com/apis/site/v2/sports/soccer/' + league + '/scoreboard', 12000);
+        var events = (d && d.events) || [];
+        var leagueName = (d && d.leagues && d.leagues[0] && d.leagues[0].name) || fsFootLeagueName(league);
+        if (!events.length) {
+            if (st) st.textContent = leagueName + ' — tidak ada pertandingan hari ini. Coba liga lain atau refresh nanti.';
+            list.innerHTML = '';
+            _fsFootLoading = false;
+            return;
+        }
+        if (st) st.textContent = '⚽ ' + leagueName + ' — ' + events.length + ' pertandingan (jadwal & skor hari ini, waktu WIB).';
+        list.innerHTML = '';
+        events.forEach(function (ev) {
+            var comp = (ev.competitions && ev.competitions[0]) || null;
+            if (!comp || !comp.competitors || comp.competitors.length < 2) return;
+            var home = null, away = null;
+            comp.competitors.forEach(function (c) {
+                if (c.homeAway === 'home') home = c;
+                else if (c.homeAway === 'away') away = c;
+            });
+            if (!home || !away) return;
+            var status = (ev.status && ev.status.type) || {};
+            var state = status.state || '';
+            var isLive = state === 'in';
+            var isDone = state === 'post';
+            var clock = (ev.status && ev.status.displayClock) ? ev.status.displayClock : '';
+            var detail = status.shortDetail || status.detail || '';
+            var whenTxt;
+            if (isLive) whenTxt = '🔴 LIVE ' + (clock ? '· ' + clock : '');
+            else if (isDone) whenTxt = '✅ ' + (detail || 'Full Time');
+            else {
+                var dt = ev.date ? new Date(ev.date) : null;
+                whenTxt = '🕒 ' + (dt && !isNaN(dt.getTime())
+                    ? dt.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' WIB'
+                    : (detail || 'Jadwal'));
+            }
+            var homeScore = (home.score != null) ? home.score : '-';
+            var awayScore = (away.score != null) ? away.score : '-';
+            var row = document.createElement('div');
+            row.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid ' + (isLive ? 'rgba(34,197,94,0.5)' : 'rgba(255,255,255,0.1)') + ';border-radius:12px;padding:10px 12px;';
+            row.innerHTML = '<div style="font-size:0.6rem;font-weight:800;color:' + (isLive ? '#4ade80' : '#94a3b8') + ';letter-spacing:0.5px;">' + esc(whenTxt) + '</div>'
+                + '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;">'
+                + '<div style="flex:1;min-width:0;text-align:right;font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(home.team.shortDisplayName || home.team.displayName || '') + '</div>'
+                + '<div style="font-size:1rem;font-weight:900;color:#fff;background:rgba(0,0,0,0.35);border-radius:8px;padding:4px 10px;flex-shrink:0;">' + esc(String(homeScore)) + ' - ' + esc(String(awayScore)) + '</div>'
+                + '<div style="flex:1;min-width:0;font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(away.team.shortDisplayName || away.team.displayName || '') + '</div>'
+                + '</div>'
+                + (ev.venue && ev.venue.fullName ? '<div style="font-size:0.6rem;color:#64748b;margin-top:5px;text-align:center;">📍 ' + esc(ev.venue.fullName) + '</div>' : '');
+            list.appendChild(row);
+        });
+        if (!list.children.length && st) st.textContent = 'Tidak ada pertandingan yang bisa ditampilkan untuk liga ini.';
+    } catch (e) {
+        if (st) st.textContent = '⚠️ Gagal memuat skor. Cek koneksi lalu tekan 🔄 Refresh.';
+    }
+    _fsFootLoading = false;
+}
+
+// ================= 3. TRANSLATOR (fsTrans*) =================
+// Utama: MyMemory (gratis, tanpa kunci). Batas anonim ±5.000 karakter/hari per
+// IP — dari IP VM ini kuota habis (HTTP 429, 17 Nov 2026); dari HP pengguna
+// kuota IP-nya sendiri yang berlaku. Cadangan: LibreTranslate publik.
+// TIDAK ada terjemahan dummy: kalau kedua API gagal, tampilkan pesan jujur.
+var _fsTransLast = '';
+var _fsTransBusy = false;
+function fsTransSwap() {
+    var from = document.getElementById('fsTransFrom');
+    var to = document.getElementById('fsTransTo');
+    if (!from || !to) return;
+    var tmp = from.value;
+    from.value = to.value;
+    to.value = tmp;
+    var out = document.getElementById('fsTransOut');
+    var inp = document.getElementById('fsTransInput');
+    if (out && _fsTransLast && inp) { inp.value = _fsTransLast; }
+}
+function fsTransMyMemory(text, from, to) {
+    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text)
+        + '&langpair=' + encodeURIComponent(from + '|' + to);
+    return _fsFetchJson(url, 12000).then(function (d) {
+        var t = d && d.responseData && d.responseData.translatedText;
+        if (!t) throw new Error('MyMemory: respons kosong');
+        if (/MYMEMORY WARNING/i.test(t) || /QUERY LENGTH LIMIT/i.test(t)) throw new Error('MyMemory: kuota gratis habis');
+        return t;
+    });
+}
+function fsTransLibre(text, from, to) {
+    return fetch('https://libretranslate.de/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: text, source: from, target: to, format: 'text' })
+    }).then(function (r) {
+        if (!r.ok) throw new Error('LibreTranslate: HTTP ' + r.status);
+        return r.json();
+    }).then(function (d) {
+        if (!d || !d.translatedText) throw new Error('LibreTranslate: respons kosong');
+        return d.translatedText;
+    });
+}
+async function fsTransGo() {
+    if (_fsTransBusy) return;
+    var inp = document.getElementById('fsTransInput');
+    var from = document.getElementById('fsTransFrom');
+    var to = document.getElementById('fsTransTo');
+    var out = document.getElementById('fsTransOut');
+    var st = document.getElementById('fsTransStatus');
+    var text = (inp && inp.value || '').trim();
+    if (!text) { if (st) st.textContent = 'Tulis dulu teks yang mau diterjemahkan (atau ketuk 🎤 Bicara).'; return; }
+    if (text.length > 4500) { if (st) st.textContent = 'Teks terlalu panjang untuk kuota gratis (maks ±4.500 karakter sekali jalan). Pendekkan dulu.'; return; }
+    if (!from || !to || from.value === to.value) { if (st) st.textContent = 'Pilih dua bahasa yang berbeda.'; return; }
+    _fsTransBusy = true;
+    if (st) st.textContent = '⏳ Menerjemahkan...';
+    if (out) out.textContent = '⏳ ...';
+    try {
+        var result = await fsTransMyMemory(text, from.value, to.value);
+        _fsTransLast = result;
+        if (out) out.textContent = result;
+        if (st) st.textContent = '✅ Selesai (via MyMemory, gratis).';
+    } catch (e1) {
+        if (st) st.textContent = 'MyMemory gagal (' + (e1 && e1.message ? e1.message : 'kuota/limit') + ') — mencoba cadangan LibreTranslate...';
+        try {
+            var result2 = await fsTransLibre(text, from.value, to.value);
+            _fsTransLast = result2;
+            if (out) out.textContent = result2;
+            if (st) st.textContent = '✅ Selesai (via LibreTranslate, gratis).';
+        } catch (e2) {
+            if (out) out.textContent = 'Terjemahan gagal.';
+            if (st) st.textContent = '⚠️ Kedua layanan gratis gagal saat ini (MyMemory: kuota harian IP ini habis; LibreTranslate: tidak terjangkau). Coba lagi besok atau ganti jaringan/Wi-Fi — tidak ada hasil palsu yang ditampilkan.';
+        }
+    }
+    _fsTransBusy = false;
+}
+function fsTransSpeak() {
+    var to = document.getElementById('fsTransTo');
+    var st = document.getElementById('fsTransStatus');
+    if (!_fsTransLast) { if (st) st.textContent = 'Belum ada hasil terjemahan untuk didengarkan.'; return; }
+    if (!('speechSynthesis' in window)) { if (st) st.textContent = '⚠️ Browser ini tidak mendukung pembacaan suara.'; return; }
+    try {
+        window.speechSynthesis.cancel();
+        var u = new SpeechSynthesisUtterance(_fsTransLast);
+        u.lang = (to && to.value) || 'id-ID';
+        window.speechSynthesis.speak(u);
+        if (st) st.textContent = '🔊 Membacakan hasil terjemahan...';
+    } catch (e) {
+        if (st) st.textContent = '⚠️ Gagal membacakan suara.';
+    }
+}
+function fsTransMic() {
+    var from = document.getElementById('fsTransFrom');
+    var inp = document.getElementById('fsTransInput');
+    var st = document.getElementById('fsTransStatus');
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { if (st) st.textContent = '⚠️ Mic suara tidak didukung browser ini (coba Chrome di Android).'; return; }
+    try {
+        var rec = new SR();
+        rec.lang = (from && from.value) || 'en-US';
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+        if (st) st.textContent = '🎤 Mendengarkan... bicara sekarang.';
+        rec.onresult = function (ev) {
+            var txt = ev.results && ev.results[0] && ev.results[0][0] && ev.results[0][0].transcript;
+            if (txt && inp) { inp.value = txt; if (st) st.textContent = '🎤 Terdengar: "' + txt + '" — menerjemahkan...'; fsTransGo(); }
+        };
+        rec.onerror = function () { if (st) st.textContent = '⚠️ Mic gagal / tidak ada izin mikrofon.'; };
+        rec.onend = function () {};
+        rec.start();
+    } catch (e) {
+        if (st) st.textContent = '⚠️ Mic gagal dimulai.';
+    }
+}
+function fsTransCopy() {
+    var st = document.getElementById('fsTransStatus');
+    if (!_fsTransLast) { if (st) st.textContent = 'Belum ada hasil untuk disalin.'; return; }
+    var done = function () { if (st) st.textContent = '📋 Hasil disalin.'; };
+    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin — salin manual dari kotak hasil.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(_fsTransLast).then(done, fail);
+    } else {
+        try {
+            var ta = document.createElement('textarea');
+            ta.value = _fsTransLast;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            done();
+        } catch (e) { fail(); }
+    }
+}
+
+// ================= 4. CEK IP & VPN (fsIp*) =================
+// Utama: ipinfo.io/json (tanpa kunci, HTTP 200 terverifikasi 17 Nov 2026).
+// Cadangan: ipwho.is (tanpa kunci, HTTP 200 terverifikasi).
+// JUJUR: browser tidak bisa memberi VPN — VPN butuh aplikasi (ProxyCloud).
+var _fsIpBusy = false;
+function fsIpCard(label, value) {
+    var d = document.createElement('div');
+    d.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid rgba(248,113,113,0.2);border-radius:10px;padding:10px;min-width:0;';
+    d.innerHTML = '<div style="font-size:0.58rem;color:#94a3b8;">' + esc(label) + '</div><div style="font-size:0.78rem;font-weight:800;color:#fff;margin-top:3px;word-break:break-all;">' + esc(value || '-') + '</div>';
+    return d;
+}
+async function fsIpCheck() {
+    if (_fsIpBusy) return;
+    var grid = document.getElementById('fsIpGrid');
+    var st = document.getElementById('fsIpStatus');
+    if (!grid) return;
+    _fsIpBusy = true;
+    if (st) st.textContent = '⏳ Mengecek IP...';
+    var info = null;
+    try {
+        var a = await _fsFetchJson('https://ipinfo.io/json', 10000);
+        if (a && a.ip) {
+            info = {
+                ip: a.ip,
+                city: [a.city, a.region].filter(Boolean).join(', '),
+                country: a.country,
+                isp: a.org || '',
+                tz: a.timezone || ''
+            };
+        }
+    } catch (e) { /* lanjut ke cadangan */ }
+    if (!info) {
+        try {
+            var b = await _fsFetchJson('https://ipwho.is/', 10000);
+            if (b && b.success && b.ip) {
+                info = {
+                    ip: b.ip,
+                    city: [b.city, b.region].filter(Boolean).join(', '),
+                    country: b.country ? (b.country + (b.country_code ? ' (' + b.country_code + ')' : '')) : '',
+                    isp: (b.connection && (b.connection.isp || b.connection.org)) || '',
+                    tz: (b.timezone && b.timezone.id) || ''
+                };
+            }
+        } catch (e2) { /* gagal total */ }
+    }
+    grid.innerHTML = '';
+    if (!info) {
+        if (st) st.textContent = '⚠️ Gagal mengecek IP (ipinfo.io & ipwho.is tidak terjangkau). Cek koneksi lalu tekan 🔄.';
+        _fsIpBusy = false;
+        return;
+    }
+    grid.appendChild(fsIpCard('🌐 IP Publik', info.ip));
+    grid.appendChild(fsIpCard('📍 Kota', info.city));
+    grid.appendChild(fsIpCard('🏳️ Negara', info.country));
+    grid.appendChild(fsIpCard('🏢 ISP / Operator', info.isp));
+    grid.appendChild(fsIpCard('🕒 Zona Waktu', info.tz));
+    grid.appendChild(fsIpCard('🔒 Status', 'IP asli terlihat — pakai VPN untuk menyembunyikan'));
+    if (st) st.textContent = '✅ IP dicek. Ingat: ini HANYA menampilkan IP kamu — untuk menyembunyikannya, instal aplikasi VPN (ProxyCloud) di bawah.';
+    _fsIpBusy = false;
+}
+
+// ================= 5. KIRIM WHATSAPP (fsWa*) =================
+// Pembuat tautan wa.me — bukan aplikasi chat, tanpa backend, tanpa login.
+// Repo inspirasi: MoazSayed7/Flutter-Chat-App-Firebase-Authentication-
+// Messaging-WhatsApp-Like (butuh Firebase — tidak bisa jalan di web statis;
+// repo tidak punya file LICENSE).
+var _fsWaLink = '';
+function fsWaNormalize(raw) {
+    var d = String(raw || '').replace(/[^\d+]/g, '');
+    if (d.charAt(0) === '+') d = d.slice(1);
+    if (d.charAt(0) === '0') d = '62' + d.slice(1);
+    else if (d.charAt(0) === '8') d = '62' + d;
+    return d;
+}
+function fsWaValid(num) {
+    return /^62[1-9]\d{7,13}$/.test(num);
+}
+function fsWaMake() {
+    var phoneEl = document.getElementById('fsWaPhone');
+    var msgEl = document.getElementById('fsWaMsg');
+    var res = document.getElementById('fsWaResult');
+    var numEl = document.getElementById('fsWaNumber');
+    var linkEl = document.getElementById('fsWaLink');
+    var openEl = document.getElementById('fsWaOpen');
+    var st = document.getElementById('fsWaStatus');
+    var num = fsWaNormalize(phoneEl && phoneEl.value);
+    if (!fsWaValid(num)) {
+        if (res) res.style.display = 'none';
+        if (st) st.textContent = '⚠️ Nomor tidak valid. Tulis nomor Indonesia, cth: 081234567890 atau 6281234567890 (9–15 digit setelah kode negara 62).';
+        return;
+    }
+    var msg = (msgEl && msgEl.value) || '';
+    _fsWaLink = 'https://wa.me/' + num + (msg ? '?text=' + encodeURIComponent(msg) : '');
+    if (numEl) numEl.textContent = '+' + num;
+    if (linkEl) linkEl.textContent = _fsWaLink;
+    if (openEl) openEl.href = _fsWaLink;
+    if (res) res.style.display = 'block';
+    if (st) st.textContent = '✅ Link siap — ketuk "Buka di WhatsApp". Nomor harus aktif & terdaftar di WhatsApp, kalau tidak chat tidak akan terbuka.';
+}
+function fsWaCopy() {
+    var st = document.getElementById('fsWaStatus');
+    if (!_fsWaLink) { if (st) st.textContent = 'Buat dulu link-nya.'; return; }
+    var done = function () { if (st) st.textContent = '📋 Link disalin: ' + _fsWaLink; };
+    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin — salin manual link di atas.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(_fsWaLink).then(done, fail);
+    } else {
+        try {
+            var ta = document.createElement('textarea');
+            ta.value = _fsWaLink;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            done();
+        } catch (e) { fail(); }
+    }
+}
+
+// ================= INIT (aman walau sebagian elemen belum ada) =================
+fsSubRender();
+fsFootLoad('eng.1');
+fsIpCheck();
+            </script>
         </div>
 
 <!-- ===== ZENLINK TAB ===== -->
@@ -729,10 +1393,10 @@ function _fsFetchJson(url, ms) {
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
             <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
-            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
-            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
-            <button onclick="location.href='hiburan.html#tvchannel'"><span>📺</span>Live TV</button>
-            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'" class="active"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 
@@ -753,8 +1417,31 @@ function _fsFetchJson(url, ms) {
             if (sidebar.classList.contains('active')) toggleSidebar();
         }
         function bukaGarapan() { window.location.href = 'garapan.html'; }
+        function fsSetTheme(name) {
+            var T = window.FS_THEMES || {};
+            var t = T[name]; if (!t) return;
+            try { localStorage.setItem('fsTheme', name); } catch(e) {}
+            document.documentElement.style.setProperty('--primary', t[0]);
+            document.documentElement.style.setProperty('--primary-glow', t[1]);
+            fsThemeRender();
+        }
+        function fsThemeRender() {
+            var row = document.getElementById('fsThemeRow'); if (!row) return;
+            var cur = ''; try { cur = localStorage.getItem('fsTheme') || 'biru'; } catch(e) {}
+            var names = { biru: '🔵 Biru', hijau: '🟢 Hijau', ungu: '🟣 Ungu', merah: '🔴 Merah', emas: '🟡 Emas' };
+            var T = window.FS_THEMES || {};
+            row.innerHTML = '';
+            Object.keys(names).forEach(function(n){
+                var b = document.createElement('button');
+                b.textContent = names[n];
+                b.style.cssText = 'background:' + (T[n] ? T[n][0] : '#38bdf8') + ';color:#000;border:none;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;' + (n === cur ? 'outline:2px solid #fff;outline-offset:2px;' : 'opacity:0.75;');
+                b.onclick = function(){ fsSetTheme(n); };
+                row.appendChild(b);
+            });
+        }
         // Buka tab dari hash URL (mis. tools.html#zenlink)
         document.addEventListener('DOMContentLoaded', function(){
+            fsThemeRender();
             var h = (location.hash || '').replace('#', '');
             if (h && document.getElementById(h)) {
                 var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + h + '\'"]');
