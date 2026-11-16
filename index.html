@@ -1877,9 +1877,12 @@
                 <div id="fsRadioNow" style="font-size:0.85rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🎵 Belum ada lagu diputar</div>
                 <div id="fsRadioMeta" style="font-size:0.68rem;color:#64748b;margin-top:4px;">Pilih lagu di bawah untuk mulai mendengarkan</div>
                 <audio id="fsRadioAudio" controls preload="none" style="width:100%;margin-top:12px;border-radius:10px;"></audio>
-                <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+                <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
+                    <button onclick="fsRadioStep(-1)" style="min-height:48px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;border-radius:10px;padding:10px 18px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏮ Sebelumnya</button>
                     <button onclick="fsRadioStop()" style="min-height:48px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:10px;padding:10px 22px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹ Stop</button>
+                    <button onclick="fsRadioStep(1)" style="min-height:48px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;border-radius:10px;padding:10px 18px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">Berikutnya ⏭</button>
                 </div>
+                <div style="font-size:0.6rem;color:#475569;margin-top:8px;">Lagu habis → otomatis lanjut ke lagu berikutnya di daftar (ala BitChord).</div>
                 <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
                 <div id="fsRadioLyrics" style="display:none;margin-top:12px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 12px;font-size:0.72rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;max-height:220px;overflow-y:auto;">Lirik akan muncul di sini saat lagu diputar.</div>
             </div>
@@ -1914,6 +1917,9 @@
             // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
             var _fsRadioInit = false;
             var _fsRadioLoading = false;
+            // Antrean putar ala BitChord: daftar terakhir yang dirender + posisi lagu saat ini
+            var _fsRadioTracks = [];
+            var _fsRadioIndex = -1;
             var FS_AUDIUS = 'https://discoveryprovider.audius.co/v1';
             var FS_AUDIUS_APP = 'app_name=FREEDOM_SYNDICATE';
 
@@ -1937,6 +1943,14 @@
                 }
                 if (statusEl) statusEl.textContent = tracks.length + ' lagu ditemukan';
                 list.innerHTML = '';
+                _fsRadioTracks = tracks.map(function(t){
+                    return {
+                        url: FS_AUDIUS + '/tracks/' + encodeURIComponent(t.id) + '/stream?' + FS_AUDIUS_APP,
+                        title: t.title || 'Tanpa judul',
+                        artist: (t.user && t.user.name) || 'Artis tidak dikenal',
+                        genre: t.genre || ''
+                    };
+                });
                 tracks.forEach(function(t){
                     var title = t.title || 'Tanpa judul';
                     var artist = (t.user && t.user.name) || 'Artis tidak dikenal';
@@ -2004,6 +2018,10 @@
                 var errEl = document.getElementById('fsRadioError');
                 if (errEl) errEl.style.display = 'none';
                 if (!url) return;
+                _fsRadioIndex = -1;
+                for (var i = 0; i < _fsRadioTracks.length; i++) {
+                    if (_fsRadioTracks[i].url === url) { _fsRadioIndex = i; break; }
+                }
                 document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar: ' + title;
                 document.getElementById('fsRadioMeta').textContent = [artist, genre].filter(Boolean).join(' • ') || 'Audius';
                 fsRadioLyrics(title, artist);
@@ -2037,9 +2055,20 @@
                 });
             }
 
+            // Pindah ke lagu sebelum / sesudahnya di antrean (putar melingkar).
+            function fsRadioStep(dir) {
+                if (!_fsRadioTracks.length) return;
+                var next = _fsRadioIndex + dir;
+                if (next < 0) next = _fsRadioTracks.length - 1;
+                if (next >= _fsRadioTracks.length) next = 0;
+                var t = _fsRadioTracks[next];
+                if (t) fsRadioPlay(t.url, t.title, t.artist, t.genre);
+            }
+
             function fsRadioStop() {
                 var audio = document.getElementById('fsRadioAudio');
                 try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch(e) {}
+                _fsRadioIndex = -1;
                 document.getElementById('fsRadioNow').textContent = '🎵 Belum ada lagu diputar';
                 document.getElementById('fsRadioMeta').textContent = 'Pilih lagu di bawah untuk mulai mendengarkan';
                 var box = document.getElementById('fsRadioLyrics');
@@ -2050,6 +2079,10 @@
             document.getElementById('fsRadioAudio').addEventListener('error', function(){
                 var errEl = document.getElementById('fsRadioError');
                 if (errEl && this.src) errEl.style.display = 'block';
+            });
+            // Lagu habis -> otomatis lanjut ke lagu berikutnya di antrean
+            document.getElementById('fsRadioAudio').addEventListener('ended', function(){
+                fsRadioStep(1);
             });
             </script>
         </div>
@@ -2760,7 +2793,7 @@
             <div class="tv-subtab-pane" id="pane-tvLive" style="padding:14px 14px 24px;">
                 <div style="background:linear-gradient(135deg,rgba(14,30,60,0.95),rgba(10,20,45,0.95));border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;">
                     <div style="font-size:0.78rem;font-weight:800;color:#fff;">📡 LIVE TV — Channel Gratis</div>
-                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org — Olahraga &amp; Indonesia saat tab dibuka, kategori lain saat dipilih — jadi channel ikut ter-update otomatis. Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org (database 30.333 channel) — Olahraga &amp; Indonesia saat tab dibuka, kategori dan negara lain saat dipilih — jadi channel ikut ter-update otomatis. Ketuk ⭐ di tiap channel untuk menyimpan ke Favorit (tersimpan di HP). Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
                 </div>
 
                 <!-- Player -->
@@ -2774,17 +2807,36 @@
                 </div>
                 <div id="tvLiveError" style="display:none;margin-top:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px 16px;text-align:center;font-size:0.7rem;color:#fca5a5;">⚠️ Stream tidak tersedia, coba channel lain.</div>
 
-                <!-- Filter kategori -->
-                <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;" id="tvLiveFilterBar">
+                <!-- Filter: simpanan + kategori -->
+                <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;margin-top:12px;">⭐ SIMPANAN &amp; KATEGORI</div>
+                <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;" id="tvLiveFilterBar">
                     <button class="fs-cat-btn active" onclick="tvLiveSetCat('all', this)">Semua</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('fav', this)">⭐ Favorit</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('recent', this)">🕒 Terakhir Ditonton</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('sports', this)">⚽ Olahraga</button>
-                    <button class="fs-cat-btn" onclick="tvLiveSetCat('id', this)">🇮🇩 Indonesia</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('movies', this)">🎬 Film</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('news', this)">📰 Berita</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('music', this)">🎵 Musik</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('documentary', this)">🎥 Dokumenter</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('kids', this)">🧒 Anak</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('entertainment', this)">🎭 Hiburan</button>
+                </div>
+
+                <!-- Negara (iptv-org — database 30.333 channel, dikelompokkan per negara; dimuat on-demand saat dipilih) -->
+                <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;margin-top:12px;">🌍 NEGARA</div>
+                <div style="display:flex;gap:6px;margin-top:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;" id="tvLiveCountryBar">
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('id', this)">🇮🇩 Indonesia</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('my', this)">🇲🇾 Malaysia</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('sg', this)">🇸🇬 Singapura</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('th', this)">🇹🇭 Thailand</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('kr', this)">🇰🇷 Korea</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('jp', this)">🇯🇵 Jepang</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('in', this)">🇮🇳 India</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('uk', this)">🇬🇧 Inggris</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('us', this)">🇺🇸 Amerika</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('au', this)">🇦🇺 Australia</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('de', this)">🇩🇪 Jerman</button>
+                    <button class="fs-cat-btn" onclick="tvLiveSetCat('fr', this)">🇫🇷 Prancis</button>
                 </div>
 
                 <!-- Search -->
@@ -2806,22 +2858,42 @@
             // --- LIVE TV: playlist publik iptv-org (diambil tiap kunjungan, tanpa kunci) ---
             var TVLIVE_URLS = {
                 sports: 'https://iptv-org.github.io/iptv/categories/sports.m3u',
-                id: 'https://iptv-org.github.io/iptv/countries/id.m3u',
                 movies: 'https://iptv-org.github.io/iptv/categories/movies.m3u',
                 news: 'https://iptv-org.github.io/iptv/categories/news.m3u',
                 music: 'https://iptv-org.github.io/iptv/categories/music.m3u',
                 documentary: 'https://iptv-org.github.io/iptv/categories/documentary.m3u',
                 kids: 'https://iptv-org.github.io/iptv/categories/kids.m3u',
-                entertainment: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u'
+                entertainment: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u',
+                // Negara — iptv-org countries/*.m3u (jumlah channel dicek 17 Nov 2026:
+                // id ~174, my 6, sg 9, th 73, kr 72, jp 10, in 823, uk 311, us 1.497,
+                // au 79, de 306, fr 208; Inggris pakai kode 'uk', bukan 'gb')
+                id: 'https://iptv-org.github.io/iptv/countries/id.m3u',
+                my: 'https://iptv-org.github.io/iptv/countries/my.m3u',
+                sg: 'https://iptv-org.github.io/iptv/countries/sg.m3u',
+                th: 'https://iptv-org.github.io/iptv/countries/th.m3u',
+                kr: 'https://iptv-org.github.io/iptv/countries/kr.m3u',
+                jp: 'https://iptv-org.github.io/iptv/countries/jp.m3u',
+                in: 'https://iptv-org.github.io/iptv/countries/in.m3u',
+                uk: 'https://iptv-org.github.io/iptv/countries/uk.m3u',
+                us: 'https://iptv-org.github.io/iptv/countries/us.m3u',
+                au: 'https://iptv-org.github.io/iptv/countries/au.m3u',
+                de: 'https://iptv-org.github.io/iptv/countries/de.m3u',
+                fr: 'https://iptv-org.github.io/iptv/countries/fr.m3u'
             };
-            // Label tampil per kategori (badge kartu + ringkasan status)
+            // Label tampil per kategori / negara (badge kartu + ringkasan status)
             var TVLIVE_LABELS = {
-                sports: 'Olahraga', id: 'Indonesia', movies: 'Film', news: 'Berita',
-                music: 'Musik', documentary: 'Dokumenter', kids: 'Anak', entertainment: 'Hiburan'
+                sports: 'Olahraga', movies: 'Film', news: 'Berita',
+                music: 'Musik', documentary: 'Dokumenter', kids: 'Anak', entertainment: 'Hiburan',
+                id: 'Indonesia', my: 'Malaysia', sg: 'Singapura', th: 'Thailand', kr: 'Korea',
+                jp: 'Jepang', in: 'India', uk: 'Inggris', us: 'Amerika', au: 'Australia',
+                de: 'Jerman', fr: 'Prancis'
             };
             var TVLIVE_BADGES = {
-                sports: '⚽ Olahraga', id: '🇮🇩 Indonesia', movies: '🎬 Film', news: '📰 Berita',
-                music: '🎵 Musik', documentary: '🎥 Dokumenter', kids: '🧒 Anak', entertainment: '🎭 Hiburan'
+                sports: '⚽ Olahraga', movies: '🎬 Film', news: '📰 Berita',
+                music: '🎵 Musik', documentary: '🎥 Dokumenter', kids: '🧒 Anak', entertainment: '🎭 Hiburan',
+                id: '🇮🇩 Indonesia', my: '🇲🇾 Malaysia', sg: '🇸🇬 Singapura', th: '🇹🇭 Thailand',
+                kr: '🇰🇷 Korea', jp: '🇯🇵 Jepang', in: '🇮🇳 India', uk: '🇬🇧 Inggris',
+                us: '🇺🇸 Amerika', au: '🇦🇺 Australia', de: '🇩🇪 Jerman', fr: '🇫🇷 Prancis'
             };
             var _tvLiveAll = [];
             var _tvLiveLoaded = false;
@@ -2834,6 +2906,36 @@
             var _tvLivePage = 100;
             var _tvLiveHls = null;
             var _tvLiveCurrent = null;
+
+            // ⭐ Favorit + 🕒 Terakhir Ditonton — tersimpan lokal di HP (localStorage),
+            // tanpa akun dan tanpa server, seperti Lanjutkan Menonton di FS Cinema.
+            var FS_TV_FAV_KEY = 'fsTvFav';
+            var FS_TV_RECENT_KEY = 'fsTvRecent';
+            function _tvLiveLoadList(key) {
+                try {
+                    var arr = JSON.parse(localStorage.getItem(key) || '[]');
+                    return Array.isArray(arr) ? arr : [];
+                } catch(e) { return []; }
+            }
+            function _tvLiveSaveList(key, arr) {
+                try { localStorage.setItem(key, JSON.stringify(arr)); } catch(e) {}
+            }
+            function tvLiveIsFav(url) {
+                return _tvLiveLoadList(FS_TV_FAV_KEY).some(function(x){ return x.url === url; });
+            }
+            function tvLiveToggleFav(ch) {
+                var arr = _tvLiveLoadList(FS_TV_FAV_KEY);
+                var i = -1;
+                for (var k = 0; k < arr.length; k++) { if (arr[k].url === ch.url) { i = k; break; } }
+                if (i >= 0) arr.splice(i, 1);
+                else arr.unshift({ name: ch.name, url: ch.url, logo: ch.logo || '', src: ch.src || '', group: ch.group || '' });
+                _tvLiveSaveList(FS_TV_FAV_KEY, arr.slice(0, 100));
+            }
+            function tvLiveRecentSave(ch) {
+                var arr = _tvLiveLoadList(FS_TV_RECENT_KEY).filter(function(x){ return x.url !== ch.url; });
+                arr.unshift({ name: ch.name, url: ch.url, logo: ch.logo || '', src: ch.src || '', group: ch.group || '', time: Date.now() });
+                _tvLiveSaveList(FS_TV_RECENT_KEY, arr.slice(0, 12));
+            }
 
             // Filter channel premium (pay-TV) — hanya free-to-air yang ditampilkan.
             // Nama channel yang mengandung merek TV berbayar di bawah ini disembunyikan.
@@ -2920,6 +3022,14 @@
 
             function tvLiveFiltered() {
                 var q = (document.getElementById('tvLiveSearch').value || '').trim().toLowerCase();
+                // Favorit / Terakhir Ditonton berasal dari simpanan lokal, bukan playlist
+                if (_tvLiveCat === 'fav' || _tvLiveCat === 'recent') {
+                    var saved = _tvLiveLoadList(_tvLiveCat === 'fav' ? FS_TV_FAV_KEY : FS_TV_RECENT_KEY);
+                    return saved.filter(function(ch){
+                        if (q && (ch.name || '').toLowerCase().indexOf(q) === -1) return false;
+                        return true;
+                    });
+                }
                 return _tvLiveAll.filter(function(ch){
                     if (_tvLiveCat !== 'all' && ch.src !== _tvLiveCat) return false;
                     if (q && ch.name.toLowerCase().indexOf(q) === -1) return false;
@@ -2947,6 +3057,20 @@
                         + '<div style="flex:1;min-width:0;"><div style="font-size:0.72rem;font-weight:800;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(ch.name) + '</div>'
                         + '<div style="font-size:0.58rem;color:#64748b;">' + srcBadge + (ch.group ? ' · ' + esc(ch.group) : '') + '</div></div>'
                         + '<div style="font-size:0.9rem;color:var(--primary);flex-shrink:0;">▶</div>';
+                    // Tombol ⭐ favorit (klik bintang saja, jangan ikut memutar channel)
+                    var starBtn = document.createElement('button');
+                    starBtn.textContent = tvLiveIsFav(ch.url) ? '★' : '☆';
+                    starBtn.title = 'Simpan ke Favorit';
+                    starBtn.style.cssText = 'background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;flex-shrink:0;color:' + (tvLiveIsFav(ch.url) ? '#fbbf24' : '#475569') + ';font-family:inherit;';
+                    starBtn.onclick = function(ev){
+                        if (ev) ev.stopPropagation();
+                        tvLiveToggleFav(ch);
+                        var fav = tvLiveIsFav(ch.url);
+                        starBtn.textContent = fav ? '★' : '☆';
+                        starBtn.style.color = fav ? '#fbbf24' : '#475569';
+                        if (_tvLiveCat === 'fav') tvLiveRender(true);
+                    };
+                    card.insertBefore(starBtn, card.lastChild);
                     list.appendChild(card);
                 });
                 _tvLiveShown += batch.length;
@@ -2960,9 +3084,11 @@
             function tvLiveOnSearch() { tvLiveRender(true); }
             function tvLiveSetCat(cat, btn) {
                 _tvLiveCat = cat;
-                document.querySelectorAll('#tvLiveFilterBar .fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
+                document.querySelectorAll('#tvLiveFilterBar .fs-cat-btn, #tvLiveCountryBar .fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
                 if (btn) btn.classList.add('active');
-                // Kategori sudah dimuat (atau 'Semua') -> langsung tampil.
+                // Favorit / Terakhir Ditonton berasal dari simpanan lokal — tanpa fetch.
+                if (cat === 'fav' || cat === 'recent') { tvLiveRender(true); return; }
+                // Kategori / negara sudah dimuat (atau 'Semua') -> langsung tampil.
                 // Belum dimuat -> fetch on-demand sekali, lalu tampil; hasil di-cache.
                 if (cat === 'all' || _tvLiveLoadedCats[cat]) { tvLiveRender(true); return; }
                 var statusEl = document.getElementById('tvLiveStatus');
@@ -2998,6 +3124,7 @@
                 if (badge) badge.style.display = 'block';
                 if (badgeName) badgeName.textContent = ch.name;
                 _tvLiveCurrent = ch;
+                try { tvLiveRecentSave(ch); } catch(e) {}
                 // FS-HARDEN: stream http:// -> coba https:// dulu (mixed content memblokir
                 // http di halaman https). Kalau https gagal, fallback ke http:// aslinya.
                 var _tvOrigUrl = ch.url;
