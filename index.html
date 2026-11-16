@@ -1881,6 +1881,7 @@
                     <button onclick="fsRadioStop()" style="min-height:48px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:10px;padding:10px 22px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹ Stop</button>
                 </div>
                 <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
+                <div id="fsRadioLyrics" style="display:none;margin-top:12px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 12px;font-size:0.72rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;max-height:220px;overflow-y:auto;">Lirik akan muncul di sini saat lagu diputar.</div>
             </div>
 
             <!-- Cari lagu -->
@@ -1907,7 +1908,7 @@
             <!-- Daftar lagu -->
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:14px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: Audius (open source, artis independen) · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka.</div>
 
             <script>
             // --- MUSIK (Audius API publik, tanpa kunci; repo: AudiusProject/audius) ---
@@ -2005,6 +2006,7 @@
                 if (!url) return;
                 document.getElementById('fsRadioNow').textContent = '▶ Sedang diputar: ' + title;
                 document.getElementById('fsRadioMeta').textContent = [artist, genre].filter(Boolean).join(' • ') || 'Audius';
+                fsRadioLyrics(title, artist);
                 try { audio.pause(); } catch(e) {}
                 audio.src = url;
                 var p = audio.play();
@@ -2014,11 +2016,34 @@
                 });
             }
 
+            // Lirik ala BitChord — LRCLIB (API publik gratis, tanpa kunci).
+            // BitChord mencantumkan LRCLIB sebagai salah satu penyedia liriknya.
+            // Hanya teks lirik polos yang dipakai; kalau tidak ada, tampilkan pesan, jangan diam.
+            function fsRadioLyrics(title, artist) {
+                var box = document.getElementById('fsRadioLyrics');
+                if (!box) return;
+                box.style.display = 'block';
+                box.textContent = '⏳ Memuat lirik...';
+                var url = 'https://lrclib.net/api/get?artist_name=' + encodeURIComponent(artist || '')
+                    + '&track_name=' + encodeURIComponent(title || '');
+                fetch(url).then(function(r){
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                }).then(function(d){
+                    var txt = (d && d.plainLyrics) || '';
+                    box.textContent = txt ? txt : 'Lirik tidak tersedia untuk lagu ini.';
+                }).catch(function(){
+                    box.textContent = 'Lirik tidak tersedia untuk lagu ini.';
+                });
+            }
+
             function fsRadioStop() {
                 var audio = document.getElementById('fsRadioAudio');
                 try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch(e) {}
                 document.getElementById('fsRadioNow').textContent = '🎵 Belum ada lagu diputar';
                 document.getElementById('fsRadioMeta').textContent = 'Pilih lagu di bawah untuk mulai mendengarkan';
+                var box = document.getElementById('fsRadioLyrics');
+                if (box) { box.style.display = 'none'; box.textContent = 'Lirik akan muncul di sini saat lagu diputar.'; }
             }
 
             // Error stream (mis. server mati): beri tahu user, jangan diam saja
@@ -2211,6 +2236,15 @@
                             <option value="2embed">2Embed</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- Lanjutkan Menonton (ala Idlix — tersimpan lokal di HP, tanpa server) -->
+                <div id="fsContinueWrap" style="display:none;padding:10px 14px;background:rgba(5,10,20,0.98);border-bottom:1px solid rgba(56,189,248,0.1);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <div style="font-size:0.7rem;font-weight:800;color:#fff;letter-spacing:1px;">▶ LANJUTKAN MENONTON</div>
+                        <button onclick="fsContinueClear()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:12px;padding:4px 10px;font-size:0.6rem;cursor:pointer;font-family:inherit;">Hapus</button>
+                    </div>
+                    <div id="fsContinueRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;"></div>
                 </div>
 
                 <!-- Results grid -->
@@ -2435,6 +2469,7 @@
                 }
 
                 function fsPlay(tmdbId, title) {
+                    try { fsContinueSave(tmdbId, title); } catch(e) {}
                     var server = document.getElementById('fsServerSelect').value;
                     var url;
                     if (server === 'vidsrc') {
@@ -2475,6 +2510,54 @@
                     frame.src = url;
                     document.getElementById('fsResults').style.display='none';
                 }
+
+                // --- LANJUTKAN MENONTON (ala Idlix) ---
+                // Disimpan di localStorage HP masing-masing — tanpa server, tanpa akun,
+                // tanpa mengambil kode Idlix (repo itu tanpa file lisensi, dan backend-nya
+                // scraping Idlix + bypass Cloudflare, jadi tidak dipakai di sini).
+                var FS_CONTINUE_KEY = 'fsContinueWatching';
+                function fsContinueLoad() {
+                    try {
+                        var raw = localStorage.getItem(FS_CONTINUE_KEY);
+                        var arr = raw ? JSON.parse(raw) : [];
+                        return Array.isArray(arr) ? arr : [];
+                    } catch(e) { return []; }
+                }
+                function fsContinueSave(id, title) {
+                    if (!id || !title) return;
+                    var arr = fsContinueLoad().filter(function(x){ return String(x.id) !== String(id); });
+                    arr.unshift({ id: String(id), title: title, type: fsMediaType, time: Date.now() });
+                    arr = arr.slice(0, 12);
+                    try { localStorage.setItem(FS_CONTINUE_KEY, JSON.stringify(arr)); } catch(e) {}
+                    fsContinueRender();
+                }
+                function fsContinueRender() {
+                    var wrap = document.getElementById('fsContinueWrap');
+                    var row = document.getElementById('fsContinueRow');
+                    if (!wrap || !row) return;
+                    var arr = fsContinueLoad();
+                    if (!arr.length) { wrap.style.display = 'none'; row.innerHTML = ''; return; }
+                    wrap.style.display = 'block';
+                    row.innerHTML = '';
+                    arr.forEach(function(item){
+                        var card = document.createElement('div');
+                        card.style.cssText = 'flex:0 0 150px;cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid rgba(56,189,248,0.15);background:rgba(15,23,42,0.8);padding:10px;';
+                        card.onclick = function(){
+                            fsMediaType = item.type === 'tv' ? 'tv' : 'movie';
+                            fsSetType(fsMediaType, null);
+                            fsPlay(item.id, item.title);
+                        };
+                        card.innerHTML = '<div style="font-size:1.2rem;">🎬</div>'
+                            + '<div style="font-size:0.65rem;color:#fff;font-weight:700;line-height:1.3;margin-top:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(item.title) + '</div>'
+                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:4px;">' + (item.type === 'tv' ? '📺 Series' : '🎬 Film') + ' · ketuk untuk lanjut</div>';
+                        row.appendChild(card);
+                    });
+                }
+                function fsContinueClear() {
+                    try { localStorage.removeItem(FS_CONTINUE_KEY); } catch(e) {}
+                    fsContinueRender();
+                }
+                fsContinueRender();
                 </script>
             </div>
 
