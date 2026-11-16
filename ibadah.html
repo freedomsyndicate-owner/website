@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
+    <title>Freedom Syndicate | Al Qur'an</title>
+    <meta name="description" content="Baca Al Qur'an online gratis: 114 surah, terjemahan Indonesia, dan murotal per ayat.">
+    <meta property="og:title" content="Freedom Syndicate | Al Qur'an">
+    <meta property="og:description" content="Baca Al Qur'an online gratis: 114 surah, terjemahan Indonesia, dan murotal per ayat.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freedomsyndicate.my.id/ibadah.html">
+
+    <script>
+    (function(){
+        'use strict';
+
+        // --- 1. DISABLE KLIK KANAN ---
+        document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+
+        // --- 2. DISABLE TEXT SELECT ---
+        document.addEventListener('selectstart', function(e){
+            // Izinkan select di input & textarea
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        }, true);
+
+        // --- 3. DISABLE DRAG ---
+        document.addEventListener('dragstart', function(e){ e.preventDefault(); }, true);
+
+        // --- 4. DISABLE KEYBOARD SHORTCUTS BERBAHAYA ---
+        document.addEventListener('keydown', function(e){
+            var k = e.key ? e.key.toLowerCase() : '';
+            var ctrl = e.ctrlKey || e.metaKey;
+            var shift = e.shiftKey;
+
+            // F12
+            if(e.key === 'F12'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+U (view-source)
+            if(ctrl && k === 'u'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+S (save)
+            if(ctrl && k === 's'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+P (print)
+            if(ctrl && k === 'p'){ e.preventDefault(); e.stopPropagation(); return false; }
+            // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C / Ctrl+Shift+K
+            if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
+                e.preventDefault(); e.stopPropagation(); return false;
+            }
+            // Ctrl+A — blokir hanya di luar input/textarea
+            if(ctrl && k === 'a'){
+                if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+                    e.preventDefault(); e.stopPropagation(); return false;
+                }
+            }
+        }, true);
+
+        // --- 5. DEVTOOLS DETECTOR ---
+        // Metode: bandingkan window size. Threshold 200px agar tidak false-positive di mobile.
+        var _devOpen = false;
+        var _devCheckActive = true;
+
+        function _onDevToolsOpen(){
+            if(!_devCheckActive) return;
+            _devCheckActive = false; // jalankan sekali saja
+            document.addEventListener('DOMContentLoaded', function(){
+                _showBlocked();
+            });
+            // Jika DOM sudah ready, langsung tampilkan
+            if(document.body) _showBlocked();
+        }
+
+        function _showBlocked(){
+            document.body.innerHTML = [
+                '<div style="display:flex;flex-direction:column;align-items:center;',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
+                'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.0</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools & refresh halaman.</div>',
+                '</div>'
+            ].join('');
+        }
+
+        // Cek setiap 1.5 detik — hanya aktif di desktop (skip mobile kecil)
+        setInterval(function(){
+            if(!_devCheckActive) return;
+            // Mobile: outerWidth biasanya sama dengan innerWidth, skip
+            if(window.outerWidth < 500) return;
+            var wDiff = window.outerWidth - window.innerWidth;
+            var hDiff = window.outerHeight - window.innerHeight;
+            if(wDiff > 200 || hDiff > 200){
+                if(!_devOpen){ _devOpen = true; _onDevToolsOpen(); }
+            } else {
+                _devOpen = false;
+            }
+        }, 1500);
+
+        // --- 6. DISABLE PRINT ---
+        window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
+
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        var _s = document.createElement('style');
+        _s.textContent = [
+            '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
+            '-ms-user-select:none!important; user-select:none!important;',
+            '-webkit-touch-callout:none!important; }',
+            'input, textarea, [contenteditable] {',
+            '-webkit-user-select:text!important; user-select:text!important; }'
+        ].join('');
+        document.head.appendChild(_s);
+
+    })();
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _fsFetchJson(url, ms) {
+                    return new Promise(function(resolve, reject) {
+                        var done = false;
+                        var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 8000);
+                        fetch(url).then(function(r){
+                            if (!r.ok) throw new Error('HTTP ' + r.status);
+                            return r.json();
+                        }).then(function(d){
+                            if (!done) { done = true; clearTimeout(t); resolve(d); }
+                        }).catch(function(e){
+                            if (!done) { done = true; clearTimeout(t); reject(e); }
+                        });
+                    });
+                }
+    </script>
+</head>
+<body>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+
+    <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
+        <ul class="sidebar-menu">
+            <li class="side-label">MENU UTAMA</li>
+            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
+            <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
+            <li><button onclick="location.href='index.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="location.href='ai.html'">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="openTab('quran', this)" class="active-tab">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
+            <li class="side-label">LAINNYA</li>
+            <li><button onclick="location.href='index.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='index.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+
+<div id="quran" class="tab-content active" style="padding:14px 14px 24px;">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📖 AL QUR'AN</h3><p>114 surah — teks Arab, latin, terjemahan Indonesia &amp; murotal. Gratis, tanpa iklan.</p></div>
+
+            <div id="fsQuranListView">
+                <!-- Lanjutkan Membaca (tersimpan lokal di HP) -->
+                <div id="fsQuranContinue" style="display:none;background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(5,150,105,0.08));border:1px solid rgba(16,185,129,0.45);border-radius:14px;padding:12px 14px;margin-top:6px;">
+                    <div style="font-size:0.55rem;letter-spacing:3px;color:#6ee7b7;font-weight:700;">▶ LANJUTKAN MEMBACA</div>
+                    <div id="fsQuranContinueText" style="font-size:0.85rem;font-weight:800;color:#fff;margin-top:4px;"></div>
+                    <button onclick="fsQuranContinueOpen()" style="margin-top:8px;background:#10b981;color:#022c22;border:none;border-radius:10px;padding:9px 16px;font-weight:900;font-size:0.75rem;cursor:pointer;font-family:inherit;">Buka</button>
+                </div>
+
+                <!-- Cari surah -->
+                <div style="margin-top:14px;">
+                    <input id="fsQuranSearch" type="text" placeholder="🔍 Cari surah / nomor... (mis. Al-Baqarah, 2, Yasin)"
+                        style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.35);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.9rem;outline:none;min-height:48px;"
+                        oninput="fsQuranRenderList()" />
+                    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+                        <button onclick="fsQuranFilter('all',this)" class="fs-cat-btn active" style="border-color:rgba(16,185,129,0.4);">Semua</button>
+                        <button onclick="fsQuranFilter('Meccan',this)" class="fs-cat-btn">Makkiyah</button>
+                        <button onclick="fsQuranFilter('Medinan',this)" class="fs-cat-btn">Madaniyah</button>
+                    </div>
+                </div>
+
+                <div id="fsQuranStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat daftar surah...</div>
+                <div id="fsQuranList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
+            </div>
+
+            <!-- Pembaca surah -->
+            <div id="fsQuranReader" style="display:none;">
+                <button onclick="fsQuranBack()" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:10px;padding:9px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">← Daftar Surah</button>
+                <div style="text-align:center;margin-top:14px;">
+                    <div id="fsQuranSurahArab" style="font-family:'Amiri',serif;font-size:1.9rem;color:#fff;line-height:1.6;"></div>
+                    <div id="fsQuranSurahTitle" style="font-size:1rem;font-weight:800;color:#fff;margin-top:4px;"></div>
+                    <div id="fsQuranSurahMeta" style="font-size:0.68rem;color:#94a3b8;margin-top:4px;"></div>
+                </div>
+                <div id="fsQuranBismillah" style="display:none;text-align:center;font-family:'Amiri',serif;font-size:1.35rem;color:#a7f3d0;margin:16px 0 4px;line-height:2;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <!-- Kontrol murotal -->
+                <div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:14px;flex-wrap:wrap;">
+                    <button onclick="fsQuranStep(-1)" style="min-width:44px;min-height:44px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:50%;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;">⏮</button>
+                    <button id="fsQuranPlayBtn" onclick="fsQuranTogglePlay()" style="min-width:56px;min-height:56px;background:#10b981;color:#022c22;border:none;border-radius:50%;font-size:1.25rem;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(16,185,129,0.4);">▶</button>
+                    <button onclick="fsQuranStep(1)" style="min-width:44px;min-height:44px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:50%;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;">⏭</button>
+                    <button onclick="fsQuranStop()" style="min-width:44px;min-height:44px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:50%;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;justify-content:center;">
+                    <select id="fsQuranEdition" onchange="fsQuranChangeEdition(this.value)" style="background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.35);border-radius:8px;color:#a7f3d0;font-size:0.72rem;padding:8px 10px;outline:none;font-family:inherit;">
+                        <option value="id.indonesian">Terjemahan Indonesia</option>
+                        <option value="id.muntakhab">Quraish Shihab</option>
+                        <option value="id.jalalayn">Tafsir Jalalayn</option>
+                    </select>
+                    <input id="fsQuranJump" type="number" min="1" placeholder="Ayat ke-" style="width:84px;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.35);border-radius:8px;color:#fff;font-size:0.72rem;padding:8px 10px;outline:none;font-family:inherit;">
+                    <button onclick="fsQuranJump()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:8px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">Lompat</button>
+                </div>
+                <div id="fsQuranReaderStatus" style="font-size:0.65rem;color:#64748b;text-align:center;margin-top:10px;">Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.</div>
+                <div id="fsQuranAyahs" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
+                <audio id="fsQuranAudio" preload="none" style="display:none;"></audio>
+            </div>
+
+            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">Sumber teks, terjemahan &amp; audio: AlQuran Cloud (api.alquran.cloud) — gratis, tanpa kunci • Murotal: Mishary Rashid Alafasy • Huruf Arab: Amiri (dipakai QuranKu) • Fitur mengikuti QuranKu (Rafigibran, MIT) — aplikasinya Flutter, jadi fiturnya ditulis ulang di sini.</div>
+
+            <script>
+            // --- AL QUR'AN (AlQuran Cloud, API publik gratis tanpa kunci, CORS *) ---
+            var FS_QURAN_API = 'https://api.alquran.cloud/v1';
+            var _fsQuranInit = false;
+            var _fsQuranList = [];
+            var _fsQuranFilter = 'all';
+            var _fsQuranSurah = 0;
+            var _fsQuranAyahs = [];
+            var _fsQuranEdition = 'id.indonesian';
+            var _fsQuranPlayIdx = -1;
+            var _fsQuranPlayAll = false;
+            var _fsQuranScrollTo = 0;
+
+            function fsQuranInit() {
+                if (_fsQuranInit) return;
+                _fsQuranInit = true;
+                // Huruf Arab Amiri (dipakai QuranKu) — dimuat hanya saat tab dibuka.
+                if (!document.getElementById('fsQuranFont')) {
+                    var l = document.createElement('link');
+                    l.id = 'fsQuranFont'; l.rel = 'stylesheet';
+                    l.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap';
+                    document.head.appendChild(l);
+                }
+                document.getElementById('fsQuranAudio').addEventListener('ended', function(){
+                    if (_fsQuranPlayAll) fsQuranStep(1);
+                    else { _fsQuranPlayIdx = -1; fsQuranMarkPlaying(); var b = document.getElementById('fsQuranPlayBtn'); if (b) b.textContent = '▶'; }
+                });
+                document.getElementById('fsQuranAudio').addEventListener('play', function(){
+                    var b = document.getElementById('fsQuranPlayBtn'); if (b) b.textContent = '⏸';
+                });
+                document.getElementById('fsQuranAudio').addEventListener('pause', function(){
+                    var b = document.getElementById('fsQuranPlayBtn'); if (b) b.textContent = '▶';
+                });
+                fsQuranContinueRender();
+                // Daftar surah: pakai cache dulu biar langsung tampil, lalu segarkan.
+                try {
+                    var cached = JSON.parse(localStorage.getItem('fsQuranList') || 'null');
+                    if (cached && cached.length === 114) { _fsQuranList = cached; fsQuranRenderList(); }
+                } catch(e) {}
+                fetch(FS_QURAN_API + '/surah').then(function(r){ return r.json(); }).then(function(d){
+                    if (d && d.data && d.data.length === 114) {
+                        _fsQuranList = d.data;
+                        try { localStorage.setItem('fsQuranList', JSON.stringify(d.data)); } catch(e) {}
+                        fsQuranRenderList();
+                    }
+                }).catch(function(){
+                    var st = document.getElementById('fsQuranStatus');
+                    if (!_fsQuranList.length && st) st.textContent = '⚠️ Gagal memuat daftar surah. Cek koneksi lalu buka lagi tab ini.';
+                });
+            }
+
+            function fsQuranFilter(type, btn) {
+                _fsQuranFilter = type;
+                var bar = btn ? btn.parentElement : null;
+                if (bar) bar.querySelectorAll('.fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
+                if (btn) btn.classList.add('active');
+                fsQuranRenderList();
+            }
+
+            function fsQuranRenderList() {
+                var list = document.getElementById('fsQuranList');
+                var st = document.getElementById('fsQuranStatus');
+                var q = (document.getElementById('fsQuranSearch').value || '').toLowerCase().trim();
+                var items = _fsQuranList.filter(function(s){
+                    if (_fsQuranFilter !== 'all' && s.revelationType !== _fsQuranFilter) return false;
+                    if (!q) return true;
+                    return (s.englishName || '').toLowerCase().indexOf(q) !== -1
+                        || (s.englishNameTranslation || '').toLowerCase().indexOf(q) !== -1
+                        || String(s.number) === q
+                        || ('surah ' + s.number) === q;
+                });
+                if (st) st.textContent = _fsQuranList.length
+                    ? (items.length + ' dari 114 surah' + (q ? ' untuk "' + q + '"' : ''))
+                    : '⏳ Memuat daftar surah...';
+                list.innerHTML = '';
+                items.forEach(function(s){
+                    var row = document.createElement('div');
+                    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:linear-gradient(160deg, rgba(255,255,255,0.08), rgba(16,185,129,0.05));border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:10px 12px;cursor:pointer;';
+                    row.innerHTML =
+                        '<div style="width:40px;height:40px;flex-shrink:0;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;">' + s.number + '</div>' +
+                        '<div style="flex:1;min-width:0;">' +
+                            '<div style="font-size:0.85rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(s.englishName || '') + '</div>' +
+                            '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(s.englishNameTranslation || '') + ' • ' + s.numberOfAyahs + ' ayat • ' + (s.revelationType === 'Meccan' ? 'Makkiyah' : 'Madaniyah') + '</div>' +
+                        '</div>' +
+                        '<div style="font-family:\'Amiri\',serif;font-size:1.15rem;color:#a7f3d0;flex-shrink:0;">' + esc(s.name || '') + '</div>';
+                    row.onclick = function(){ fsQuranOpen(s.number, 0); };
+                    list.appendChild(row);
+                });
+            }
+
+            function fsQuranOpen(n, scrollAyah) {
+                _fsQuranSurah = n;
+                _fsQuranScrollTo = scrollAyah || 0;
+                fsQuranStop();
+                document.getElementById('fsQuranListView').style.display = 'none';
+                document.getElementById('fsQuranReader').style.display = 'block';
+                var s = null;
+                _fsQuranList.forEach(function(x){ if (x.number === n) s = x; });
+                document.getElementById('fsQuranSurahArab').textContent = s ? s.name : '';
+                document.getElementById('fsQuranSurahTitle').textContent = s ? (s.englishName + ' • Surah ke-' + s.number) : ('Surah ke-' + n);
+                document.getElementById('fsQuranSurahMeta').textContent = s ? (s.englishNameTranslation + ' • ' + s.numberOfAyahs + ' ayat • ' + (s.revelationType === 'Meccan' ? 'Makkiyah' : 'Madaniyah')) : '';
+                document.getElementById('fsQuranBismillah').style.display = (n !== 1 && n !== 9) ? 'block' : 'none';
+                document.getElementById('fsQuranReaderStatus').textContent = '⏳ Memuat surah...';
+                document.getElementById('fsQuranAyahs').innerHTML = '';
+                window.scrollTo({ top: 0 });
+                fetch(FS_QURAN_API + '/surah/' + n + '/editions/quran-uthmani,en.transliteration,' + _fsQuranEdition + ',ar.alafasy')
+                    .then(function(r){ return r.json(); })
+                    .then(function(d){
+                        if (!d || !d.data || d.data.length < 4) throw new Error('bad data');
+                        var arab = d.data[0].ayahs || [], latin = d.data[1].ayahs || [], tr = d.data[2].ayahs || [], au = d.data[3].ayahs || [];
+                        _fsQuranAyahs = arab.map(function(a, i){
+                            return { n: a.numberInSurah, arab: a.text, latin: (latin[i] && latin[i].text) || '', tr: (tr[i] && tr[i].text) || '', audio: (au[i] && au[i].audio) || '' };
+                        });
+                        fsQuranRenderAyahs();
+                        document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.';
+                        if (_fsQuranScrollTo > 0) {
+                            var el = document.getElementById('fsQuranAyah-' + _fsQuranScrollTo);
+                            if (el) setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+                            _fsQuranScrollTo = 0;
+                        }
+                    })
+                    .catch(function(){
+                        document.getElementById('fsQuranReaderStatus').textContent = '⚠️ Gagal memuat surah. Cek koneksi lalu buka lagi.';
+                    });
+            }
+
+            function fsQuranRenderAyahs() {
+                var wrap = document.getElementById('fsQuranAyahs');
+                wrap.innerHTML = '';
+                _fsQuranAyahs.forEach(function(a, i){
+                    var card = document.createElement('div');
+                    card.id = 'fsQuranAyah-' + a.n;
+                    card.style.cssText = 'background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(16,185,129,0.04));border:1px solid rgba(255,255,255,0.13);border-radius:14px;padding:12px 14px;';
+                    card.innerHTML =
+                        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                            '<span style="min-width:30px;height:30px;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;">' + a.n + '</span>' +
+                            '<span>' +
+                                '<button onclick="fsQuranPlayAyah(' + i + ', false)" style="background:#10b981;color:#022c22;border:none;border-radius:8px;padding:7px 12px;font-size:0.72rem;font-weight:900;cursor:pointer;font-family:inherit;margin-right:6px;">▶ Dengar</button>' +
+                                '<button onclick="fsQuranBookmark(' + a.n + ')" title="Tandai terakhir dibaca" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);color:#fbbf24;border-radius:8px;padding:7px 10px;font-size:0.72rem;cursor:pointer;font-family:inherit;">🔖</button>' +
+                            '</span>' +
+                        '</div>' +
+                        '<div style="font-family:\'Amiri\',serif;font-size:1.55rem;line-height:2.1;text-align:right;direction:rtl;color:#fff;margin-top:8px;">' + esc(a.arab) + '</div>' +
+                        (a.latin ? '<div style="font-size:0.68rem;color:#94a3b8;font-style:italic;line-height:1.6;margin-top:6px;">' + esc(a.latin) + '</div>' : '') +
+                        (a.tr ? '<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.7;margin-top:6px;">' + esc(a.tr) + '</div>' : '');
+                    wrap.appendChild(card);
+                });
+                fsQuranMarkPlaying();
+            }
+
+            function fsQuranMarkPlaying() {
+                var cards = document.querySelectorAll('#fsQuranAyahs > div');
+                cards.forEach(function(c, i){
+                    c.style.borderColor = (i === _fsQuranPlayIdx) ? 'rgba(16,185,129,0.7)' : 'rgba(255,255,255,0.13)';
+                });
+            }
+
+            function fsQuranPlayAyah(i, auto) {
+                if (i < 0 || i >= _fsQuranAyahs.length) { fsQuranStop(); return; }
+                var a = _fsQuranAyahs[i];
+                if (!a.audio) return;
+                _fsQuranPlayIdx = i;
+                _fsQuranPlayAll = !!auto;
+                fsQuranMarkPlaying();
+                var audio = document.getElementById('fsQuranAudio');
+                audio.src = a.audio;
+                var p = audio.play();
+                if (p && p.catch) p.catch(function(){});
+                var st = document.getElementById('fsQuranReaderStatus');
+                if (st) st.textContent = '🔊 Ayat ' + a.n + (_fsQuranPlayAll ? ' • Murotal berjalan...' : '');
+            }
+
+            function fsQuranTogglePlay() {
+                var audio = document.getElementById('fsQuranAudio');
+                if (!audio.paused) { audio.pause(); return; }
+                if (_fsQuranPlayIdx >= 0 && audio.src) { var p = audio.play(); if (p && p.catch) p.catch(function(){}); return; }
+                if (_fsQuranAyahs.length) fsQuranPlayAyah(0, true);
+            }
+
+            function fsQuranStep(d) {
+                if (!_fsQuranAyahs.length) return;
+                var next = (_fsQuranPlayIdx < 0 ? 0 : _fsQuranPlayIdx + d);
+                if (next < 0) next = 0;
+                if (next >= _fsQuranAyahs.length) { fsQuranStop(); return; }
+                fsQuranPlayAyah(next, _fsQuranPlayAll || d !== 0);
+            }
+
+            function fsQuranStop() {
+                _fsQuranPlayAll = false;
+                _fsQuranPlayIdx = -1;
+                var audio = document.getElementById('fsQuranAudio');
+                try { audio.pause(); } catch(e) {}
+                var b = document.getElementById('fsQuranPlayBtn'); if (b) b.textContent = '▶';
+                fsQuranMarkPlaying();
+            }
+
+            function fsQuranChangeEdition(v) {
+                _fsQuranEdition = v;
+                if (_fsQuranSurah) fsQuranOpen(_fsQuranSurah, 0);
+            }
+
+            function fsQuranJump() {
+                var v = parseInt((document.getElementById('fsQuranJump').value || ''), 10);
+                if (!v || v < 1 || v > _fsQuranAyahs.length) return;
+                var el = document.getElementById('fsQuranAyah-' + v);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function fsQuranBookmark(n) {
+                var s = null;
+                _fsQuranList.forEach(function(x){ if (x.number === _fsQuranSurah) s = x; });
+                try {
+                    localStorage.setItem('fsQuranLast', JSON.stringify({ surah: _fsQuranSurah, ayah: n, name: s ? s.englishName : ('Surah ke-' + _fsQuranSurah) }));
+                } catch(e) {}
+                fsQuranContinueRender();
+                var st = document.getElementById('fsQuranReaderStatus');
+                if (st) st.textContent = '🔖 Ditandai: ' + (s ? s.englishName : '') + ' ayat ' + n + ' — tersimpan di HP.';
+            }
+
+            function fsQuranContinueRender() {
+                var box = document.getElementById('fsQuranContinue');
+                var txt = document.getElementById('fsQuranContinueText');
+                if (!box || !txt) return;
+                var last = null;
+                try { last = JSON.parse(localStorage.getItem('fsQuranLast') || 'null'); } catch(e) {}
+                if (last && last.surah) {
+                    box.style.display = 'block';
+                    txt.textContent = (last.name || ('Surah ke-' + last.surah)) + ' — ayat ' + (last.ayah || 1);
+                } else {
+                    box.style.display = 'none';
+                }
+            }
+
+            function fsQuranContinueOpen() {
+                var last = null;
+                try { last = JSON.parse(localStorage.getItem('fsQuranLast') || 'null'); } catch(e) {}
+                if (last && last.surah) fsQuranOpen(last.surah, last.ayah || 0);
+            }
+
+            function fsQuranBack() {
+                fsQuranStop();
+                document.getElementById('fsQuranReader').style.display = 'none';
+                document.getElementById('fsQuranListView').style.display = 'block';
+                fsQuranContinueRender();
+                window.scrollTo({ top: 0 });
+            }
+            </script>
+        </div>
+
+    </div>
+
+    <nav class="bottomnav" aria-label="Navigasi utama">
+        <div class="bottomnav-inner">
+            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='trading.html'"><span>📈</span>Trading</button>
+            <button onclick="location.href='hiburan.html#movie'"><span>🎬</span>Movie</button>
+            <button onclick="location.href='hiburan.html#tvchannel'"><span>📺</span>Live TV</button>
+            <button onclick="location.href='ai.html'"><span>🤖</span>Chat Ai</button>
+        </div>
+    </nav>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        function toggleSidebar() {
+            var overlay = document.getElementById('pageOverlay');
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        }
+        function openTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+            document.querySelectorAll('.sidebar-menu button').forEach(function(b){ b.classList.remove('active-tab'); });
+            var el = document.getElementById(tabId);
+            if (el) el.classList.add('active');
+            if (btnElement) btnElement.classList.add('active-tab');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (sidebar.classList.contains('active')) toggleSidebar();
+        }
+        function bukaGarapan() { window.location.href = 'garapan.html'; }
+        document.addEventListener('DOMContentLoaded', function(){
+            var h = (location.hash || '').replace('#', '');
+            if (h && document.getElementById(h)) {
+                var btn = document.querySelector('.sidebar-menu button[onclick*="\'' + h + '\'"]');
+                openTab(h, btn);
+            }
+        });
+    </script>
+</body>
+</html>
