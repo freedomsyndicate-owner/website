@@ -3565,6 +3565,26 @@
                     </div>
                 </div>
 
+                <!-- Hero billboard + baris ala Idlix (HomeViewModel: banner + swimlane) -->
+                <div id="fsCinemaHero" style="display:none;position:relative;height:280px;overflow:hidden;background:#0f172a;">
+                    <img id="fsHeroBg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.15) 0%,rgba(2,6,23,0.55) 55%,rgba(2,6,23,0.98) 100%);"></div>
+                    <div style="position:absolute;left:16px;right:16px;bottom:14px;">
+                        <div style="font-size:0.55rem;letter-spacing:3px;color:var(--primary);font-weight:800;">🔥 SEDANG TRENDING</div>
+                        <div id="fsHeroTitle" style="font-size:1.25rem;font-weight:900;color:#fff;line-height:1.15;margin-top:4px;"></div>
+                        <div id="fsHeroMeta" style="font-size:0.65rem;color:#cbd5e1;margin-top:4px;"></div>
+                        <div id="fsHeroOv" style="font-size:0.68rem;color:#94a3b8;line-height:1.5;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"></div>
+                        <div style="display:flex;gap:8px;margin-top:10px;">
+                            <button id="fsHeroPlay" style="background:#fff;color:#000;border:none;border-radius:8px;padding:9px 18px;font-weight:900;font-size:0.8rem;cursor:pointer;font-family:inherit;">▶ Putar</button>
+                            <button id="fsHeroFav" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:9px 14px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">＋ Favorit</button>
+                        </div>
+                        <div id="fsHeroDots" style="display:flex;gap:5px;margin-top:10px;"></div>
+                    </div>
+                </div>
+                <div id="fsHomeRows" style="padding:4px 0 8px;background:rgba(5,10,20,0.98);">
+                    <div id="fsHomeStatus" style="font-size:0.65rem;color:#475569;text-align:center;padding:12px 0;">⏳ Memuat beranda film...</div>
+                </div>
+
                 <!-- Lanjutkan Menonton (ala Idlix — tersimpan lokal di HP, tanpa server) -->
                 <div id="fsContinueWrap" style="display:none;padding:10px 14px;background:rgba(5,10,20,0.98);border-bottom:1px solid rgba(56,189,248,0.1);">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -3574,16 +3594,19 @@
                     <div id="fsContinueRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;"></div>
                 </div>
 
-                <!-- Results grid -->
-                <div id="fsResults" style="display:none;padding:10px 14px;overflow-y:auto;max-height:340px;background:rgba(5,10,20,0.98);">
-                    <div id="fsSourceNote" style="font-size:0.62rem;color:#64748b;text-align:center;padding:4px 0 2px;"></div>
+                <!-- Results grid (tanpa scroll dalam — halaman yang scroll, ala Netflix) -->
+                <div id="fsResults" style="display:none;padding:10px 14px;background:rgba(5,10,20,0.98);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <div id="fsSourceNote" style="font-size:0.62rem;color:#64748b;padding:4px 0 2px;"></div>
+                        <button onclick="fsCinemaShowHome()" style="flex-shrink:0;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:14px;padding:4px 10px;font-size:0.62rem;font-weight:700;cursor:pointer;font-family:inherit;">✕ Tutup hasil</button>
+                    </div>
                     <div id="fsResultsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
                     <div id="fsPaginationNav"></div>
                 </div>
 
                 <!-- Player -->
                 <div id="fsPlayerWrap" style="position:relative;">
-                    <div id="fsPlayerPlaceholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 260px);background:rgba(5,10,20,0.98);text-align:center;padding:20px;">
+                    <div id="fsPlayerPlaceholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;background:rgba(5,10,20,0.98);text-align:center;padding:20px;">
                         <div style="font-size:3.5rem;margin-bottom:10px;">🎬</div>
                         <div style="font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:2px;">FS CINEMA</div>
                         <div style="font-size:0.7rem;color:#475569;margin-top:6px;">Cari film di atas lalu klik untuk play</div>
@@ -3608,7 +3631,38 @@
                         <div style="font-size:0.65rem;color:#94a3b8;">Coba ganti server lain di dropdown atas</div>
                         <button onclick="document.getElementById('fsErrorToast').style.display='none'" style="margin-top:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;">Tutup</button>
                     </div>
-                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;height:calc(100vh - 260px);border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"></iframe>
+                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"></iframe>
+                </div>
+
+                <!-- Detail film/series ala Idlix DetailScreen -->
+                <div id="fsCinemaDetail" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(2,6,23,0.98);overflow-y:auto;">
+                    <div style="position:relative;height:240px;">
+                        <img id="fsDetBg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.1) 0%,rgba(2,6,23,0.6) 60%,rgba(2,6,23,0.98) 100%);"></div>
+                        <button onclick="fsCinemaCloseDetail()" style="position:absolute;top:14px;right:14px;width:36px;height:36px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:50%;font-size:0.9rem;cursor:pointer;font-family:inherit;z-index:2;">✕</button>
+                    </div>
+                    <div style="padding:0 16px 28px;margin-top:-64px;position:relative;">
+                        <div style="display:flex;gap:14px;">
+                            <img id="fsDetPoster" src="" alt="" style="width:110px;height:165px;border-radius:10px;object-fit:cover;flex-shrink:0;box-shadow:0 8px 24px rgba(0,0,0,0.6);background:#1e293b;">
+                            <div style="flex:1;min-width:0;padding-top:56px;">
+                                <div id="fsDetTitle" style="font-size:1.05rem;font-weight:900;color:#fff;line-height:1.2;"></div>
+                                <div id="fsDetMeta" style="font-size:0.65rem;color:#cbd5e1;margin-top:5px;line-height:1.6;"></div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:16px;">
+                            <button id="fsDetPlay" onclick="fsCinemaPlayDetail()" style="flex:1;background:#fff;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">▶ Putar</button>
+                            <button id="fsDetFav" onclick="fsCinemaToggleFavDetail()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:10px;padding:12px 16px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">＋ Favorit</button>
+                        </div>
+                        <div id="fsDetOv" style="font-size:0.72rem;color:#94a3b8;line-height:1.7;margin-top:14px;"></div>
+                        <div id="fsDetEps" style="display:none;margin-top:16px;">
+                            <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-bottom:8px;">📺 Pilih Episode</div>
+                            <div style="font-size:0.62rem;color:#64748b;margin-bottom:4px;">SEASON</div>
+                            <div id="fsDetSeasons" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                            <div style="font-size:0.62rem;color:#64748b;margin:10px 0 4px;">EPISODE</div>
+                            <div id="fsDetEpisodes" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                        </div>
+                        <div style="font-size:0.58rem;color:#475569;margin-top:16px;">Sumber data: TMDB (via Worker) + OMDb · Putar lewat server yang dipilih di atas.</div>
+                    </div>
                 </div>
 
                 <script>
@@ -3666,6 +3720,9 @@
                     var grid = document.getElementById('fsResultsGrid');
                     grid.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:0.75rem;">\uD83D\uDD0D Mencari...</div>';
                     document.getElementById('fsResults').style.display = 'block';
+                    // Cari aktif -> sembunyikan beranda (hero + baris), ala Netflix
+                    var _hr = document.getElementById('fsHomeRows'); if (_hr) _hr.style.display = 'none';
+                    var _he = document.getElementById('fsCinemaHero'); if (_he) _he.style.display = 'none';
                     _fsSetNote('');
                     var allResults = [];
                     var viaTmdb = false;
@@ -3685,9 +3742,13 @@
                                     title: title, name: title,
                                     poster_url: r.poster_path ? 'https://image.tmdb.org/t/p/w500' + r.poster_path : '',
                                     poster_path: r.poster_path || '',
+                                    backdrop_path: r.backdrop_path || '',
                                     release_date: (r.release_date || r.first_air_date || '').slice(0, 4),
                                     first_air_date: (r.release_date || r.first_air_date || '').slice(0, 4),
-                                    overview: r.overview || ''
+                                    overview: r.overview || '',
+                                    vote_average: r.vote_average || 0,
+                                    genre_ids: r.genre_ids || [],
+                                    type: fsMediaType
                                 });
                             });
                             if (list.length < 20) break; // halaman terakhir
@@ -3727,7 +3788,7 @@
                 // Hasil TMDB: ambil imdbID via OMDb SEKALI saat diklik, lalu putar.
                 // Kalau lookup gagal, pakai ID TMDB langsung (VidSrc/MultiEmbed menerima).
                 var _fsResolving = false;
-                async function fsPlayTmdb(item) {
+                async function fsPlayTmdb(item, season, ep) {
                     if (_fsResolving) return;
                     _fsResolving = true;
                     var title = item.title || item.name || '';
@@ -3743,7 +3804,7 @@
                     } catch(e) {}
                     _fsResolving = false;
                     _fsSetNote('Hasil dari TMDB \u2022 ketuk poster untuk memutar');
-                    fsPlay(imdbId || String(item.tmdbId), title);
+                    fsPlay(imdbId || String(item.tmdbId), title, season || 0, ep || 0);
                 }
 
                 function _fsRenderPage() {
@@ -3758,7 +3819,7 @@
                         card.style.cssText='cursor:pointer;border-radius:8px;overflow:hidden;border:1px solid rgba(56,189,248,0.15);background:rgba(15,23,42,0.8);transition:transform 0.2s;';
                         card.onmouseover=function(){this.style.transform='scale(1.04)';};
                         card.onmouseout=function(){this.style.transform='scale(1)';};
-                        card.onclick=function(){ if (item.source === 'tmdb') { fsPlayTmdb(item); } else { fsPlay(item.id,title); } };
+                        card.onclick=function(){ fsCinemaOpenDetail(item); };
                         card.innerHTML = poster
                             ? '<img src="'+esc(poster)+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>'
                             : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>';
@@ -3795,18 +3856,21 @@
                     document.getElementById('fsResults').style.display = 'block';
                 }
 
-                function fsPlay(tmdbId, title) {
+                // season/episode (series): dipakai VidSrc & AutoEmbed; server lain
+                // tidak menerima S/E di URL jadi jatuh ke S1E1 bawaan server itu.
+                function fsPlay(tmdbId, title, season, ep) {
                     try { fsContinueSave(tmdbId, title); } catch(e) {}
                     var server = document.getElementById('fsServerSelect').value;
+                    var s = Math.max(1, season || 1), e = Math.max(1, ep || 1);
                     var url;
                     if (server === 'vidsrc') {
                         url = fsMediaType==='movie'
                             ? 'https://vidsrc.to/embed/movie/'+tmdbId
-                            : 'https://vidsrc.to/embed/tv/'+tmdbId;
+                            : 'https://vidsrc.to/embed/tv/'+tmdbId+'/'+s+'/'+e;
                     } else if (server === 'autoembed') {
                         url = fsMediaType==='movie'
                             ? 'https://player.autoembed.cc/embed/movie/'+tmdbId
-                            : 'https://player.autoembed.cc/embed/tv/'+tmdbId+'/1/1';
+                            : 'https://player.autoembed.cc/embed/tv/'+tmdbId+'/'+s+'/'+e;
                     } else if (server === 'multiembed') {
                         var isImdb = /^tt\d+$/.test(tmdbId);
                         url = 'https://multiembed.mov/?video_id='+tmdbId+'&tmdb='+(isImdb ? '0' : '1');
@@ -3883,6 +3947,339 @@
                 function fsContinueClear() {
                     try { localStorage.removeItem(FS_CONTINUE_KEY); } catch(e) {}
                     fsContinueRender();
+                }
+
+                // --- BERANDA FILM ala Idlix (HomeViewModel: banner + swimlane, paralel) ---
+                // Kode Kotlin & backend scraping Idlix TIDAK bisa dipakai di website
+                // statis. Yang diterapkan: pola berandanya — hero billboard berputar,
+                // baris poster per kategori, detail + pilih episode, favorit lokal.
+                // Data tetap dari TMDB (Worker) + OMDb yang sudah dipakai FS Cinema.
+                var _fsHomeInit = false;
+                var _fsHomeLoading = false;
+                var FS_HOME_ROWS = [
+                    { key: 'trending', label: '🔥 Trending', q: '2025', type: 'movie' },
+                    { key: 'populer', label: '🎬 Populer', q: 'avengers', type: 'movie' },
+                    { key: 'aksi', label: '🎭 Aksi', q: 'john wick', type: 'movie' },
+                    { key: 'komedi', label: '😂 Komedi', q: 'home alone', type: 'movie' },
+                    { key: 'series', label: '📺 Series Populer', q: 'squid game', type: 'tv' }
+                ];
+                var FS_CINEMA_GENRES = { 28:'Aksi', 12:'Petualangan', 16:'Animasi', 35:'Komedi', 80:'Kriminal', 18:'Drama', 10751:'Keluarga', 14:'Fantasi', 36:'Sejarah', 27:'Horor', 10402:'Musik', 9648:'Misteri', 10749:'Romansa', 878:'Sci-Fi', 53:'Thriller', 10752:'Perang', 37:'Barat', 10770:'TV', 99:'Dokumenter' };
+                function fsCinemaHomeInit() {
+                    if (_fsHomeInit) return;
+                    _fsHomeInit = true;
+                    fsCinemaFavRender();
+                    fsCinemaHomeLoad(false);
+                }
+                function fsCinemaShowHome() {
+                    var r = document.getElementById('fsResults');
+                    if (r) r.style.display = 'none';
+                    var hr = document.getElementById('fsHomeRows'); if (hr) hr.style.display = 'block';
+                    var he = document.getElementById('fsCinemaHero');
+                    if (he && _fsHeroItems.length) he.style.display = 'block';
+                    var grid = document.getElementById('fsResultsGrid'); if (grid) grid.innerHTML = '';
+                }
+                function fsCinemaRowFetch(q, type) {
+                    return _fsFetchJson(FS_CINEMA_PROXY + '?q=' + encodeURIComponent(q) + '&type=' + type + '&page=1', 8000).then(function(d){
+                        var list = (d && d.results) || [];
+                        return list.filter(function(r){ return r.poster_path; }).slice(0, 10).map(function(r){
+                            return {
+                                id: 'tmdb:' + r.id, tmdbId: r.id, source: 'tmdb',
+                                title: r.title || r.name || '', name: r.title || r.name || '',
+                                poster_url: 'https://image.tmdb.org/t/p/w500' + r.poster_path,
+                                poster_path: r.poster_path || '', backdrop_path: r.backdrop_path || '',
+                                release_date: (r.release_date || r.first_air_date || '').slice(0, 4),
+                                overview: r.overview || '', vote_average: r.vote_average || 0,
+                                genre_ids: r.genre_ids || [], type: type
+                            };
+                        });
+                    });
+                }
+                function fsCinemaHomeLoad(retried) {
+                    if (_fsHomeLoading) return;
+                    _fsHomeLoading = true;
+                    Promise.all(FS_HOME_ROWS.map(function(row){
+                        return fsCinemaRowFetch(row.q, row.type).catch(function(){ return []; });
+                    })).then(function(all){
+                        var any = false;
+                        all.forEach(function(items, i){
+                            if (items.length) { any = true; fsCinemaRenderRow(FS_HOME_ROWS[i], items); }
+                        });
+                        var st = document.getElementById('fsHomeStatus');
+                        if (!any && !retried) {
+                            // Semua kosong -> coba sekali lagi 1 detik kemudian
+                            // (pola yang sama dipakai HomeViewModel Idlix saat startup).
+                            setTimeout(function(){ _fsHomeLoading = false; fsCinemaHomeLoad(true); }, 1000);
+                            return;
+                        }
+                        _fsHomeLoading = false;
+                        if (st) st.textContent = any ? '' : '⚠️ Beranda gagal dimuat — coba buka lagi tab ini nanti.';
+                    });
+                }
+                function fsCinemaRenderRow(row, items) {
+                    var wrap = document.getElementById('fsHomeRows');
+                    if (!wrap) return;
+                    var sec = document.createElement('div');
+                    sec.style.cssText = 'padding:10px 0 2px;';
+                    var head = document.createElement('div');
+                    head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0 14px 8px;';
+                    head.innerHTML = '<div style="font-size:0.78rem;font-weight:800;color:#fff;letter-spacing:0.5px;">' + esc(row.label) + '</div>';
+                    var more = document.createElement('button');
+                    more.textContent = 'Lihat Semua ›';
+                    more.style.cssText = 'background:none;border:none;color:var(--primary);font-size:0.65rem;font-weight:700;cursor:pointer;font-family:inherit;';
+                    more.onclick = function(){ fsCinemaRowSearch(row); };
+                    head.appendChild(more);
+                    sec.appendChild(head);
+                    var lane = document.createElement('div');
+                    lane.style.cssText = 'display:flex;gap:10px;overflow-x:auto;padding:0 14px 6px;scrollbar-width:thin;';
+                    items.forEach(function(item){
+                        var card = document.createElement('div');
+                        card.style.cssText = 'flex:0 0 108px;cursor:pointer;';
+                        var yr = (item.release_date || '').slice(0, 4);
+                        var rating = item.vote_average ? '⭐ ' + (Math.round(item.vote_average * 10) / 10) : '';
+                        card.innerHTML = '<img src="' + esc(item.poster_url) + '" alt="" loading="lazy" style="width:108px;height:162px;border-radius:10px;object-fit:cover;display:block;border:1px solid rgba(56,189,248,0.15);">'
+                            + '<div style="font-size:0.65rem;color:#fff;font-weight:700;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(item.title) + '</div>'
+                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:2px;">' + esc(yr) + (rating ? ' · ' + rating : '') + '</div>';
+                        card.onclick = function(){ fsCinemaOpenDetail(item); };
+                        lane.appendChild(card);
+                    });
+                    sec.appendChild(lane);
+                    wrap.appendChild(sec);
+                    if (row.key === 'trending') fsCinemaHeroSet(items.slice(0, 5));
+                }
+                function fsCinemaRowSearch(row) {
+                    document.getElementById('fsSearchInput').value = row.q;
+                    fsMediaType = row.type;
+                    fsSetType(row.type, null);
+                    fsSearch();
+                }
+
+                // --- HERO BILLBOARD (ala TvHeroBillboard / HeroBannerPager) ---
+                var _fsHeroItems = [];
+                var _fsHeroIdx = 0;
+                var _fsHeroTimer = null;
+                function fsCinemaHeroSet(items) {
+                    _fsHeroItems = items || [];
+                    _fsHeroIdx = 0;
+                    if (!_fsHeroItems.length) return;
+                    document.getElementById('fsCinemaHero').style.display = 'block';
+                    fsCinemaHeroShow(0);
+                    if (_fsHeroTimer) clearInterval(_fsHeroTimer);
+                    _fsHeroTimer = setInterval(function(){
+                        var mv = document.getElementById('movie');
+                        if (!mv || !mv.classList.contains('active')) return;
+                        _fsHeroIdx = (_fsHeroIdx + 1) % _fsHeroItems.length;
+                        fsCinemaHeroShow(_fsHeroIdx);
+                    }, 6000);
+                }
+                function fsCinemaHeroShow(i) {
+                    var it = _fsHeroItems[i];
+                    if (!it) return;
+                    _fsHeroIdx = i;
+                    var bg = document.getElementById('fsHeroBg');
+                    bg.src = it.backdrop_path ? 'https://image.tmdb.org/t/p/w780' + it.backdrop_path : (it.poster_url || '');
+                    document.getElementById('fsHeroTitle').textContent = it.title;
+                    var meta = [];
+                    if (it.release_date) meta.push(it.release_date.slice(0, 4));
+                    if (it.vote_average) meta.push('⭐ ' + (Math.round(it.vote_average * 10) / 10));
+                    if (it.genre_ids && it.genre_ids.length) meta.push(it.genre_ids.slice(0, 2).map(function(g){ return FS_CINEMA_GENRES[g] || ''; }).filter(Boolean).join(' • '));
+                    document.getElementById('fsHeroMeta').textContent = meta.join('  •  ');
+                    document.getElementById('fsHeroOv').textContent = it.overview || '';
+                    document.getElementById('fsHeroPlay').onclick = function(){ fsCinemaOpenDetail(_fsHeroItems[_fsHeroIdx]); };
+                    var favBtn = document.getElementById('fsHeroFav');
+                    favBtn.textContent = fsCinemaFavIs(it.source === 'tmdb' ? 'tmdb:' + it.tmdbId : it.id) ? '★ Favorit' : '＋ Favorit';
+                    favBtn.onclick = function(){ fsCinemaFavToggle(_fsHeroItems[_fsHeroIdx]); fsCinemaHeroShow(_fsHeroIdx); };
+                    var dots = document.getElementById('fsHeroDots');
+                    dots.innerHTML = '';
+                    _fsHeroItems.forEach(function(_, j){
+                        var d = document.createElement('span');
+                        d.style.cssText = 'width:' + (j === i ? '18px' : '6px') + ';height:6px;border-radius:3px;background:' + (j === i ? 'var(--primary)' : 'rgba(255,255,255,0.35)') + ';cursor:pointer;';
+                        d.onclick = function(){ fsCinemaHeroShow(j); };
+                        dots.appendChild(d);
+                    });
+                }
+
+                // --- FAVORIT (Bookmark ala DetailScreen, tersimpan lokal) ---
+                var FS_CINEMA_FAV_KEY = 'fsCinemaFav';
+                function fsCinemaFavLoad() {
+                    try { var a = JSON.parse(localStorage.getItem(FS_CINEMA_FAV_KEY) || '[]'); return Array.isArray(a) ? a : []; }
+                    catch(e) { return []; }
+                }
+                function fsCinemaFavIs(id) {
+                    return fsCinemaFavLoad().some(function(x){ return String(x.id) === String(id); });
+                }
+                function fsCinemaFavToggle(item) {
+                    if (!item) return;
+                    var key = item.source === 'tmdb' ? 'tmdb:' + item.tmdbId : item.id;
+                    var arr = fsCinemaFavLoad();
+                    var idx = -1;
+                    arr.forEach(function(x, i){ if (String(x.id) === String(key)) idx = i; });
+                    if (idx >= 0) arr.splice(idx, 1);
+                    else arr.unshift({ id: key, tmdbId: item.tmdbId || '', source: item.source || 'tmdb', title: item.title, poster_url: item.poster_url || '', release_date: item.release_date || '', type: item.type || fsMediaType, overview: item.overview || '', vote_average: item.vote_average || 0 });
+                    arr = arr.slice(0, 30);
+                    try { localStorage.setItem(FS_CINEMA_FAV_KEY, JSON.stringify(arr)); } catch(e) {}
+                    fsCinemaFavRender();
+                }
+                function fsCinemaFavRender() {
+                    var wrap = document.getElementById('fsHomeRows');
+                    if (!wrap) return;
+                    var old = document.getElementById('fsFavRow');
+                    if (old) old.remove();
+                    var favs = fsCinemaFavLoad();
+                    if (!favs.length) return;
+                    var sec = document.createElement('div');
+                    sec.id = 'fsFavRow';
+                    sec.style.cssText = 'padding:10px 0 2px;';
+                    sec.innerHTML = '<div style="font-size:0.78rem;font-weight:800;color:#fff;letter-spacing:0.5px;padding:0 14px 8px;">⭐ Favorit Saya</div>';
+                    var lane = document.createElement('div');
+                    lane.style.cssText = 'display:flex;gap:10px;overflow-x:auto;padding:0 14px 6px;scrollbar-width:thin;';
+                    favs.forEach(function(f){
+                        var item = { id: f.id, tmdbId: f.tmdbId, source: f.source || 'tmdb', title: f.title, poster_url: f.poster_url, release_date: f.release_date, type: f.type || 'movie', overview: f.overview || '', vote_average: f.vote_average || 0 };
+                        var card = document.createElement('div');
+                        card.style.cssText = 'flex:0 0 108px;cursor:pointer;';
+                        var yr = (f.release_date || '').slice(0, 4);
+                        card.innerHTML = (f.poster_url
+                            ? '<img src="' + esc(f.poster_url) + '" alt="" loading="lazy" style="width:108px;height:162px;border-radius:10px;object-fit:cover;display:block;border:1px solid rgba(251,191,36,0.4);">'
+                            : '<div style="width:108px;height:162px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎬</div>')
+                            + '<div style="font-size:0.65rem;color:#fff;font-weight:700;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.title) + '</div>'
+                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:2px;">' + esc(yr) + '</div>';
+                        card.onclick = function(){ fsCinemaOpenDetail(item); };
+                        lane.appendChild(card);
+                    });
+                    sec.appendChild(lane);
+                    var status = document.getElementById('fsHomeStatus');
+                    if (status && status.parentElement === wrap) wrap.insertBefore(sec, status.nextSibling);
+                    else wrap.insertBefore(sec, wrap.firstChild);
+                }
+
+                // --- DETAIL (ala DetailScreen: sinopsis + favorit + pilih episode) ---
+                var _fsDetailItem = null;
+                var _fsDetailImdb = '';
+                var _fsDetailSeason = 1;
+                var _fsDetailEp = 1;
+                var _fsDetailTotalSeasons = 0;
+                function fsCinemaOpenDetail(item) {
+                    if (!item) return;
+                    _fsDetailItem = item;
+                    _fsDetailImdb = '';
+                    _fsDetailSeason = 1;
+                    _fsDetailEp = 1;
+                    _fsDetailTotalSeasons = 0;
+                    var isSeries = (item.type || fsMediaType) === 'tv';
+                    var bg = document.getElementById('fsDetBg');
+                    bg.src = item.backdrop_path ? 'https://image.tmdb.org/t/p/w780' + item.backdrop_path : (item.poster_url || '');
+                    var poster = document.getElementById('fsDetPoster');
+                    poster.src = item.poster_url || '';
+                    document.getElementById('fsDetTitle').textContent = item.title || item.name || '';
+                    var meta = [];
+                    var yr = (item.release_date || item.first_air_date || '').slice(0, 4);
+                    if (yr) meta.push(yr);
+                    if (item.vote_average) meta.push('⭐ ' + (Math.round(item.vote_average * 10) / 10) + ' / 10');
+                    meta.push(isSeries ? '📺 Series' : '🎬 Film');
+                    if (item.genre_ids && item.genre_ids.length) meta.push(item.genre_ids.slice(0, 3).map(function(g){ return FS_CINEMA_GENRES[g] || ''; }).filter(Boolean).join(' • '));
+                    document.getElementById('fsDetMeta').textContent = meta.join('  •  ');
+                    document.getElementById('fsDetOv').textContent = item.overview || 'Sinopsis belum tersedia.';
+                    document.getElementById('fsDetEps').style.display = 'none';
+                    fsCinemaPaintFavBtn();
+                    document.getElementById('fsCinemaDetail').style.display = 'block';
+                    // Perkaya via OMDb (imdbID + sinopsis + genre + total season) — sekali.
+                    var title = item.title || item.name || '';
+                    var lookup = item.source === 'omdb'
+                        ? FS_SEARCH_API + '?i=' + encodeURIComponent(item.id) + '&apikey=' + FS_SEARCH_KEY
+                        : FS_SEARCH_API + '?t=' + encodeURIComponent(title) + '&type=' + (isSeries ? 'series' : 'movie') + (yr ? '&y=' + yr : '') + '&apikey=' + FS_SEARCH_KEY;
+                    _fsFetchJson(lookup, 8000).then(function(d){
+                        if (!d || d.Response !== 'True') return;
+                        if (d.imdbID) _fsDetailImdb = d.imdbID;
+                        if (d.Plot && d.Plot !== 'N/A') document.getElementById('fsDetOv').textContent = d.Plot;
+                        if (d.Genre && d.Genre !== 'N/A') {
+                            var m = document.getElementById('fsDetMeta');
+                            m.textContent = m.textContent + '  •  ' + d.Genre;
+                        }
+                        if (d.imdbRating && d.imdbRating !== 'N/A') {
+                            var m2 = document.getElementById('fsDetMeta');
+                            if (m2.textContent.indexOf('/ 10') === -1) m2.textContent = m2.textContent + '  •  ⭐ ' + d.imdbRating + ' / 10';
+                        }
+                        if (isSeries && d.totalSeasons) {
+                            _fsDetailTotalSeasons = parseInt(d.totalSeasons, 10) || 0;
+                            if (_fsDetailTotalSeasons > 0) fsCinemaRenderSeasons(Math.min(_fsDetailTotalSeasons, 12));
+                        }
+                    }).catch(function(){});
+                }
+                function fsCinemaPaintFavBtn() {
+                    var b = document.getElementById('fsDetFav');
+                    if (!b || !_fsDetailItem) return;
+                    var key = _fsDetailItem.source === 'tmdb' ? 'tmdb:' + _fsDetailItem.tmdbId : _fsDetailItem.id;
+                    b.textContent = fsCinemaFavIs(key) ? '★ Favorit' : '＋ Favorit';
+                }
+                function fsCinemaToggleFavDetail() {
+                    fsCinemaFavToggle(_fsDetailItem);
+                    fsCinemaPaintFavBtn();
+                }
+                function fsCinemaCloseDetail() {
+                    var ov = document.getElementById('fsCinemaDetail');
+                    if (ov) ov.style.display = 'none';
+                    _fsDetailItem = null;
+                }
+                function fsCinemaPlayDetail() {
+                    if (!_fsDetailItem) return;
+                    var item = _fsDetailItem;
+                    var isSeries = (item.type || fsMediaType) === 'tv';
+                    fsMediaType = isSeries ? 'tv' : 'movie';
+                    fsSetType(fsMediaType, null);
+                    fsCinemaCloseDetail();
+                    if (item.source === 'tmdb') fsPlayTmdb(item, isSeries ? _fsDetailSeason : 0, isSeries ? _fsDetailEp : 0);
+                    else fsPlay(item.id, item.title, isSeries ? _fsDetailSeason : 0, isSeries ? _fsDetailEp : 0);
+                }
+                function fsCinemaRenderSeasons(n) {
+                    var box = document.getElementById('fsDetSeasons');
+                    var eps = document.getElementById('fsDetEpisodes');
+                    var wrap = document.getElementById('fsDetEps');
+                    if (!box || !wrap) return;
+                    wrap.style.display = 'block';
+                    box.innerHTML = '';
+                    for (var s = 1; s <= n; s++) {
+                        (function(season){
+                            var b = document.createElement('button');
+                            b.textContent = 'S' + season;
+                            b.style.cssText = 'background:' + (season === _fsDetailSeason ? 'var(--primary)' : 'rgba(56,189,248,0.08)') + ';border:1px solid rgba(56,189,248,0.35);color:' + (season === _fsDetailSeason ? '#000' : 'var(--primary)') + ';border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;';
+                            b.onclick = function(){ _fsDetailSeason = season; _fsDetailEp = 1; fsCinemaRenderSeasons(n); fsCinemaLoadEpisodes(season); };
+                            box.appendChild(b);
+                        })(s);
+                    }
+                    if (eps) eps.innerHTML = '<div style="font-size:0.65rem;color:#64748b;">⏳ Memuat episode...</div>';
+                    fsCinemaLoadEpisodes(_fsDetailSeason);
+                }
+                function fsCinemaLoadEpisodes(season) {
+                    var eps = document.getElementById('fsDetEpisodes');
+                    if (!eps || !_fsDetailItem) return;
+                    var title = _fsDetailItem.title || _fsDetailItem.name || '';
+                    var u = _fsDetailImdb
+                        ? FS_SEARCH_API + '?i=' + encodeURIComponent(_fsDetailImdb) + '&Season=' + season + '&apikey=' + FS_SEARCH_KEY
+                        : FS_SEARCH_API + '?t=' + encodeURIComponent(title) + '&Season=' + season + '&apikey=' + FS_SEARCH_KEY;
+                    _fsFetchJson(u, 8000).then(function(d){
+                        var list = (d && d.Episodes) || [];
+                        eps.innerHTML = '';
+                        var count = list.length || 10;
+                        for (var i = 1; i <= count; i++) {
+                            (function(ep){
+                                var b = document.createElement('button');
+                                b.textContent = 'E' + ep;
+                                b.style.cssText = 'background:' + (ep === _fsDetailEp ? 'var(--primary)' : 'rgba(56,189,248,0.08)') + ';border:1px solid rgba(56,189,248,0.35);color:' + (ep === _fsDetailEp ? '#000' : 'var(--primary)') + ';border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;';
+                                b.onclick = function(){ _fsDetailEp = ep; fsCinemaLoadEpisodes(season); };
+                                eps.appendChild(b);
+                            })(i);
+                        }
+                    }).catch(function(){
+                        eps.innerHTML = '';
+                        for (var i = 1; i <= 10; i++) {
+                            (function(ep){
+                                var b = document.createElement('button');
+                                b.textContent = 'E' + ep;
+                                b.style.cssText = 'background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.35);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;';
+                                b.onclick = function(){ _fsDetailEp = ep; fsCinemaLoadEpisodes(season); };
+                                eps.appendChild(b);
+                            })(i);
+                        }
+                    });
                 }
                 fsContinueRender();
                 </script>
@@ -5435,6 +5832,7 @@ function fsSchedRender(matches) {
             if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
             if (tabId === 'musik' && typeof fsRadioInit === 'function') { fsRadioInit(); }
             if (tabId === 'quran' && typeof fsQuranInit === 'function') { fsQuranInit(); }
+            if (tabId === 'movie' && typeof fsCinemaHomeInit === 'function') { fsCinemaHomeInit(); }
             if (tabId === 'game') { _lazyLoadIframe('emulator'); }
 
             // Tutup sidebar setelah memilih (khusus mobile friendly) —
