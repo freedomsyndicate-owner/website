@@ -35,11 +35,9 @@ echo -n "models: "
 curl -s --max-time 5 http://127.0.0.1:3001/v1/models | head -c 200; echo
 # If the gateway needs its own client key, save it opaquely (name + length only).
 export KEY_FILE="$DIR/.freellmapi-key"
-if [ ! -s "$KEY_FILE" ]; then
-  bun extract-key.mjs "$KEY_FILE" || echo "key lookup skipped (will try without key)"
-else
-  echo "freellmapi key file already exists"
-fi
+# Always re-extract: a previous run may have saved a wrong key (e.g. ENCRYPTION_KEY).
+rm -f "$KEY_FILE"
+bun extract-key.mjs "$KEY_FILE" || echo "key lookup skipped (will try without key)"
 
 echo "== 3. SuperAgent watch alive? =="
 if curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://127.0.0.1:7928/muse | grep -q 426; then
@@ -50,9 +48,10 @@ else
 fi
 
 echo "== 4. start phone server (port 8090) =="
-# Always restart so a redeploy picks up the new code.
-fuser -k 8090/tcp 2>/dev/null || true
-sleep 2
+# Always restart so a redeploy picks up the new code. Kill by PID from ss
+# (fuser is not installed on the Box; pkill -f would match our own shell).
+OLD_PID=$(ss -ltnp 2>/dev/null | grep ':8090' | grep -o 'pid=[0-9]*' | cut -d= -f2 | head -1 || true)
+if [ -n "$OLD_PID" ]; then echo "stopping old phone server PID $OLD_PID"; kill "$OLD_PID" || true; sleep 2; kill -9 "$OLD_PID" 2>/dev/null || true; sleep 1; fi
 (PORT=8090 WS_URL=ws://127.0.0.1:7928/muse TOKEN_FILE="$TOKEN_FILE" nohup bun server.ts >> /workspace/superagent-phone.log 2>&1 &)
 sleep 4
 tail -5 /workspace/superagent-phone.log

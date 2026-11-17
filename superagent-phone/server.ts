@@ -268,7 +268,11 @@ async function callChatApi(base: string, model: string, key: string | null, mess
     if (!res.ok) {
       const body = await res.text().catch(() => "");
       console.log(`[phone] LLM ${base} HTTP ${res.status}: ${body.slice(0, 200)}`);
-      if (res.status === 429) return { ok: false, http: 429, reason: "Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi sekitar 15 menit lagi." };
+      if (res.status === 429) {
+        let wait = "";
+        try { const e = JSON.parse(body); const s = e?.error?.retry_after; if (typeof s === "number") wait = s >= 3600 ? ` sekitar ${Math.round(s / 3600)} jam lagi` : ` sekitar ${Math.ceil(s / 60)} menit lagi`; } catch {}
+        return { ok: false, http: 429, reason: `Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi${wait}.` };
+      }
       return { ok: false, http: res.status, reason: `Otak error HTTP ${res.status}. Coba lagi sebentar lagi.` };
     }
     const j: any = await res.json();
