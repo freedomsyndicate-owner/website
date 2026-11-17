@@ -192,6 +192,7 @@ function _fsFetchJson(url, ms) {
                     <div style="font-size:0.85rem;font-weight:900;color:#fff;">🕌 Waktu Sholat</div>
                     <select id="fsSholatCity" onchange="fsSholatSetCity(this.value)" style="background:rgba(2,6,23,0.7);border:1px solid rgba(16,185,129,0.5);color:#a7f3d0;border-radius:8px;padding:6px 8px;font-size:0.68rem;font-weight:700;font-family:inherit;max-width:150px;">
                         <option value="0506" selected>Batam</option>
+                        <option value="gps">📍 Lokasi GPS</option>
                         <option value="1301">Jakarta</option>
                         <option value="1219">Bandung</option>
                         <option value="1638">Surabaya</option>
@@ -212,6 +213,11 @@ function _fsFetchJson(url, ms) {
                         <option value="0610">Jambi</option>
                     </select>
                 </div>
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                    <input id="fsSholatSearch" type="text" placeholder="🔍 Cari kota lain..." oninput="fsSholatSearch(this.value)" style="flex:1;background:rgba(2,6,23,0.7);border:1px solid rgba(16,185,129,0.4);color:#fff;border-radius:8px;padding:8px 10px;font-size:0.7rem;outline:none;font-family:inherit;min-width:0;" />
+                    <button onclick="fsSholatUseGps()" style="background:#10b981;color:#022c22;border:none;border-radius:8px;padding:8px 12px;font-weight:900;font-size:0.7rem;cursor:pointer;font-family:inherit;white-space:nowrap;">📍 GPS</button>
+                </div>
+                <div id="fsSholatSearchResults" style="margin-top:6px;"></div>
                 <div id="fsSholatHijri" style="font-size:0.65rem;color:#a7f3d0;margin-top:4px;"></div>
                 <div id="fsSholatNext" style="font-size:0.8rem;font-weight:800;color:#fbbf24;margin-top:6px;">⏳ Memuat jadwal sholat...</div>
                 <div id="fsSholatGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;"></div>
@@ -390,11 +396,13 @@ function _fsFetchJson(url, ms) {
             function fsSholatInit() {
                 if (_fsSholatInit) return; _fsSholatInit = true;
                 var sel = document.getElementById('fsSholatCity');
+                var savedCity = '0506';
                 try {
-                    var saved = localStorage.getItem('fsSholatCity') || '0506';
-                    if (sel) sel.value = saved;
+                    savedCity = localStorage.getItem('fsSholatCity') || '0506';
+                    if (sel) sel.value = savedCity;
                 } catch(e) {}
-                fsSholatLoad();
+                if (savedCity === 'gps') fsSholatUseGps(true);
+                else fsSholatLoad();
                 // Tanggal Hijriah (Aladhan) — gagal pun tidak masalah, barisnya dibiarkan kosong.
                 try {
                     var now = new Date();
@@ -407,9 +415,110 @@ function _fsFetchJson(url, ms) {
                 } catch(e) {}
             }
             function fsSholatSetCity(id) {
+                if (id === 'gps') { fsSholatUseGps(); return; }
                 try { localStorage.setItem('fsSholatCity', id); } catch(e) {}
                 _fsSholatData = null;
                 fsSholatLoad();
+            }
+
+            // ===== CARI KOTA (MyQuran) — kota apa pun di Indonesia =====
+            var _fsSholatSearchTimer = null;
+            function fsSholatSearch(q) {
+                var box = document.getElementById('fsSholatSearchResults');
+                q = (q || '').trim();
+                if (_fsSholatSearchTimer) clearTimeout(_fsSholatSearchTimer);
+                if (q.length < 3) { if (box) box.innerHTML = ''; return; }
+                if (box) box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">⏳ Mencari...</div>';
+                _fsSholatSearchTimer = setTimeout(function(){
+                    fetch('https://api.myquran.com/v2/sholat/kota/cari/' + encodeURIComponent(q))
+                        .then(function(r){ return r.json(); }).then(function(d){
+                            if (!box) return;
+                            var list = (d && d.data) || [];
+                            if (!list.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">Tidak ketemu — coba kata lain.</div>'; return; }
+                            var html = '';
+                            list.slice(0, 8).forEach(function(c){
+                                html += '<button onclick="fsSholatPickCity(\'' + c.id + '\',\'' + String(c.lokasi).replace(/\'/g, '') + '\')" style="display:block;width:100%;text-align:left;background:rgba(255,255,255,0.06);border:1px solid rgba(16,185,129,0.3);color:#e2e8f0;border-radius:8px;padding:8px 10px;font-size:0.7rem;font-weight:700;margin-top:4px;cursor:pointer;font-family:inherit;">' + c.lokasi + '</button>';
+                            });
+                            box.innerHTML = html;
+                        }).catch(function(){
+                            if (box) box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">⚠️ Pencarian gagal — cek koneksi.</div>';
+                        });
+                }, 400);
+            }
+            function fsSholatPickCity(id, name) {
+                var box = document.getElementById('fsSholatSearchResults');
+                if (box) box.innerHTML = '';
+                var inp = document.getElementById('fsSholatSearch');
+                if (inp) inp.value = '';
+                var sel = document.getElementById('fsSholatCity');
+                if (sel) {
+                    var exists = false;
+                    for (var i = 0; i < sel.options.length; i++) { if (sel.options[i].value === id) { exists = true; break; } }
+                    if (!exists) {
+                        var opt = document.createElement('option');
+                        opt.value = id; opt.textContent = name;
+                        sel.appendChild(opt);
+                    }
+                    sel.value = id;
+                }
+                try { localStorage.setItem('fsSholatCity', id); } catch(e) {}
+                _fsSholatData = null;
+                fsSholatLoad();
+            }
+
+            // ===== GPS: jadwal sholat dari koordinat HP (Aladhan, metode Kemenag) =====
+            function fsSholatUseGps(auto) {
+                var nextEl = document.getElementById('fsSholatNext');
+                var today = new Date();
+                var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+                // Pakai cache GPS hari ini dulu supaya langsung tampil.
+                try {
+                    var cached = JSON.parse(localStorage.getItem('fsSholatCache_gps_' + todayStr) || 'null');
+                    if (cached && cached.jadwal) { _fsSholatData = cached; fsSholatRender(); }
+                } catch(e) {}
+                if (!navigator.geolocation) {
+                    if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ GPS tidak tersedia di browser ini — cari kota di atas.';
+                    return;
+                }
+                if (!auto && nextEl && !_fsSholatData) nextEl.textContent = '📍 Mengambil lokasi...';
+                navigator.geolocation.getCurrentPosition(function(pos){
+                    var lat = pos.coords.latitude, lon = pos.coords.longitude;
+                    fetch('https://api.aladhan.com/v1/timings?latitude=' + lat + '&longitude=' + lon + '&method=20')
+                        .then(function(r){ return r.json(); }).then(function(d){
+                            var t = d && d.data && d.data.timings;
+                            if (!t) { if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal GPS tidak dapat dimuat.'; return; }
+                            function clean(x){ return String(x || '').replace(/[^0-9:]/g, '').slice(0, 5); }
+                            function addMin(hhmm, mins){ var p = hhmm.split(':'); var m = (+p[0])*60 + (+p[1]) + mins; return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); }
+                            var entry = {
+                                date: todayStr,
+                                imsak: clean(t.Imsak), subuh: clean(t.Fajr),
+                                terbit: clean(t.Sunrise), dhuha: addMin(clean(t.Sunrise), 29),
+                                dzuhur: clean(t.Dhuhr), ashar: clean(t.Asr),
+                                maghrib: clean(t.Maghrib), isya: clean(t.Isha)
+                            };
+                            _fsSholatData = { lokasi: 'Lokasi saya (GPS)', jadwal: [entry] };
+                            try { localStorage.setItem('fsSholatCache_gps_' + todayStr, JSON.stringify(_fsSholatData)); } catch(e) {}
+                            var sel = document.getElementById('fsSholatCity');
+                            if (sel) sel.value = 'gps';
+                            try { localStorage.setItem('fsSholatCity', 'gps'); } catch(e) {}
+                            var h = d.data.hijri;
+                            var hEl = document.getElementById('fsSholatHijri');
+                            if (h && hEl) hEl.textContent = '📅 ' + h.day + ' ' + h.month.en + ' ' + h.year + ' H';
+                            fsSholatRender();
+                        }).catch(function(){
+                            if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal GPS tidak dapat dimuat — cek koneksi.';
+                        });
+                }, function(){
+                    if (!_fsSholatData) {
+                        if (nextEl) nextEl.textContent = '⚠️ Lokasi ditolak / tidak ditemukan — izinkan lokasi di browser, atau cari kota di atas.';
+                        // Kembali ke Batam supaya kartu tidak kosong.
+                        var sel = document.getElementById('fsSholatCity');
+                        if (sel) sel.value = '0506';
+                        try { localStorage.setItem('fsSholatCity', '0506'); } catch(e) {}
+                        _fsSholatData = null;
+                        fsSholatLoad();
+                    }
+                }, { timeout: 10000 });
             }
             function fsSholatLoad() {
                 var sel = document.getElementById('fsSholatCity');
@@ -479,7 +588,7 @@ function _fsFetchJson(url, ms) {
                 if (extraEl) extraEl.textContent = 'Terbit ' + (j.terbit || '--:--') + '  •  Dhuha ' + (j.dhuha || '--:--') + '  •  ' + (_fsSholatData.lokasi || '');
                 if (_fsSholatTimer) clearInterval(_fsSholatTimer);
                 function tick(){
-                    if (!nextDate) { if (nextEl) nextEl.textContent = nextName ? nextName + ' — jadwal besok belum tersedia.' : ''; return; }
+                    if (!nextDate) { if (nextEl) nextEl.textContent = 'Semua sholat hari ini sudah lewat.'; return; }
                     var diff = Math.max(0, Math.floor((nextDate - new Date())/1000));
                     var hh = String(Math.floor(diff/3600)).padStart(2,'0');
                     var mm = String(Math.floor(diff%3600/60)).padStart(2,'0');
