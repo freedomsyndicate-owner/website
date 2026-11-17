@@ -754,7 +754,8 @@
                     <div style="font-size:0.68rem;color:#94a3b8;line-height:1.7;">
                         1️⃣ Pilih <b style="color:#fff;">MOVIE</b> atau <b style="color:#fff;">SERIES</b> → ketik judul → tekan <b style="color:#fff;">CARI</b><br>
                         2️⃣ Klik poster film yang muncul → langsung play<br>
-                        3️⃣ Server bawaan adalah <b style="color:#fff;">FS Player (tanpa iklan)</b> — film diputar langsung di player sendiri, tanpa iklan dan tanpa tab baru. Kalau FS Player tidak jalan di perangkatmu, ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
+                        3️⃣ Server bawaan adalah <b style="color:#fff;">FS Player (tanpa iklan)</b> — film diputar langsung di player sendiri, tanpa iklan dan tanpa tab baru. Kalau FS Player tidak jalan di perangkatmu, ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidSrc.sh → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
+                        3️⃣b <b style="color:#fbbf24;">Series baru?</b> Server biasanya cuma punya episode 1 dulu — episode terbaru muncul beberapa hari setelah tayang. Kalau episode 4 belum jalan di semua server, berarti memang belum ada di server mana pun; coba episode 1 dulu.<br>
                         4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server film lain (bukan FS Player) — tutup saja tabnya, video tetap jalan di sini. (Player lain sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
                         5️⃣ <b style="color:#fbbf24;">Halaman putih / tidak load?</b> Tekan tombol 🔄 Coba server lain di bawah player (selalu terlihat saat video diputar)
                     </div>
@@ -778,6 +779,7 @@
                             <option value="fsplayer" selected>FS Player (tanpa iklan)</option>
                             <option value="vidsrc">VidSrc</option>
                             <option value="vidsrccc">VidSrc.cc</option>
+                            <option value="vidsrcsh">VidSrc.sh</option>
                             <option value="vidlink">VidLink</option>
                             <option value="videasy">VidEasy</option>
                             <option value="multiembed">SuperEmbed</option>
@@ -1102,6 +1104,7 @@
                 var FS_SERVERS = [
                     { key: 'vidsrc',     label: 'VidSrc',     origin: 'https://vidsrc.to' },
                     { key: 'vidsrccc',   label: 'VidSrc.cc',  origin: 'https://vidsrc.cc' },
+                    { key: 'vidsrcsh',   label: 'VidSrc.sh',  origin: 'https://vidsrc.sh' },
                     { key: 'vidlink',    label: 'VidLink',    origin: 'https://vidlink.pro' },
                     { key: 'videasy',    label: 'VidEasy',    origin: 'https://player.videasy.net' },
                     { key: 'multiembed', label: 'SuperEmbed', origin: 'https://multiembed.mov' },
@@ -1200,7 +1203,7 @@
                         // ada stream-nya: jatuh ke server iframe berikutnya.
                         _fsDirectSetNote('⚠️ FS Player belum bisa untuk film ini — pindah ke server lain…');
                         _fsDirectStop();
-                        _fsPlayNextServer();
+                        if (!_fsPlayNextServer()) _fsShowPlayerError();
                         return;
                     }
                     _fsDirectQualities = data.qualities;
@@ -1219,7 +1222,7 @@
                         if (myToken !== _fsDirectToken) return;
                         _fsDirectSetNote('⚠️ Video tidak bisa diputar di perangkat ini — pindah ke server lain…');
                         _fsDirectStop();
-                        _fsPlayNextServer();
+                        if (!_fsPlayNextServer()) _fsShowPlayerError();
                     };
                     _fsDirectPlayQuality(pick, 0);
                 }
@@ -1243,6 +1246,9 @@
                     if (serverKey === 'vidsrccc') return fsMediaType === 'movie'
                         ? 'https://vidsrc.cc/v2/embed/movie/' + tmdbNum
                         : 'https://vidsrc.cc/v2/embed/tv/' + tmdbNum + '/' + s + '/' + e;
+                    if (serverKey === 'vidsrcsh') return fsMediaType === 'movie'
+                        ? 'https://vidsrc.sh/embed/movie/' + tmdbNum
+                        : 'https://vidsrc.sh/embed/tv/' + tmdbNum + '/' + s + '/' + e;
                     if (serverKey === 'vidlink') return fsMediaType === 'movie'
                         ? 'https://vidlink.pro/movie/' + tmdbNum
                         : 'https://vidlink.pro/tv/' + tmdbNum + '/' + s + '/' + e;
@@ -1255,6 +1261,11 @@
                     if (serverKey === 'multiembed') { var isImdb = /^tt\d+$/.test(tmdbId); return 'https://multiembed.mov/?video_id=' + tmdbId + '&tmdb=' + (isImdb ? '0' : '1'); }
                     // 2Embed: film pakai /embed/tt..., series pakai /embedtv/tt...&s=&e=
                     // (kode lama selalu pakai /embed/ sehingga series jatuh ke S1E1).
+                    // 2Embed HANYA bisa id IMDb (tt...) — kalau yang ada cuma id
+                    // TMDB angka (OMDb tidak kenal judulnya, mis. series Indo
+                    // baru), kembalikan null supaya server ini DILEWATI, bukan
+                    // dimuat dengan id yang pasti gagal.
+                    if (!/^tt\d+$/.test(tmdbId)) return null;
                     if (fsMediaType === 'movie') return 'https://www.2embed.cc/embed/' + tmdbId;
                     return 'https://www.2embed.cc/embedtv/' + tmdbId + '&s=' + s + '&e=' + e;
                 }
@@ -1281,7 +1292,9 @@
                     _fsPlayAttempt = 0;
                     if (chosen === 'fsplayer') { fsPlayDirect(tmdbId, title, s, e); return; }
                     _fsSetNote('\u23F3 Memutar via ' + _fsServerByKey(chosen).label + '…');
-                    _fsStartPlayer(_fsEmbedUrl(chosen, tmdbId, s, e));
+                    var _u = _fsEmbedUrl(chosen, tmdbId, s, e);
+                    if (!_u) { if (!_fsPlayNextServer()) _fsShowPlayerError(); return; }
+                    _fsStartPlayer(_u);
                 }
                 function _fsPlayNextServer() {
                     if (!_fsLastPlay || !_fsPlayOrder.length) return false;
@@ -1293,7 +1306,9 @@
                     var label = next === 'fsplayer' ? 'FS Player (tanpa iklan)' : _fsServerByKey(next).label;
                     _fsSetNote('\u26A0\uFE0F Server sebelumnya tidak memuat — coba ' + label + '…');
                     if (next === 'fsplayer') { fsPlayDirect(_fsLastPlay.id, _fsLastPlay.title, _fsLastPlay.season, _fsLastPlay.ep); return true; }
-                    _fsStartPlayer(_fsEmbedUrl(next, _fsLastPlay.id, _fsLastPlay.season, _fsLastPlay.ep));
+                    var _u2 = _fsEmbedUrl(next, _fsLastPlay.id, _fsLastPlay.season, _fsLastPlay.ep);
+                    if (!_u2) return _fsPlayNextServer();
+                    _fsStartPlayer(_u2);
                     return true;
                 }
                 function fsCinemaServerChanged() {
@@ -1337,7 +1352,7 @@
                 function fsCinemaTryNextServer() {
                     if (!_fsLastPlay) return;
                     var sel = document.getElementById('fsServerSelect');
-                    var order = ['fsplayer', 'vidsrc', 'vidsrccc', 'vidlink', 'videasy', 'multiembed', '2embed', 'autoembed'];
+                    var order = ['fsplayer', 'vidsrc', 'vidsrccc', 'vidsrcsh', 'vidlink', 'videasy', 'multiembed', '2embed', 'autoembed'];
                     var cur = sel ? sel.value : 'vidsrc';
                     var idx = order.indexOf(cur);
                     var next = order[(idx + 1) % order.length];
