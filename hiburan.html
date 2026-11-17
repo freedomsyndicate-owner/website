@@ -1121,6 +1121,23 @@
                 // desktop), otomatis jatuh ke server iframe berikutnya.
                 var _fsDirectToken = 0;
                 var _fsDirectQualities = [];
+                var _fsDirectUseProxy = false;
+                var _fsDirectCurrent = null;
+                // 17 Nov 2026 (terbukti di lapangan): host video bcdn MENOLAK
+                // fetch dari jaringan Cloudflare Workers (427), padahal link
+                // yang sama lolos dari server lain (206). Jadi FS Player
+                // mengambil video LANGSUNG dari bcdn dulu (pakai IP & browser
+                // penonton sendiri — sama seperti player VidLink asli), dan
+                // baru memakai proxy Worker kalau jalur langsung gagal.
+                // URL langsung didapat dari parameter u di URL proxy Worker
+                // (tidak perlu deploy ulang Worker).
+                function _fsDirectUrlOf(q) {
+                    try {
+                        var u = new URL(q.url, location.href).searchParams.get('u');
+                        if (u) return u;
+                    } catch(e) {}
+                    return q.directUrl || q.url;
+                }
                 function _fsDirectSetNote(txt) {
                     var n = document.getElementById('fsDirectNote');
                     if (n) { n.style.display = txt ? 'block' : 'none'; n.textContent = txt || ''; }
@@ -1166,17 +1183,19 @@
                 function _fsDirectPlayQuality(q, resumeTime) {
                     var v = document.getElementById('fsDirectVideo');
                     if (!v || !q) return;
+                    _fsDirectCurrent = q;
                     var t = (typeof resumeTime === 'number') ? resumeTime : v.currentTime;
                     var tracks = v.querySelectorAll('track'); for (var i = 0; i < tracks.length; i++) tracks[i].remove();
-                    v.src = q.url;
+                    v.src = _fsDirectUseProxy ? q.url : _fsDirectUrlOf(q);
                     v.load();
                     v.onloadedmetadata = function(){ if (t > 0 && t < (v.duration || 0)) { try { v.currentTime = t; } catch(e){} } };
                     var p = v.play(); if (p && p.catch) p.catch(function(){});
-                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan');
+                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectUseProxy ? ' · via proxy' : ''));
                     _fsDirectRenderBar(q);
                 }
                 async function fsPlayDirect(tmdbId, title, season, ep) {
                     var myToken = ++_fsDirectToken;
+                    _fsDirectUseProxy = false;
                     var v = document.getElementById('fsDirectVideo');
                     var frame = document.getElementById('fsPlayerFrame');
                     if (frame) { frame.onload = null; frame.onerror = null; frame.src = ''; frame.style.display = 'none'; }
@@ -1220,6 +1239,15 @@
                     }
                     v.onerror = function(){
                         if (myToken !== _fsDirectToken) return;
+                        var _cur = _fsDirectCurrent || pick;
+                        if (!_fsDirectUseProxy && _fsDirectUrlOf(_cur) !== _cur.url) {
+                            // Jalur langsung ditolak host video — coba sekali
+                            // lewat proxy Worker sebelum pindah server.
+                            _fsDirectUseProxy = true;
+                            _fsDirectSetNote('⏳ Jalur langsung ditolak — coba lewat proxy…');
+                            _fsDirectPlayQuality(_cur, 0);
+                            return;
+                        }
                         _fsDirectSetNote('⚠️ Video tidak bisa diputar di perangkat ini — pindah ke server lain…');
                         _fsDirectStop();
                         if (!_fsPlayNextServer()) _fsShowPlayerError();
