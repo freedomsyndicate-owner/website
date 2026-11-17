@@ -15,6 +15,17 @@ const TOKEN_FILE = process.env.TOKEN_FILE || ".ws-token";
 const LLM_BASE = "https://api.llm7.io/v1";
 const LLM_MODEL = "gpt-oss:20b";
 const LLM_DEFAULT_MODEL = "default"; // LLM7 default (Codestral): plain content, own quota
+const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "meta-llama/llama-3.3-70b-instruct:free";
+
+let openrouterKey: string | null | undefined;
+async function loadOpenrouterKey(): Promise<string | null> {
+  if (openrouterKey !== undefined) return openrouterKey;
+  if (process.env.OPENROUTER_KEY) { openrouterKey = process.env.OPENROUTER_KEY; return openrouterKey; }
+  try { const v = fs.readFileSync(".openrouter-key", "utf8").trim(); openrouterKey = v.length >= 8 ? v : null; }
+  catch { openrouterKey = null; }
+  return openrouterKey;
+}
 const MAX_STEPS = 12;
 
 const SYSTEM_PROMPT = `You are SuperAgent, a coding agent running on a Linux box. The user talks to you from their phone in Indonesian. Reply in Indonesian.
@@ -259,6 +270,10 @@ function extractFromMessage(msg: any): string | null {
 async function callChatApi(base: string, model: string, key: string | null, messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string; http?: number; retryAfter?: number }> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (key) headers["Authorization"] = `Bearer ${key}`;
+  if (base.includes("openrouter")) {
+    headers["HTTP-Referer"] = "https://main.tailb5991a.ts.net/";
+    headers["X-Title"] = "SuperAgent Phone";
+  }
   try {
     const res = await fetch(`${base}/chat/completions`, {
       method: "POST",
@@ -313,14 +328,20 @@ async function callLlm(messages: any[]): Promise<{ ok: boolean; text?: string; r
   const primary = await callChatApi(FREELLMAPI_BASE, model, key, messages);
   if (primary.ok) return primary;
   // 401/403/404 from FreeLLMAPI means key/model wrong — still try LLM7.
-  // 2. LLM7 "default" (Codestral): returns plain content, separate quota.
+  // 2. OpenRouter free model (key from 9Router, $0 balance is fine for :free models).
+  const orKey = await loadOpenrouterKey();
+  const or = orKey
+    ? await callChatApi(OPENROUTER_BASE, OPENROUTER_MODEL, orKey, messages)
+    : { ok: false, reason: "no openrouter key" };
+  if (or.ok) return or;
+  // 3. LLM7 "default" (Codestral): returns plain content, separate quota.
   const fallback = await callChatApi(LLM_BASE, LLM_DEFAULT_MODEL, "llm7", messages);
   if (fallback.ok) return fallback;
-  // 3. LLM7 gpt-oss:20b (may be quota-exhausted or reasoning-only).
+  // 4. LLM7 gpt-oss:20b (may be quota-exhausted or reasoning-only).
   const last = await callChatApi(LLM_BASE, LLM_MODEL, "llm7", messages);
   if (last.ok) return last;
   // Report the LONGEST wait, not the last error (a 60s rate-limit can hide a 25h daily quota).
-  const fails = [primary, fallback, last];
+  const fails = [primary, or, fallback, last];
   const worst = fails.reduce((a, b) => (b.retryAfter ?? -1) > (a.retryAfter ?? -1) ? b : a, fails[0]);
   return { ok: false, reason: worst.reason || last.reason || fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
 }
