@@ -70,6 +70,11 @@
             left: -300px;
             width: 280px;
             height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(56,189,248,0.35) transparent;
             background: rgba(10, 15, 28, 0.82);
             backdrop-filter: blur(10px) saturate(1.2);
             -webkit-backdrop-filter: blur(10px) saturate(1.2);
@@ -1278,4 +1283,25 @@
         }
         button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
             outline: 2px solid var(--primary); outline-offset: 2px;
+        }
+
+        /* === LAYAR PENDEK (HP landscape / mode desktop landscape) ===
+           Di layar pendek, menu sidebar isinya lebih panjang dari tinggi layar
+           dan splash elang bertumpuk (judul ketutup elang, tombol ENTER tidak
+           kelihatan) — keduanya harus muat, kalau tidak halaman tidak bisa
+           diakses. Blok ini ditaruh paling akhir supaya menang atas aturan
+           dasar di atas (spesifisitas sama, yang terakhir menang). */
+        @media (max-height: 500px) {
+            /* Sidebar: lebih ringkas + tetap bisa di-scroll */
+            .sidebar { padding-top: 56px; }
+            .sidebar-menu button { padding: 10px 22px; font-size: 0.95rem; }
+            .sidebar-menu li { margin-bottom: 4px; }
+            .side-label { padding: 10px 22px 4px; }
+            /* Splash: elang kecil, judul kecil, tombol ENTER selalu terlihat */
+            .intro-eagle-container { top: 4%; width: 150px; height: 96px; }
+            .intro-text-container { top: 46%; }
+            .intro-main-title { font-size: clamp(1.3rem, 6vh, 2rem); }
+            .intro-subtitle { font-size: 0.7rem; letter-spacing: 0.2em; margin-top: 6px; }
+            .intro-enter-btn { bottom: 16px; padding: 11px 28px; font-size: 0.85rem; }
+            .intro-energy-ring { width: 420px; height: 420px; }
         }

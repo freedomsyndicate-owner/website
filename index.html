@@ -466,6 +466,10 @@
                 var _s = document.getElementById('introSplash');
                 _s.classList.add('hidden'); _s.style.display = 'none';
             } else {
+                // Mulai dari atas: setelah reload (mis. ganti ke mode desktop),
+                // Chrome bisa mengembalikan posisi scroll lama sehingga yang
+                // terlihat malah bagian bawah halaman.
+                window.scrollTo(0, 0);
                 createIntroStars();
                 createIntroParticles();
             }
