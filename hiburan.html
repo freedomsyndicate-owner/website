@@ -754,9 +754,9 @@
                     <div style="font-size:0.68rem;color:#94a3b8;line-height:1.7;">
                         1️⃣ Pilih <b style="color:#fff;">MOVIE</b> atau <b style="color:#fff;">SERIES</b> → ketik judul → tekan <b style="color:#fff;">CARI</b><br>
                         2️⃣ Klik poster film yang muncul → langsung play<br>
-                        3️⃣ <b style="color:#f87171;">Video error / layar hitam?</b> Ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — kalau 15 detik tidak memuat, otomatis pindah sendiri ke server berikutnya<br>
-                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Seharusnya sudah diblokir otomatis (player dikunci sandbox). Kalau masih ada yang lolos, tutup saja, lalu tekan play lagi — video tetap jalan di sini<br>
-                        5️⃣ <b style="color:#fbbf24;">Halaman putih / tidak load?</b> Tunggu 15 detik (auto-pindah server) atau tekan tombol 🔄 Coba server lain di bawah player
+                        3️⃣ <b style="color:#f87171;">Video error / layar hitam?</b> Ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
+                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server filmnya — tutup saja tabnya, video tetap jalan di sini. (Player sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
+                        5️⃣ <b style="color:#fbbf24;">Halaman putih / tidak load?</b> Tekan tombol 🔄 Coba server lain di bawah player (selalu terlihat saat video diputar)
                     </div>
                 </div>
 
@@ -774,7 +774,7 @@
                             style="flex:1;padding:6px;border-radius:8px;border:1px solid var(--primary);background:var(--primary);color:#000;font-size:0.7rem;font-weight:700;cursor:pointer;letter-spacing:1px;">🎬 MOVIE</button>
                         <button onclick="fsSetType('tv',this)" id="fsBtnTV"
                             style="flex:1;padding:6px;border-radius:8px;border:1px solid rgba(56,189,248,0.3);background:transparent;color:var(--primary);font-size:0.7rem;font-weight:700;cursor:pointer;letter-spacing:1px;">📺 SERIES</button>
-                        <select id="fsServerSelect" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.25);border-radius:8px;color:#94a3b8;font-size:0.7rem;padding:4px 6px;outline:none;">
+                        <select onchange="fsCinemaServerChanged()" id="fsServerSelect" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.25);border-radius:8px;color:#94a3b8;font-size:0.7rem;padding:4px 6px;outline:none;">
                             <option value="vidsrc">VidSrc</option>
                             <option value="vidsrccc">VidSrc.cc</option>
                             <option value="vidlink">VidLink</option>
@@ -852,7 +852,11 @@
                         <div style="font-size:0.65rem;color:#94a3b8;">Coba ganti server lain di dropdown atas</div>
                         <button onclick="fsCinemaTryNextServer()" style="margin-top:6px;background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;margin-right:6px;">🔄 Coba server lain</button><button onclick="document.getElementById('fsErrorToast').style.display='none'" style="margin-top:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;">Tutup</button>
                     </div>
-                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-pointer-lock"></iframe>
+                    <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"></iframe>
+                    <div id="fsPlayerBar" style="display:none;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 14px;background:rgba(5,10,20,0.98);">
+                        <button onclick="fsCinemaTryNextServer()" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.72rem;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;">🔄 Coba server lain</button>
+                        <span style="font-size:0.62rem;color:#64748b;">Video tidak muncul / layar hitam? Tekan tombol di samping — langsung pindah server, tanpa tekan Putar lagi.</span>
+                    </div>
                 </div>
 
                 <!-- Detail film/series ala Idlix DetailScreen -->
@@ -1171,20 +1175,28 @@
                     _fsStartPlayer(_fsEmbedUrl(next, _fsLastPlay.id, _fsLastPlay.season, _fsLastPlay.ep));
                     return true;
                 }
+                function fsCinemaServerChanged() {
+                    // Ganti server di dropdown -> langsung muat ulang film yang sedang diputar.
+                    if (!_fsLastPlay) return;
+                    fsPlay(_fsLastPlay.id, _fsLastPlay.title, _fsLastPlay.season, _fsLastPlay.ep);
+                }
                 function _fsStartPlayer(url) {
                     document.getElementById('fsPlayerPlaceholder').style.display = 'none';
                     document.getElementById('fsErrorToast').style.display = 'none';
+                    var _bar = document.getElementById('fsPlayerBar');
+                    if (_bar) _bar.style.display = 'flex';
                     var frame = document.getElementById('fsPlayerFrame');
                     var myToken = ++_fsPlayToken;
                     frame.onload = null;
                     frame.onerror = null;
                     frame.src = '';
                     frame.style.display = 'block';
-                    // Watchdog: iframe cross-origin tidak bisa dicek isinya, tapi event
-                    // onload TIDAK jalan kalau navigasi gagal total (host mati).
-                    // Kalau 15 detik tidak ada onload, OTOMATIS pindah ke server
-                    // berikutnya (bukan cuma toast); toast hanya muncul kalau semua
-                    // server sudah dicoba dan tetap tidak memuat.
+                    // Watchdog: iframe cross-origin tidak bisa dicek isinya. onload
+                    // tetap jalan walau yang dimuat halaman error (mis. dulu saat
+                    // sandbox aktif), jadi auto-pindah HANYA menangkap gagal muat
+                    // total (host mati). Kalau video sudah dimuat tapi isinya error
+                    // / hitam, pakai tombol "Coba server lain" di bawah player —
+                    // tombol itu selalu terlihat, bukan cuma di toast.
                     var loaded = false;
                     frame.onload = function(){ loaded = true; _fsSetNote(''); };
                     frame.onerror = function(){ if (!_fsPlayNextServer()) _fsShowPlayerError(); };
