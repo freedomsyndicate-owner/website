@@ -754,6 +754,13 @@
         /* Mode cari: sembunyikan beranda (hero + genre + rekomendasi) */
         #fsRadioStreamPane.searching .fs-home-only { display: none !important; }
 
+        /* --- TOOLS v2: grid kartu alat ala launcher aplikasi --- */
+        .fs-tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+        .fs-tool-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 12px; padding: 12px 6px; color: #fff; text-decoration: none; text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+        .fs-tool-tile .fs-tt-ico { font-size: 1.35rem; line-height: 1; }
+        .fs-tool-tile .fs-tt-name { font-size: 0.68rem; font-weight: 800; line-height: 1.2; }
+        .fs-tool-tile .fs-tt-desc { font-size: 0.53rem; opacity: 0.85; line-height: 1.3; }
+
         /* iframe player */
         .tv-iframe-wrap {
             position: relative;

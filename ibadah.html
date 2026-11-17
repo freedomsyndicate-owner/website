@@ -183,6 +183,57 @@ function _fsFetchJson(url, ms) {
 
 <div id="quran" class="tab-content active" style="padding:14px 14px 24px;">
             <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📖 AL QUR'AN</h3><p>114 surah — teks Arab, latin, terjemahan Indonesia &amp; murotal. Gratis, tanpa iklan.</p></div>
+            <div style="text-align:center;font-family:'Amiri',serif;font-size:1.5rem;color:#a7f3d0;margin:8px 0 0;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            <div style="text-align:center;font-size:0.62rem;color:#94a3b8;">Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang</div>
+
+            <!-- ===== WAKTU SHOLAT (MyQuran, jadwal Kemenag) + tanggal Hijriah ===== -->
+            <div id="fsSholatCard" style="background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(5,150,105,0.06));border:1px solid rgba(16,185,129,0.45);border-radius:16px;padding:14px;margin-top:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                    <div style="font-size:0.85rem;font-weight:900;color:#fff;">🕌 Waktu Sholat</div>
+                    <select id="fsSholatCity" onchange="fsSholatSetCity(this.value)" style="background:rgba(2,6,23,0.7);border:1px solid rgba(16,185,129,0.5);color:#a7f3d0;border-radius:8px;padding:6px 8px;font-size:0.68rem;font-weight:700;font-family:inherit;max-width:150px;">
+                        <option value="0506" selected>Batam</option>
+                        <option value="1301">Jakarta</option>
+                        <option value="1219">Bandung</option>
+                        <option value="1638">Surabaya</option>
+                        <option value="0228">Medan</option>
+                        <option value="2622">Makassar</option>
+                        <option value="0816">Palembang</option>
+                        <option value="1505">Yogyakarta</option>
+                        <option value="1433">Semarang</option>
+                        <option value="1634">Malang</option>
+                        <option value="1222">Bogor</option>
+                        <option value="1221">Bekasi</option>
+                        <option value="1107">Tangerang</option>
+                        <option value="1225">Depok</option>
+                        <option value="0412">Pekanbaru</option>
+                        <option value="2308">Balikpapan</option>
+                        <option value="2914">Manado</option>
+                        <option value="1709">Denpasar</option>
+                        <option value="0610">Jambi</option>
+                    </select>
+                </div>
+                <div id="fsSholatHijri" style="font-size:0.65rem;color:#a7f3d0;margin-top:4px;"></div>
+                <div id="fsSholatNext" style="font-size:0.8rem;font-weight:800;color:#fbbf24;margin-top:6px;">⏳ Memuat jadwal sholat...</div>
+                <div id="fsSholatGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;"></div>
+                <div id="fsSholatExtra" style="font-size:0.62rem;color:#94a3b8;text-align:center;margin-top:8px;"></div>
+            </div>
+
+            <!-- ===== AYAT HARI INI + TASBIH ===== -->
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <div style="flex:1;background:linear-gradient(160deg,rgba(251,191,36,0.12),rgba(16,185,129,0.06));border:1px solid rgba(251,191,36,0.35);border-radius:14px;padding:12px;">
+                    <div style="font-size:0.6rem;letter-spacing:2px;color:#fbbf24;font-weight:800;">✨ AYAT HARI INI</div>
+                    <div id="fsAyahArab" style="font-family:'Amiri',serif;font-size:1.15rem;color:#fff;line-height:1.9;margin-top:6px;text-align:right;"></div>
+                    <div id="fsAyahId" style="font-size:0.65rem;color:#d1d5db;line-height:1.6;margin-top:6px;"></div>
+                    <div id="fsAyahRef" style="font-size:0.6rem;color:#94a3b8;margin-top:4px;"></div>
+                </div>
+                <div style="flex:0 0 128px;background:linear-gradient(160deg,rgba(16,185,129,0.16),rgba(56,189,248,0.05));border:1px solid rgba(16,185,129,0.4);border-radius:14px;padding:12px;text-align:center;">
+                    <div style="font-size:0.6rem;letter-spacing:2px;color:#a7f3d0;font-weight:800;">📿 TASBIH</div>
+                    <div id="fsTasbihCount" onclick="fsTasbihTap()" style="font-size:1.9rem;font-weight:900;color:#fff;margin-top:6px;cursor:pointer;">0</div>
+                    <div id="fsTasbihTarget" style="font-size:0.6rem;color:#94a3b8;">dari 33</div>
+                    <button onclick="fsTasbihTap()" style="width:100%;margin-top:8px;background:#10b981;color:#022c22;border:none;border-radius:10px;padding:10px;font-weight:900;font-size:0.8rem;cursor:pointer;font-family:inherit;">＋ Hitung</button>
+                    <button onclick="fsTasbihReset()" style="width:100%;margin-top:6px;background:transparent;border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:10px;padding:7px;font-size:0.65rem;font-weight:700;cursor:pointer;font-family:inherit;">Ulangi</button>
+                </div>
+            </div>
 
             <div id="fsQuranListView">
                 <!-- Lanjutkan Membaca (tersimpan lokal di HP) -->
@@ -328,6 +379,152 @@ function _fsFetchJson(url, ms) {
                         if (st2) st2.textContent = '⚠️ Gagal memuat daftar surah. Cek koneksi lalu buka lagi tab ini.';
                     }
                 }
+                // Fitur islami: jadwal sholat, ayat harian, tasbih.
+                fsSholatInit();
+                fsAyahToday();
+                fsTasbihInit();
+            }
+
+            // ===== WAKTU SHOLAT (MyQuran — jadwal Kemenag, tanpa kunci) =====
+            var _fsSholatInit = false, _fsSholatData = null, _fsSholatTimer = null;
+            function fsSholatInit() {
+                if (_fsSholatInit) return; _fsSholatInit = true;
+                var sel = document.getElementById('fsSholatCity');
+                try {
+                    var saved = localStorage.getItem('fsSholatCity') || '0506';
+                    if (sel) sel.value = saved;
+                } catch(e) {}
+                fsSholatLoad();
+                // Tanggal Hijriah (Aladhan) — gagal pun tidak masalah, barisnya dibiarkan kosong.
+                try {
+                    var now = new Date();
+                    var g = now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear();
+                    fetch('https://api.aladhan.com/v1/gToH/' + g).then(function(r){ return r.json(); }).then(function(d){
+                        var h = d && d.data && d.data.hijri;
+                        var el = document.getElementById('fsSholatHijri');
+                        if (h && el) el.textContent = '📅 ' + h.day + ' ' + h.month.en + ' ' + h.year + ' H';
+                    }).catch(function(){});
+                } catch(e) {}
+            }
+            function fsSholatSetCity(id) {
+                try { localStorage.setItem('fsSholatCity', id); } catch(e) {}
+                _fsSholatData = null;
+                fsSholatLoad();
+            }
+            function fsSholatLoad() {
+                var sel = document.getElementById('fsSholatCity');
+                var id = (sel && sel.value) || '0506';
+                var now = new Date();
+                var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+                var key = 'fsSholatCache_' + id + '_' + ym;
+                var nextEl = document.getElementById('fsSholatNext');
+                // Pakai cache bulan ini dulu supaya langsung tampil.
+                try {
+                    var cached = JSON.parse(localStorage.getItem(key) || 'null');
+                    if (cached && cached.jadwal) { _fsSholatData = cached; fsSholatRender(); }
+                } catch(e) {}
+                fetch('https://api.myquran.com/v2/sholat/jadwal/' + id + '/' + now.getFullYear() + '/' + (now.getMonth()+1))
+                    .then(function(r){ return r.json(); }).then(function(d){
+                        if (d && d.status && d.data && d.data.jadwal) {
+                            _fsSholatData = d.data;
+                            try { localStorage.setItem(key, JSON.stringify(d.data)); } catch(e) {}
+                            fsSholatRender();
+                        } else if (!_fsSholatData && nextEl) { nextEl.textContent = '⚠️ Jadwal sholat tidak dapat dimuat.'; }
+                    }).catch(function(){
+                        if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal sholat tidak dapat dimuat — cek koneksi.';
+                    });
+            }
+            function fsSholatRender() {
+                var grid = document.getElementById('fsSholatGrid');
+                var nextEl = document.getElementById('fsSholatNext');
+                var extraEl = document.getElementById('fsSholatExtra');
+                if (!grid || !_fsSholatData || !_fsSholatData.jadwal) return;
+                var now = new Date();
+                var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+                var idx = -1;
+                _fsSholatData.jadwal.forEach(function(j, i){ if (j.date === today) idx = i; });
+                if (idx < 0) { if (nextEl) nextEl.textContent = '⚠️ Jadwal hari ini belum tersedia.'; return; }
+                var j = _fsSholatData.jadwal[idx];
+                var prayers = [
+                    ['Imsak', j.imsak], ['Subuh', j.subuh], ['Dzuhur', j.dzuhur],
+                    ['Ashar', j.ashar], ['Maghrib', j.maghrib], ['Isya', j.isya]
+                ];
+                function toMin(t){ var p = (t||'').split(':'); return (+p[0])*60 + (+p[1] || 0); }
+                var nowMin = now.getHours()*60 + now.getMinutes();
+                var nextIdx = -1, nextMin = 0;
+                prayers.forEach(function(p, i){ if (nextIdx < 0 && toMin(p[1]) > nowMin) { nextIdx = i; nextMin = toMin(p[1]); } });
+                var nextName = '', nextDate = null;
+                if (nextIdx >= 0) {
+                    nextName = prayers[nextIdx][0];
+                    nextDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Math.floor(nextMin/60), nextMin%60);
+                } else {
+                    var nj = _fsSholatData.jadwal[idx+1];
+                    if (nj) {
+                        var m2 = toMin(nj.imsak);
+                        nextName = 'Imsak besok';
+                        nextDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, Math.floor(m2/60), m2%60);
+                    }
+                }
+                grid.innerHTML = '';
+                prayers.forEach(function(p, i){
+                    var cell = document.createElement('div');
+                    var isNext = (i === nextIdx);
+                    cell.style.cssText = 'border-radius:10px;padding:9px 6px;text-align:center;' + (isNext
+                        ? 'background:rgba(251,191,36,0.18);border:1px solid #fbbf24;'
+                        : 'background:rgba(255,255,255,0.05);border:1px solid rgba(16,185,129,0.25);');
+                    cell.innerHTML = '<div style="font-size:0.6rem;color:' + (isNext ? '#fbbf24' : '#94a3b8') + ';font-weight:800;">' + (isNext ? '▶ ' : '') + p[0] + '</div>' +
+                        '<div style="font-size:0.85rem;font-weight:900;color:#fff;margin-top:2px;">' + (p[1] || '--:--') + '</div>';
+                    grid.appendChild(cell);
+                });
+                if (extraEl) extraEl.textContent = 'Terbit ' + (j.terbit || '--:--') + '  •  Dhuha ' + (j.dhuha || '--:--') + '  •  ' + (_fsSholatData.lokasi || '');
+                if (_fsSholatTimer) clearInterval(_fsSholatTimer);
+                function tick(){
+                    if (!nextDate) { if (nextEl) nextEl.textContent = nextName ? nextName + ' — jadwal besok belum tersedia.' : ''; return; }
+                    var diff = Math.max(0, Math.floor((nextDate - new Date())/1000));
+                    var hh = String(Math.floor(diff/3600)).padStart(2,'0');
+                    var mm = String(Math.floor(diff%3600/60)).padStart(2,'0');
+                    var ss = String(diff%60).padStart(2,'0');
+                    if (nextEl) nextEl.textContent = '⏰ ' + nextName + ' dalam ' + hh + ':' + mm + ':' + ss;
+                }
+                tick();
+                _fsSholatTimer = setInterval(tick, 1000);
+            }
+
+            // ===== AYAT HARI INI (7 ayat pendek, ganti tiap hari — tanpa API) =====
+            var FS_AYAH_WEEK = [
+                { ar: 'فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ', id: 'Maka nikmat Tuhan kamu yang manakah yang kamu dustakan?', ref: 'QS. Ar-Rahman (55): 13' },
+                { ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', id: 'Sesungguhnya bersama kesulitan ada kemudahan.', ref: 'QS. Ash-Sharh (94): 6' },
+                { ar: 'فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ', id: 'Maka ingatlah kepada-Ku, niscaya Aku ingat (pula) kepadamu. Bersyukurlah kepada-Ku dan janganlah kamu ingkar kepada-Ku.', ref: 'QS. Al-Baqarah (2): 152' },
+                { ar: 'لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ', id: 'Janganlah kamu berputus asa dari rahmat Allah.', ref: 'QS. Az-Zumar (39): 53' },
+                { ar: 'وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ', id: 'Dan Dia memberinya rezeki dari arah yang tidak disangka-sangkanya.', ref: 'QS. At-Talaq (65): 3' },
+                { ar: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', id: 'Allah tidak membebani seseorang melainkan sesuai dengan kesanggupannya.', ref: 'QS. Al-Baqarah (2): 286' },
+                { ar: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ', id: 'Dan sungguh, kelak Tuhanmu pasti memberikan karunia-Nya kepadamu, sehingga engkau menjadi puas.', ref: 'QS. Ad-Duha (93): 5' }
+            ];
+            function fsAyahToday() {
+                var a = FS_AYAH_WEEK[new Date().getDay()];
+                var ar = document.getElementById('fsAyahArab'); if (ar) ar.textContent = a.ar;
+                var idEl = document.getElementById('fsAyahId'); if (idEl) idEl.textContent = a.id;
+                var rf = document.getElementById('fsAyahRef'); if (rf) rf.textContent = a.ref;
+            }
+
+            // ===== TASBIH (penghitung dzikir, tersimpan di HP) =====
+            var _fsTasbih = 0;
+            function fsTasbihInit() {
+                try { _fsTasbih = parseInt(localStorage.getItem('fsTasbihCount') || '0', 10) || 0; } catch(e) {}
+                fsTasbihShow();
+            }
+            function fsTasbihShow() {
+                var c = document.getElementById('fsTasbihCount'); if (c) c.textContent = _fsTasbih;
+            }
+            function fsTasbihTap() {
+                _fsTasbih = (_fsTasbih >= 33) ? 0 : _fsTasbih + 1;
+                try { localStorage.setItem('fsTasbihCount', String(_fsTasbih)); } catch(e) {}
+                fsTasbihShow();
+            }
+            function fsTasbihReset() {
+                _fsTasbih = 0;
+                try { localStorage.setItem('fsTasbihCount', '0'); } catch(e) {}
+                fsTasbihShow();
             }
 
             function fsQuranFilter(type, btn) {
