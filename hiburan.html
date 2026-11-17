@@ -1289,9 +1289,10 @@
                     var _boxUrl = _fsBoxUrlOf(_fsDirectRawUrlOf(pick));
                     var _ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
                     var _to = _ctrl ? setTimeout(function(){ try { _ctrl.abort(); } catch(e){} }, 8000) : null;
-                    fetch(_boxUrl, { headers: { Range: 'bytes=0-1023' }, signal: _ctrl ? _ctrl.signal : undefined, cache: 'no-store' }).then(function(r){
+                    fetch(_boxUrl, { signal: _ctrl ? _ctrl.signal : undefined, cache: 'no-store' }).then(function(r){
                         if (_to) clearTimeout(_to);
                         if (myToken !== _fsDirectToken) return;
+                        if (r.body && r.body.cancel) { try { r.body.cancel(); } catch(e){} }
                         if (r.ok) { _fsDirectMode = 'box'; _fsDirectPlayQuality(pick, 0); }
                         else { _fsDirectMode = 'surge'; _fsDirectPlayQuality(pick, 0); }
                     }).catch(function(){

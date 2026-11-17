@@ -22,6 +22,11 @@ const CORS = {
 const server = http.createServer((req, res) => {
   let u;
   try { u = new URL(req.url, 'http://x'); } catch (e) { res.writeHead(400); res.end('bad url'); return; }
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, { ...CORS, 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'Access-Control-Max-Age': '86400' });
+    res.end();
+    return;
+  }
   if (u.pathname === '/health') { res.writeHead(200, { 'Content-Type': 'text/plain' }); res.end('ok'); return; }
   if (u.pathname !== '/v') { res.writeHead(404); res.end('not found'); return; }
   let target;
