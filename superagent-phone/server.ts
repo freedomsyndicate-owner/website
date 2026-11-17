@@ -14,6 +14,7 @@ const WORKSPACE = process.env.WORKSPACE || "/workspace";
 const TOKEN_FILE = process.env.TOKEN_FILE || ".ws-token";
 const LLM_BASE = "https://api.llm7.io/v1";
 const LLM_MODEL = "gpt-oss:20b";
+const LLM_DEFAULT_MODEL = "default"; // LLM7 default (Codestral): plain content, own quota
 const MAX_STEPS = 12;
 
 const SYSTEM_PROMPT = `You are SuperAgent, a coding agent running on a Linux box. The user talks to you from their phone in Indonesian. Reply in Indonesian.
@@ -311,10 +312,13 @@ async function callLlm(messages: any[]): Promise<{ ok: boolean; text?: string; r
   const primary = await callChatApi(FREELLMAPI_BASE, model, key, messages);
   if (primary.ok) return primary;
   // 401/403/404 from FreeLLMAPI means key/model wrong — still try LLM7.
-  // 2. LLM7 fallback (keyless).
-  const fallback = await callChatApi(LLM_BASE, LLM_MODEL, "llm7", messages);
+  // 2. LLM7 "default" (Codestral): returns plain content, separate quota.
+  const fallback = await callChatApi(LLM_BASE, LLM_DEFAULT_MODEL, "llm7", messages);
   if (fallback.ok) return fallback;
-  return { ok: false, reason: fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
+  // 3. LLM7 gpt-oss:20b (may be quota-exhausted or reasoning-only).
+  const last = await callChatApi(LLM_BASE, LLM_MODEL, "llm7", messages);
+  if (last.ok) return last;
+  return { ok: false, reason: last.reason || fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
 }
 
 // ---------- HTTP server (page + SSE chat) ----------
