@@ -442,7 +442,10 @@
             -webkit-backdrop-filter: blur(12px) saturate(1.25);
             border-top: 1px solid rgba(255,255,255,0.12);
             padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
+            transition: transform .3s ease;
         }
+        /* Bar bawah sembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
+        .bottomnav.nav-hidden { transform: translateY(110%); }
         .bottomnav-inner { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 560px; margin: 0 auto; }
         .bottomnav a {
             color: #94a3b8; font-size: 0.62rem; font-weight: 700; text-decoration: none;
@@ -720,5 +723,9 @@
             <a href="index.html#chatai"><span>🤖</span>Chat Ai</a>
         </div>
     </nav>
+<script>
+/* Bar bawah: sembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
+(function(){var nav=document.querySelector('.bottomnav');if(!nav)return;var last=window.scrollY||0;window.addEventListener('scroll',function(){var y=window.scrollY||0;if(y>last&&y>120){nav.classList.add('nav-hidden');}else if(y<last||y<=120){nav.classList.remove('nav-hidden');}last=y;},{passive:true});})();
+</script>
 </body>
 </html>

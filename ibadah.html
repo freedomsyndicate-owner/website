@@ -280,6 +280,13 @@ function _fsFetchJson(url, ms) {
                     var cached = JSON.parse(localStorage.getItem('fsQuranList') || 'null');
                     if (cached && cached.length === 114) { _fsQuranList = cached; fsQuranRenderList(); }
                 } catch(e) {}
+                // Kalau tidak ada cache, tampilkan dulu daftar cadangan yang
+                // tertanam di halaman supaya surah langsung muncul — API
+                // menyegarkan datanya sesudahnya.
+                if (!_fsQuranList.length && typeof FS_QURAN_LIST_FALLBACK !== 'undefined' && FS_QURAN_LIST_FALLBACK.length === 114) {
+                    _fsQuranList = FS_QURAN_LIST_FALLBACK;
+                    fsQuranRenderList();
+                }
                 // Daftar surah: timeout 8 dtk + coba 2x; kalau API tetap diam,
                 // pakai daftar cadangan yang sudah tertanam di halaman (114 surah).
                 var _qTries = 0;
@@ -302,12 +309,20 @@ function _fsFetchJson(url, ms) {
                     });
                 })();
                 function _qUseFallback() {
-                    if (_fsQuranList.length) return;
+                    // Jangan timpa status kalau pengguna sedang mencari —
+                    // hitungan hasil cari lebih penting dari catatan offline.
+                    var _q = '';
+                    try { _q = (document.getElementById('fsQuranSearch').value || '').trim(); } catch(e) {}
+                    if (_fsQuranList.length) {
+                        var st0 = document.getElementById('fsQuranStatus');
+                        if (!_q && st0) st0.textContent = '114 surah (daftar offline — API tidak merespons; murotal butuh API, coba lagi nanti).';
+                        return;
+                    }
                     if (typeof FS_QURAN_LIST_FALLBACK !== 'undefined' && FS_QURAN_LIST_FALLBACK.length === 114) {
                         _fsQuranList = FS_QURAN_LIST_FALLBACK;
                         fsQuranRenderList();
                         var st = document.getElementById('fsQuranStatus');
-                        if (st) st.textContent = '114 surah (daftar offline — API tidak merespons; murotal butuh API, coba lagi nanti).';
+                        if (!_q && st) st.textContent = '114 surah (daftar offline — API tidak merespons; murotal butuh API, coba lagi nanti).';
                     } else {
                         var st2 = document.getElementById('fsQuranStatus');
                         if (st2) st2.textContent = '⚠️ Gagal memuat daftar surah. Cek koneksi lalu buka lagi tab ini.';
@@ -518,6 +533,11 @@ function _fsFetchJson(url, ms) {
                 fsQuranContinueRender();
                 window.scrollTo({ top: 0 });
             }
+
+            // Tab Qur'an aktif saat halaman Ibadah dibuka — muat daftar surah sekarang.
+            // (Sebelumnya fungsi init ini tidak pernah dipanggil, jadi daftar surah
+            //  stuck di "Memuat..." selamanya.)
+            fsQuranInit();
             </script>
         </div>
 
@@ -546,6 +566,7 @@ function _fsFetchJson(url, ms) {
             document.querySelectorAll('.sidebar-menu button').forEach(function(b){ b.classList.remove('active-tab'); });
             var el = document.getElementById(tabId);
             if (el) el.classList.add('active');
+            if (tabId === 'quran' && typeof fsQuranInit === 'function') fsQuranInit();
             if (btnElement) btnElement.classList.add('active-tab');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (sidebar.classList.contains('active')) toggleSidebar();
@@ -559,5 +580,9 @@ function _fsFetchJson(url, ms) {
             }
         });
     </script>
+<script>
+/* Bar bawah: sembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
+(function(){var nav=document.querySelector('.bottomnav');if(!nav)return;var last=window.scrollY||0;window.addEventListener('scroll',function(){var y=window.scrollY||0;if(y>last&&y>120){nav.classList.add('nav-hidden');}else if(y<last||y<=120){nav.classList.remove('nav-hidden');}last=y;},{passive:true});})();
+</script>
 </body>
 </html>
