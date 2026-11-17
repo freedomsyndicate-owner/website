@@ -1710,6 +1710,7 @@
                     <button class="fs-genre-tile" onclick="fsRadioGenre('dangdut',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">🪘</span><span>Dangdut</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('jawa',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">🎶</span><span>Lagu Jawa</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('koplo',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">🥁</span><span>Koplo</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('dj',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">🎧</span><span>DJ</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('jazz',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">🎷</span><span>Jazz</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('lo-fi',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">🌙</span><span>Lo-Fi</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('k-pop',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">💜</span><span>K-Pop</span></button>
@@ -2091,6 +2092,40 @@
                 fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(q) + '&' + FS_AUDIUS_APP + '&limit=50');
             }
 
+            // Genre = beberapa query YouTube sekaligus (terbaru + lawas + DJ) + Audius,
+            // digabung dan dibuang duplikatnya. Dulu genre cuma cari Audius — untuk
+            // lagu Jawa/DJ hasilnya hampir selalu kosong.
+            function fsRadioGenreSearch(queries, audiusQ) {
+                if (_fsRadioLoading) return;
+                _fsRadioLoading = true;
+                var list = document.getElementById('fsRadioList');
+                var statusEl = document.getElementById('fsRadioStatus');
+                if (statusEl) statusEl.textContent = '⏳ Mencari lagu Jawa/DJ terbaru sampai terlama...';
+                fsRadioSetMode(true);
+                var ytJobs = queries.map(function(q){ return fsRadioInvSearch(q).catch(function(){ return []; }); });
+                var audiusJob = fetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(audiusQ) + '&' + FS_AUDIUS_APP + '&limit=50')
+                    .then(function(r){ return r.json(); }).then(function(d){ return fsRadioAudiusToItems((d && d.data) || []); })
+                    .catch(function(){ return []; });
+                Promise.all(ytJobs.concat([audiusJob])).then(function(parts){
+                    _fsRadioLoading = false;
+                    var merged = [];
+                    parts.forEach(function(p){ merged = fsRadioMergeItems(merged, p); });
+                    if (!merged.length) {
+                        if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
+                        if (list) list.innerHTML = '';
+                        _fsRadioTracks = [];
+                        return;
+                    }
+                    var nYt = 0;
+                    merged.forEach(function(t){ if (t.source === 'youtube') nYt++; });
+                    fsRadioRenderItems(merged, statusEl, list,
+                        merged.length + ' lagu ditemukan — terbaru sampai terlama'
+                        + (nYt ? ' • ' + nYt + ' dari YouTube' : ''), 'grid');
+                }).catch(function(){
+                    _fsRadioLoading = false;
+                    if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
+                });
+            }
             function fsRadioGenre(genre, btn) {
                 var chips = document.querySelectorAll('#fsRadioChips button');
                 chips.forEach(function(b){ b.classList.remove('active'); });
@@ -2098,11 +2133,15 @@
                 if (genre === 'trending') {
                     fsRadioLoadTrending();
                 } else if (genre === 'indonesia') {
-                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('Indonesia') + '&' + FS_AUDIUS_APP + '&limit=50');
+                    fsRadioGenreSearch(['lagu indonesia terbaru', 'lagu indonesia lawas', 'pop indonesia terbaru', 'dj indonesia terbaru'], 'Indonesia');
                 } else if (genre === 'jawa') {
-                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('lagu jawa terbaru') + '&' + FS_AUDIUS_APP + '&limit=50');
+                    fsRadioGenreSearch(['lagu jawa terbaru', 'lagu jawa lawas', 'campursari', 'dj jawa terbaru', 'didi kempot'], 'lagu jawa terbaru');
                 } else if (genre === 'koplo') {
-                    fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent('dangdut koplo terbaru') + '&' + FS_AUDIUS_APP + '&limit=50');
+                    fsRadioGenreSearch(['dangdut koplo terbaru', 'koplo terbaru', 'dangdut koplo lawas', 'dj koplo'], 'dangdut koplo terbaru');
+                } else if (genre === 'dj') {
+                    fsRadioGenreSearch(['dj jawa terbaru', 'dj indonesia terbaru', 'dj dangdut terbaru', 'dj tiktok viral terbaru'], 'dj terbaru');
+                } else if (genre === 'dangdut') {
+                    fsRadioGenreSearch(['dangdut terbaru', 'dangdut lawas', 'dangdut koplo terbaru'], 'dangdut');
                 } else {
                     fsRadioFetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(genre) + '&' + FS_AUDIUS_APP + '&limit=50');
                 }
@@ -2148,8 +2187,31 @@
                 }).catch(function(){ return _fsInvTryMirror(i + 1, path); });
             }
             // Cari video YouTube -> daftar item lagu (source 'youtube', diputar penuh via audio).
+            // DALAM (17 Nov 2026, perintah San: lagu Jawa/DJ terbaru s.d. terlama harus ada):
+            // satu query saja cuma mengembalikan 20 hasil (limit Invidious per halaman).
+            // Jadi tiap pencarian menarik 3 halaman sekaligus: hal.1 relevansi + hal.2
+            // relevansi + hal.1 urut tanggal upload (terbaru dulu). Dites live: semua
+            // kata kunci Jawa/DJ ("dj jawa terbaru", "lagu jawa lawas", "campursari",
+            // "dangdut koplo terbaru", "dj indonesia terbaru") mengembalikan 20 hasil
+            // per halaman. Gabung ketiganya, buang duplikat videoId -> sampai 60 lagu.
             function fsRadioInvSearch(q) {
-                return _fsInvTryMirror(0, '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video').then(function(d){ return fsRadioYtToItems(d); });
+                var pages = [
+                    '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video',
+                    '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video&page=2',
+                    '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video&sort_by=upload_date'
+                ];
+                var jobs = pages.map(function(p){ return _fsInvTryMirror(0, p).catch(function(){ return []; }); });
+                return Promise.all(jobs).then(function(results){
+                    var seen = {}, all = [];
+                    results.forEach(function(d){
+                        (d || []).forEach(function(v){
+                            if (!v || v.type !== 'video' || !v.videoId || !v.title || seen[v.videoId]) return;
+                            seen[v.videoId] = 1;
+                            all.push(v);
+                        });
+                    });
+                    return fsRadioYtToItems(all);
+                });
             }
             function fsRadioYtToItems(d) {
                 var out = [];
@@ -2166,7 +2228,7 @@
                         sub: '⏱ ' + fsRadioFmtDur(v.lengthSeconds || 0) + ' · ▶ YouTube • Lagu penuh'
                     });
                 });
-                return out.slice(0, 20);
+                return out.slice(0, 60);
             }
             function fsRadioInvVideo(videoId) {
                 return _fsInvTryMirror(0, '/api/v1/videos/' + encodeURIComponent(videoId));
