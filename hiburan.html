@@ -1113,27 +1113,41 @@
                 ];
                 var _fsLastTmdb = null;
                 var FS_STREAM = 'https://fs-ai.sanlana1903.workers.dev/stream';
+                var FS_BOX_STREAM = 'https://main.tailb5991a.ts.net/stream';
                 // --- FS PLAYER (tanpa iklan) — 17 Nov 2026 ---
                 // Film diambil LANGSUNG (bukan iframe): Worker fs-ai mengambil
                 // URL MP4 dari VidLink lalu diputar di <video> sendiri — tanpa
-                // iklan, tanpa tab baru. Kalau video tidak bisa diputar di
-                // perangkat ini (mis. codec HEVC tidak didukung browser
-                // desktop), otomatis jatuh ke server iframe berikutnya.
+                // iklan, tanpa tab baru. Urutan jalur video: (1) proxy Box
+                // 'main' lewat Tailscale Funnel — satu-satunya jalur yang
+                // terbukti lolos (206) karena host video menolak UA browser
+                // (428), egress Cloudflare (427), dan proxy VidLink sendiri
+                // di browser; (2) proxy surge VidLink; (3) proxy Worker;
+                // (4) server iframe. Kalau Box tidur, probe 8 detik gagal
+                // dan langsung lanjut ke jalur berikut. Kalau video tidak
+                // bisa diputar di perangkat ini (mis. codec HEVC tidak
+                // didukung browser desktop), otomatis jatuh ke server
+                // iframe berikutnya.
                 var _fsDirectToken = 0;
                 var _fsDirectQualities = [];
-                var _fsDirectUseProxy = false;
+                var _fsDirectMode = 'box';
                 var _fsDirectCurrent = null;
-                // 17 Nov 2026 (riset player VidLink — catatan /tmp/vidlink-research):
-                // VidLink sendiri TIDAK pernah mengambil bcdn langsung dari
-                // browser: player mereka (JW Player, <video> biasa) menulis
-                // ulang semua URL ke proxy mereka surge.flooderrr.store
-                // (/mp{path}?{sign,t}&headers={}&host={origin}). bcdn MENOLAK
-                // UA browser (428) dan egress Cloudflare (427) — makanya jalur
-                // lama (bcdn langsung, lalu proxy Worker) mati di browser.
-                // Jadi jalur pertama FS Player sekarang = proxy surge VidLink
-                // (persis cara player VidLink sendiri), cadangan kedua = proxy
-                // Worker, lalu server iframe. URL bcdn didapat dari parameter
-                // u di URL proxy Worker (tidak perlu deploy ulang Worker).
+                // 17 Nov 2026: bcdn MENOLAK UA browser (428) dan egress
+                // Cloudflare (427); proxy surge VidLink juga mati di browser.
+                // Satu-satunya jalur yang lolos: proxy Node di Box 'main'
+                // (fs-stream-proxy.js, port 3002) lewat Tailscale Funnel —
+                // terbukti 206 dari Box dan dari internet publik. URL bcdn
+                // didapat dari parameter u di URL proxy Worker; WAJIB
+                // di-encode (tanpa encode, &t= terpotong dan bcdn balas 403).
+                function _fsDirectRawUrlOf(q) {
+                    try {
+                        var u = new URL(q.url, location.href).searchParams.get('u');
+                        if (u) return u;
+                    } catch(e) {}
+                    return q.directUrl || q.url;
+                }
+                function _fsBoxUrlOf(bcdnUrl) {
+                    return FS_BOX_STREAM + '/v?u=' + encodeURIComponent(bcdnUrl);
+                }
                 function _fsSurgeUrlOf(bcdnUrl) {
                     try {
                         var u = new URL(bcdnUrl);
@@ -1147,11 +1161,7 @@
                     } catch(e) { return bcdnUrl; }
                 }
                 function _fsDirectUrlOf(q) {
-                    try {
-                        var u = new URL(q.url, location.href).searchParams.get('u');
-                        if (u) return _fsSurgeUrlOf(u);
-                    } catch(e) {}
-                    return q.directUrl ? _fsSurgeUrlOf(q.directUrl) : q.url;
+                    return _fsSurgeUrlOf(_fsDirectRawUrlOf(q));
                 }
                 function _fsDirectSetNote(txt) {
                     var n = document.getElementById('fsDirectNote');
@@ -1201,16 +1211,18 @@
                     _fsDirectCurrent = q;
                     var t = (typeof resumeTime === 'number') ? resumeTime : v.currentTime;
                     var tracks = v.querySelectorAll('track'); for (var i = 0; i < tracks.length; i++) tracks[i].remove();
-                    v.src = _fsDirectUseProxy ? q.url : _fsDirectUrlOf(q);
+                    var _src = _fsDirectMode === 'box' ? _fsBoxUrlOf(_fsDirectRawUrlOf(q))
+                        : _fsDirectMode === 'worker' ? q.url : _fsDirectUrlOf(q);
+                    v.src = _src;
                     v.load();
                     v.onloadedmetadata = function(){ if (t > 0 && t < (v.duration || 0)) { try { v.currentTime = t; } catch(e){} } };
                     var p = v.play(); if (p && p.catch) p.catch(function(){});
-                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectUseProxy ? ' · via proxy' : ''));
+                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectMode === 'box' ? ' · via Box' : _fsDirectMode === 'worker' ? ' · via proxy' : ''));
                     _fsDirectRenderBar(q);
                 }
                 async function fsPlayDirect(tmdbId, title, season, ep) {
                     var myToken = ++_fsDirectToken;
-                    _fsDirectUseProxy = false;
+                    _fsDirectMode = 'box';
                     var v = document.getElementById('fsDirectVideo');
                     var frame = document.getElementById('fsPlayerFrame');
                     if (frame) { frame.onload = null; frame.onerror = null; frame.src = ''; frame.style.display = 'none'; }
@@ -1255,10 +1267,14 @@
                     v.onerror = function(){
                         if (myToken !== _fsDirectToken) return;
                         var _cur = _fsDirectCurrent || pick;
-                        if (!_fsDirectUseProxy && _fsDirectUrlOf(_cur) !== _cur.url) {
-                            // Jalur langsung ditolak host video — coba sekali
-                            // lewat proxy Worker sebelum pindah server.
-                            _fsDirectUseProxy = true;
+                        if (_fsDirectMode === 'box') {
+                            _fsDirectMode = 'surge';
+                            _fsDirectSetNote('⏳ Proxy Box tidak menjawab — coba jalur VidLink…');
+                            _fsDirectPlayQuality(_cur, 0);
+                            return;
+                        }
+                        if (_fsDirectMode === 'surge' && _fsDirectUrlOf(_cur) !== _cur.url) {
+                            _fsDirectMode = 'worker';
                             _fsDirectSetNote('⏳ Jalur VidLink ditolak — coba lewat proxy…');
                             _fsDirectPlayQuality(_cur, 0);
                             return;
@@ -1267,7 +1283,22 @@
                         _fsDirectStop();
                         if (!_fsPlayNextServer()) _fsShowPlayerError();
                     };
-                    _fsDirectPlayQuality(pick, 0);
+                    // Probe Box dulu (maks 8 detik): kalau Box tidur/mati,
+                    // langsung loncat ke jalur surge tanpa menunggu lama.
+                    _fsDirectSetNote('⏳ Menghubungi proxy Box…');
+                    var _boxUrl = _fsBoxUrlOf(_fsDirectRawUrlOf(pick));
+                    var _ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+                    var _to = _ctrl ? setTimeout(function(){ try { _ctrl.abort(); } catch(e){} }, 8000) : null;
+                    fetch(_boxUrl, { headers: { Range: 'bytes=0-1023' }, signal: _ctrl ? _ctrl.signal : undefined, cache: 'no-store' }).then(function(r){
+                        if (_to) clearTimeout(_to);
+                        if (myToken !== _fsDirectToken) return;
+                        if (r.ok) { _fsDirectMode = 'box'; _fsDirectPlayQuality(pick, 0); }
+                        else { _fsDirectMode = 'surge'; _fsDirectPlayQuality(pick, 0); }
+                    }).catch(function(){
+                        if (_to) clearTimeout(_to);
+                        if (myToken !== _fsDirectToken) return;
+                        _fsDirectMode = 'surge'; _fsDirectPlayQuality(pick, 0);
+                    });
                 }
                 function _fsServerByKey(k) {
                     for (var i = 0; i < FS_SERVERS.length; i++) if (FS_SERVERS[i].key === k) return FS_SERVERS[i];
