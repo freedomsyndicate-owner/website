@@ -1217,7 +1217,10 @@
                     v.load();
                     v.onloadedmetadata = function(){ if (t > 0 && t < (v.duration || 0)) { try { v.currentTime = t; } catch(e){} } };
                     var p = v.play(); if (p && p.catch) p.catch(function(){});
-                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectMode === 'box' ? ' · via Box' : _fsDirectMode === 'worker' ? ' · via proxy' : ''));
+                    var _hevcOnly = (q.codec || '').toLowerCase().indexOf('hevc') === 0 && !_fsDirectQualities.some(function(x){ return (x.codec || '').toLowerCase().indexOf('h264') === 0; });
+                    var _note = '▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectMode === 'box' ? ' · via Box' : _fsDirectMode === 'worker' ? ' · via proxy' : '');
+                    if (_hevcOnly) _note += ' · ⚠️ HEVC saja: gambar hitam di Chrome laptop (suara jalan) — coba di HP Android atau tekan Coba server lain';
+                    _fsDirectSetNote(_note);
                     _fsDirectRenderBar(q);
                 }
                 async function fsPlayDirect(tmdbId, title, season, ep) {
