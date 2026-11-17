@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="var(--ink)">
+    <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Lainnya</title>
     <meta name="description" content="Lainnya: Keluh Kesah anonim, Aplikasi Mod, dan Konten Dewasa (18+).">
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A, blokir hanya di luar input/textarea
+            // Ctrl+A — blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,15 +79,16 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK: Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
-                'justify-content:center;height:100vh;background:var(--ink);color:var(--red-text);',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
-                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:var(--red-text);">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:var(--paper-faint);letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
-                '<div style="font-size:0.68rem;color:var(--paper-dim);margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
         }
@@ -126,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -144,41 +145,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha384-+/4lqMnmLqwbdHXshvGDmBTeWlNoPRdjXi4ZsiBj10EhQXaTBe3RF5JZktdSjug6" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" integrity="sha384-f6/UpzjTjIXASlp20cArQsaRh1EvHVJd5kegy/gYR9W2D0a32TnEqUEiW4Zm/5O0" crossorigin="anonymous"></script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
         var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'emas';
+        var n = localStorage.getItem('fsTheme') || 'biru';
         var th = T[n] || T.biru;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
     </script>
     <link rel="stylesheet" href="style.css">
-    <style>
-    /* Status interaktif (unslop UX-003/004/005/006). Aturan lokal: pemindai hanya
-       membaca <style> di file ini, bukan stylesheet yang di-link. Nilai sama
-       dengan aturan global di style.css. */
-    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    a:hover { color: var(--paper); }
-    button:hover, input:hover, select:hover, textarea:hover, summary:hover { border-color: var(--gold); background: var(--ink-3); }
-    button:active { transform: translateY(1px); background: var(--ink-3); }
-    a:active { color: var(--gold); }
-    button:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); }
-    input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); color: var(--paper-faint); }
-    /* Gudang Mod sebagai tabel baris: jenis, isi, tautan. Satu-satunya CSS lokal halaman. */
-    .mod-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-    .mod-table th, .mod-table td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-    .mod-table th { font-size: 0.72rem; color: var(--paper-faint); font-weight: 700; }
-    .mod-table td { font-size: 0.9rem; color: var(--paper); }
-    .mod-table td:first-child { font-weight: 700; white-space: nowrap; }
-    .mod-table tr:last-child th, .mod-table tr:last-child td { border-bottom: none; }
-    .mod-table a { display: inline-block; min-height: 44px; line-height: 44px; padding: 0 14px; color: var(--ink); background: var(--gold); border-radius: 6px; font-weight: 700; font-size: 0.85rem; text-decoration: none; white-space: nowrap; }
-    @media (max-width: 480px) {
-        .mod-table td:nth-child(2) { font-size: 0.8rem; }
-    }
-    </style>
     <script>
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _fsFetchJson(url, ms) {
@@ -198,59 +175,55 @@ function _fsFetchJson(url, ms) {
     </script>
 </head>
 <body>
-    <a class="skip-link" href="#main">Lewati ke isi</a>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu"><img src="icons/menu.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
 <nav class="sidebar" id="sidebar">
-        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
         <ul class="sidebar-menu">
             <li class="side-label">MENU UTAMA</li>
-            <li><button onclick="location.href='index.html'">Beranda</button></li>
-            <li><button onclick="location.href='trading.html'">Trading</button></li>
-            <li><button onclick="location.href='garapan.html'">Info Garapan</button></li>
-            <li class="side-label">HIBURAN</li>
-            <li><button onclick="location.href='hiburan.html#tvchannel'">TV Channel</button></li>
-            <li><button onclick="location.href='hiburan.html#movie'">Movie</button></li>
-            <li><button onclick="location.href='hiburan.html#musik'">Musik</button></li>
-            <li><button onclick="location.href='hiburan.html#komik'">Komik</button></li>
-            <li><button onclick="location.href='hiburan.html#game'">Game</button></li>
-            <li class="side-label">AI</li>
-            <li><button onclick="location.href='ai.html'">Chat Ai</button></li>
-            <li class="side-label">IBADAH</li>
-            <li><button onclick="location.href='ibadah.html'">Al Qur'an</button></li>
-            <li class="side-label">TOOLS</li>
-            <li><button onclick="location.href='tools.html'">Tools</button></li>
-            <li><button onclick="location.href='tools.html#download'">Download App</button></li>
+            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
+            <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
+            <li><button onclick="location.href='garapan.html'">💰 Info Garapan</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="location.href='ai.html'">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="openTab('keluhkesah', this)" class="active-tab">Keluh Kesah</button></li>
-            <li><button onclick="openTab('mod', this)">Aplikasi Mod</button></li>
-            <li><button onclick="openTab('dewasa', this)">Konten Dewasa (18+)</button></li>
+            <li><button onclick="openTab('keluhkesah', this)" class="active-tab">🗣️ Keluh Kesah</button></li>
+            <li><button onclick="openTab('mod', this)">📱 Aplikasi Mod</button></li>
+            <li><button onclick="openTab('dewasa', this)">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
-    <div class="main-wrapper" id="main">
-        <header class="page-head">
-            <span class="sec-no">01 Lainnya</span>
-            <h1>Lainnya</h1>
-            <hr class="gold-rule">
-            <p>Keluh kesah, aplikasi mod, dan konten dewasa 18+.</p>
-        </header>
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
 
 <!-- ===== TOOLS TAB (PDF Tools + Open Gym + Podcast/Sound Center) ===== -->
         <!-- Ketiga aplikasi itu native (Kotlin / React+Node / Flutter): kodenya TIDAK
              bisa dipaste ke website statis. Yang diterapkan: FITUR intinya, ditulis
-             ulang sebagai web app yang jalan 100% di browser HP, tanpa instal,
+             ulang sebagai web app yang jalan 100% di browser HP — tanpa instal,
              tanpa daftar, tanpa iklan, file tidak diunggah ke server mana pun. -->
         <div id="keluhkesah" class="tab-content active">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h2>Ruang Anonim</h2><p>Tumpahkan keluh kesahmu. Identitasmu aman, link tidak diizinkan.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🗣️ RUANG ANONIM</h3><p>Tumpahkan keluh kesahmu — identitasmu aman, link tidak diizinkan.</p></div>
             <div class="content-box">
+                <h3 style="margin-top:0; color: var(--primary);">RUANG ANONIM</h3>
+                <p>Tumpahkan keluh kesahmu di sini. Identitasmu aman. (Link tidak diizinkan)</p>
                 <div class="form-group">
-                    <textarea id="pesanAnonim" placeholder="Ketik pesanmu di sini…"></textarea>
+                    <textarea id="pesanAnonim" placeholder="Ketik pesanmu di sini..."></textarea>
                     <span id="alertPesan" class="alert-msg">Peringatan: Link/URL dilarang di ruang ini!</span>
-                    <span id="loadingPesan" class="alert-msg" style="display:none; color:var(--paper-dim);">Mengirim pesan ke Owner…</span>
-                    <span id="suksesPesan" class="alert-msg" style="color: var(--green-text);">Pesan berhasil dikirim ke Owner!</span>
+                    <span id="loadingPesan" class="alert-msg" style="display:none; color:#38bdf8;">⏳ Mengirim pesan ke Owner...</span>
+                    <span id="suksesPesan" class="alert-msg" style="color: #4ade80;">✅ Pesan berhasil dikirim ke Owner!</span>
                     <button id="btnKirimPesan" class="btn-submit" onclick="kirimPesan()">Kirim Pesan</button>
                 </div>
             </div>
@@ -258,71 +231,85 @@ function _fsFetchJson(url, ms) {
 
 
         <div id="mod" class="tab-content">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h2>Gudang Mod</h2><p>Aplikasi premium dan game modifikasi pilihan.</p></div>
-            <div class="content-box">
-                <p style="color:var(--paper-dim); font-size:0.95rem; line-height:1.7; margin:0 0 8px;">Koleksi aplikasi premium dan game modifikasi. Gratis.</p>
-                <p style="color:var(--paper-faint); font-size:0.78rem; margin:0 0 8px;">Khusus anggota Freedom Syndicate.</p>
-                <table class="mod-table">
-                    <thead>
-                        <tr><th>Jenis</th><th>Isi</th><th></th></tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Aplikasi Mod</td>
-                            <td>Aplikasi premium, tanpa iklan.</td>
-                            <td><a href="https://1024terabox.com/s/1EC_s0LKaIsnUTp053nP2Bg" target="_blank" rel="noopener noreferrer">Buka</a></td>
-                        </tr>
-                        <tr>
-                            <td>Game Mod</td>
-                            <td>Game modifikasi.</td>
-                            <td><a href="https://1024terabox.com/s/1s9YYzCiCaueE9ejiq-yFyA" target="_blank" rel="noopener noreferrer">Buka</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📱 GUDANG MOD</h3><p>Aplikasi premium &amp; game modifikasi pilihan — gratis dan diperbarui.</p></div>
+            <div class="content-box" style="text-align:center;">
+                <h3 style="margin-top:0; color: var(--primary); font-size:1.3rem; letter-spacing:2px;">⚡ GUDANG MOD SYNDICATE ⚡</h3>
+                <p style="color:#94a3b8; font-size:0.95rem; line-height:1.7; margin-bottom: 8px;">
+                    Selamat datang di <span style="color:var(--primary); font-weight:700;">zona eksklusif</span> anggota Syndicate.<br>
+                    Temukan koleksi <b style="color:#fff;">Aplikasi Premium</b> & <b style="color:#fff;">Game Modifikasi</b> pilihan terbaik — gratis, aman, dan selalu diperbarui untuk kamu!
+                </p>
+                <p style="color:#64748b; font-size:0.78rem; letter-spacing:1px; margin-bottom: 28px;">🔒 KHUSUS ANGGOTA FREEDOM SYNDICATE</p>
+
+                <a href="https://1024terabox.com/s/1EC_s0LKaIsnUTp053nP2Bg" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-app">
+                    <span class="mod-btn-icon">📱</span>
+                    <span class="mod-btn-text">
+                        <span class="mod-btn-title">APLIKASI MOD</span>
+                        <span class="mod-btn-sub">Premium Apps • Unlocked • No Ads</span>
+                    </span>
+                    <span class="mod-btn-arrow">→</span>
+                </a>
+
+                <a href="https://1024terabox.com/s/1s9YYzCiCaueE9ejiq-yFyA" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-game">
+                    <span class="mod-btn-icon">🎮</span>
+                    <span class="mod-btn-text">
+                        <span class="mod-btn-title">GAME MOD</span>
+                        <span class="mod-btn-sub">Modified Games • High Graphics • Cheats</span>
+                    </span>
+                    <span class="mod-btn-arrow">→</span>
+                </a>
             </div>
         </div>
 
 
         <div id="dewasa" class="tab-content">
 
-            <!-- ===== GATE LOGIN (Firebase Auth, ganti PIN) ===== -->
+            <!-- ===== GATE LOGIN (Firebase Auth — ganti PIN) ===== -->
             <div id="dewasaLoginScreen" class="content-box" style="text-align:center; max-width:340px; margin:0 auto;">
-                <h2 style="margin:0 0 4px; font-size:1.1rem; color:var(--red-text);">Konten Dewasa 18+</h2>
-                <p style="font-size:0.72rem; color:var(--paper-faint); margin:0 0 20px;">Akses terbatas. Khusus 18+.</p>
-                <p style="font-size:0.85rem; color:var(--paper-dim); line-height:1.7; margin-bottom:18px;">Login dengan Google untuk membuka konten dewasa.</p>
-                <button id="dewasaLoginBtn" onclick="dewasaLoginGoogle()" style="background:var(--paper);color:var(--ink);border:none;padding:12px 22px;border-radius:6px;font-weight:800;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;min-height:44px;">
+                <div style="font-size:2.6rem; margin-bottom:4px; animation: fireFloat 2s infinite ease-in-out;">🔐</div>
+                <h3 style="margin:0 0 4px; font-size:1.1rem; font-weight:900; letter-spacing:3px; color:#f87171; animation: redGlow 2.5s infinite ease-in-out;">成人向けコンテンツ</h3>
+                <p style="font-size:0.72rem; color:#64748b; letter-spacing:2px; margin:0 0 20px;">AKSES TERBATAS • KHUSUS 18+</p>
+                <p style="font-size:0.85rem; color:#94a3b8; line-height:1.7; margin-bottom:18px;">Login dengan Google untuk membuka konten dewasa.</p>
+                <button id="dewasaLoginBtn" onclick="dewasaLoginGoogle()" style="background:#fff;color:#1f2937;border:none;padding:12px 22px;border-radius:10px;font-weight:800;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;">
                     <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09A11.99 11.99 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.29A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.57.38-2.29V6.62H1.29a12 12 0 0 0 0 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42A11.98 11.98 0 0 0 12 0 11.99 11.99 0 0 0 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
                     Login dengan Google
                 </button>
-                <p id="dewasaLoginStatus" style="font-size:0.72rem; color:var(--paper-faint); margin-top:14px; min-height:18px;"></p>
+                <p id="dewasaLoginStatus" style="font-size:0.72rem; color:#64748b; margin-top:14px; min-height:18px;"></p>
             </div>
 
             <!-- ===== KONTEN DEWASA (muncul setelah login, link diisi via JS) ===== -->
             <div id="dewasaContent" style="display:none;">
                 <div class="content-box" style="text-align:center;">
-                    <h3 class="adult-title">Syndicate Night Hub</h3>
-                    <p class="adult-tagline">Konten ini hanya untuk anggota dewasa. Login dulu untuk membuka tautan.</p>
-                    <p class="adult-desc">Tautan komunitas ada di bawah.</p>
-                    <p class="adult-cta">Pilih platform di bawah untuk gabung.</p>
+                    <div class="adult-fire">🔥</div>
+                    <h3 class="adult-title">SYNDICATE NIGHT HUB</h3>
+                    <p class="adult-tagline">
+                        Konten yang terlalu <span class="adult-hot">panas</span> untuk ditampilkan di sini.<br>
+                        Hanya untuk jiwa-jiwa berani yang benar-benar <span class="adult-hot">bebas</span>.
+                    </p>
+                    <div class="adult-divider">✦ &nbsp; KHUSUS 18+ &nbsp; ✦</div>
+                    <p class="adult-desc">
+                        Semua konten eksklusif <b style="color:#fff;">Syndicate Night Hub</b> tersimpan aman di komunitas kami.<br>
+                        Bergabunglah sekarang dan dapatkan akses penuh ke konten yang tak akan kamu temukan di tempat lain — <span style="color:#f87171; font-weight:700;">tanpa sensor, tanpa batas.</span>
+                    </p>
+                    <p class="adult-cta">👇 Pilih platform favoritmu & langsung gabung 👇</p>
                     <!-- Link diisi dinamis oleh JS setelah login (fungsi _injectDewasaLinks) -->
                     <div id="dewasaLinks"></div>
-                    <p class="adult-note">Dengan bergabung, kamu menyatakan berusia 18 tahun ke atas.</p>
+                    <p class="adult-note">⚠️ Dengan bergabung, kamu menyatakan bahwa kamu berusia <b>18 tahun ke atas</b>.</p>
                 </div>
             </div>
 
         </div>
 
 
-            <footer>FREEDOM SYNDICATE &bull; 2026</footer>
+            <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
-            <button onclick="location.href='index.html'">Beranda</button>
-            <button onclick="location.href='hiburan.html'">Hiburan</button>
-            <button onclick="location.href='tools.html'">Tools</button>
-            <button onclick="location.href='ibadah.html'">Ibadah</button>
-            <button onclick="location.href='lainnya.html'" class="active">Lainnya</button>
+            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'" class="active"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 
@@ -366,9 +353,9 @@ function _fsFetchJson(url, ms) {
 
             // Loading state
             btn.disabled       = true;
-            btn.textContent    = 'Mengirim…';
+            btn.textContent    = '⏳ Mengirim...';
             loadBox.style.display = 'block';
-            alertBox.textContent = 'Pengiriman pesan dinonaktifkan sementara. Hubungi admin lewat Telegram @freedomsyndicate.';
+            alertBox.textContent = '⚠️ Pengiriman pesan dinonaktifkan sementara. Hubungi admin lewat Telegram @freedomsyndicate.';
             alertBox.style.display = 'block';
             btn.disabled = false;
             btn.textContent = 'Kirim Pesan';
@@ -385,7 +372,7 @@ function _fsFetchJson(url, ms) {
             const wrap = document.getElementById('dewasaLinks');
             if (!wrap) return;
             if (typeof firebase === 'undefined' || !firebase.database) {
-                wrap.innerHTML = '<p style="color:var(--red-text);font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
+                wrap.innerHTML = '<p style="color:#fca5a5;font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
                 return;
             }
             _dewasaLinksLoading = true;
@@ -394,7 +381,7 @@ function _fsFetchJson(url, ms) {
                 const d = (snap && typeof snap.val === 'function') ? snap.val() : null;
                 const ok = function(u){ return typeof u === 'string' && u.length > 0 && u.indexOf('https://') === 0; };
                 if (!d || !ok(d.telegram) || !ok(d.discord) || !ok(d.whatsapp)) {
-                    wrap.innerHTML = '<p style="color:var(--red-text);font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
+                    wrap.innerHTML = '<p style="color:#fca5a5;font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
                     return;
                 }
                 _dewasaLinksRendered = true;
@@ -404,18 +391,21 @@ function _fsFetchJson(url, ms) {
                 <a href="${_tg}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-tg">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.851l-2.94-.918c-.638-.203-.65-.638.136-.943l11.47-4.42c.532-.194.998.13.058.651z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">TELEGRAM</span><span class="ajb-sub">Gabung Channel Sekarang</span></span>
+                    <span class="ajb-arrow">→</span>
                 </a>
                 <a href="${_dc}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-dc">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">DISCORD</span><span class="ajb-sub">Masuk ke Server Rahasia</span></span>
+                    <span class="ajb-arrow">→</span>
                 </a>
                 <a href="${_wa}" target="_blank" rel="noopener noreferrer" class="adult-join-btn btn-join-wa">
                     <span class="ajb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span>
                     <span class="ajb-text"><span class="ajb-title">WHATSAPP</span><span class="ajb-sub">Ikuti Channel Eksklusif</span></span>
+                    <span class="ajb-arrow">→</span>
                 </a>`;
             }).catch(function(){
                 _dewasaLinksLoading = false;
-                wrap.innerHTML = '<p style="color:var(--red-text);font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
+                wrap.innerHTML = '<p style="color:#fca5a5;font-size:0.85rem;">Link gagal dimuat. Coba refresh halaman.</p>';
             });
         }
         // --- GATE DEWASA: LOGIN GOOGLE (Firebase Auth) ---
@@ -443,7 +433,7 @@ function _fsFetchJson(url, ms) {
             return 'Gagal login: ' + (err && err.message ? err.message : err);
         }
 
-        // Tombol "Login lewat popup", muncul hanya kalau redirect gagal.
+        // Tombol "Login lewat popup" — muncul hanya kalau redirect gagal.
         // Popup butuh ketukan pengguna langsung (gesture), jadi tidak bisa
         // dipanggil otomatis dari catch.
         function _fsShowPopupBtn() {
@@ -454,32 +444,32 @@ function _fsFetchJson(url, ms) {
             btn = document.createElement('button');
             btn.id = 'dewasaPopupBtn';
             btn.type = 'button';
-            btn.textContent = 'Login lewat popup';
-            btn.style.cssText = 'margin-top:10px;display:inline-block;background:var(--ink-3);color:var(--paper);border:1px solid var(--line-strong);padding:10px 18px;border-radius:6px;font-weight:700;font-size:0.8rem;cursor:pointer;min-height:44px;';
+            btn.textContent = '🔄 Login lewat popup';
+            btn.style.cssText = 'margin-top:10px;display:inline-block;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;cursor:pointer;';
             btn.onclick = function(){ _fsLoginPopup(); };
             loginBtn.parentNode.insertBefore(btn, loginBtn.nextSibling);
         }
 
         function _fsLoginPopup() {
             var st = document.getElementById('dewasaLoginStatus');
-            if (st) st.textContent = 'Membuka popup login Google…';
+            if (st) st.textContent = '⏳ Membuka popup login Google...';
             if (!_fsFirebaseInit()) {
-                if (st) st.textContent = 'Firebase belum termuat. Refresh halaman.';
+                if (st) st.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
                 return;
             }
             var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithPopup(provider).then(function(){
-                if (st) st.textContent = 'Login berhasil, memuat…';
+                if (st) st.textContent = '✅ Login berhasil, memuat...';
             }).catch(function(err){
-                if (st) st.textContent = _fsLoginErrMsg(err);
+                if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
             });
         }
 
         function dewasaLoginGoogle() {
             var st = document.getElementById('dewasaLoginStatus');
-            if (st) st.textContent = 'Membuka login Google…';
+            if (st) st.textContent = '⏳ Membuka login Google...';
             if (!_fsFirebaseInit()) {
-                if (st) st.textContent = 'Firebase belum termuat. Refresh halaman.';
+                if (st) st.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
                 return;
             }
             var provider = new firebase.auth.GoogleAuthProvider();
@@ -491,11 +481,11 @@ function _fsFetchJson(url, ms) {
                     // putus/lambat): coba sekali lagi otomatis, lalu tawarkan
                     // login lewat popup.
                     if (err && err.code === 'auth/network-request-failed' && tried < 2) {
-                        if (st) st.textContent = 'Koneksi lambat, mencoba lagi…';
+                        if (st) st.textContent = '⏳ Koneksi lambat, mencoba lagi...';
                         setTimeout(attempt, 1500);
                         return;
                     }
-                    if (st) st.textContent = _fsLoginErrMsg(err);
+                    if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
                     _fsShowPopupBtn();
                 });
             }
@@ -510,7 +500,7 @@ function _fsFetchJson(url, ms) {
                 loginScreen.style.display = 'block';
                 content.style.display = 'none';
                 var st0 = document.getElementById('dewasaLoginStatus');
-                if (st0) st0.textContent = 'Firebase belum termuat. Refresh halaman.';
+                if (st0) st0.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
                 return;
             }
             var user = null;
@@ -527,7 +517,7 @@ function _fsFetchJson(url, ms) {
         }
 
         // Jalankan gate setiap kali tab dewasa dibuka (ganti patch PIN lama).
-        // Auth state dipulihkan async setelah redirect login, cek ulang saat berubah.
+        // Auth state dipulihkan async setelah redirect login — cek ulang saat berubah.
         document.addEventListener('DOMContentLoaded', () => {
             const origOpenTab = window.openTab;
             window.openTab = function(tabId, btnElement) {
@@ -549,7 +539,7 @@ function _fsFetchJson(url, ms) {
                     firebase.auth().getRedirectResult().catch(function(err){
                         var st0 = document.getElementById('dewasaLoginStatus');
                         var dw = document.getElementById('dewasa');
-                        if (st0 && dw && dw.classList.contains('active')) st0.textContent = _fsLoginErrMsg(err);
+                        if (st0 && dw && dw.classList.contains('active')) st0.textContent = '⚠️ ' + _fsLoginErrMsg(err);
                     });
                 } catch (e) {}
             }
@@ -586,12 +576,12 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.id = 'fsPwaPop';
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', 'Instal aplikasi Freedom Syndicate');
-    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:var(--ink-2);border:1px solid var(--line-strong);border-radius:6px;padding:14px 12px;display:flex;gap:12px;align-items:center;';
-    pop.innerHTML = '<img src="icon-192.png" alt="" width="52" height="52" style="width:52px;height:52px;border-radius:6px;flex:0 0 auto;">'
-      + '<div style="flex:1;min-width:0;"><div style="color:var(--paper);font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:var(--paper-dim);font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
-      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:var(--gold);color:var(--ink);border:0;border-radius:6px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;min-height:44px;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:var(--paper-faint);font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;min-width:44px;min-height:44px;"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>';
+    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
+    pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
+      + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
@@ -607,7 +597,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
       else { window._fsPwaPrompt = null; syncDownloadBtn(); }
     } else {
       var h = document.getElementById('fsPwaHint');
-      if (h) { h.style.color = 'var(--paper)'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
+      if (h) { h.style.color = '#fff'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
     }
   }
   function syncDownloadBtn(){

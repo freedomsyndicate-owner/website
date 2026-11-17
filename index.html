@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="var(--ink)">
+    <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif: situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Official Hub</title>
     <meta name="description" content="Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.">
@@ -23,7 +23,7 @@
     {"@context":"https://schema.org","@type":"WebSite","name":"Freedom Syndicate","url":"https://freedomsyndicate.my.id/","description":"Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.","inLanguage":"id"}
     </script>
     <!-- ======================================================
-         FREEDOM SYNDICATE, SECURITY SHIELD v3.0
+         FREEDOM SYNDICATE — SECURITY SHIELD v3.0
          Anti Inspect · Anti Copy · Anti DevTools · Stable
     ====================================================== -->
     <script>
@@ -61,7 +61,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A: blokir hanya di luar input/textarea
+            // Ctrl+A — blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -85,15 +85,16 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK: Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
-                'justify-content:center;height:100vh;background:var(--ink);color:var(--red-text);',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
-                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:var(--red-text);">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:var(--paper-faint);letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
-                '<div style="font-size:0.68rem;color:var(--paper-dim);margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
         }
@@ -132,7 +133,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -150,7 +151,7 @@
         <script>
     // FS-HARDEN: escape HTML untuk data pihak ketiga sebelum dimasukkan ke innerHTML (cegah XSS).
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-    // HLS.js fallback detector, jika CDN Cloudflare down/diblokir
+    // HLS.js fallback detector — jika CDN Cloudflare down/diblokir
     window.addEventListener('DOMContentLoaded', function(){
         if (window._hlsJsFailed || typeof Hls === 'undefined') {
             window._hlsJsFailed = true;
@@ -162,7 +163,7 @@
                 _hlsWarnShown = true;
                 var statusEl = document.getElementById('tv1Status');
                 if (statusEl) {
-                    statusEl.innerHTML = '<b>HLS.js gagal dimuat</b>, streaming .m3u8 tidak tersedia. ' +
+                    statusEl.innerHTML = '⚠️ <b>HLS.js gagal dimuat</b> — streaming .m3u8 tidak tersedia. ' +
                         'Coba matikan ekstensi pemblokir (AdBlock/VPN), atau gunakan channel tipe embed. ' +
                         '<a href="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" target="_blank" rel="noopener noreferrer" ' +
                         'style="color:var(--primary);text-decoration:underline;">Cek CDN</a>';
@@ -172,11 +173,11 @@
     });
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
         var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'emas';
+        var n = localStorage.getItem('fsTheme') || 'biru';
         var th = T[n] || T.biru;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
@@ -184,21 +185,41 @@
     </script>
     <link rel="stylesheet" href="style.css">
     <style>
-    /* Status interaktif (unslop UX-003/004/005/006). Aturan lokal: pemindai hanya
-       membaca <style> di file ini, bukan stylesheet yang di-link. Nilai sama
-       dengan aturan global di style.css. */
-    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    a:hover { color: var(--paper); }
-    button:hover, input:hover, select:hover, textarea:hover, summary:hover { border-color: var(--gold); background: var(--ink-3); }
-    button:active { transform: translateY(1px); background: var(--ink-3); }
-    a:active { color: var(--gold); }
-    button:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); }
-    input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); color: var(--paper-faint); }
+    /* FS-SEARCH + FAQ + KONTAK — inline index.html (saran review Wafa, 17 Nov 2026). */
+    .topbar-search { background: rgba(16,185,129,.14); border: 1px solid rgba(16,185,129,.45); color: #fff; border-radius: 20px; padding: 8px 12px; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .fs-search-overlay { position: fixed; inset: 0; z-index: 10002; background: rgba(2,6,23,.93); display: flex; align-items: flex-start; justify-content: center; padding: 70px 14px 20px; }
+    .fs-search-box { width: 100%; max-width: 560px; background: #0f172a; border: 1px solid rgba(16,185,129,.4); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+    .fs-search-bar { display: flex; gap: 8px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .fs-search-bar input { flex: 1; min-width: 0; background: #020617; border: 1px solid rgba(16,185,129,.4); border-radius: 10px; padding: 11px 12px; color: #fff; font-size: .9rem; font-family: inherit; outline: none; }
+    .fs-search-bar button { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 0 14px; font-size: .9rem; cursor: pointer; font-family: inherit; }
+    .fs-search-results { max-height: 60vh; overflow-y: auto; padding: 6px; }
+    .fs-search-item { display: block; padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none; }
+    .fs-search-item:hover { background: rgba(16,185,129,.12); }
+    .fs-search-item .fs-sr-title { color: #fff; font-size: .85rem; font-weight: 800; }
+    .fs-search-item .fs-sr-desc { color: #94a3b8; font-size: .68rem; margin-top: 2px; }
+    .fs-search-item .fs-sr-tag { float: right; font-size: .58rem; font-weight: 800; color: #10b981; background: rgba(16,185,129,.12); border-radius: 20px; padding: 2px 8px; margin-left: 8px; }
+    .fs-search-empty { color: #94a3b8; font-size: .8rem; padding: 16px 12px; text-align: center; }
+    .fs-search-hint { color: #475569; font-size: .62rem; text-align: center; padding: 8px 0 10px; }
+    .fs-home-section { margin: 28px 0 8px; text-align: left; }
+    .fs-home-h { font-size: 1.05rem; font-weight: 900; color: #fff; margin: 0 0 4px; letter-spacing: .5px; }
+    .fs-home-sub { font-size: .72rem; color: #94a3b8; margin: 0 0 12px; line-height: 1.6; }
+    .fs-faq { background: rgba(255,255,255,.05); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; margin-top: 8px; overflow: hidden; }
+    .fs-faq summary { padding: 12px 14px; font-size: .82rem; font-weight: 800; color: #fff; cursor: pointer; list-style: none; }
+    .fs-faq summary::-webkit-details-marker { display: none; }
+    .fs-faq summary::before { content: '+ '; color: #10b981; }
+    .fs-faq[open ] summary::before { content: '- '; }
+    .fs-faq p { padding: 0 14px 12px; font-size: .76rem; color: #cbd5e1; line-height: 1.7; margin: 0; }
+    .fs-faq a { color: #10b981; }
+    .fs-kontak-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .fs-kontak-card { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.05); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; padding: 12px; text-decoration: none; color: #fff; }
+    .fs-kontak-card .fs-kc-ico { font-size: 1.3rem; flex-shrink: 0; }
+    .fs-kontak-card .fs-kc-name { font-size: .8rem; font-weight: 800; }
+    .fs-kontak-card .fs-kc-desc { font-size: .62rem; color: #94a3b8; margin-top: 2px; line-height: 1.4; }
     </style>
+
+    <!-- FS REDESIGN v2: topbar + bottomnav + header tab konsisten + glass lebih terasa -->
 </head>
 <body>
-    <a class="skip-link" href="#main">Lewati ke isi</a>
     <!-- === INTRO SPLASH SCREEN === -->
     <div class="intro-splash" id="introSplash">
         <!-- Stars Background -->
@@ -215,173 +236,150 @@
 
         <!-- Eagle Container -->
         <div class="intro-eagle-container">
-            <svg class="intro-eagle-svg" viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Elang Freedom Syndicate">
+            <svg class="intro-eagle-svg" viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="introEagleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#7dd3fc;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#38bdf8;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#0284c7;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="beakGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#fde68a;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
                 <!-- LEFT WING (back wing, soaring position) -->
                 <g class="intro-wing-left">
                     <!-- Main left wing shape -->
-                    <path d="M148,90 C130,82 105,72 78,65 C55,59 30,56 10,62 C2,65 0,72 4,80 C8,87 20,92 38,96 C62,101 90,102 118,99 C132,97 142,94 148,90 Z" fill="var(--gold)"/>
+                    <path d="M148,90 C130,82 105,72 78,65 C55,59 30,56 10,62 C2,65 0,72 4,80 C8,87 20,92 38,96 C62,101 90,102 118,99 C132,97 142,94 148,90 Z" fill="url(#introEagleGradient)"/>
                     <!-- Left wing primary feathers (finger tips) -->
-                    <path d="M10,62 C4,68 2,76 6,83 C12,89 22,90 34,88 C24,82 16,74 18,66 Z" fill="var(--gold)" opacity="0.85"/>
-                    <path d="M22,58 C14,64 10,74 14,82 C20,82 30,80 36,76 C28,72 20,66 22,58 Z" fill="var(--gold)" opacity="0.75"/>
+                    <path d="M10,62 C4,68 2,76 6,83 C12,89 22,90 34,88 C24,82 16,74 18,66 Z" fill="url(#introEagleGradient)" opacity="0.85"/>
+                    <path d="M22,58 C14,64 10,74 14,82 C20,82 30,80 36,76 C28,72 20,66 22,58 Z" fill="url(#introEagleGradient)" opacity="0.75"/>
                     <!-- Wing feather texture lines -->
-                    <path d="M80,66 Q90,78 90,88" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                    <path d="M100,68 Q108,80 106,90" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                    <path d="M118,70 Q124,82 122,92" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
+                    <path d="M80,66 Q90,78 90,88" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                    <path d="M100,68 Q108,80 106,90" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                    <path d="M118,70 Q124,82 122,92" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
                 </g>
 
                 <!-- RIGHT WING (front wing, soaring position) -->
                 <g class="intro-wing-right">
                     <!-- Main right wing shape -->
-                    <path d="M152,90 C170,82 195,72 222,65 C245,59 270,56 290,62 C298,65 300,72 296,80 C292,87 280,92 262,96 C238,101 210,102 182,99 C168,97 158,94 152,90 Z" fill="var(--gold)"/>
+                    <path d="M152,90 C170,82 195,72 222,65 C245,59 270,56 290,62 C298,65 300,72 296,80 C292,87 280,92 262,96 C238,101 210,102 182,99 C168,97 158,94 152,90 Z" fill="url(#introEagleGradient)"/>
                     <!-- Right wing primary feathers -->
-                    <path d="M290,62 C296,68 298,76 294,83 C288,89 278,90 266,88 C276,82 284,74 282,66 Z" fill="var(--gold)" opacity="0.85"/>
-                    <path d="M278,58 C286,64 290,74 286,82 C280,82 270,80 264,76 C272,72 280,66 278,58 Z" fill="var(--gold)" opacity="0.75"/>
+                    <path d="M290,62 C296,68 298,76 294,83 C288,89 278,90 266,88 C276,82 284,74 282,66 Z" fill="url(#introEagleGradient)" opacity="0.85"/>
+                    <path d="M278,58 C286,64 290,74 286,82 C280,82 270,80 264,76 C272,72 280,66 278,58 Z" fill="url(#introEagleGradient)" opacity="0.75"/>
                     <!-- Wing feather texture lines -->
-                    <path d="M220,66 Q210,78 210,88" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                    <path d="M200,68 Q192,80 194,90" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                    <path d="M182,70 Q176,82 178,92" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
+                    <path d="M220,66 Q210,78 210,88" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                    <path d="M200,68 Q192,80 194,90" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                    <path d="M182,70 Q176,82 178,92" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
                 </g>
 
                 <!-- EAGLE BODY (streamlined, aerodynamic) -->
-                <path d="M150,78 C140,78 132,83 130,92 C128,102 132,115 140,122 C145,126 150,128 150,128 C150,128 155,126 160,122 C168,115 172,102 170,92 C168,83 160,78 150,78 Z" fill="var(--gold)"/>
+                <path d="M150,78 C140,78 132,83 130,92 C128,102 132,115 140,122 C145,126 150,128 150,128 C150,128 155,126 160,122 C168,115 172,102 170,92 C168,83 160,78 150,78 Z" fill="url(#introEagleGradient)"/>
                 <!-- Body highlight -->
-                <path d="M150,82 C144,82 138,86 136,93 C135,98 137,106 142,112" stroke="color-mix(in srgb, var(--paper) 50%, transparent)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M150,82 C144,82 138,86 136,93 C135,98 137,106 142,112" stroke="rgba(125,211,252,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
 
                 <!-- NECK -->
-                <path d="M144,80 C140,74 142,66 148,62 C150,61 152,61 154,62 C160,66 162,74 158,80 Z" fill="var(--gold)"/>
+                <path d="M144,80 C140,74 142,66 148,62 C150,61 152,61 154,62 C160,66 162,74 158,80 Z" fill="url(#introEagleGradient)"/>
 
                 <!-- HEAD (eagle profile facing right) -->
-                <path d="M148,62 C148,50 154,44 162,42 C170,40 178,44 180,52 C182,58 178,66 170,68 C162,70 154,68 150,64 Z" fill="var(--gold)"/>
+                <path d="M148,62 C148,50 154,44 162,42 C170,40 178,44 180,52 C182,58 178,66 170,68 C162,70 154,68 150,64 Z" fill="url(#introEagleGradient)"/>
                 <!-- White head patch (bald eagle style) -->
-                <path d="M155,48 C158,44 164,42 170,44 C175,46 178,51 177,56 C175,61 170,64 165,63 C160,62 156,58 155,54 Z" fill="color-mix(in srgb, var(--paper) 90%, transparent)"/>
+                <path d="M155,48 C158,44 164,42 170,44 C175,46 178,51 177,56 C175,61 170,64 165,63 C160,62 156,58 155,54 Z" fill="rgba(230,246,255,0.9)"/>
 
                 <!-- BEAK (strongly hooked - eagle characteristic) -->
-                <path d="M178,52 C184,51 191,53 194,58 C191,61 185,62 180,60 C182,57 182,54 178,52 Z" fill="var(--gold)"/>
+                <path d="M178,52 C184,51 191,53 194,58 C191,61 185,62 180,60 C182,57 182,54 178,52 Z" fill="url(#beakGrad)"/>
                 <!-- Beak hook -->
-                <path d="M190,58 C194,59 196,62 193,65 C190,67 185,66 183,63 C186,63 190,61 190,58 Z" fill="var(--gold)"/>
+                <path d="M190,58 C194,59 196,62 193,65 C190,67 185,66 183,63 C186,63 190,61 190,58 Z" fill="url(#beakGrad)"/>
                 <!-- Nostril -->
-                <path d="M183,55 C184,54 185,54 185,55 C185,56 184,56 183,55 Z" fill="color-mix(in srgb, var(--black) 40%, transparent)"/>
+                <path d="M183,55 C184,54 185,54 185,55 C185,56 184,56 183,55 Z" fill="rgba(0,0,0,0.4)"/>
 
                 <!-- EYE (fierce eagle eye) -->
-                <circle cx="172" cy="52" r="5" fill="color-mix(in srgb, var(--ink) 80%, transparent)"/>
+                <circle cx="172" cy="52" r="5" fill="rgba(0,30,60,0.8)"/>
                 <circle cx="172" cy="52" r="3.5" fill="#1e3a5f"/>
                 <circle cx="172" cy="52" r="2" fill="#0c1445"/>
                 <!-- Eye highlight -->
-                <circle cx="173.5" cy="50.5" r="1" fill="color-mix(in srgb, var(--paper) 90%, transparent)"/>
+                <circle cx="173.5" cy="50.5" r="1" fill="rgba(255,255,255,0.9)"/>
                 <!-- Eyebrow ridge (gives fierce look) -->
-                <path d="M167,48 C170,46 175,46 178,48" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M167,48 C170,46 175,46 178,48" stroke="url(#introEagleGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
 
                 <!-- TAIL FEATHERS (fanned out) -->
-                <path d="M144,126 C138,140 132,155 133,165 L138,168 C140,158 145,148 150,144 C155,148 160,158 162,168 L167,165 C168,155 162,140 156,126 Z" fill="var(--gold)"/>
+                <path d="M144,126 C138,140 132,155 133,165 L138,168 C140,158 145,148 150,144 C155,148 160,158 162,168 L167,165 C168,155 162,140 156,126 Z" fill="url(#introEagleGradient)"/>
                 <!-- Tail feather details -->
-                <path d="M143,130 C139,144 136,158 137,166" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                <path d="M150,128 L150,168" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
-                <path d="M157,130 C161,144 164,158 163,166" stroke="color-mix(in srgb, var(--ink) 40%, transparent)" stroke-width="1" fill="none"/>
+                <path d="M143,130 C139,144 136,158 137,166" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                <path d="M150,128 L150,168" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
+                <path d="M157,130 C161,144 164,158 163,166" stroke="rgba(2,132,199,0.4)" stroke-width="1" fill="none"/>
 
                 <!-- LEFT TALON -->
-                <path d="M140,122 C136,130 133,138 134,143" stroke="var(--gold)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                <path d="M134,143 L128,146 M134,143 L132,149 M134,143 L138,148 M134,143 L136,143" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M140,122 C136,130 133,138 134,143" stroke="url(#beakGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M134,143 L128,146 M134,143 L132,149 M134,143 L138,148 M134,143 L136,143" stroke="url(#beakGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
 
                 <!-- RIGHT TALON -->
-                <path d="M160,122 C164,130 167,138 166,143" stroke="var(--gold)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                <path d="M166,143 L172,146 M166,143 L168,149 M166,143 L162,148 M166,143 L164,143" stroke="var(--gold)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M160,122 C164,130 167,138 166,143" stroke="url(#beakGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <path d="M166,143 L172,146 M166,143 L168,149 M166,143 L162,148 M166,143 L164,143" stroke="url(#beakGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
             </svg>
         </div>
 
         <!-- Text Container -->
         <div class="intro-text-container">
-            <div class="intro-main-title">
+            <h1 class="intro-main-title">
                 <span class="intro-title-word">FREEDOM</span>
                 <br>
                 <span class="intro-title-word">SYNDICATE</span>
-            </div>
-            <p class="intro-subtitle">Komunitas trading, garapan, dan hiburan</p>
+            </h1>
+            <p class="intro-subtitle">Rise Above • Dominate Together</p>
         </div>
 
         <!-- Particle Container -->
         <div class="intro-particle-container" id="introParticleContainer"></div>
 
         <!-- Enter Button -->
-        <button class="intro-enter-btn" onclick="hideIntroSplash()">Masuk</button>
+        <button class="intro-enter-btn" onclick="hideIntroSplash()">ENTER THE SYNDICATE</button>
     </div>
 
     <!-- === MAIN CONTENT === -->
 
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu"><img src="icons/menu.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-search" onclick="fsSearchOpen()" aria-label="Cari di situs">Cari</button><button class="topbar-ai" onclick="location.href='ai.html'">Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-search" onclick="fsSearchOpen()" aria-label="Cari di situs">🔍 Cari</button><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
     <nav class="sidebar" id="sidebar">
-        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
         <ul class="sidebar-menu">
             <li class="side-label">MENU UTAMA</li>
-            <li><button onclick="openTab('home', this)" class="active-tab">Beranda</button></li>
-            <li><button onclick="location.href='trading.html'">Trading</button></li>
-            <li><button onclick="bukaGarapan()">Info Garapan</button></li>
-            <li class="side-label">HIBURAN</li>
-            <li><button onclick="location.href='hiburan.html#tvchannel'">TV Channel</button></li>
-            <li><button onclick="location.href='hiburan.html#movie'">Movie</button></li>
-            <li><button onclick="location.href='hiburan.html#musik'">Musik</button></li>
-            <li><button onclick="location.href='hiburan.html#komik'">Komik</button></li>
-            <li><button onclick="location.href='hiburan.html#game'">Game</button></li>
-            <li class="side-label">AI</li>
-            <li><button onclick="location.href='ai.html'">Chat Ai</button></li>
-            <li class="side-label">IBADAH</li>
-            <li><button onclick="location.href='ibadah.html'">Al Qur'an</button></li>
-            <li class="side-label">TOOLS</li>
-            <li><button onclick="location.href='tools.html'">Tools</button></li>
-            <li><button onclick="location.href='tools.html#download'">Download App</button></li>
+            <li><button onclick="openTab('home', this)" class="active-tab">🏠 Beranda</button></li>
+            <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="location.href='ai.html'">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='lainnya.html#keluhkesah'">Keluh Kesah</button></li>
-            <li><button onclick="location.href='lainnya.html#mod'">Aplikasi Mod</button></li>
-            <li><button onclick="location.href='lainnya.html#dewasa'">Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
-    <div class="main-wrapper" id="main">
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
 
         <div id="home" class="tab-content active">
-            <header class="page-head">
-                <span class="sec-no">BULETIN KOMUNITAS</span>
-                <h1>Freedom Syndicate</h1>
-                <hr class="gold-rule">
-                <p>Komunitas trading, garapan gratis, musik, film, dan ibadah. Semua isi situs ada di bawah ini.</p>
-            </header>
-            <section aria-label="Isi situs">
-                <ol class="fs-list">
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">01</span> <a href="trading.html"><strong>Trading</strong></a><span class="fs-date">Harga XAUUSD dan market, analisa, dan jurnal.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">02</span> <a href="garapan.html"><strong>Info Garapan</strong></a><span class="fs-date">Garapan gratis yang sudah dicek, tanpa modal.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">03</span> <a href="hiburan.html"><strong>Hiburan</strong></a><span class="fs-date">TV, film, musik, komik, dan game.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">04</span> <a href="ai.html"><strong>Chat Ai</strong></a><span class="fs-date">Tanya apa saja, analisa chart XAUUSD dan BTC.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">05</span> <a href="ibadah.html"><strong>Ibadah</strong></a><span class="fs-date">Al Qur'an 114 surah dan jadwal sholat.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">06</span> <a href="tools.html"><strong>Tools</strong></a><span class="fs-date">PDF, terjemah, cek IP, dan alat gratis lain.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">07</span> <a href="journal.html"><strong>Journal</strong></a><span class="fs-date">Jurnal trading dan materi belajar.</span></li>
-                    <li><span style="font-variant-numeric: tabular-nums" class="sec-no">08</span> <a href="lainnya.html"><strong>Lainnya</strong></a><span class="fs-date">Keluh kesah, aplikasi mod, dan konten 18+.</span></li>
-                </ol>
-            </section>
-            <figure class="fs-stage">
-                <div class="fs-stage-title">Info Garapan</div>
-                <div class="fs-stage-row"><span class="fs-stage-name">Airdrop</span><span class="fs-stage-bar" style="width:62%"></span></div>
-                <div class="fs-stage-row"><span class="fs-stage-name">Bank</span><span class="fs-stage-bar" style="width:45%"></span></div>
-                <div class="fs-stage-row"><span class="fs-stage-name">Gratisan</span><span class="fs-stage-bar" style="width:70%"></span></div>
-                <a class="btn fs-stage-cta" href="garapan.html">Buka garapan</a>
-                <figcaption>Ilustrasi: contoh tampilan daftar garapan di halaman Info Garapan.</figcaption>
-            </figure>
             <div class="intro-box">
-                <p class="description" style="max-width:65ch;">
-                    <b>Freedom Syndicate</b> adalah komunitas Indonesia. Isinya trading Forex, Crypto,
-                    dan XAUUSD, garapan airdrop dan quest gratis, Chat Ai, APK dan game mod, musik,
-                    film, materi belajar trading, dan ibadah. Rumahnya di Discord (137 anggota) dan
-                    Telegram. Semua fitur di situs ini gratis.
+                <p class="description">
+                    <b>Freedom Syndicate</b> adalah rumah bagi jiwa-jiwa bebas yang berani mendobrak batas. Di sini, kami menyatukan kerasnya dunia <b>Trading</b>, serunya <b>Game</b>, dan harmoni <b>Musik</b> yang membebaskan — ditambah <b>Movie</b>, <b>Live TV</b>, <b>Komik</b>, <b>Chat Ai</b>, <b>Al Qur'an</b>, dan <b>Garapan</b> gratis yang sudah dicek. Kami adalah rumah untuk melepas <b>Keluh Kesah</b> tanpa sekat, ruang <b>Nobar</b> untuk tawa bersama, hingga gudang <b>Aplikasi MOD</b> dan akses <b>Konten Dewasa (18+)</b>. Di Syndicate, kebebasan Anda adalah hukum tertinggi kami.
                 </p>
             </div>
-            <section class="fs-home-section" aria-label="Baru di situs">
-                <h2 class="fs-home-h">Baru di situs</h2>
-                <ul class="fs-list">
-                    <li><a href="#" onclick="fsSearchOpen(); return false;"><strong>Pencarian situs</strong></a><span class="fs-date">17 Nov 2026, cari halaman, tool, surah, dan FAQ dari satu kolom.</span></li>
-                    <li><a href="#faq"><strong>FAQ dan Kontak</strong></a><span class="fs-date">17 Nov 2026, jawaban cepat dan semua channel resmi di satu tempat.</span></li>
-                </ul>
-            </section>
             <div class="social-grid">
                 <a href="https://t.me/freedom_syndicate_Bot" class="social-btn btn-tg">TELEGRAM</a>
                 <a href="https://discord.gg/hUf7D4jaNJ" class="social-btn btn-dc">DISCORD</a>
@@ -392,52 +390,52 @@
             </div>
             <!-- ===== FAQ (saran review Wafa, 17 Nov 2026) ===== -->
             <section id="faq" class="fs-home-section">
-                <h2 class="fs-home-h">Pertanyaan Umum (FAQ)</h2>
+                <h3 class="fs-home-h">❓ Pertanyaan Umum (FAQ)</h3>
                 <p class="fs-home-sub">Jawaban cepat untuk hal yang paling sering ditanyakan member.</p>
-                <details class="fs-faq"><summary>Apa itu FREEDOM SYNDICATE?</summary><p>FREEDOM SYNDICATE adalah komunitas dan hub online: tempat berkumpulnya dunia trading, garapan gratis, musik, game, movie, Live TV, komik, Chat Ai, Al Qur'an, sampai ruang Keluh Kesah. Semua bisa diakses gratis dari satu website ini.</p></details>
-                <details class="fs-faq"><summary>Apakah semua fitur di website ini gratis?</summary><p>Ya, semua fitur di website ini gratis, tanpa biaya berlangganan. Garapan yang kami bagikan juga hanya yang gratis dan sudah dicek: tanpa modal, tanpa gas, tanpa deposit. Kalau ada yang meminta bayaran atas nama kami, itu bukan dari Freedom Syndicate.</p></details>
+                <details class="fs-faq"><summary>Apa itu FREEDOM SYNDICATE?</summary><p>FREEDOM SYNDICATE adalah komunitas dan hub online untuk jiwa-jiwa bebas: tempat berkumpulnya dunia trading, garapan gratis, musik, game, movie, Live TV, komik, Chat Ai, Al Qur'an, sampai ruang Keluh Kesah. Semua bisa diakses gratis dari satu website ini.</p></details>
+                <details class="fs-faq"><summary>Apakah semua fitur di website ini gratis?</summary><p>Ya, semua fitur di website ini gratis — tanpa biaya berlangganan. Garapan yang kami bagikan juga hanya yang gratis dan sudah dicek: tanpa modal, tanpa gas, tanpa deposit. Kalau ada yang meminta bayaran atas nama kami, itu bukan dari Freedom Syndicate.</p></details>
                 <details class="fs-faq"><summary>Bagaimana cara gabung ke Telegram / Discord?</summary><p>Klik tombol Telegram atau Discord di Beranda, atau lihat bagian Kontak di bawah. Telegram: channel @freedomsyndicate dan bot @freedom_syndicate_Bot. Discord: discord.gg/hUf7D4jaNJ. Ada juga channel WhatsApp, TikTok, dan Instagram kami.</p></details>
-                <details class="fs-faq"><summary>Apa itu Chat Ai, Journal, dan Tools?</summary><p><a href="ai.html">Chat Ai</a>: asisten AI, tanya apa saja, analisa chart XAUUSD &amp; BTC, tanpa login. <a href="journal.html">Journal</a>: jurnal trading untuk mencatat analisa dan sinyal. <a href="tools.html">Tools</a>: alat gratis seperti PDF Tools, Translator, Cek IP &amp; VPN, Skor Bola, Podcast, dan Kirim WhatsApp.</p></details>
-                <details class="fs-faq"><summary>Bagaimana cara install aplikasi Freedom Syndicate di HP?</summary><p>Buka freedomsyndicate.my.id di Chrome HP, ketuk titik tiga di kanan atas, lalu pilih "Instal aplikasi", situs ini PWA, jadi langsung jadi aplikasi tanpa download APK. Atau unduh APK-nya di <a href="tools.html#download">Tools → Download App</a>.</p></details>
-                <details class="fs-faq"><summary>Apakah Al-Qur'an bisa dibaca offline?</summary><p>Bisa. Teks surah, Arab, Latin, dan terjemahan Indonesia, bisa dibaca offline setelah pertama kali dibuka, karena datanya tersimpan di HP. Murotal/audio per ayat tetap butuh internet.</p></details>
+                <details class="fs-faq"><summary>Apa itu Chat Ai, Journal, dan Tools?</summary><p><a href="ai.html">Chat Ai</a>: asisten AI — tanya apa saja, analisa chart XAUUSD &amp; BTC, tanpa login. <a href="journal.html">Journal</a>: jurnal trading untuk mencatat analisa dan sinyal. <a href="tools.html">Tools</a>: alat gratis seperti PDF Tools, Translator, Cek IP &amp; VPN, Skor Bola, Podcast, dan Kirim WhatsApp.</p></details>
+                <details class="fs-faq"><summary>Bagaimana cara install aplikasi Freedom Syndicate di HP?</summary><p>Buka freedomsyndicate.my.id di Chrome HP, ketuk titik tiga di kanan atas, lalu pilih "Instal aplikasi" — situs ini PWA, jadi langsung jadi aplikasi tanpa download APK. Atau unduh APK-nya di <a href="tools.html#download">Tools → Download App</a>.</p></details>
+                <details class="fs-faq"><summary>Apakah Al-Qur'an bisa dibaca offline?</summary><p>Bisa. Teks surah — Arab, Latin, dan terjemahan Indonesia — bisa dibaca offline setelah pertama kali dibuka, karena datanya tersimpan di HP. Murotal/audio per ayat tetap butuh internet.</p></details>
             </section>
             <!-- ===== KONTAK (saran review Wafa, 17 Nov 2026) ===== -->
             <section id="kontak" class="fs-home-section">
-                <h2 class="fs-home-h">Kontak dan Komunitas</h2>
+                <h3 class="fs-home-h">📬 Kontak &amp; Komunitas</h3>
                 <p class="fs-home-sub">Gabung komunitas atau hubungi kami lewat channel resmi di bawah ini.</p>
                 <div class="fs-kontak-grid">
-                    <a class="fs-kontak-card" href="https://t.me/freedomsyndicate" target="_blank" rel="noopener"><span><span class="fs-kc-name">Telegram Channel</span><span class="fs-kc-desc" style="display:block;">@freedomsyndicate, info dan update garapan</span></span></a>
-                    <a class="fs-kontak-card" href="https://t.me/freedom_syndicate_Bot" target="_blank" rel="noopener"><span><span class="fs-kc-name">Telegram Bot</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate_Bot, bot resmi FS</span></span></a>
-                    <a class="fs-kontak-card" href="https://discord.gg/hUf7D4jaNJ" target="_blank" rel="noopener"><span><span class="fs-kc-name">Discord</span><span class="fs-kc-desc" style="display:block;">Server Freedom Syndicate</span></span></a>
-                    <a class="fs-kontak-card" href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" target="_blank" rel="noopener"><span><span class="fs-kc-name">WhatsApp Channel</span><span class="fs-kc-desc" style="display:block;">Channel resmi FS di WhatsApp</span></span></a>
-                    <a class="fs-kontak-card" href="https://www.tiktok.com/@freedom_syndicate" target="_blank" rel="noopener"><span><span class="fs-kc-name">TikTok</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate</span></span></a>
-                    <a class="fs-kontak-card" href="https://www.instagram.com/freedom__syndicate" target="_blank" rel="noopener"><span><span class="fs-kc-name">Instagram</span><span class="fs-kc-desc" style="display:block;">@freedom__syndicate</span></span></a>
-                    <a class="fs-kontak-card" href="https://www.facebook.com/share/18TPqtZgH2/" target="_blank" rel="noopener"><span><span class="fs-kc-name">Facebook</span><span class="fs-kc-desc" style="display:block;">Halaman Freedom Syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://t.me/freedomsyndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">📨</span><span><span class="fs-kc-name">Telegram Channel</span><span class="fs-kc-desc" style="display:block;">@freedomsyndicate — info &amp; update garapan</span></span></a>
+                    <a class="fs-kontak-card" href="https://t.me/freedom_syndicate_Bot" target="_blank" rel="noopener"><span class="fs-kc-ico">🤖</span><span><span class="fs-kc-name">Telegram Bot</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate_Bot — bot resmi FS</span></span></a>
+                    <a class="fs-kontak-card" href="https://discord.gg/hUf7D4jaNJ" target="_blank" rel="noopener"><span class="fs-kc-ico">🎮</span><span><span class="fs-kc-name">Discord</span><span class="fs-kc-desc" style="display:block;">Server Freedom Syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" target="_blank" rel="noopener"><span class="fs-kc-ico">💬</span><span><span class="fs-kc-name">WhatsApp Channel</span><span class="fs-kc-desc" style="display:block;">Channel resmi FS di WhatsApp</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.tiktok.com/@freedom_syndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">🎵</span><span><span class="fs-kc-name">TikTok</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.instagram.com/freedom__syndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">📷</span><span><span class="fs-kc-name">Instagram</span><span class="fs-kc-desc" style="display:block;">@freedom__syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.facebook.com/share/18TPqtZgH2/" target="_blank" rel="noopener"><span class="fs-kc-ico">👍</span><span><span class="fs-kc-name">Facebook</span><span class="fs-kc-desc" style="display:block;">Halaman Freedom Syndicate</span></span></a>
                 </div>
             </section>
         </div>
 
         <div id="garapan" class="tab-content">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h2>INFO GARAPAN</h2><p>Website dan aplikasi penghasil uang terbaru, hanya yang gratis dan sudah dicek.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>💰 INFO GARAPAN</h3><p>Website dan aplikasi penghasil uang terbaru — hanya yang gratis dan sudah dicek.</p></div>
             <div class="content-box">
-                <h3 style="margin-top:0;">Info Garapan Cuan</h3>
-                <p>Daftar website dan aplikasi penghasil uang terbaru. Diperbarui berkala.</p>
-                <p>Garapan terbaru ada di halaman Info Garapan, hanya yang gratis dan sudah kami cek.</p>
-                <button class="btn" onclick="bukaGarapan()">Lihat Info Garapan</button>
+                <h3 style="margin-top:0; color: var(--primary);">INFO GARAPAN Cuan</h3>
+                <p>Daftar website dan aplikasi penghasil uang terbaru. (Update berkala)</p>
+                <p>Garapan terbaru ada di halaman Info Garapan — hanya yang gratis dan sudah kami cek.</p>
+                <button onclick="bukaGarapan()" style="background:var(--primary);color:#000;border:none;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;margin-top:8px;">Lihat Info Garapan</button>
             </div>
         </div>
 
         <!-- ===== MOVIE TAB ===== -->
-        <footer>FREEDOM SYNDICATE &bull; 2026</footer>
+        <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 
         <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
-            <button data-tab="home" class="active" onclick="navTab('home')">Beranda</button>
-            <button onclick="location.href='hiburan.html'">Hiburan</button>
-            <button onclick="location.href='tools.html'">Tools</button>
-            <button onclick="location.href='ibadah.html'">Ibadah</button>
-            <button onclick="location.href='lainnya.html'">Lainnya</button>
+            <button data-tab="home" class="active" onclick="navTab('home')"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 
@@ -604,12 +602,12 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.id = 'fsPwaPop';
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', 'Instal aplikasi Freedom Syndicate');
-    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:var(--ink-2);border:1px solid color-mix(in srgb, var(--gold) 45%, transparent);border-radius:6px;padding:14px 12px;display:flex;gap:12px;align-items:center;';
-    pop.innerHTML = '<img src="icon-192.png" alt="" width="52" height="52" style="width:52px;height:52px;border-radius:6px;flex:0 0 auto;">'
-      + '<div style="flex:1;min-width:0;"><div style="color:var(--paper);font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:var(--paper-dim);font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
-      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:var(--gold);color:var(--ink);border:0;border-radius:6px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:var(--paper-faint);font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>';
+    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
+    pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
+      + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
@@ -625,7 +623,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
       else { window._fsPwaPrompt = null; syncDownloadBtn(); }
     } else {
       var h = document.getElementById('fsPwaHint');
-      if (h) { h.style.color = 'var(--paper)'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
+      if (h) { h.style.color = '#fff'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
     }
   }
   function syncDownloadBtn(){
@@ -651,8 +649,8 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     <div id="fsSearchOverlay" class="fs-search-overlay" style="display:none;" role="dialog" aria-label="Pencarian" onclick="if(event.target===this)fsSearchClose()">
         <div class="fs-search-box">
             <div class="fs-search-bar">
-                <input id="fsSearchInput" type="search" aria-label="Cari di situs" placeholder="Cari halaman, tool, surah, atau FAQ…" autocomplete="off" oninput="fsSearchRun(this.value)">
-                <button type="button" onclick="fsSearchClose()" aria-label="Tutup"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>
+                <input id="fsSearchInput" type="search" placeholder="Cari halaman, tool, surah, atau FAQ..." autocomplete="off" oninput="fsSearchRun(this.value)">
+                <button type="button" onclick="fsSearchClose()" aria-label="Tutup">✕</button>
             </div>
             <div id="fsSearchResults" class="fs-search-results"></div>
             <div class="fs-search-hint">Enter untuk membuka hasil pertama • Esc untuk menutup • Ctrl+K untuk mencari</div>
@@ -664,40 +662,40 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     var FS_SEARCH_INDEX = [
         {t:'Beranda', d:'Halaman utama Freedom Syndicate', u:'index.html', k:'home beranda utama', c:'Halaman', m:1},
         {t:'Hiburan', d:'Live TV, Movie, Musik, Komik, dan Game', u:'hiburan.html', k:'hiburan tv movie musik komik game nobar', c:'Halaman', m:1},
-        {t:'TV Channel', d:'Live TV gratis, Hiburan', u:'hiburan.html#tvchannel', k:'tv channel live streaming', c:'Halaman'},
-        {t:'Movie', d:'Nonton film, Hiburan', u:'hiburan.html#movie', k:'movie film nonton', c:'Halaman'},
-        {t:'Musik', d:'Musik gratis, Hiburan', u:'hiburan.html#musik', k:'musik lagu spotify', c:'Halaman'},
-        {t:'Komik', d:'Baca komik, Hiburan', u:'hiburan.html#komik', k:'komik manga baca', c:'Halaman'},
-        {t:'Game', d:'Game gratis, Hiburan', u:'hiburan.html#game', k:'game main 2048 tetris', c:'Halaman'},
+        {t:'TV Channel', d:'Live TV gratis — Hiburan', u:'hiburan.html#tvchannel', k:'tv channel live streaming', c:'Halaman'},
+        {t:'Movie', d:'Nonton film — Hiburan', u:'hiburan.html#movie', k:'movie film nonton', c:'Halaman'},
+        {t:'Musik', d:'Musik gratis — Hiburan', u:'hiburan.html#musik', k:'musik lagu spotify', c:'Halaman'},
+        {t:'Komik', d:'Baca komik — Hiburan', u:'hiburan.html#komik', k:'komik manga baca', c:'Halaman'},
+        {t:'Game', d:'Game gratis — Hiburan', u:'hiburan.html#game', k:'game main 2048 tetris', c:'Halaman'},
         {t:'Tools', d:'Alat gratis: PDF, Translator, Cek IP, dan lainnya', u:'tools.html', k:'tools alat pdf translator ip vpn whatsapp', c:'Halaman', m:1},
-        {t:'PDF Tools', d:'Gabung, pisah & kompres PDF, Tools', u:'tools.html#fsToolsPdf', k:'pdf gabung pisah kompres', c:'Tool'},
-        {t:'Open Gym', d:'Latihan gym, Tools', u:'tools.html#fsToolsGym', k:'gym latihan olahraga fitness', c:'Tool'},
-        {t:'Podcast', d:'Podcast, Tools', u:'tools.html#fsToolsPod', k:'podcast audio dengar', c:'Tool'},
-        {t:'Langganan', d:'Kelola langganan, Tools', u:'tools.html#fsToolsSub', k:'langganan subscription kelola', c:'Tool'},
-        {t:'Skor Bola', d:'Skor pertandingan, Tools', u:'tools.html#fsToolsFoot', k:'skor bola sepakbola livescore', c:'Tool'},
-        {t:'Translator', d:'Terjemah bahasa, Tools', u:'tools.html#fsToolsTrans', k:'translator terjemah translate bahasa', c:'Tool'},
-        {t:'Cek IP & VPN', d:'Cek alamat IP & VPN, Tools', u:'tools.html#fsToolsIp', k:'cek ip vpn alamat proxy', c:'Tool'},
-        {t:'Kirim WhatsApp', d:'Pembuat tautan wa.me, Tools', u:'tools.html#fsToolsWa', k:'whatsapp wa kirim pesan tautan', c:'Tool'},
-        {t:'Tema', d:'Ganti warna tema situs, Tools', u:'tools.html#fsToolsTheme', k:'tema warna tampilan', c:'Tool'},
-        {t:'Download App', d:'Instal aplikasi / unduh APK, Tools', u:'tools.html#download', k:'download aplikasi apk instal pwa', c:'Tool'},
-        {t:"Al Qur'an", d:'Baca 114 surah + jadwal sholat, Ibadah', u:'ibadah.html', k:'quran surah ayat terjemahan murotal sholat ibadah', c:'Halaman', m:1},
-        {t:'Chat Ai', d:'Tanya apa saja, analisa chart, AI', u:'ai.html', k:'chat ai tanya analisa chart xauusd btc', c:'Halaman', m:1},
+        {t:'PDF Tools', d:'Gabung, pisah & kompres PDF — Tools', u:'tools.html#fsToolsPdf', k:'pdf gabung pisah kompres', c:'Tool'},
+        {t:'Open Gym', d:'Latihan gym — Tools', u:'tools.html#fsToolsGym', k:'gym latihan olahraga fitness', c:'Tool'},
+        {t:'Podcast', d:'Podcast — Tools', u:'tools.html#fsToolsPod', k:'podcast audio dengar', c:'Tool'},
+        {t:'Langganan', d:'Kelola langganan — Tools', u:'tools.html#fsToolsSub', k:'langganan subscription kelola', c:'Tool'},
+        {t:'Skor Bola', d:'Skor pertandingan — Tools', u:'tools.html#fsToolsFoot', k:'skor bola sepakbola livescore', c:'Tool'},
+        {t:'Translator', d:'Terjemah bahasa — Tools', u:'tools.html#fsToolsTrans', k:'translator terjemah translate bahasa', c:'Tool'},
+        {t:'Cek IP & VPN', d:'Cek alamat IP & VPN — Tools', u:'tools.html#fsToolsIp', k:'cek ip vpn alamat proxy', c:'Tool'},
+        {t:'Kirim WhatsApp', d:'Pembuat tautan wa.me — Tools', u:'tools.html#fsToolsWa', k:'whatsapp wa kirim pesan tautan', c:'Tool'},
+        {t:'Tema', d:'Ganti warna tema situs — Tools', u:'tools.html#fsToolsTheme', k:'tema warna tampilan', c:'Tool'},
+        {t:'Download App', d:'Instal aplikasi / unduh APK — Tools', u:'tools.html#download', k:'download aplikasi apk instal pwa', c:'Tool'},
+        {t:"Al Qur'an", d:'Baca 114 surah + jadwal sholat — Ibadah', u:'ibadah.html', k:'quran surah ayat terjemahan murotal sholat ibadah', c:'Halaman', m:1},
+        {t:'Chat Ai', d:'Tanya apa saja, analisa chart — AI', u:'ai.html', k:'chat ai tanya analisa chart xauusd btc', c:'Halaman', m:1},
         {t:'Trading', d:'Market Hub: analisa & jurnal trading', u:'trading.html', k:'trading forex crypto analisa jurnal market', c:'Halaman', m:1},
         {t:'Lainnya', d:'Keluh Kesah, Aplikasi Mod, Konten Dewasa (18+)', u:'lainnya.html', k:'lainnya keluh kesah mod dewasa curhat', c:'Halaman', m:1},
-        {t:'Keluh Kesah', d:'Curhat anonim, Lainnya', u:'lainnya.html#keluhkesah', k:'keluh kesah curhat anonim', c:'Halaman'},
-        {t:'Aplikasi Mod', d:'APK & game mod, Lainnya', u:'lainnya.html#mod', k:'aplikasi mod apk game', c:'Halaman'},
-        {t:'Konten Dewasa (18+)', d:'Khusus dewasa, Lainnya', u:'lainnya.html#dewasa', k:'dewasa 18 konten', c:'Halaman'},
+        {t:'Keluh Kesah', d:'Curhat anonim — Lainnya', u:'lainnya.html#keluhkesah', k:'keluh kesah curhat anonim', c:'Halaman'},
+        {t:'Aplikasi Mod', d:'APK & game mod — Lainnya', u:'lainnya.html#mod', k:'aplikasi mod apk game', c:'Halaman'},
+        {t:'Konten Dewasa (18+)', d:'Khusus dewasa — Lainnya', u:'lainnya.html#dewasa', k:'dewasa 18 konten', c:'Halaman'},
         {t:'Info Garapan', d:'Garapan gratis yang sudah dicek', u:'garapan.html', k:'garapan airdrop gratis cuan tanpa modal', c:'Halaman', m:1},
         {t:'Journal', d:'Jurnal trading anggota', u:'journal.html', k:'journal jurnal trading sinyal', c:'Halaman', m:1},
-        {t:'Apa itu FREEDOM SYNDICATE?', d:'FAQ, tentang komunitas ini', u:'index.html#faq', k:'faq apa itu freedom syndicate komunitas', c:'FAQ'},
-        {t:'Apakah semua fitur di website ini gratis?', d:'FAQ, biaya & garapan gratis', u:'index.html#faq', k:'faq gratis biaya bayar langganan', c:'FAQ'},
-        {t:'Bagaimana cara gabung ke Telegram / Discord?', d:'FAQ, gabung komunitas', u:'index.html#faq', k:'faq gabung telegram discord join', c:'FAQ'},
-        {t:'Apa itu Chat Ai, Journal, dan Tools?', d:'FAQ, fitur Chat Ai, Journal, Tools', u:'index.html#faq', k:'faq chat ai journal tools fitur', c:'FAQ'},
-        {t:'Bagaimana cara install aplikasi di HP?', d:'FAQ, instal PWA / unduh APK', u:'index.html#faq', k:'faq instal aplikasi hp pwa apk download', c:'FAQ'},
-        {t:'Apakah Al-Qur\u2019an bisa dibaca offline?', d:'FAQ, baca surah tanpa internet', u:'index.html#faq', k:'faq quran offline tanpa internet baca', c:'FAQ'},
-        {t:'Telegram Channel', d:'Kontak, @freedomsyndicate', u:'index.html#kontak', k:'kontak telegram channel', c:'Kontak'},
-        {t:'Discord', d:'Kontak, server Discord FS', u:'index.html#kontak', k:'kontak discord server', c:'Kontak'},
-        {t:'WhatsApp Channel', d:'Kontak, channel WhatsApp FS', u:'index.html#kontak', k:'kontak whatsapp channel', c:'Kontak'}
+        {t:'Apa itu FREEDOM SYNDICATE?', d:'FAQ — tentang komunitas ini', u:'index.html#faq', k:'faq apa itu freedom syndicate komunitas', c:'FAQ'},
+        {t:'Apakah semua fitur di website ini gratis?', d:'FAQ — biaya & garapan gratis', u:'index.html#faq', k:'faq gratis biaya bayar langganan', c:'FAQ'},
+        {t:'Bagaimana cara gabung ke Telegram / Discord?', d:'FAQ — gabung komunitas', u:'index.html#faq', k:'faq gabung telegram discord join', c:'FAQ'},
+        {t:'Apa itu Chat Ai, Journal, dan Tools?', d:'FAQ — fitur Chat Ai, Journal, Tools', u:'index.html#faq', k:'faq chat ai journal tools fitur', c:'FAQ'},
+        {t:'Bagaimana cara install aplikasi di HP?', d:'FAQ — instal PWA / unduh APK', u:'index.html#faq', k:'faq instal aplikasi hp pwa apk download', c:'FAQ'},
+        {t:'Apakah Al-Qur\u2019an bisa dibaca offline?', d:'FAQ — baca surah tanpa internet', u:'index.html#faq', k:'faq quran offline tanpa internet baca', c:'FAQ'},
+        {t:'Telegram Channel', d:'Kontak — @freedomsyndicate', u:'index.html#kontak', k:'kontak telegram channel', c:'Kontak'},
+        {t:'Discord', d:'Kontak — server Discord FS', u:'index.html#kontak', k:'kontak discord server', c:'Kontak'},
+        {t:'WhatsApp Channel', d:'Kontak — channel WhatsApp FS', u:'index.html#kontak', k:'kontak whatsapp channel', c:'Kontak'}
     ];
     FS_SEARCH_SURAHS.forEach(function(s){
         FS_SEARCH_INDEX.push({t:s[1], d:'Surah ke-' + s[0] + ' • Al Qur\u2019an', u:'ibadah.html', k:'surah quran ' + s[0] + ' ' + s[1].toLowerCase(), c:'Surah'});

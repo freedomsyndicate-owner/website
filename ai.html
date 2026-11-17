@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="var(--ink)">
+    <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Chat Ai</title>
     <meta name="description" content="Chat Ai Freedom Syndicate: tanya apa saja, analisa chart XAUUSD & BTC, tanpa login.">
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A: blokir hanya di luar input/textarea
+            // Ctrl+A — blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,15 +79,16 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK: Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
-                'justify-content:center;height:100vh;background:var(--ink);color:var(--red-text);',
+                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
-                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:1px;color:var(--red-text);">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:var(--paper-faint);letter-spacing:1px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
-                '<div style="font-size:0.68rem;color:var(--paper-faint);margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
+                '<div style="font-size:3.5rem;">🛡️</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
         }
@@ -126,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -140,39 +141,17 @@
     })();
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP). Terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
         var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'emas';
+        var n = localStorage.getItem('fsTheme') || 'biru';
         var th = T[n] || T.biru;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
     </script>
     <link rel="stylesheet" href="style.css">
-    <style>
-    /* Status interaktif (unslop UX-003/004/005/006). Aturan lokal: pemindai hanya
-       membaca <style> di file ini, bukan stylesheet yang di-link. Nilai sama
-       dengan aturan global di style.css. */
-    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    a:hover { color: var(--paper); }
-    button:hover, input:hover, select:hover, textarea:hover, summary:hover { border-color: var(--gold); background: var(--ink-3); }
-    button:active { transform: translateY(1px); background: var(--ink-3); }
-    a:active { color: var(--gold); }
-    button:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); }
-    input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); color: var(--paper-faint); }
-    /* Chat Ai: jendela chat adalah titik fokus halaman. Datar, teks kertas di
-       atas tinta, tanpa gradasi atau bayangan. (R-01, R-12, R-31) */
-    .ai-model-row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
-    .ai-model-row label { font-size:0.8rem; font-weight:700; color:var(--paper); flex:0 0 auto; }
-    .ai-model-row select { flex:1; min-width:0; }
-    #aiChat { background:var(--ink-2); border:1px solid var(--line); border-radius:6px; padding:12px; height:calc(100vh - 340px); min-height:320px; overflow-y:auto; font-size:0.9rem; line-height:1.6; color:var(--paper); }
-    .ai-input-row { display:flex; gap:8px; margin-top:10px; }
-    .ai-input-row input { flex:1; min-width:0; }
-    #aiStatus { font-family:ui-monospace, monospace; font-size:0.68rem; color:var(--paper-faint); margin-top:10px; line-height:1.5; }
-    </style>
     <script>
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _fsFetchJson(url, ms) {
@@ -192,64 +171,63 @@ function _fsFetchJson(url, ms) {
     </script>
 </head>
 <body>
-    <a class="skip-link" href="#main">Lewati ke isi</a>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu"><img src="icons/menu.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
 <nav class="sidebar" id="sidebar">
-        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
         <ul class="sidebar-menu">
             <li class="side-label">MENU UTAMA</li>
-            <li><button onclick="location.href='index.html'">Beranda</button></li>
-            <li><button onclick="location.href='trading.html'">Trading</button></li>
-            <li><button onclick="bukaGarapan()">Info Garapan</button></li>
-            <li><button onclick="location.href='lainnya.html#keluhkesah'">Keluh Kesah</button></li>
-            <li class="side-label">HIBURAN</li>
-            <li><button onclick="location.href='hiburan.html#tvchannel'">TV Channel</button></li>
-            <li><button onclick="location.href='hiburan.html#movie'">Movie</button></li>
-            <li><button onclick="location.href='hiburan.html#musik'">Musik</button></li>
-            <li><button onclick="location.href='hiburan.html#komik'">Komik</button></li>
-            <li><button onclick="location.href='hiburan.html#game'">Game</button></li>
-            <li class="side-label">AI</li>
-            <li><button onclick="openTab('chatai', this)" class="active-tab">Chat Ai</button></li>
-            <li class="side-label">IBADAH</li>
-            <li><button onclick="location.href='ibadah.html'">Al Qur'an</button></li>
-            <li class="side-label">TOOLS</li>
-            <li><button onclick="location.href='tools.html'">Tools</button></li>
-            <li><button onclick="location.href='tools.html#download'">Download App</button></li>
+            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
+            <li><button onclick="location.href='trading.html'">📈 Trading</button></li>
+            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
+            <li class="side-label">🎬 HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
+            <li class="side-label">🤖 AI</li>
+            <li><button onclick="openTab('chatai', this)" class="active-tab">🤖 Chat Ai</button></li>
+            <li class="side-label">🕌 IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
+            <li class="side-label">🛠️ TOOLS</li>
+            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
+            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='lainnya.html#mod'">Aplikasi Mod</button></li>
-            <li><button onclick="location.href='lainnya.html#dewasa'">Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
-    <div class="main-wrapper" id="main">
-<div id="chatai" class="tab-content active">
-            <div class="page-head">
-                <span style="font-variant-numeric: tabular-nums" class="sec-no">01</span>
-                <h1>Chat Ai</h1>
-                <hr class="gold-rule">
-                <p>Pilih model, lalu tanya di bawah. Semua model di sini gratis tanpa kunci.</p>
+    <div class="main-wrapper">
+        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+
+<div id="chatai" class="tab-content active" style="padding:14px 14px 24px;">
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
+                <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">🤖 CHAT AI</div>
+                <div style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">Pilih AI, lalu tanya-balas di sini. Semua model di bawah gratis tanpa kunci, langsung jalan.</div>
             </div>
-            <div class="ai-model-row">
-                <label for="aiModel">Model</label>
-                <select id="aiModel" onchange="aiOnModelChange()">
-                    <optgroup label="Gratis tanpa kunci: LLM7">
-                        <option value="llm7:default">LLM7: Otomatis (gratis, tanpa kunci)</option>
-                        <option value="llm7:gpt-oss:20b" selected>LLM7: GPT-OSS 20B</option>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+                <select id="aiModel" onchange="aiOnModelChange()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:10px;border-radius:10px;font-size:0.8rem;">
+                    <optgroup label="Gratis tanpa kunci — LLM7">
+                        <option value="llm7:default">LLM7 — Otomatis (gratis, tanpa kunci)</option>
+                        <option value="llm7:gpt-oss:20b" selected>LLM7 — GPT-OSS 20B</option>
                     </optgroup>
                 </select>
-                <button type="button" class="btn btn-ghost" onclick="aiClearChat()">Hapus</button>
+                <button onclick="aiClearChat()" style="background:#0a0e14;border:1px solid #30363d;color:#94a3b8;padding:10px 14px;border-radius:10px;font-size:0.8rem;cursor:pointer;">🗑️ Hapus</button>
             </div>
-            <div id="aiChat">
-                <div style="color:var(--paper-dim);">Halo! Pilih model di atas, lalu ketik pertanyaanmu di bawah. Jawaban muncul di sini.</div>
+            <div id="aiChat" style="background:#050a14;border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:12px;height:calc(100vh - 380px);min-height:260px;overflow-y:auto;font-size:0.82rem;line-height:1.55;color:#e2e8f0;">
+                <div style="color:#94a3b8;">👋 Halo! Pilih AI di atas, lalu ketik pertanyaanmu di bawah. Jawaban muncul di sini.</div>
             </div>
-            <div class="ai-input-row">
-                <input id="aiInput" type="text" aria-label="Tulis pesan untuk Chat Ai" placeholder="Tanya apa saja…" autocomplete="off" onkeydown="if(event.key==='Enter')aiSend()">
-                <button id="aiSendBtn" class="btn" onclick="aiSend()">Kirim</button>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <input id="aiInput" type="text" placeholder="Tanya apa saja..." autocomplete="off" onkeydown="if(event.key==='Enter')aiSend()" style="flex:1;min-width:0;background:#0a0e14;border:1px solid #30363d;color:#fff;padding:11px 12px;border-radius:10px;font-size:0.85rem;box-sizing:border-box;">
+                <button id="aiSendBtn" onclick="aiSend()" style="background:var(--primary);color:#000;border:none;padding:11px 18px;border-radius:10px;font-weight:800;font-size:0.85rem;cursor:pointer;">Kirim</button>
             </div>
-            <div id="aiStatus" aria-live="polite">Obrolan hanya tersimpan di HP kamu (tidak dikirim ke FS). Model LLM7 gratis tanpa kunci tapi daftar modelnya bisa berubah.</div>
+            <div id="aiStatus" style="font-size:0.68rem;color:#94a3b8;margin-top:10px;line-height:1.5;">ℹ️ Obrolan hanya tersimpan di HP kamu (tidak dikirim ke FS). Model LLM7 gratis tanpa kunci tapi daftar modelnya bisa berubah.</div>
         </div>
         <script>
         var AI_WORKER_URL = 'https://fs-ai.sanlana1903.workers.dev';
@@ -257,7 +235,7 @@ function _fsFetchJson(url, ms) {
         var aiHistory = [];
         var aiBusy = false;
         var AI_SYS = 'Kamu adalah AI Assistant FREEDOM SYNDICATE. Jawab SELALU dalam Bahasa Indonesia, ringkas dan jelas. Jika ditanya harga kripto, pakai data harga live yang diberikan dan sebutkan harganya; jangan mengarang angka. Jika tidak ada data harga, katakan terus terang.';
-        // Harga live dari TradingView (scanner API, gratis, tanpa kunci). Simbol
+        // Harga live dari TradingView (scanner API, gratis, tanpa kunci) — simbol
         // apa pun yang disebut user langsung dicoba: kripto via BINANCE, emas
         // (XAU/EMAS/GOLD) via OANDA:XAUUSD, forex via OANDA, saham via NASDAQ/NYSE.
         // Tidak ada daftar koin tetap.
@@ -303,7 +281,7 @@ function _fsFetchJson(url, ms) {
         function aiFmt(s) {
           var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
           e = e.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-          e = e.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:var(--gold);">$1</a>');
+          e = e.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" style="color:#38bdf8;">$1</a>');
           return e;
         }
         function aiBubble(role, text) {
@@ -311,19 +289,19 @@ function _fsFetchJson(url, ms) {
           var div = document.createElement('div');
           div.style.margin = '10px 0';
           div.style.padding = '10px 12px';
-          div.style.borderRadius = '6px';
+          div.style.borderRadius = '10px';
           div.style.whiteSpace = 'pre-wrap';
           div.style.wordBreak = 'break-word';
           if (role === 'user') {
-            div.style.background = 'var(--ink-3)';
+            div.style.background = 'rgba(56,189,248,0.15)';
             div.style.textAlign = 'right';
             div.textContent = text;
           } else if (role === 'error') {
-            div.style.background = 'color-mix(in srgb, var(--red) 15%, transparent)';
-            div.style.color = 'var(--red-text)';
+            div.style.background = 'rgba(239,68,68,0.15)';
+            div.style.color = '#fca5a5';
             div.textContent = text;
           } else {
-            div.style.background = 'var(--ink-2)';
+            div.style.background = 'rgba(148,163,184,0.12)';
             div.innerHTML = aiFmt(text);
           }
           box.appendChild(div);
@@ -333,7 +311,7 @@ function _fsFetchJson(url, ms) {
         function aiOnModelChange() { /* pilihan tersimpan otomatis lewat select */ }
         function aiClearChat() {
           aiHistory = [];
-          document.getElementById('aiChat').innerHTML = '<div style="color:var(--paper-dim);">Obrolan dihapus. Silakan tanya lagi.</div>';
+          document.getElementById('aiChat').innerHTML = '<div style="color:#94a3b8;">👋 Obrolan dihapus. Silakan tanya lagi.</div>';
         }
         async function aiSend() {
           if (aiBusy) return;
@@ -348,7 +326,7 @@ function _fsFetchJson(url, ms) {
           aiBubble('user', text);
           aiHistory.push({ role: 'user', content: text });
           if (aiHistory.length > 20) aiHistory = aiHistory.slice(-20);
-          var thinking = aiBubble('ai', 'Mengetik…');
+          var thinking = aiBubble('ai', '⏳ Mengetik...');
           var btn = document.getElementById('aiSendBtn');
           aiBusy = true;
           btn.disabled = true;
@@ -380,7 +358,7 @@ function _fsFetchJson(url, ms) {
             aiHistory.push({ role: 'assistant', content: reply });
           } catch (e) {
             thinking.remove();
-            var emsg = 'Gagal: ' + (e && e.message ? e.message : 'tidak bisa terhubung.');
+            var emsg = '⚠️ Gagal: ' + (e && e.message ? e.message : 'tidak bisa terhubung.');
             if (backend === 'sinar') emsg += ' (Model SinarCloud butuh secret Worker yang sudah dipasang; coba model LLM7 gratis.)';
             aiBubble('error', emsg);
           }
@@ -391,18 +369,18 @@ function _fsFetchJson(url, ms) {
         </script>
 
 
-        <!-- ===== MUSIK TAB (Audius, open source, API publik gratis, tanpa kunci) ===== -->
+        <!-- ===== MUSIK TAB (Audius — open source, API publik gratis, tanpa kunci) ===== -->
 
-            <footer>FREEDOM SYNDICATE &bull; 2026</footer>
+            <footer>BEYOND THE LIMITS &bull; 2026</footer>
     </div>
 
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
-            <button onclick="location.href='index.html'">Beranda</button>
-            <button onclick="location.href='hiburan.html'">Hiburan</button>
-            <button onclick="location.href='tools.html'">Tools</button>
-            <button onclick="location.href='ibadah.html'">Ibadah</button>
-            <button onclick="location.href='lainnya.html'">Lainnya</button>
+            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
+            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
+            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
+            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
+            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
         </div>
     </nav>
 
@@ -455,12 +433,12 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.id = 'fsPwaPop';
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', 'Instal aplikasi Freedom Syndicate');
-    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:var(--ink-2);border:1px solid var(--line-strong);border-radius:6px;padding:14px 12px;display:flex;gap:12px;align-items:center;';
-    pop.innerHTML = '<img src="icon-192.png" alt="" width="52" height="52" style="width:52px;height:52px;border-radius:6px;flex:0 0 auto;">'
-      + '<div style="flex:1;min-width:0;"><div style="color:var(--paper);font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:var(--paper-dim);font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK. Buka lebih cepat.</div></div>'
-      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:var(--gold);color:var(--ink);border:0;border-radius:6px;padding:12px 16px;min-height:44px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:8px;right:8px;background:none;border:0;color:var(--paper-faint);font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;min-width:44px;min-height:44px;padding:10px;"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>';
+    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
+    pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
+      + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
@@ -476,7 +454,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
       else { window._fsPwaPrompt = null; syncDownloadBtn(); }
     } else {
       var h = document.getElementById('fsPwaHint');
-      if (h) { h.style.color = 'var(--paper)'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
+      if (h) { h.style.color = '#fff'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
     }
   }
   function syncDownloadBtn(){
