@@ -890,5 +890,9 @@ function _fsFetchJson(url, ms) {
 /* Bar bawah: sembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
 (function(){var nav=document.querySelector('.bottomnav');if(!nav)return;var last=window.scrollY||0;window.addEventListener('scroll',function(){var y=window.scrollY||0;if(y>last&&y>120){nav.classList.add('nav-hidden');}else if(y<last||y<=120){nav.classList.remove('nav-hidden');}last=y;},{passive:true});})();
 </script>
+<script>
+// PWA: daftarkan service worker supaya situs bisa diinstal dari Chrome (tanpa APK).
+if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+</script>
 </body>
 </html>

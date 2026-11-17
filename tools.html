@@ -1385,6 +1385,8 @@ fsIpCheck();
                 <p style="color:#64748b; font-size:0.75rem; line-height:1.6; margin-top:20px;">
                     💡 Tips: Jika muncul peringatan "Install dari sumber tidak dikenal", izinkan saja di setting HP-mu. Aplikasi ini 100% aman untuk anggota Syndicate.
                 </p>
+                    <p style="color:#94a3b8; font-size:0.78rem; line-height:1.7; margin-top:14px;">📲 Tanpa APK juga bisa: buka situs ini di Chrome → titik tiga → <b style="color:#fff;">Instal aplikasi</b> — langsung jadi aplikasi di HP.</p>
+
             </div>
         </div>
             <footer>BEYOND THE LIMITS &bull; 2026</footer>
@@ -1452,6 +1454,10 @@ fsIpCheck();
 <script>
 /* Bar bawah: sembunyi saat scroll ke bawah, muncul lagi saat scroll ke atas */
 (function(){var nav=document.querySelector('.bottomnav');if(!nav)return;var last=window.scrollY||0;window.addEventListener('scroll',function(){var y=window.scrollY||0;if(y>last&&y>120){nav.classList.add('nav-hidden');}else if(y<last||y<=120){nav.classList.remove('nav-hidden');}last=y;},{passive:true});})();
+</script>
+<script>
+// PWA: daftarkan service worker supaya situs bisa diinstal dari Chrome (tanpa APK).
+if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 </script>
 </body>
 </html>
