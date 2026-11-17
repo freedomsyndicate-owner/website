@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Al Qur'an</title>
     <meta name="description" content="Baca Al Qur'an online gratis: 114 surah, terjemahan Indonesia, dan murotal per ayat.">
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A — blokir hanya di luar input/textarea
+            // Ctrl+A, blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,7 +79,7 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK, Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
@@ -87,7 +87,7 @@
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
                 '<div style="font-size:3.5rem;">🛡️</div>',
                 '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.75rem;color:#94A3B8;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
                 '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
@@ -127,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -141,12 +141,12 @@
     })();
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
-        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#E8A90C', 'rgba(232,169,12,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'biru';
-        var th = T[n] || T.biru;
+        var n = localStorage.getItem('fsTheme') || 'emas';
+        var th = T[n] || T.emas;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
@@ -171,7 +171,7 @@ function _fsFetchJson(url, ms) {
     </script>
 </head>
 <body>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 <span class="tb-lbl">Chat Ai</span></button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
@@ -203,15 +203,15 @@ function _fsFetchJson(url, ms) {
     </nav>
 
     <div class="main-wrapper">
-        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+        <h2 class="fs-hero-title">FREEDOM SYNDICATE</h2>
 
 <div id="quran" class="tab-content active" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📖 AL QUR'AN</h3><p>114 surah — teks Arab, latin, terjemahan Indonesia &amp; murotal. Gratis, tanpa iklan.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📖 AL QUR'AN</h3><p>114 surah, teks Arab, latin, terjemahan Indonesia &amp; murotal. Gratis, tanpa iklan.</p></div>
             <div style="text-align:center;font-family:'Amiri',serif;font-size:1.5rem;color:#a7f3d0;margin:8px 0 0;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
             <div style="text-align:center;font-size:0.62rem;color:#94a3b8;">Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang</div>
 
             <!-- ===== WAKTU SHOLAT (MyQuran, jadwal Kemenag) + tanggal Hijriah ===== -->
-            <div id="fsSholatCard" style="background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(5,150,105,0.06));border:1px solid rgba(16,185,129,0.45);border-radius:16px;padding:14px;margin-top:10px;">
+            <div id="fsSholatCard" style="background:rgba(16,185,129,0.22);border:1px solid rgba(16,185,129,0.45);border-radius:10px;padding:14px;margin-top:10px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
                     <div style="font-size:0.85rem;font-weight:900;color:#fff;">🕌 Waktu Sholat</div>
                     <select id="fsSholatCity" onchange="fsSholatSetCity(this.value)" style="background:rgba(2,6,23,0.7);border:1px solid rgba(16,185,129,0.5);color:#a7f3d0;border-radius:8px;padding:6px 8px;font-size:0.68rem;font-weight:700;font-family:inherit;max-width:150px;">
@@ -250,13 +250,13 @@ function _fsFetchJson(url, ms) {
 
             <!-- ===== AYAT HARI INI + TASBIH ===== -->
             <div style="display:flex;gap:8px;margin-top:10px;">
-                <div style="flex:1;background:linear-gradient(160deg,rgba(251,191,36,0.12),rgba(16,185,129,0.06));border:1px solid rgba(251,191,36,0.35);border-radius:14px;padding:12px;">
+                <div style="flex:1;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.35);border-radius:10px;padding:12px;">
                     <div style="font-size:0.6rem;letter-spacing:2px;color:#fbbf24;font-weight:800;">✨ AYAT HARI INI</div>
                     <div id="fsAyahArab" style="font-family:'Amiri',serif;font-size:1.15rem;color:#fff;line-height:1.9;margin-top:6px;text-align:right;"></div>
                     <div id="fsAyahId" style="font-size:0.65rem;color:#d1d5db;line-height:1.6;margin-top:6px;"></div>
                     <div id="fsAyahRef" style="font-size:0.6rem;color:#94a3b8;margin-top:4px;"></div>
                 </div>
-                <div style="flex:0 0 128px;background:linear-gradient(160deg,rgba(16,185,129,0.16),rgba(56,189,248,0.05));border:1px solid rgba(16,185,129,0.4);border-radius:14px;padding:12px;text-align:center;">
+                <div style="flex:0 0 128px;background:rgba(16,185,129,0.16);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:12px;text-align:center;">
                     <div style="font-size:0.6rem;letter-spacing:2px;color:#a7f3d0;font-weight:800;">📿 TASBIH</div>
                     <div id="fsTasbihCount" onclick="fsTasbihTap()" style="font-size:1.9rem;font-weight:900;color:#fff;margin-top:6px;cursor:pointer;">0</div>
                     <div id="fsTasbihTarget" style="font-size:0.6rem;color:#94a3b8;">dari 33</div>
@@ -267,7 +267,7 @@ function _fsFetchJson(url, ms) {
 
             <div id="fsQuranListView">
                 <!-- Lanjutkan Membaca (tersimpan lokal di HP) -->
-                <div id="fsQuranContinue" style="display:none;background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(5,150,105,0.08));border:1px solid rgba(16,185,129,0.45);border-radius:14px;padding:12px 14px;margin-top:6px;">
+                <div id="fsQuranContinue" style="display:none;background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.45);border-radius:14px;padding:12px 14px;margin-top:6px;">
                     <div style="font-size:0.55rem;letter-spacing:3px;color:#6ee7b7;font-weight:700;">▶ LANJUTKAN MEMBACA</div>
                     <div id="fsQuranContinueText" style="font-size:0.85rem;font-weight:800;color:#fff;margin-top:4px;"></div>
                     <button onclick="fsQuranContinueOpen()" style="margin-top:8px;background:#10b981;color:#022c22;border:none;border-radius:10px;padding:9px 16px;font-weight:900;font-size:0.75rem;cursor:pointer;font-family:inherit;">Buka</button>
@@ -285,7 +285,7 @@ function _fsFetchJson(url, ms) {
                     </div>
                 </div>
 
-                <div id="fsQuranStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat daftar surah...</div>
+                <div id="fsQuranStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">⏳ Memuat daftar surah...</div>
                 <div id="fsQuranList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
             </div>
 
@@ -314,12 +314,12 @@ function _fsFetchJson(url, ms) {
                     <input id="fsQuranJump" type="number" min="1" placeholder="Ayat ke-" style="width:84px;background:rgba(255,255,255,0.07);border:1px solid rgba(16,185,129,0.35);border-radius:8px;color:#fff;font-size:0.72rem;padding:8px 10px;outline:none;font-family:inherit;">
                     <button onclick="fsQuranJump()" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#a7f3d0;border-radius:8px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">Lompat</button>
                 </div>
-                <div id="fsQuranReaderStatus" style="font-size:0.65rem;color:#64748b;text-align:center;margin-top:10px;">Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.</div>
+                <div id="fsQuranReaderStatus" style="font-size:0.65rem;color:#94A3B8;text-align:center;margin-top:10px;">Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.</div>
                 <div id="fsQuranAyahs" style="display:flex;flex-direction:column;gap:10px;margin-top:10px;"></div>
                 <audio id="fsQuranAudio" preload="none" style="display:none;"></audio>
             </div>
 
-            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">Sumber teks, terjemahan &amp; audio: AlQuran Cloud (api.alquran.cloud) — gratis, tanpa kunci • Teks Arab, Latin &amp; terjemahan tersimpan di situs (data/quran.json) — bisa dibaca offline setelah pertama kali dimuat; audio murotal tetap butuh internet • Murotal: Mishary Rashid Alafasy • Huruf Arab: Amiri (dipakai QuranKu) • Fitur mengikuti QuranKu (Rafigibran, MIT) — aplikasinya Flutter, jadi fiturnya ditulis ulang di sini.</div>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:14px;text-align:center;">Sumber teks, terjemahan &amp; audio: AlQuran Cloud (api.alquran.cloud), gratis, tanpa kunci • Teks Arab, Latin &amp; terjemahan tersimpan di situs (data/quran.json), bisa dibaca offline setelah pertama kali dimuat; audio murotal tetap butuh internet • Murotal: Mishary Rashid Alafasy • Huruf Arab: Amiri (dipakai QuranKu) • Fitur mengikuti QuranKu (Rafigibran, MIT), aplikasinya Flutter, jadi fiturnya ditulis ulang di sini.</div>
 
             <script>
             // --- AL QUR'AN (AlQuran Cloud, API publik gratis tanpa kunci, CORS *) ---
@@ -338,7 +338,7 @@ function _fsFetchJson(url, ms) {
             function fsQuranInit() {
                 if (_fsQuranInit) return;
                 _fsQuranInit = true;
-                // Huruf Arab Amiri (dipakai QuranKu) — dimuat hanya saat tab dibuka.
+                // Huruf Arab Amiri (dipakai QuranKu), dimuat hanya saat tab dibuka.
                 if (!document.getElementById('fsQuranFont')) {
                     var l = document.createElement('link');
                     l.id = 'fsQuranFont'; l.rel = 'stylesheet';
@@ -362,7 +362,7 @@ function _fsFetchJson(url, ms) {
                     if (cached && cached.length === 114) { _fsQuranList = cached; fsQuranRenderList(); }
                 } catch(e) {}
                 // Kalau tidak ada cache, tampilkan dulu daftar cadangan yang
-                // tertanam di halaman supaya surah langsung muncul — API
+                // tertanam di halaman supaya surah langsung muncul, API
                 // menyegarkan datanya sesudahnya.
                 if (!_fsQuranList.length && typeof FS_QURAN_LIST_FALLBACK !== 'undefined' && FS_QURAN_LIST_FALLBACK.length === 114) {
                     _fsQuranList = FS_QURAN_LIST_FALLBACK;
@@ -390,20 +390,20 @@ function _fsFetchJson(url, ms) {
                     });
                 })();
                 function _qUseFallback() {
-                    // Jangan timpa status kalau pengguna sedang mencari —
+                    // Jangan timpa status kalau pengguna sedang mencari,
                     // hitungan hasil cari lebih penting dari catatan offline.
                     var _q = '';
                     try { _q = (document.getElementById('fsQuranSearch').value || '').trim(); } catch(e) {}
                     if (_fsQuranList.length) {
                         var st0 = document.getElementById('fsQuranStatus');
-                        if (!_q && st0) st0.textContent = '114 surah (daftar offline — API tidak merespons; murotal butuh API, coba lagi nanti).';
+                        if (!_q && st0) st0.textContent = '114 surah (daftar offline, API tidak merespons; murotal butuh API, coba lagi nanti).';
                         return;
                     }
                     if (typeof FS_QURAN_LIST_FALLBACK !== 'undefined' && FS_QURAN_LIST_FALLBACK.length === 114) {
                         _fsQuranList = FS_QURAN_LIST_FALLBACK;
                         fsQuranRenderList();
                         var st = document.getElementById('fsQuranStatus');
-                        if (!_q && st) st.textContent = '114 surah (daftar offline — API tidak merespons; murotal butuh API, coba lagi nanti).';
+                        if (!_q && st) st.textContent = '114 surah (daftar offline, API tidak merespons; murotal butuh API, coba lagi nanti).';
                     } else {
                         var st2 = document.getElementById('fsQuranStatus');
                         if (st2) st2.textContent = '⚠️ Gagal memuat daftar surah. Cek koneksi lalu buka lagi tab ini.';
@@ -418,7 +418,7 @@ function _fsFetchJson(url, ms) {
                 fsTasbihInit();
             }
 
-            // ===== WAKTU SHOLAT (MyQuran — jadwal Kemenag, tanpa kunci) =====
+            // ===== WAKTU SHOLAT (MyQuran, jadwal Kemenag, tanpa kunci) =====
             var _fsSholatInit = false, _fsSholatData = null, _fsSholatTimer = null;
             function fsSholatInit() {
                 if (_fsSholatInit) return; _fsSholatInit = true;
@@ -430,7 +430,7 @@ function _fsFetchJson(url, ms) {
                 } catch(e) {}
                 if (savedCity === 'gps') fsSholatUseGps(true);
                 else fsSholatLoad();
-                // Tanggal Hijriah (Aladhan) — gagal pun tidak masalah, barisnya dibiarkan kosong.
+                // Tanggal Hijriah (Aladhan), gagal pun tidak masalah, barisnya dibiarkan kosong.
                 try {
                     var now = new Date();
                     var g = now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear();
@@ -448,7 +448,7 @@ function _fsFetchJson(url, ms) {
                 fsSholatLoad();
             }
 
-            // ===== CARI KOTA (MyQuran) — kota apa pun di Indonesia =====
+            // ===== CARI KOTA (MyQuran), kota apa pun di Indonesia =====
             var _fsSholatSearchTimer = null;
             function fsSholatSearch(q) {
                 var box = document.getElementById('fsSholatSearchResults');
@@ -461,14 +461,14 @@ function _fsFetchJson(url, ms) {
                         .then(function(r){ return r.json(); }).then(function(d){
                             if (!box) return;
                             var list = (d && d.data) || [];
-                            if (!list.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">Tidak ketemu — coba kata lain.</div>'; return; }
+                            if (!list.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">Tidak ketemu, coba kata lain.</div>'; return; }
                             var html = '';
                             list.slice(0, 8).forEach(function(c){
                                 html += '<button onclick="fsSholatPickCity(\'' + c.id + '\',\'' + String(c.lokasi).replace(/\'/g, '') + '\')" style="display:block;width:100%;text-align:left;background:rgba(255,255,255,0.06);border:1px solid rgba(16,185,129,0.3);color:#e2e8f0;border-radius:8px;padding:8px 10px;font-size:0.7rem;font-weight:700;margin-top:4px;cursor:pointer;font-family:inherit;">' + c.lokasi + '</button>';
                             });
                             box.innerHTML = html;
                         }).catch(function(){
-                            if (box) box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">⚠️ Pencarian gagal — cek koneksi.</div>';
+                            if (box) box.innerHTML = '<div style="font-size:0.65rem;color:#94a3b8;">⚠️ Pencarian gagal, cek koneksi.</div>';
                         });
                 }, 400);
             }
@@ -504,7 +504,7 @@ function _fsFetchJson(url, ms) {
                     if (cached && cached.jadwal) { _fsSholatData = cached; fsSholatRender(); }
                 } catch(e) {}
                 if (!navigator.geolocation) {
-                    if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ GPS tidak tersedia di browser ini — cari kota di atas.';
+                    if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ GPS tidak tersedia di browser ini, cari kota di atas.';
                     return;
                 }
                 if (!auto && nextEl && !_fsSholatData) nextEl.textContent = '📍 Mengambil lokasi...';
@@ -533,11 +533,11 @@ function _fsFetchJson(url, ms) {
                             if (h && hEl) hEl.textContent = '📅 ' + h.day + ' ' + h.month.en + ' ' + h.year + ' H';
                             fsSholatRender();
                         }).catch(function(){
-                            if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal GPS tidak dapat dimuat — cek koneksi.';
+                            if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal GPS tidak dapat dimuat, cek koneksi.';
                         });
                 }, function(){
                     if (!_fsSholatData) {
-                        if (nextEl) nextEl.textContent = '⚠️ Lokasi ditolak / tidak ditemukan — izinkan lokasi di browser, atau cari kota di atas.';
+                        if (nextEl) nextEl.textContent = '⚠️ Lokasi ditolak / tidak ditemukan, izinkan lokasi di browser, atau cari kota di atas.';
                         // Kembali ke Batam supaya kartu tidak kosong.
                         var sel = document.getElementById('fsSholatCity');
                         if (sel) sel.value = '0506';
@@ -567,7 +567,7 @@ function _fsFetchJson(url, ms) {
                             fsSholatRender();
                         } else if (!_fsSholatData && nextEl) { nextEl.textContent = '⚠️ Jadwal sholat tidak dapat dimuat.'; }
                     }).catch(function(){
-                        if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal sholat tidak dapat dimuat — cek koneksi.';
+                        if (!_fsSholatData && nextEl) nextEl.textContent = '⚠️ Jadwal sholat tidak dapat dimuat, cek koneksi.';
                     });
             }
             function fsSholatRender() {
@@ -626,7 +626,7 @@ function _fsFetchJson(url, ms) {
                 _fsSholatTimer = setInterval(tick, 1000);
             }
 
-            // ===== AYAT HARI INI (7 ayat pendek, ganti tiap hari — tanpa API) =====
+            // ===== AYAT HARI INI (7 ayat pendek, ganti tiap hari, tanpa API) =====
             var FS_AYAH_WEEK = [
                 { ar: 'فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ', id: 'Maka nikmat Tuhan kamu yang manakah yang kamu dustakan?', ref: 'QS. Ar-Rahman (55): 13' },
                 { ar: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', id: 'Sesungguhnya bersama kesulitan ada kemudahan.', ref: 'QS. Ash-Sharh (94): 6' },
@@ -676,7 +676,7 @@ function _fsFetchJson(url, ms) {
                 var st = document.getElementById('fsQuranStatus');
                 var q = (document.getElementById('fsQuranSearch').value || '').toLowerCase().trim();
                 // Normalisasi ejaan: buang spasi/tanda baca, samakan huruf ganda,
-                // buang 'h' akhir, plus cocok tanpa vokal — supaya "yasin" ketemu
+                // buang 'h' akhir, plus cocok tanpa vokal, supaya "yasin" ketemu
                 // "Yaseen", "baqarah" ketemu "Al-Baqara", "rahman" ketemu "Ar-Rahmaan".
                 var _qn = function(x){ return String(x || '').toLowerCase().replace(/[^a-z0-9]/g, '').replace(/(.)\1+/g, '$1').replace(/h$/, ''); };
                 var _qv = function(x){ return _qn(x).replace(/[aeiou]/g, ''); };
@@ -698,7 +698,7 @@ function _fsFetchJson(url, ms) {
                 list.innerHTML = '';
                 items.forEach(function(s){
                     var row = document.createElement('div');
-                    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:linear-gradient(160deg, rgba(255,255,255,0.08), rgba(16,185,129,0.05));border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:10px 12px;cursor:pointer;';
+                    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:10px 12px;cursor:pointer;';
                     row.innerHTML =
                         '<div style="width:40px;height:40px;flex-shrink:0;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;">' + s.number + '</div>' +
                         '<div style="flex:1;min-width:0;">' +
@@ -777,13 +777,13 @@ function _fsFetchJson(url, ms) {
                 document.getElementById('fsQuranReaderStatus').textContent = '⏳ Memuat surah...';
                 document.getElementById('fsQuranAyahs').innerHTML = '';
                 window.scrollTo({ top: 0 });
-                // 1) Coba data lokal dulu (tersimpan di situs — jalan offline).
+                // 1) Coba data lokal dulu (tersimpan di situs, jalan offline).
                 fsQuranLoadLocal().then(function(){
                     var local = fsQuranAyahsFromLocal(n, _fsQuranEdition);
                     if (!local) throw new Error('no local');
                     _fsQuranAyahs = local;
                     fsQuranRenderAyahs();
-                    document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • 📴 Tersimpan offline — ketuk ▶ di tiap ayat untuk mendengarkan (audio butuh internet), atau ▶ besar untuk murotal satu surah penuh.';
+                    document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • 📴 Tersimpan offline, ketuk ▶ di tiap ayat untuk mendengarkan (audio butuh internet), atau ▶ besar untuk murotal satu surah penuh.';
                     fsQuranScrollToAyah();
                 }).catch(function(){
                     // 2) Gagal / edisi terjemahan lain: API seperti dulu (perlu internet).
@@ -811,7 +811,7 @@ function _fsFetchJson(url, ms) {
                 _fsQuranAyahs.forEach(function(a, i){
                     var card = document.createElement('div');
                     card.id = 'fsQuranAyah-' + a.n;
-                    card.style.cssText = 'background:linear-gradient(160deg, rgba(255,255,255,0.07), rgba(16,185,129,0.04));border:1px solid rgba(255,255,255,0.13);border-radius:14px;padding:12px 14px;';
+                    card.style.cssText = 'background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;padding:12px 14px;';
                     card.innerHTML =
                         '<div style="display:flex;justify-content:space-between;align-items:center;">' +
                             '<span style="min-width:30px;height:30px;border-radius:50%;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;">' + a.n + '</span>' +
@@ -841,7 +841,7 @@ function _fsFetchJson(url, ms) {
                 if (!a.audio) return;
                 if (typeof navigator !== 'undefined' && navigator.onLine === false) {
                     var _st0 = document.getElementById('fsQuranReaderStatus');
-                    if (_st0) _st0.textContent = '⚠️ Audio butuh internet — teks surah tetap bisa dibaca offline.';
+                    if (_st0) _st0.textContent = '⚠️ Audio butuh internet, teks surah tetap bisa dibaca offline.';
                     return;
                 }
                 _fsQuranPlayIdx = i;
@@ -899,7 +899,7 @@ function _fsFetchJson(url, ms) {
                 } catch(e) {}
                 fsQuranContinueRender();
                 var st = document.getElementById('fsQuranReaderStatus');
-                if (st) st.textContent = '🔖 Ditandai: ' + (s ? s.englishName : '') + ' ayat ' + n + ' — tersimpan di HP.';
+                if (st) st.textContent = '🔖 Ditandai: ' + (s ? s.englishName : '') + ' ayat ' + n + ', tersimpan di HP.';
             }
 
             function fsQuranContinueRender() {
@@ -910,7 +910,7 @@ function _fsFetchJson(url, ms) {
                 try { last = JSON.parse(localStorage.getItem('fsQuranLast') || 'null'); } catch(e) {}
                 if (last && last.surah) {
                     box.style.display = 'block';
-                    txt.textContent = (last.name || ('Surah ke-' + last.surah)) + ' — ayat ' + (last.ayah || 1);
+                    txt.textContent = (last.name || ('Surah ke-' + last.surah)) + ', ayat ' + (last.ayah || 1);
                 } else {
                     box.style.display = 'none';
                 }
@@ -930,7 +930,7 @@ function _fsFetchJson(url, ms) {
                 window.scrollTo({ top: 0 });
             }
 
-            // Tab Qur'an aktif saat halaman Ibadah dibuka — muat daftar surah sekarang.
+            // Tab Qur'an aktif saat halaman Ibadah dibuka, muat daftar surah sekarang.
             // (Sebelumnya fungsi init ini tidak pernah dipanggil, jadi daftar surah
             //  stuck di "Memuat..." selamanya.)
             fsQuranInit();
@@ -1003,9 +1003,9 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
     pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
       + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
       + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#94A3B8;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });

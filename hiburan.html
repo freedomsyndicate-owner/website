@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Hiburan</title>
-    <meta name="description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game — gratis.">
+    <meta name="description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game, gratis.">
     <meta property="og:title" content="Freedom Syndicate | Hiburan">
-    <meta property="og:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game — gratis.">
+    <meta property="og:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game, gratis.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/hiburan.html">
     <meta name="keywords" content="live tv gratis, nonton movie, musik gratis, komik online, game gratis, nobar">
     <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Freedom Syndicate | Hiburan">
-    <meta name="twitter:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game — gratis.">
+    <meta name="twitter:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game, gratis.">
     <link rel="canonical" href="https://freedomsyndicate.my.id/hiburan.html">
 
     <script>
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A — blokir hanya di luar input/textarea
+            // Ctrl+A, blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,7 +79,7 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK, Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
@@ -87,7 +87,7 @@
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
                 '<div style="font-size:3.5rem;">🛡️</div>',
                 '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.75rem;color:#94A3B8;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
                 '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
@@ -127,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -141,12 +141,12 @@
     })();
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
-        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#E8A90C', 'rgba(232,169,12,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'biru';
-        var th = T[n] || T.biru;
+        var n = localStorage.getItem('fsTheme') || 'emas';
+        var th = T[n] || T.emas;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
@@ -157,7 +157,7 @@
     <script>
     // FS-HARDEN: escape HTML untuk data pihak ketiga sebelum dimasukkan ke innerHTML (cegah XSS).
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-    // HLS.js fallback detector — jika CDN Cloudflare down/diblokir
+    // HLS.js fallback detector, jika CDN Cloudflare down/diblokir
     window.addEventListener('DOMContentLoaded', function(){
         if (window._hlsJsFailed || typeof Hls === 'undefined') {
             window._hlsJsFailed = true;
@@ -169,7 +169,7 @@
                 _hlsWarnShown = true;
                 var statusEl = document.getElementById('tv1Status');
                 if (statusEl) {
-                    statusEl.innerHTML = '⚠️ <b>HLS.js gagal dimuat</b> — streaming .m3u8 tidak tersedia. ' +
+                    statusEl.innerHTML = '⚠️ <b>HLS.js gagal dimuat</b>, streaming .m3u8 tidak tersedia. ' +
                         'Coba matikan ekstensi pemblokir (AdBlock/VPN), atau gunakan channel tipe embed. ' +
                         '<a href="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js" target="_blank" rel="noopener noreferrer" ' +
                         'style="color:var(--primary);text-decoration:underline;">Cek CDN</a>';
@@ -180,7 +180,7 @@
     </script>
 </head>
 <body>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 <span class="tb-lbl">Chat Ai</span></button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
@@ -212,7 +212,14 @@
     </nav>
 
     <div class="main-wrapper">
-        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+        <h2 class="fs-hero-title">FREEDOM SYNDICATE</h2>
+        <nav class="fs-tabstrip" aria-label="Bagian hiburan">
+            <button type="button" onclick="openTab('tvchannel', null)">📺 TV Channel</button>
+            <button type="button" onclick="openTab('movie', null)">🎬 Movie</button>
+            <button type="button" onclick="openTab('musik', null)">🎵 Musik</button>
+            <button type="button" onclick="openTab('komik', null)">📖 Komik</button>
+            <button type="button" onclick="openTab('game', null)">🎮 Game</button>
+        </nav>
 
 <div id="tvchannel" class="tab-content active" style="padding:0;margin:0;">
 
@@ -245,7 +252,7 @@
                     <div class="tv-iframe-overlay" id="tvOverlay">
                         <div style="font-size:2.2rem;margin-bottom:8px;">📺</div>
                         <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">PILIH CHANNEL</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Pilih genre &amp; tap salah satu channel di bawah</div>
+                        <div style="font-size:0.62rem;color:#94A3B8;margin-top:5px;">Pilih genre &amp; tap salah satu channel di bawah</div>
                     </div>
                 </div>
 
@@ -285,7 +292,7 @@
                 </div>
 
                 <!-- Status -->
-                <div id="tv1Status" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;"></div>
+                <div id="tv1Status" style="font-size:0.65rem;color:#94A3B8;margin-top:10px;text-align:center;letter-spacing:1px;"></div>
 
                 <!-- Groups -->
                 <div id="tv1Groups" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
@@ -295,9 +302,9 @@
 
             <!-- ===== PANE: LIVE TV (playlist iptv-org, diambil langsung tiap kunjungan) ===== -->
             <div class="tv-subtab-pane" id="pane-tvLive" style="padding:14px 14px 24px;">
-                <div style="background:linear-gradient(135deg,rgba(14,30,60,0.95),rgba(10,20,45,0.95));border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;">
-                    <div style="font-size:0.78rem;font-weight:800;color:#fff;">📡 LIVE TV — Channel Gratis</div>
-                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air) — ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org (database 30.333 channel) — Olahraga &amp; Indonesia saat tab dibuka, kategori dan negara lain saat dipilih — jadi channel ikut ter-update otomatis. Ketuk ⭐ di tiap channel untuk menyimpan ke Favorit (tersimpan di HP). Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
+                <div style="background:rgba(14,30,60,0.95);border:1px solid rgba(56,189,248,0.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+                    <div style="font-size:0.78rem;font-weight:800;color:#fff;">📡 LIVE TV, Channel Gratis</div>
+                    <div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Channel TV gratis (free-to-air), ketersediaan tergantung sumber. Playlist diambil langsung dari iptv-org (database 30.333 channel), Olahraga &amp; Indonesia saat tab dibuka, kategori dan negara lain saat dipilih, jadi channel ikut ter-update otomatis. Ketuk ⭐ di tiap channel untuk menyimpan ke Favorit (tersimpan di HP). Channel olahraga di sini hanya yang free-to-air; liga premium (Premier League / Champions League) tidak tersedia gratis secara legal.</div>
                 </div>
 
                 <!-- Player -->
@@ -306,13 +313,13 @@
                     <div class="tv-iframe-overlay" id="tvLiveOverlay">
                         <div style="font-size:2.2rem;margin-bottom:8px;">📡</div>
                         <div style="font-size:0.8rem;color:var(--primary);letter-spacing:2px;font-weight:700;">PILIH CHANNEL</div>
-                        <div style="font-size:0.62rem;color:#475569;margin-top:5px;">Cari channel, lalu tap untuk menonton</div>
+                        <div style="font-size:0.62rem;color:#94A3B8;margin-top:5px;">Cari channel, lalu tap untuk menonton</div>
                     </div>
                 </div>
                 <div id="tvLiveError" style="display:none;margin-top:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px 16px;text-align:center;font-size:0.7rem;color:#fca5a5;">⚠️ Stream tidak tersedia, coba channel lain.</div>
 
                 <!-- Filter: simpanan + kategori -->
-                <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;margin-top:12px;">⭐ SIMPANAN &amp; KATEGORI</div>
+                <div style="font-size:0.6rem;letter-spacing:2px;color:#94A3B8;font-weight:700;margin-top:12px;">⭐ SIMPANAN &amp; KATEGORI</div>
                 <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;" id="tvLiveFilterBar">
                     <button class="fs-cat-btn active" onclick="tvLiveSetCat('all', this)">Semua</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('fav', this)">⭐ Favorit</button>
@@ -326,8 +333,8 @@
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('entertainment', this)">🎭 Hiburan</button>
                 </div>
 
-                <!-- Negara (iptv-org — database 30.333 channel, dikelompokkan per negara; dimuat on-demand saat dipilih) -->
-                <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;margin-top:12px;">🌍 NEGARA</div>
+                <!-- Negara (iptv-org, database 30.333 channel, dikelompokkan per negara; dimuat on-demand saat dipilih) -->
+                <div style="font-size:0.6rem;letter-spacing:2px;color:#94A3B8;font-weight:700;margin-top:12px;">🌍 NEGARA</div>
                 <div style="display:flex;gap:6px;margin-top:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;" id="tvLiveCountryBar">
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('id', this)">🇮🇩 Indonesia</button>
                     <button class="fs-cat-btn" onclick="tvLiveSetCat('my', this)">🇲🇾 Malaysia</button>
@@ -349,7 +356,7 @@
                 </div>
 
                 <!-- Status -->
-                <div id="tvLiveStatus" style="font-size:0.65rem;color:#475569;margin-top:10px;text-align:center;letter-spacing:1px;">⏳ Buka tab ini untuk memuat playlist...</div>
+                <div id="tvLiveStatus" style="font-size:0.65rem;color:#94A3B8;margin-top:10px;text-align:center;letter-spacing:1px;">⏳ Buka tab ini untuk memuat playlist...</div>
 
                 <!-- Daftar channel -->
                 <div id="tvLiveList" style="margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
@@ -368,7 +375,7 @@
                 documentary: 'https://iptv-org.github.io/iptv/categories/documentary.m3u',
                 kids: 'https://iptv-org.github.io/iptv/categories/kids.m3u',
                 entertainment: 'https://iptv-org.github.io/iptv/categories/entertainment.m3u',
-                // Negara — iptv-org countries/*.m3u (jumlah channel dicek 17 Nov 2026:
+                // Negara, iptv-org countries/*.m3u (jumlah channel dicek 17 Nov 2026:
                 // id ~174, my 6, sg 9, th 73, kr 72, jp 10, in 823, uk 311, us 1.497,
                 // au 79, de 306, fr 208; Inggris pakai kode 'uk', bukan 'gb')
                 id: 'https://iptv-org.github.io/iptv/countries/id.m3u',
@@ -411,7 +418,7 @@
             var _tvLiveHls = null;
             var _tvLiveCurrent = null;
 
-            // ⭐ Favorit + 🕒 Terakhir Ditonton — tersimpan lokal di HP (localStorage),
+            // ⭐ Favorit + 🕒 Terakhir Ditonton, tersimpan lokal di HP (localStorage),
             // tanpa akun dan tanpa server, seperti Lanjutkan Menonton di FS Cinema.
             var FS_TV_FAV_KEY = 'fsTvFav';
             var FS_TV_RECENT_KEY = 'fsTvRecent';
@@ -441,7 +448,7 @@
                 _tvLiveSaveList(FS_TV_RECENT_KEY, arr.slice(0, 12));
             }
 
-            // Filter channel premium (pay-TV) — hanya free-to-air yang ditampilkan.
+            // Filter channel premium (pay-TV), hanya free-to-air yang ditampilkan.
             // Nama channel yang mengandung merek TV berbayar di bawah ini disembunyikan.
             var _tvLivePremium = /bein|sky\s*sports|sky\s*cinema|sky\s*atlantic|espn|\bhbo\b|cinemax|showtime|\bstarz\b|dazn|eurosport|bt\s*sport|tnt\s*sports|premier\s*sports|setanta|fox\s*sports/i;
             function tvLiveParseM3U(text, src) {
@@ -563,13 +570,13 @@
                     var starBtn = document.createElement('button');
                     starBtn.textContent = tvLiveIsFav(ch.url) ? '★' : '☆';
                     starBtn.title = 'Simpan ke Favorit';
-                    starBtn.style.cssText = 'position:absolute;top:2px;right:2px;z-index:2;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:' + (tvLiveIsFav(ch.url) ? '#fbbf24' : '#475569') + ';font-family:inherit;';
+                    starBtn.style.cssText = 'position:absolute;top:2px;right:2px;z-index:2;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:' + (tvLiveIsFav(ch.url) ? '#fbbf24' : '#94A3B8') + ';font-family:inherit;';
                     starBtn.onclick = function(ev){
                         if (ev) ev.stopPropagation();
                         tvLiveToggleFav(ch);
                         var fav = tvLiveIsFav(ch.url);
                         starBtn.textContent = fav ? '★' : '☆';
-                        starBtn.style.color = fav ? '#fbbf24' : '#475569';
+                        starBtn.style.color = fav ? '#fbbf24' : '#64748b';
                         if (_tvLiveCat === 'fav') tvLiveRender(true);
                     };
                     card.appendChild(starBtn);
@@ -588,7 +595,7 @@
                 _tvLiveCat = cat;
                 document.querySelectorAll('#tvLiveFilterBar .fs-cat-btn, #tvLiveCountryBar .fs-cat-btn').forEach(function(b){ b.classList.remove('active'); });
                 if (btn) btn.classList.add('active');
-                // Favorit / Terakhir Ditonton berasal dari simpanan lokal — tanpa fetch.
+                // Favorit / Terakhir Ditonton berasal dari simpanan lokal, tanpa fetch.
                 if (cat === 'fav' || cat === 'recent') { tvLiveRender(true); return; }
                 // Kategori / negara sudah dimuat (atau 'Semua') -> langsung tampil.
                 // Belum dimuat -> fetch on-demand sekali, lalu tampil; hasil di-cache.
@@ -690,36 +697,36 @@
                     ></iframe>
                     <!-- Fallback jika globe 3D gagal render (dikenal terjadi di sebagian WebView Android/Kiwi) -->
                     <div id="tvWorldFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                        <button onclick="_fbClose('tvWorld')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
+                        <button onclick="_fbClose('tvWorld')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#94A3B8;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
                         <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🌍 Layar hitam / globe tidak muncul?</div>
                         <button onclick="tvWorldReload()" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
                     </div>
                 </div>
             </div>
 
-                        <!-- ===== PANE: TV4 — SPORT (JADWAL & SKOR PERTANDINGAN MENDATANG) ===== -->
+                        <!-- ===== PANE: TV4, SPORT (JADWAL & SKOR PERTANDINGAN MENDATANG) ===== -->
             <div class="tv-subtab-pane" id="pane-tv4" style="padding:0;">
 
-                <!-- Jadwal & skor — dirender sendiri pakai data API (bukan iframe, jadi tidak bisa diblokir situs lain) -->
+                <!-- Jadwal & skor, dirender sendiri pakai data API (bukan iframe, jadi tidak bisa diblokir situs lain) -->
                 <div id="tv4PaneScore" style="padding:14px 14px 24px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                         <div>
                             <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">⚽ PERTANDINGAN MENDATANG</div>
-                            <div id="tv4ScoreDate" style="font-size:0.65rem;color:#64748b;margin-top:2px;"></div>
+                            <div id="tv4ScoreDate" style="font-size:0.65rem;color:#94A3B8;margin-top:2px;"></div>
                         </div>
                         <button onclick="tv4LoadLivescore(true)" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 14px;font-size:0.65rem;cursor:pointer;font-weight:700;">🔄 Refresh</button>
                     </div>
                     <div id="tv4ScoreLeagueFilter" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none;"></div>
-                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:10px 0;">⏳ Memuat jadwal pertandingan mendatang...</div>
+                    <div id="tv4ScoreStatus" style="font-size:0.65rem;color:#94A3B8;text-align:center;margin:10px 0;">⏳ Memuat jadwal pertandingan mendatang...</div>
                     <div id="tv4ScoreList" style="display:flex;flex-direction:column;gap:8px;"></div>
                     <!-- Jadwal Pertandingan (openfootball/football.json, lisensi CC0, GitHub) -->
                     <div id="fsSchedule" style="margin-top:18px;border-top:1px solid rgba(56,189,248,0.15);padding-top:14px;">
                         <div style="font-size:0.6rem;letter-spacing:2px;color:var(--primary);font-weight:700;text-transform:uppercase;">📅 JADWAL PERTANDINGAN</div>
                         <div id="fsSchedLeagues" style="display:flex;gap:6px;overflow-x:auto;padding:10px 0 6px;scrollbar-width:none;"></div>
-                        <div id="fsSchedStatus" style="font-size:0.65rem;color:#475569;text-align:center;margin:8px 0;">⏳ Memuat jadwal...</div>
+                        <div id="fsSchedStatus" style="font-size:0.65rem;color:#94A3B8;text-align:center;margin:8px 0;">⏳ Memuat jadwal...</div>
                         <div id="fsSchedNext" style="display:flex;flex-direction:column;gap:8px;"></div>
                         <div id="fsSchedPastWrap" style="display:none;margin-top:12px;">
-                            <div style="font-size:0.6rem;letter-spacing:2px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">✅ HASIL TERAKHIR</div>
+                            <div style="font-size:0.6rem;letter-spacing:2px;color:#94A3B8;font-weight:700;text-transform:uppercase;margin-bottom:8px;">✅ HASIL TERAKHIR</div>
                             <div id="fsSchedPast" style="display:flex;flex-direction:column;gap:8px;"></div>
                         </div>
                         <p style="font-size:0.55rem;color:#1e293b;text-align:center;margin-top:14px;">Jadwal: openfootball (CC0, GitHub) · Skor live: TheSportsDB</p>
@@ -746,16 +753,16 @@
             </div>
             <div class="movie-pane active" id="pane-idlix">
                 <!-- === INFO NOTE (bisa ditutup) === -->
-                <div id="fsCinemaNote" style="background:linear-gradient(135deg,rgba(14,30,60,0.95),rgba(10,20,45,0.95));border-bottom:2px solid rgba(56,189,248,0.3);padding:10px 14px;position:relative;">
+                <div id="fsCinemaNote" style="background:rgba(14,30,60,0.95);border-bottom:2px solid rgba(56,189,248,0.3);padding:10px 14px;position:relative;">
                     <button onclick="document.getElementById('fsCinemaNote').style.display='none'" 
                         style="position:absolute;top:8px;right:10px;background:rgba(255,255,255,0.08);border:none;color:#94a3b8;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
                     <div style="font-size:0.7rem;font-weight:800;color:var(--primary);letter-spacing:2px;margin-bottom:6px;">📋 PANDUAN FS CINEMA</div>
                     <div style="font-size:0.68rem;color:#94a3b8;line-height:1.7;">
                         1️⃣ Pilih <b style="color:#fff;">MOVIE</b> atau <b style="color:#fff;">SERIES</b> → ketik judul → tekan <b style="color:#fff;">CARI</b><br>
                         2️⃣ Klik poster film yang muncul → langsung play<br>
-                        3️⃣ Server bawaan adalah <b style="color:#fff;">FS Player (tanpa iklan)</b> — film diputar langsung di player sendiri, tanpa iklan dan tanpa tab baru. Kalau FS Player tidak jalan di perangkatmu, ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidSrc.sh → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
-                        3️⃣b <b style="color:#fbbf24;">Series baru?</b> Server biasanya cuma punya episode 1 dulu — episode terbaru muncul beberapa hari setelah tayang. Kalau episode 4 belum jalan di semua server, berarti memang belum ada di server mana pun; coba episode 1 dulu.<br>
-                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server film lain (bukan FS Player) — tutup saja tabnya, video tetap jalan di sini. (Player lain sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
+                        3️⃣ Server bawaan adalah <b style="color:#fff;">FS Player (tanpa iklan)</b>, film diputar langsung di player sendiri, tanpa iklan dan tanpa tab baru. Kalau FS Player tidak jalan di perangkatmu, ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidSrc.sh → VidLink → VidEasy → SuperEmbed → 2Embed)</b>, langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
+                        3️⃣b <b style="color:#fbbf24;">Series baru?</b> Server biasanya cuma punya episode 1 dulu, episode terbaru muncul beberapa hari setelah tayang. Kalau episode 4 belum jalan di semua server, berarti memang belum ada di server mana pun; coba episode 1 dulu.<br>
+                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server film lain (bukan FS Player), tutup saja tabnya, video tetap jalan di sini. (Player lain sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
                         5️⃣ <b style="color:#fbbf24;">Halaman putih / tidak load?</b> Tekan tombol 🔄 Coba server lain di bawah player (selalu terlihat saat video diputar)
                     </div>
                 </div>
@@ -805,10 +812,10 @@
                     </div>
                 </div>
                 <div id="fsHomeRows" style="padding:4px 0 8px;background:rgba(5,10,20,0.98);">
-                    <div id="fsHomeStatus" style="font-size:0.65rem;color:#475569;text-align:center;padding:12px 0;">⏳ Memuat beranda film...</div>
+                    <div id="fsHomeStatus" style="font-size:0.65rem;color:#94A3B8;text-align:center;padding:12px 0;">⏳ Memuat beranda film...</div>
                 </div>
 
-                <!-- Lanjutkan Menonton (ala Idlix — tersimpan lokal di HP, tanpa server) -->
+                <!-- Lanjutkan Menonton (ala Idlix, tersimpan lokal di HP, tanpa server) -->
                 <div id="fsContinueWrap" style="display:none;padding:10px 14px;background:rgba(5,10,20,0.98);border-bottom:1px solid rgba(56,189,248,0.1);">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
                         <div style="font-size:0.7rem;font-weight:800;color:#fff;letter-spacing:1px;">▶ LANJUTKAN MENONTON</div>
@@ -817,10 +824,10 @@
                     <div id="fsContinueRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;"></div>
                 </div>
 
-                <!-- Results grid (tanpa scroll dalam — halaman yang scroll, ala Netflix) -->
+                <!-- Results grid (tanpa scroll dalam, halaman yang scroll, ala Netflix) -->
                 <div id="fsResults" style="display:none;padding:10px 14px;background:rgba(5,10,20,0.98);">
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                        <div id="fsSourceNote" style="font-size:0.62rem;color:#64748b;padding:4px 0 2px;"></div>
+                        <div id="fsSourceNote" style="font-size:0.62rem;color:#94A3B8;padding:4px 0 2px;"></div>
                         <button onclick="fsCinemaShowHome()" style="flex-shrink:0;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:14px;padding:4px 10px;font-size:0.62rem;font-weight:700;cursor:pointer;font-family:inherit;">✕ Tutup hasil</button>
                     </div>
                     <div id="fsResultsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
@@ -832,7 +839,7 @@
                     <div id="fsPlayerPlaceholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;background:rgba(5,10,20,0.98);text-align:center;padding:20px;">
                         <div style="font-size:3.5rem;margin-bottom:10px;">🎬</div>
                         <div style="font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:2px;">FS CINEMA</div>
-                        <div style="font-size:0.7rem;color:#475569;margin-top:6px;">Cari film di atas lalu klik untuk play</div>
+                        <div style="font-size:0.7rem;color:#94A3B8;margin-top:6px;">Cari film di atas lalu klik untuk play</div>
                         <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center;">
                             <span style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);color:#94a3b8;font-size:0.62rem;padding:4px 10px;border-radius:14px;">HD Quality</span>
                             <span style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);color:#94a3b8;font-size:0.62rem;padding:4px 10px;border-radius:14px;">Sub Indo</span>
@@ -857,10 +864,10 @@
                     <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"></iframe>
                     <video id="fsDirectVideo" controls playsinline preload="metadata" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;background:#000;"></video>
                     <div id="fsDirectBar" style="display:none;gap:6px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:rgba(5,10,20,0.98);"></div>
-                    <div id="fsDirectNote" style="display:none;font-size:0.62rem;color:#64748b;padding:0 14px 10px;background:rgba(5,10,20,0.98);"></div>
+                    <div id="fsDirectNote" style="display:none;font-size:0.62rem;color:#94A3B8;padding:0 14px 10px;background:rgba(5,10,20,0.98);"></div>
                     <div id="fsPlayerBar" style="display:none;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 14px;background:rgba(5,10,20,0.98);">
                         <button onclick="fsCinemaTryNextServer()" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.72rem;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;">🔄 Coba server lain</button>
-                        <span style="font-size:0.62rem;color:#64748b;">Video tidak muncul / layar hitam? Tekan tombol di samping — langsung pindah server, tanpa tekan Putar lagi.</span>
+                        <span style="font-size:0.62rem;color:#94A3B8;">Video tidak muncul / layar hitam? Tekan tombol di samping, langsung pindah server, tanpa tekan Putar lagi.</span>
                     </div>
                 </div>
 
@@ -886,25 +893,25 @@
                         <div id="fsDetOv" style="font-size:0.72rem;color:#94a3b8;line-height:1.7;margin-top:14px;"></div>
                         <div id="fsDetEps" style="display:none;margin-top:16px;">
                             <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-bottom:8px;">📺 Pilih Episode</div>
-                            <div style="font-size:0.62rem;color:#64748b;margin-bottom:4px;">SEASON</div>
+                            <div style="font-size:0.62rem;color:#94A3B8;margin-bottom:4px;">SEASON</div>
                             <div id="fsDetSeasons" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
-                            <div style="font-size:0.62rem;color:#64748b;margin:10px 0 4px;">EPISODE</div>
+                            <div style="font-size:0.62rem;color:#94A3B8;margin:10px 0 4px;">EPISODE</div>
                             <div id="fsDetEpisodes" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
                         </div>
-                        <div style="font-size:0.58rem;color:#475569;margin-top:16px;">Sumber data: TMDB (via Worker) + OMDb · Putar lewat server yang dipilih di atas.</div>
+                        <div style="font-size:0.58rem;color:#94A3B8;margin-top:16px;">Sumber data: TMDB (via Worker) + OMDb · Putar lewat server yang dipilih di atas.</div>
                     </div>
                 </div>
 
                 <script>
                 var fsMediaType = 'movie';
-                // Pencarian pakai OMDb (tanpa kunci TMDB) — hasilnya berisi IMDb ID (tt...)
+                // Pencarian pakai OMDb (tanpa kunci TMDB), hasilnya berisi IMDb ID (tt...)
                 // yang diterima server VidSrc / 2Embed. Kunci di bawah ini adalah kunci
                 // demo publik OMDb (bukan kunci pribadi); kalau limit hariannya habis,
                 // pencarian menampilkan pesan coba lagi. Upgrade ke Worker TMDB bila perlu.
                 var _k = '';
                 // Pencarian FS Cinema: utama lewat Worker proxy TMDB (tanpa kunci di
                 // kode), fallback ke OMDb demo bila proxy error/kosong. Hasil TMDB tidak
-                // punya imdbID — imdbID baru diambil via OMDb SEKALI saat judul diklik
+                // punya imdbID, imdbID baru diambil via OMDb SEKALI saat judul diklik
                 // (lihat fsPlayTmdb), bukan untuk seluruh daftar.
                 var _k = '';
                 var FS_CINEMA_PROXY = 'https://fs-cinema-search.sanlana1903.workers.dev/search';
@@ -948,7 +955,7 @@
                     var q = document.getElementById('fsSearchInput').value.trim();
                     if (!q) return;
                     var grid = document.getElementById('fsResultsGrid');
-                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b;font-size:0.75rem;">\uD83D\uDD0D Mencari...</div>';
+                    grid.innerHTML = '<div style="text-align:center;padding:20px;color:#94A3B8;font-size:0.75rem;">\uD83D\uDD0D Mencari...</div>';
                     document.getElementById('fsResults').style.display = 'block';
                     // Cari aktif -> sembunyikan beranda (hero + baris), ala Netflix
                     var _hr = document.getElementById('fsHomeRows'); if (_hr) _hr.style.display = 'none';
@@ -1052,8 +1059,8 @@
                         card.onmouseout=function(){this.style.transform='scale(1)';};
                         card.onclick=function(){ fsCinemaOpenDetail(item); };
                         card.innerHTML = poster
-                            ? '<img src="'+esc(poster)+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>'
-                            : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#64748b;">'+esc(year)+'</div>';
+                            ? '<img src="'+esc(poster)+'" style="width:100%;display:block;" loading="lazy"><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#94A3B8;">'+esc(year)+'</div>'
+                            : '<div style="background:#1e293b;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎬</div><div style="padding:5px 6px;font-size:0.6rem;color:#cbd5e1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(title)+'</div><div style="padding:0 6px 5px;font-size:0.58rem;color:#94A3B8;">'+esc(year)+'</div>';
                         grid.appendChild(card);
                     });
                     // Tombol Load More / Prev
@@ -1063,7 +1070,7 @@
                     if (navWrap) {
                         navWrap.innerHTML = '';
                         var info = document.createElement('div');
-                        info.style.cssText = 'font-size:0.65rem;color:#64748b;text-align:center;margin:8px 0 4px;';
+                        info.style.cssText = 'font-size:0.65rem;color:#94A3B8;text-align:center;margin:8px 0 4px;';
                         info.textContent = 'Menampilkan '+(start+1)+'-'+Math.min(start+_fsPageSize, total)+' dari '+total+' hasil';
                         navWrap.appendChild(info);
                         var btnRow = document.createElement('div');
@@ -1091,7 +1098,7 @@
                 // tidak menerima S/E di URL jadi jatuh ke S1E1 bawaan server itu.
                 // --- SERVER EMBED: probe + fallback otomatis ---
                 // 17 Nov 2026: player.autoembed.cc MATI (TCP+TLS nyambung tapi tidak
-                // pernah membalas HTTP — iframe cuma menampilkan kotak putih/gagal).
+                // pernah membalas HTTP, iframe cuma menampilkan kotak putih/gagal).
                 // Probe no-cors DIHAPUS 17 Nov 2026: ia resolve walau embed mati,
                 // dan memblokir play kalau ISP memblokir origin (lihat fsPlay).
                 // 17 Nov 2026 (perbaikan San: ganti server tidak ngaruh + banyak iklan):
@@ -1113,11 +1120,11 @@
                 var _fsLastTmdb = null;
                 var FS_STREAM = 'https://fs-ai.sanlana1903.workers.dev/stream';
                 var FS_BOX_STREAM = 'https://main.tailb5991a.ts.net/stream';
-                // --- FS PLAYER (tanpa iklan) — 17 Nov 2026 ---
+                // --- FS PLAYER (tanpa iklan), 17 Nov 2026 ---
                 // Film diambil LANGSUNG (bukan iframe): Worker fs-ai mengambil
-                // URL MP4 dari VidLink lalu diputar di <video> sendiri — tanpa
+                // URL MP4 dari VidLink lalu diputar di <video> sendiri, tanpa
                 // iklan, tanpa tab baru. Urutan jalur video: (1) proxy Box
-                // 'main' lewat Tailscale Funnel — satu-satunya jalur yang
+                // 'main' lewat Tailscale Funnel, satu-satunya jalur yang
                 // terbukti lolos (206) karena host video menolak UA browser
                 // (428), egress Cloudflare (427), dan proxy VidLink sendiri
                 // di browser; (2) proxy surge VidLink; (3) proxy Worker;
@@ -1133,7 +1140,7 @@
                 // 17 Nov 2026: bcdn MENOLAK UA browser (428) dan egress
                 // Cloudflare (427); proxy surge VidLink juga mati di browser.
                 // Satu-satunya jalur yang lolos: proxy Node di Box 'main'
-                // (fs-stream-proxy.js, port 3002) lewat Tailscale Funnel —
+                // (fs-stream-proxy.js, port 3002) lewat Tailscale Funnel,
                 // terbukti 206 dari Box dan dari internet publik. URL bcdn
                 // didapat dari parameter u di URL proxy Worker; WAJIB
                 // di-encode (tanpa encode, &t= terpotong dan bcdn balas 403).
@@ -1217,8 +1224,8 @@
                     v.onloadedmetadata = function(){ if (t > 0 && t < (v.duration || 0)) { try { v.currentTime = t; } catch(e){} } };
                     var p = v.play(); if (p && p.catch) p.catch(function(){});
                     var _hevcOnly = (q.codec || '').toLowerCase().indexOf('hevc') === 0 && !_fsDirectQualities.some(function(x){ return (x.codec || '').toLowerCase().indexOf('h264') === 0; });
-                    var _note = '▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectMode === 'box' ? ' · via Box' : _fsDirectMode === 'worker' ? ' · via proxy' : '');
-                    if (_hevcOnly) _note += ' · ⚠️ HEVC saja: gambar hitam di Chrome laptop (suara jalan) — coba di HP Android atau tekan Coba server lain';
+                    var _note = '▶ FS Player, ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan' + (_fsDirectMode === 'box' ? ' · via Box' : _fsDirectMode === 'worker' ? ' · via proxy' : '');
+                    if (_hevcOnly) _note += ' · ⚠️ HEVC saja: gambar hitam di Chrome laptop (suara jalan), coba di HP Android atau tekan Coba server lain';
                     _fsDirectSetNote(_note);
                     _fsDirectRenderBar(q);
                 }
@@ -1249,7 +1256,7 @@
                     if (!data || !data.ok || !data.qualities || !data.qualities.length) {
                         // Worker lama (belum di-deploy ulang) atau film tidak
                         // ada stream-nya: jatuh ke server iframe berikutnya.
-                        _fsDirectSetNote('⚠️ FS Player belum bisa untuk film ini — pindah ke server lain…');
+                        _fsDirectSetNote('⚠️ FS Player belum bisa untuk film ini, pindah ke server lain…');
                         _fsDirectStop();
                         if (!_fsPlayNextServer()) _fsShowPlayerError();
                         return;
@@ -1271,17 +1278,17 @@
                         var _cur = _fsDirectCurrent || pick;
                         if (_fsDirectMode === 'box') {
                             _fsDirectMode = 'surge';
-                            _fsDirectSetNote('⏳ Proxy Box tidak menjawab — coba jalur VidLink…');
+                            _fsDirectSetNote('⏳ Proxy Box tidak menjawab, coba jalur VidLink…');
                             _fsDirectPlayQuality(_cur, 0);
                             return;
                         }
                         if (_fsDirectMode === 'surge' && _fsDirectUrlOf(_cur) !== _cur.url) {
                             _fsDirectMode = 'worker';
-                            _fsDirectSetNote('⏳ Jalur VidLink ditolak — coba lewat proxy…');
+                            _fsDirectSetNote('⏳ Jalur VidLink ditolak, coba lewat proxy…');
                             _fsDirectPlayQuality(_cur, 0);
                             return;
                         }
-                        _fsDirectSetNote('⚠️ Video tidak bisa diputar di perangkat ini — pindah ke server lain…');
+                        _fsDirectSetNote('⚠️ Video tidak bisa diputar di perangkat ini, pindah ke server lain…');
                         _fsDirectStop();
                         if (!_fsPlayNextServer()) _fsShowPlayerError();
                     };
@@ -1338,7 +1345,7 @@
                     if (serverKey === 'multiembed') { var isImdb = /^tt\d+$/.test(tmdbId); return 'https://multiembed.mov/?video_id=' + tmdbId + '&tmdb=' + (isImdb ? '0' : '1'); }
                     // 2Embed: film pakai /embed/tt..., series pakai /embedtv/tt...&s=&e=
                     // (kode lama selalu pakai /embed/ sehingga series jatuh ke S1E1).
-                    // 2Embed HANYA bisa id IMDb (tt...) — kalau yang ada cuma id
+                    // 2Embed HANYA bisa id IMDb (tt...), kalau yang ada cuma id
                     // TMDB angka (OMDb tidak kenal judulnya, mis. series Indo
                     // baru), kembalikan null supaya server ini DILEWATI, bukan
                     // dimuat dengan id yang pasti gagal.
@@ -1381,7 +1388,7 @@
                     var sel = document.getElementById('fsServerSelect');
                     if (sel) sel.value = next;
                     var label = next === 'fsplayer' ? 'FS Player (tanpa iklan)' : _fsServerByKey(next).label;
-                    _fsSetNote('\u26A0\uFE0F Server sebelumnya tidak memuat — coba ' + label + '…');
+                    _fsSetNote('\u26A0\uFE0F Server sebelumnya tidak memuat, coba ' + label + '…');
                     if (next === 'fsplayer') { fsPlayDirect(_fsLastPlay.id, _fsLastPlay.title, _fsLastPlay.season, _fsLastPlay.ep); return true; }
                     var _u2 = _fsEmbedUrl(next, _fsLastPlay.id, _fsLastPlay.season, _fsLastPlay.ep);
                     if (!_u2) return _fsPlayNextServer();
@@ -1410,7 +1417,7 @@
                     // tetap jalan walau yang dimuat halaman error (mis. dulu saat
                     // sandbox aktif), jadi auto-pindah HANYA menangkap gagal muat
                     // total (host mati). Kalau video sudah dimuat tapi isinya error
-                    // / hitam, pakai tombol "Coba server lain" di bawah player —
+                    // / hitam, pakai tombol "Coba server lain" di bawah player,
                     // tombol itu selalu terlihat, bukan cuma di toast.
                     var loaded = false;
                     frame.onload = function(){ loaded = true; _fsSetNote(''); };
@@ -1438,7 +1445,7 @@
                 }
 
                 // --- LANJUTKAN MENONTON (ala Idlix) ---
-                // Disimpan di localStorage HP masing-masing — tanpa server, tanpa akun,
+                // Disimpan di localStorage HP masing-masing, tanpa server, tanpa akun,
                 // tanpa mengambil kode Idlix (repo itu tanpa file lisensi, dan backend-nya
                 // scraping Idlix + bypass Cloudflare, jadi tidak dipakai di sini).
                 var FS_CONTINUE_KEY = 'fsContinueWatching';
@@ -1475,7 +1482,7 @@
                         };
                         card.innerHTML = '<div style="font-size:1.2rem;">🎬</div>'
                             + '<div style="font-size:0.65rem;color:#fff;font-weight:700;line-height:1.3;margin-top:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(item.title) + '</div>'
-                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:4px;">' + (item.type === 'tv' ? '📺 Series' : '🎬 Film') + ' · ketuk untuk lanjut</div>';
+                            + '<div style="font-size:0.58rem;color:#94A3B8;margin-top:4px;">' + (item.type === 'tv' ? '📺 Series' : '🎬 Film') + ' · ketuk untuk lanjut</div>';
                         row.appendChild(card);
                     });
                 }
@@ -1486,7 +1493,7 @@
 
                 // --- BERANDA FILM ala Idlix (HomeViewModel: banner + swimlane, paralel) ---
                 // Kode Kotlin & backend scraping Idlix TIDAK bisa dipakai di website
-                // statis. Yang diterapkan: pola berandanya — hero billboard berputar,
+                // statis. Yang diterapkan: pola berandanya, hero billboard berputar,
                 // baris poster per kategori, detail + pilih episode, favorit lokal.
                 // Data tetap dari TMDB (Worker) + OMDb yang sudah dipakai FS Cinema.
                 var _fsHomeInit = false;
@@ -1547,7 +1554,7 @@
                             return;
                         }
                         _fsHomeLoading = false;
-                        if (st) st.textContent = any ? '' : '⚠️ Beranda gagal dimuat — coba buka lagi tab ini nanti.';
+                        if (st) st.textContent = any ? '' : '⚠️ Beranda gagal dimuat, coba buka lagi tab ini nanti.';
                     });
                 }
                 function fsCinemaRenderRow(row, items) {
@@ -1573,7 +1580,7 @@
                         var rating = item.vote_average ? '⭐ ' + (Math.round(item.vote_average * 10) / 10) : '';
                         card.innerHTML = '<img src="' + esc(item.poster_url) + '" alt="" loading="lazy" style="width:108px;height:162px;border-radius:10px;object-fit:cover;display:block;border:1px solid rgba(56,189,248,0.15);">'
                             + '<div style="font-size:0.65rem;color:#fff;font-weight:700;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(item.title) + '</div>'
-                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:2px;">' + esc(yr) + (rating ? ' · ' + rating : '') + '</div>';
+                            + '<div style="font-size:0.58rem;color:#94A3B8;margin-top:2px;">' + esc(yr) + (rating ? ' · ' + rating : '') + '</div>';
                         card.onclick = function(){ fsCinemaOpenDetail(item); };
                         lane.appendChild(card);
                     });
@@ -1676,7 +1683,7 @@
                             ? '<img src="' + esc(f.poster_url) + '" alt="" loading="lazy" style="width:108px;height:162px;border-radius:10px;object-fit:cover;display:block;border:1px solid rgba(251,191,36,0.4);">'
                             : '<div style="width:108px;height:162px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎬</div>')
                             + '<div style="font-size:0.65rem;color:#fff;font-weight:700;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.title) + '</div>'
-                            + '<div style="font-size:0.58rem;color:#64748b;margin-top:2px;">' + esc(yr) + '</div>';
+                            + '<div style="font-size:0.58rem;color:#94A3B8;margin-top:2px;">' + esc(yr) + '</div>';
                         card.onclick = function(){ fsCinemaOpenDetail(item); };
                         lane.appendChild(card);
                     });
@@ -1716,7 +1723,7 @@
                     document.getElementById('fsDetEps').style.display = 'none';
                     fsCinemaPaintFavBtn();
                     document.getElementById('fsCinemaDetail').style.display = 'block';
-                    // Perkaya via OMDb (imdbID + sinopsis + genre + total season) — sekali.
+                    // Perkaya via OMDb (imdbID + sinopsis + genre + total season), sekali.
                     var title = item.title || item.name || '';
                     var lookup = item.source === 'omdb'
                         ? FS_SEARCH_API + '?i=' + encodeURIComponent(item.id) + '&apikey=' + FS_SEARCH_KEY
@@ -1780,7 +1787,7 @@
                             box.appendChild(b);
                         })(s);
                     }
-                    if (eps) eps.innerHTML = '<div style="font-size:0.65rem;color:#64748b;">⏳ Memuat episode...</div>';
+                    if (eps) eps.innerHTML = '<div style="font-size:0.65rem;color:#94A3B8;">⏳ Memuat episode...</div>';
                     fsCinemaLoadEpisodes(_fsDetailSeason);
                 }
                 function fsCinemaLoadEpisodes(season) {
@@ -1820,7 +1827,7 @@
                 </script>
             </div>
 
-            <!-- ===== FILM KLASIK GRATIS (Internet Archive — domain publik, tanpa kunci API) ===== -->
+            <!-- ===== FILM KLASIK GRATIS (Internet Archive, domain publik, tanpa kunci API) ===== -->
             <div id="fsClassic" style="padding:16px 14px 24px;border-top:1px solid rgba(56,189,248,0.15);background:rgba(5,10,20,0.98);">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                     <div>
@@ -1829,7 +1836,7 @@
                     </div>
                     <button onclick="fsClassicLoad(true)" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:16px;padding:6px 12px;font-size:0.65rem;cursor:pointer;font-weight:700;font-family:inherit;">🔄 Refresh</button>
                 </div>
-                <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:10px;">Film klasik domain publik dari Internet Archive — gratis &amp; legal, tanpa kunci API. Ketuk poster untuk menonton.</div>
+                <div style="font-size:0.62rem;color:#94a3b8;margin-bottom:10px;">Film klasik domain publik dari Internet Archive, gratis &amp; legal, tanpa kunci API. Ketuk poster untuk menonton.</div>
                 <!-- Player film klasik -->
                 <div id="fsClassicPlayer" style="display:none;margin-bottom:12px;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -1837,16 +1844,16 @@
                         <button onclick="fsClassicClose()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:8px;padding:4px 10px;font-size:0.65rem;cursor:pointer;font-family:inherit;">✕ Tutup</button>
                     </div>
                     <video id="fsClassicVideo" controls playsinline preload="none" style="width:100%;background:#000;border-radius:12px;max-height:60vh;"></video>
-                    <div id="fsClassicMeta" style="font-size:0.6rem;color:#64748b;margin-top:6px;"></div>
+                    <div id="fsClassicMeta" style="font-size:0.6rem;color:#94A3B8;margin-top:6px;"></div>
                 </div>
-                <div id="fsClassicStatus" style="font-size:0.65rem;color:#475569;text-align:center;padding:12px 0;">⏳ Memuat film klasik...</div>
+                <div id="fsClassicStatus" style="font-size:0.65rem;color:#94A3B8;text-align:center;padding:12px 0;">⏳ Memuat film klasik...</div>
                 <div id="fsClassicRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;"></div>
-                <div style="font-size:0.58rem;color:#475569;margin-top:8px;">Sumber: archive.org (koleksi feature_films) · Film baru di sini berarti film klasik yang paling banyak diunduh · Untuk film bioskop terbaru, gunakan pencarian FS Cinema di atas.</div>
+                <div style="font-size:0.58rem;color:#94A3B8;margin-top:8px;">Sumber: archive.org (koleksi feature_films) · Film baru di sini berarti film klasik yang paling banyak diunduh · Untuk film bioskop terbaru, gunakan pencarian FS Cinema di atas.</div>
             </div>
 </div>
 
 <div id="musik" class="tab-content" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Streaming lagu penuh &amp; MP3 dari HP — tanpa iklan, musik saja.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🎵 MUSIK</h3><p>Streaming lagu penuh &amp; MP3 dari HP, tanpa iklan, musik saja.</p></div>
 
             <!-- Sub-tab: Streaming / MP3 Saya (ala Beatfy) -->
             <div style="display:flex;gap:6px;margin-bottom:12px;">
@@ -1869,7 +1876,7 @@
                     <div id="fsRadioHeroDots" class="fs-hero-dots" style="display:flex;gap:5px;margin-top:10px;"></div>
                 </div>
             </div>
-            <!-- Player ala Spotify / YT Music — MUSIK SAJA, tanpa video sama sekali.
+            <!-- Player ala Spotify / YT Music, MUSIK SAJA, tanpa video sama sekali.
                  Desain mengikuti pola clone Spotify (vanilla HTML/CSS/JS, MIT):
                  kartu now-playing + cover besar, seek bar, kontrol bulat. -->
             <!-- Player kompak ala Spotify/Joox: cover + judul + play di satu baris,
@@ -1877,7 +1884,7 @@
             <div class="content-box" style="text-align:center;padding:14px 14px 12px;">
                 <div style="display:flex;gap:12px;align-items:center;text-align:left;">
                     <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
-                        <div style="width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,rgba(56,189,248,0.4),rgba(168,85,247,0.4));display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎵</div>
+                        <div style="width:64px;height:64px;border-radius:10px;background:#1E293B;display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎵</div>
                         <img id="fsRadioArt" src="" alt="" style="position:absolute;inset:0;width:64px;height:64px;border-radius:10px;object-fit:cover;display:none;box-shadow:0 6px 18px rgba(0,0,0,0.45);">
                     </div>
                     <div style="flex:1;min-width:0;">
@@ -1892,7 +1899,7 @@
                         <div id="fsRadioSeekFill" style="position:absolute;left:0;top:0;height:100%;width:0%;background:var(--primary);border-radius:3px;"></div>
                     </div>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:#64748b;margin-top:2px;">
+                <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:#94A3B8;margin-top:2px;">
                     <span id="fsRadioTimeCur">0:00</span><span id="fsRadioTimeTot">0:00</span>
                 </div>
                 <audio id="fsRadioAudio" preload="none" style="display:none;"></audio>
@@ -1903,7 +1910,7 @@
                     <button onclick="fsRadioStop()" style="min-width:48px;min-height:48px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:50%;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;">⏹</button>
                     <button id="fsRadioRepeatBtn" onclick="fsRadioToggleRepeat()" title="Ulangi" style="min-width:44px;min-height:44px;background:transparent;border:1px solid rgba(255,255,255,0.2);color:#94a3b8;border-radius:50%;font-size:0.95rem;cursor:pointer;font-family:inherit;">🔁</button>
                 </div>
-                <div style="font-size:0.6rem;color:#475569;margin-top:8px;">Lagu habis → lanjut otomatis · Ketuk bar di atas untuk lompat ke bagian lagu.</div>
+                <div style="font-size:0.6rem;color:#94A3B8;margin-top:8px;">Lagu habis → lanjut otomatis · Ketuk bar di atas untuk lompat ke bagian lagu.</div>
                 <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
                 <button onclick="fsRadioToggleLyrics()" style="margin-top:10px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:inherit;">📝 Lirik</button>
                 <div id="fsRadioLyrics" style="display:none;margin-top:10px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 12px;font-size:0.72rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;max-height:220px;overflow-y:auto;">Lirik akan muncul di sini saat lagu diputar.</div>
@@ -1919,111 +1926,111 @@
                         style="background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:0.85rem;cursor:pointer;white-space:nowrap;min-height:48px;">CARI</button>
                 </div>
                 <div id="fsRadioChips" class="fs-genre-lane fs-home-only">
-                    <button class="fs-genre-tile active" onclick="fsRadioGenre('trending',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">🔥</span><span>Trending</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('pop',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">🎤</span><span>Pop</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('rock',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">🎸</span><span>Rock</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('dangdut',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">🪘</span><span>Dangdut</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('jawa',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">🎶</span><span>Lagu Jawa</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('koplo',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">🥁</span><span>Koplo</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('dj',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">🎧</span><span>DJ</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('jazz',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">🎷</span><span>Jazz</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('lo-fi',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">🌙</span><span>Lo-Fi</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('k-pop',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">💜</span><span>K-Pop</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioGenre('indonesia',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">🇮🇩</span><span>Indonesia</span></button>
+                    <button class="fs-genre-tile active" onclick="fsRadioGenre('trending',this)" style="background:#7c2d12;"><span class="fs-gt-ico">🔥</span><span>Trending</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('pop',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">🎤</span><span>Pop</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('rock',this)" style="background:#450a0a;"><span class="fs-gt-ico">🎸</span><span>Rock</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('dangdut',this)" style="background:#92400e;"><span class="fs-gt-ico">🪘</span><span>Dangdut</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('jawa',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">🎶</span><span>Lagu Jawa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('koplo',this)" style="background:#7c2d12;"><span class="fs-gt-ico">🥁</span><span>Koplo</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('dj',this)" style="background:#500724;"><span class="fs-gt-ico">🎧</span><span>DJ</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('jazz',this)" style="background:#4c1d95;"><span class="fs-gt-ico">🎷</span><span>Jazz</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('lo-fi',this)" style="background:#134e4a;"><span class="fs-gt-ico">🌙</span><span>Lo-Fi</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('k-pop',this)" style="background:#831843;"><span class="fs-gt-ico">💜</span><span>K-Pop</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('indonesia',this)" style="background:#14532d;"><span class="fs-gt-ico">🇮🇩</span><span>Indonesia</span></button>
                 </div>
-                <!-- ARTIS INDONESIA (17 Nov 2026, perintah San: daftar lagu Indonesia terutama dari artis harus ada, kayak YT Music) — ketuk nama artis -> semua lagunya dicari langsung di YouTube (terbaru s.d. terlama, tanpa batas lewat tombol Muat lebih banyak). Artis lain yang tidak ada di sini tetap bisa dicari lewat kolom cari di atas. -->
+                <!-- ARTIS INDONESIA (17 Nov 2026, perintah San: daftar lagu Indonesia terutama dari artis harus ada, kayak YT Music), ketuk nama artis -> semua lagunya dicari langsung di YouTube (terbaru s.d. terlama, tanpa batas lewat tombol Muat lebih banyak). Artis lain yang tidak ada di sini tetap bisa dicari lewat kolom cari di atas. -->
                 <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:16px;">🎤 Artis Indonesia</div>
-                <div style="font-size:0.62rem;color:#64748b;margin:2px 0 8px;">Ketuk nama artis untuk melihat semua lagunya — terbaru sampai terlama.</div>
+                <div style="font-size:0.62rem;color:#94A3B8;margin:2px 0 8px;">Ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama.</div>
                 <div id="fsRadioArtists" class="fs-genre-lane">
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Didi Kempot',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>Didi Kempot</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Denny Caknan',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">D</span><span>Denny Caknan</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Happy Asmara',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">H</span><span>Happy Asmara</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nella Kharisma',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">N</span><span>Nella Kharisma</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Guyon Waton',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">G</span><span>Guyon Waton</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('NDX AKA',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">N</span><span>NDX AKA</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Via Vallen',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">V</span><span>Via Vallen</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Farel Prayoga',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">F</span><span>Farel Prayoga</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Jihan Audy',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">J</span><span>Jihan Audy</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Yeni Inka',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">Y</span><span>Yeni Inka</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Safira Inema',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">S</span><span>Safira Inema</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Gilga Sahid',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">G</span><span>Gilga Sahid</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rhoma Irama',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">R</span><span>Rhoma Irama</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sodiq Monata',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">S</span><span>Sodiq Monata</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Noah',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">N</span><span>Noah</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sheila On 7',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">S</span><span>Sheila On 7</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Dewa 19',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>Dewa 19</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Slank',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">S</span><span>Slank</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Iwan Fals',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">I</span><span>Iwan Fals</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Raisa',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">R</span><span>Raisa</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Tulus',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">T</span><span>Tulus</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nadin Amizah',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">N</span><span>Nadin Amizah</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bernadya',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">B</span><span>Bernadya</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Hindia',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">H</span><span>Hindia</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Judika',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">J</span><span>Judika</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rizky Febian',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">R</span><span>Rizky Febian</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Mahalini',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">M</span><span>Mahalini</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lyodra',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">L</span><span>Lyodra</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Armada',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">A</span><span>Armada</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Wali',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">W</span><span>Wali</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('D'Masiv',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>D'Masiv</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Geisha',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">G</span><span>Geisha</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ungu',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">U</span><span>Ungu</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Kotak',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">K</span><span>Kotak</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('JKT48',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">J</span><span>JKT48</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('RAN',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">R</span><span>RAN</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Payung Teduh',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">P</span><span>Payung Teduh</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Fourtwnty',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">F</span><span>Fourtwnty</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Syahiba Saufa',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">S</span><span>Syahiba Saufa</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lala Widy',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">L</span><span>Lala Widy</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Wandra',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">W</span><span>Wandra</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Niken Salindry',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">N</span><span>Niken Salindry</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Tasya Rosmala',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">T</span><span>Tasya Rosmala</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Vita Alvia',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">V</span><span>Vita Alvia</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Dory Harsa',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>Dory Harsa</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Siti Badriah',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">S</span><span>Siti Badriah</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ayu Ting Ting',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">A</span><span>Ayu Ting Ting</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rossa',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">R</span><span>Rossa</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Afgan',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">A</span><span>Afgan</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bunga Citra Lestari',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">B</span><span>Bunga Citra Lestari</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Pamungkas',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">P</span><span>Pamungkas</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ardhito Pramono',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">A</span><span>Ardhito Pramono</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Didi Kempot',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">D</span><span>Didi Kempot</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Denny Caknan',this)" style="background:#7c2d12;"><span class="fs-gt-ico">D</span><span>Denny Caknan</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Happy Asmara',this)" style="background:#500724;"><span class="fs-gt-ico">H</span><span>Happy Asmara</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nella Kharisma',this)" style="background:#7c2d12;"><span class="fs-gt-ico">N</span><span>Nella Kharisma</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Guyon Waton',this)" style="background:#92400e;"><span class="fs-gt-ico">G</span><span>Guyon Waton</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('NDX AKA',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">N</span><span>NDX AKA</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Via Vallen',this)" style="background:#4c1d95;"><span class="fs-gt-ico">V</span><span>Via Vallen</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Farel Prayoga',this)" style="background:#134e4a;"><span class="fs-gt-ico">F</span><span>Farel Prayoga</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Jihan Audy',this)" style="background:#831843;"><span class="fs-gt-ico">J</span><span>Jihan Audy</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Yeni Inka',this)" style="background:#14532d;"><span class="fs-gt-ico">Y</span><span>Yeni Inka</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Safira Inema',this)" style="background:#450a0a;"><span class="fs-gt-ico">S</span><span>Safira Inema</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Gilga Sahid',this)" style="background:#7c2d12;"><span class="fs-gt-ico">G</span><span>Gilga Sahid</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rhoma Irama',this)" style="background:#92400e;"><span class="fs-gt-ico">R</span><span>Rhoma Irama</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sodiq Monata',this)" style="background:#500724;"><span class="fs-gt-ico">S</span><span>Sodiq Monata</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Noah',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">N</span><span>Noah</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sheila On 7',this)" style="background:#4c1d95;"><span class="fs-gt-ico">S</span><span>Sheila On 7</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Dewa 19',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">D</span><span>Dewa 19</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Slank',this)" style="background:#7c2d12;"><span class="fs-gt-ico">S</span><span>Slank</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Iwan Fals',this)" style="background:#92400e;"><span class="fs-gt-ico">I</span><span>Iwan Fals</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Raisa',this)" style="background:#500724;"><span class="fs-gt-ico">R</span><span>Raisa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Tulus',this)" style="background:#7c2d12;"><span class="fs-gt-ico">T</span><span>Tulus</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nadin Amizah',this)" style="background:#134e4a;"><span class="fs-gt-ico">N</span><span>Nadin Amizah</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bernadya',this)" style="background:#831843;"><span class="fs-gt-ico">B</span><span>Bernadya</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Hindia',this)" style="background:#14532d;"><span class="fs-gt-ico">H</span><span>Hindia</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Judika',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">J</span><span>Judika</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rizky Febian',this)" style="background:#4c1d95;"><span class="fs-gt-ico">R</span><span>Rizky Febian</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Mahalini',this)" style="background:#450a0a;"><span class="fs-gt-ico">M</span><span>Mahalini</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lyodra',this)" style="background:#7c2d12;"><span class="fs-gt-ico">L</span><span>Lyodra</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Armada',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">A</span><span>Armada</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Wali',this)" style="background:#4c1d95;"><span class="fs-gt-ico">W</span><span>Wali</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('D'Masiv',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">D</span><span>D'Masiv</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Geisha',this)" style="background:#7c2d12;"><span class="fs-gt-ico">G</span><span>Geisha</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ungu',this)" style="background:#92400e;"><span class="fs-gt-ico">U</span><span>Ungu</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Kotak',this)" style="background:#500724;"><span class="fs-gt-ico">K</span><span>Kotak</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('JKT48',this)" style="background:#7c2d12;"><span class="fs-gt-ico">J</span><span>JKT48</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('RAN',this)" style="background:#134e4a;"><span class="fs-gt-ico">R</span><span>RAN</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Payung Teduh',this)" style="background:#831843;"><span class="fs-gt-ico">P</span><span>Payung Teduh</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Fourtwnty',this)" style="background:#14532d;"><span class="fs-gt-ico">F</span><span>Fourtwnty</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Syahiba Saufa',this)" style="background:#450a0a;"><span class="fs-gt-ico">S</span><span>Syahiba Saufa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lala Widy',this)" style="background:#7c2d12;"><span class="fs-gt-ico">L</span><span>Lala Widy</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Wandra',this)" style="background:#92400e;"><span class="fs-gt-ico">W</span><span>Wandra</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Niken Salindry',this)" style="background:#500724;"><span class="fs-gt-ico">N</span><span>Niken Salindry</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Tasya Rosmala',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">T</span><span>Tasya Rosmala</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Vita Alvia',this)" style="background:#4c1d95;"><span class="fs-gt-ico">V</span><span>Vita Alvia</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Dory Harsa',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">D</span><span>Dory Harsa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Siti Badriah',this)" style="background:#7c2d12;"><span class="fs-gt-ico">S</span><span>Siti Badriah</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ayu Ting Ting',this)" style="background:#92400e;"><span class="fs-gt-ico">A</span><span>Ayu Ting Ting</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rossa',this)" style="background:#500724;"><span class="fs-gt-ico">R</span><span>Rossa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Afgan',this)" style="background:#7c2d12;"><span class="fs-gt-ico">A</span><span>Afgan</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bunga Citra Lestari',this)" style="background:#134e4a;"><span class="fs-gt-ico">B</span><span>Bunga Citra Lestari</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Pamungkas',this)" style="background:#831843;"><span class="fs-gt-ico">P</span><span>Pamungkas</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ardhito Pramono',this)" style="background:#14532d;"><span class="fs-gt-ico">A</span><span>Ardhito Pramono</span></button>
                 </div>
-                <!-- ARTIS DUNIA (17 Nov 2026, perintah San: Indonesia, luar dan dunia — kayak gudang musik) -->
+                <!-- ARTIS DUNIA (17 Nov 2026, perintah San: Indonesia, luar dan dunia, kayak gudang musik) -->
                 <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:16px;">🌍 Artis Dunia</div>
-                <div style="font-size:0.62rem;color:#64748b;margin:2px 0 8px;">Artis luar negeri — sama, ketuk namanya untuk melihat semua lagunya.</div>
-                <div style="font-size:0.62rem;color:#94a3b8;margin:6px 0 0;">💡 Artis tidak ada di daftar? Ketik namanya di kolom cari di atas — semua artis di dunia bisa dicari, lagunya diambil langsung dari YouTube saat itu juga, terbaru sampai terlama, tanpa batas.</div>
+                <div style="font-size:0.62rem;color:#94A3B8;margin:2px 0 8px;">Artis luar negeri, sama, ketuk namanya untuk melihat semua lagunya.</div>
+                <div style="font-size:0.62rem;color:#94a3b8;margin:6px 0 0;">💡 Artis tidak ada di daftar? Ketik namanya di kolom cari di atas, semua artis di dunia bisa dicari, lagunya diambil langsung dari YouTube saat itu juga, terbaru sampai terlama, tanpa batas.</div>
                 <div id="fsRadioArtistsWorld" class="fs-genre-lane">
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ed Sheeran',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">E</span><span>Ed Sheeran</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Taylor Swift',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">T</span><span>Taylor Swift</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('BTS',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">B</span><span>BTS</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Blackpink',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">B</span><span>Blackpink</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Coldplay',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">C</span><span>Coldplay</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Maroon 5',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">M</span><span>Maroon 5</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bruno Mars',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">B</span><span>Bruno Mars</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Adele',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">A</span><span>Adele</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Justin Bieber',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">J</span><span>Justin Bieber</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ariana Grande',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">A</span><span>Ariana Grande</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Billie Eilish',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">B</span><span>Billie Eilish</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('The Weeknd',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">T</span><span>The Weeknd</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Drake',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">D</span><span>Drake</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Eminem',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">E</span><span>Eminem</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Queen',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">Q</span><span>Queen</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('The Beatles',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">T</span><span>The Beatles</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Michael Jackson',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">M</span><span>Michael Jackson</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('NewJeans',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">N</span><span>NewJeans</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Twice',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">T</span><span>Twice</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Seventeen',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">S</span><span>Seventeen</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Stray Kids',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">S</span><span>Stray Kids</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lady Gaga',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">L</span><span>Lady Gaga</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rihanna',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">R</span><span>Rihanna</span></button>
-                    <button class="fs-genre-tile" onclick="fsRadioArtist('Imagine Dragons',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">I</span><span>Imagine Dragons</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ed Sheeran',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">E</span><span>Ed Sheeran</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Taylor Swift',this)" style="background:#831843;"><span class="fs-gt-ico">T</span><span>Taylor Swift</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('BTS',this)" style="background:#4c1d95;"><span class="fs-gt-ico">B</span><span>BTS</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Blackpink',this)" style="background:#500724;"><span class="fs-gt-ico">B</span><span>Blackpink</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Coldplay',this)" style="background:#134e4a;"><span class="fs-gt-ico">C</span><span>Coldplay</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Maroon 5',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">M</span><span>Maroon 5</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bruno Mars',this)" style="background:#92400e;"><span class="fs-gt-ico">B</span><span>Bruno Mars</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Adele',this)" style="background:#7c2d12;"><span class="fs-gt-ico">A</span><span>Adele</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Justin Bieber',this)" style="background:#7c2d12;"><span class="fs-gt-ico">J</span><span>Justin Bieber</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Ariana Grande',this)" style="background:#4c1d95;"><span class="fs-gt-ico">A</span><span>Ariana Grande</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Billie Eilish',this)" style="background:#14532d;"><span class="fs-gt-ico">B</span><span>Billie Eilish</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('The Weeknd',this)" style="background:#450a0a;"><span class="fs-gt-ico">T</span><span>The Weeknd</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Drake',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">D</span><span>Drake</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Eminem',this)" style="background:#92400e;"><span class="fs-gt-ico">E</span><span>Eminem</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Queen',this)" style="background:#7c2d12;"><span class="fs-gt-ico">Q</span><span>Queen</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('The Beatles',this)" style="background:#134e4a;"><span class="fs-gt-ico">T</span><span>The Beatles</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Michael Jackson',this)" style="background:#500724;"><span class="fs-gt-ico">M</span><span>Michael Jackson</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('NewJeans',this)" style="background:#831843;"><span class="fs-gt-ico">N</span><span>NewJeans</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Twice',this)" style="background:#4c1d95;"><span class="fs-gt-ico">T</span><span>Twice</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Seventeen',this)" style="background:#14532d;"><span class="fs-gt-ico">S</span><span>Seventeen</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Stray Kids',this)" style="background:#7f1d1d;"><span class="fs-gt-ico">S</span><span>Stray Kids</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lady Gaga',this)" style="background:#7c2d12;"><span class="fs-gt-ico">L</span><span>Lady Gaga</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rihanna',this)" style="background:#92400e;"><span class="fs-gt-ico">R</span><span>Rihanna</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Imagine Dragons',this)" style="background:#1d4ed8;"><span class="fs-gt-ico">I</span><span>Imagine Dragons</span></button>
                 </div>
             </div>
 
             <!-- Rekomendasi untukmu (ala Flow: rekomendasi dari yang sering didengar) -->
             <div class="fs-home-only">
             <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:18px;">🎯 Rekomendasi untukmu</div>
-            <div id="fsRecStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">Putar beberapa lagu dulu — rekomendasi muncul dari artis yang sering kamu dengarkan.</div>
+            <div id="fsRecStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Putar beberapa lagu dulu, rekomendasi muncul dari artis yang sering kamu dengarkan.</div>
             <div id="fsRecList" class="fs-track-lane" style="margin-top:6px;"></div>
             </div>
 
@@ -2032,22 +2039,22 @@
                 <div id="fsRadioListTitle" style="font-size:0.8rem;font-weight:800;color:#fff;">🔥 Trending</div>
                 <button id="fsRadioBackBtn" onclick="fsRadioLoadTrending()" style="display:none;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:14px;padding:4px 10px;font-size:0.62rem;font-weight:700;cursor:pointer;font-family:inherit;">✕ Tutup hasil</button>
             </div>
-            <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat lagu trending...</div>
+            <div id="fsRadioStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" class="fs-track-lane" style="margin-top:6px;"></div>
             <button id="fsRadioMoreBtn" onclick="fsRadioLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">⬇ Muat lebih banyak lagu</button>
-            <div id="fsRadioMoreNote" style="display:none;font-size:0.58rem;color:#475569;margin-top:6px;text-align:center;">Tidak ada batas jumlah lagu — terus tekan sampai ketemu lagunya. Semua lagu di YouTube dicari halaman demi halaman, terbaru sampai terlama.</div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus — lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Baris 🎤 Artis Indonesia: ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama — artis lain ketik saja namanya di kolom cari · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
+            <div id="fsRadioMoreNote" style="display:none;font-size:0.58rem;color:#94A3B8;margin-top:6px;text-align:center;">Tidak ada batas jumlah lagu, terus tekan sampai ketemu lagunya. Semua lagu di YouTube dicari halaman demi halaman, terbaru sampai terlama.</div>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus, lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Baris 🎤 Artis Indonesia: ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama, artis lain ketik saja namanya di kolom cari · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja, tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci, dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
             </div><!-- /fsRadioStreamPane -->
 
             <!-- ===== MP3 SAYA (ala Beatfy: pustaka lokal + cadangan) ===== -->
             <!-- Beatfy itu aplikasi Flutter: kodenya TIDAK bisa dipakai di website
-                 statis. Yang diambil: fiturnya — pustaka MP3 lokal, cari, favorit,
+                 statis. Yang diambil: fiturnya, pustaka MP3 lokal, cari, favorit,
                  top 10, baru ditambahkan, acak/ulangi, pulihkan posisi, cadangan.
                  File disimpan di IndexedDB HP (tidak diunggah ke server mana pun). -->
             <div id="fsLocalPane" style="display:none;" ondragover="event.preventDefault()" ondrop="event.preventDefault();fsLocalAddFiles(event.dataTransfer.files);">
-                <div style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(168,85,247,0.08));border:1px solid rgba(56,189,248,0.25);border-radius:14px;padding:14px;">
+                <div style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25);border-radius:14px;padding:14px;">
                     <div style="font-size:0.85rem;font-weight:800;color:#fff;">📁 Pustaka MP3 Saya</div>
-                    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">MP3 dari HP diputar langsung di sini — tanpa streaming, tanpa iklan. File tersimpan di HP ini saja, tidak diunggah ke server mana pun. Bisa juga seret file ke sini.</div>
+                    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">MP3 dari HP diputar langsung di sini, tanpa streaming, tanpa iklan. File tersimpan di HP ini saja, tidak diunggah ke server mana pun. Bisa juga seret file ke sini.</div>
                     <input type="file" id="fsLocalFiles" accept="audio/*,.mp3,.m4a,.flac,.ogg,.wav,.aac" multiple style="display:none;" onchange="fsLocalAddFiles(this.files); this.value='';">
                     <button onclick="document.getElementById('fsLocalFiles').click()" style="width:100%;margin-top:10px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">＋ Tambah MP3 dari HP</button>
                     <div style="display:flex;gap:6px;margin-top:8px;">
@@ -2055,7 +2062,7 @@
                         <button onclick="document.getElementById('fsLocalImportFile').click()" style="flex:1;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:8px;padding:8px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;">⬆ Pulihkan</button>
                     </div>
                     <input type="file" id="fsLocalImportFile" accept=".json,application/json" style="display:none;" onchange="fsLocalImport(this.files[0]); this.value='';">
-                    <div style="font-size:0.58rem;color:#64748b;margin-top:8px;line-height:1.6;">Cadangan menyimpan daftar, favorit &amp; jumlah putar. File MP3 tidak ikut tersimpan — saat pulihkan, pilih ulang file MP3-nya dan favorit &amp; hitungan putar kembali.</div>
+                    <div style="font-size:0.58rem;color:#94A3B8;margin-top:8px;line-height:1.6;">Cadangan menyimpan daftar, favorit &amp; jumlah putar. File MP3 tidak ikut tersimpan, saat pulihkan, pilih ulang file MP3-nya dan favorit &amp; hitungan putar kembali.</div>
                 </div>
                 <div style="margin-top:14px;">
                     <input id="fsLocalSearch" type="text" placeholder="🔍 Cari di pustaka (judul / artis / album)..." oninput="fsLocalRender()" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.9rem;outline:none;min-height:48px;">
@@ -2075,13 +2082,13 @@
                         <button onclick="fsPlDelete()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;border-radius:8px;padding:8px 10px;font-size:0.68rem;font-weight:800;cursor:pointer;font-family:inherit;">🗑 Hapus</button>
                     </div>
                     <div id="fsPlChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;"></div>
-                    <div style="font-size:0.62rem;color:#64748b;margin-top:6px;">Pilih playlist, lalu ketuk ＋ pada lagu untuk menambahkannya. Putar jalan berurutan.</div>
+                    <div style="font-size:0.62rem;color:#94A3B8;margin-top:6px;">Pilih playlist, lalu ketuk ＋ pada lagu untuk menambahkannya. Putar jalan berurutan.</div>
                 </div>
-                <div id="fsLocalStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">Memuat pustaka...</div>
+                <div id="fsLocalStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Memuat pustaka...</div>
                 <div id="fsLocalList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
             </div>
 
-            <!-- Mini player (tetap terlihat saat scroll — ala Spotify/Joox) -->
+            <!-- Mini player (tetap terlihat saat scroll, ala Spotify/Joox) -->
             <div id="fsMiniPlayer" class="fs-miniplayer" onclick="fsRadioOpenNp(event)">
                 <img id="fsMpArt" src="" alt="" style="display:none;">
                 <div id="fsMpArtFb" class="fs-mp-art-fallback">🎵</div>
@@ -2101,7 +2108,7 @@
                 </div>
                 <div style="text-align:center;margin-top:20px;">
                     <div style="position:relative;width:220px;height:220px;margin:0 auto;">
-                        <div id="fsNpArtFb" style="width:220px;height:220px;border-radius:20px;background:linear-gradient(135deg,rgba(56,189,248,0.4),rgba(168,85,247,0.4));display:flex;align-items:center;justify-content:center;font-size:4rem;">🎵</div>
+                        <div id="fsNpArtFb" style="width:220px;height:220px;border-radius:20px;background:#1E293B;display:flex;align-items:center;justify-content:center;font-size:4rem;">🎵</div>
                         <img id="fsNpArt" src="" alt="" style="position:absolute;inset:0;width:220px;height:220px;border-radius:20px;object-fit:cover;display:none;box-shadow:0 12px 40px rgba(0,0,0,0.6);">
                     </div>
                     <div id="fsNpNow" style="font-size:1.05rem;font-weight:800;color:#fff;margin-top:16px;">Belum ada lagu diputar</div>
@@ -2112,7 +2119,7 @@
                         <div id="fsNpSeekFill" style="position:absolute;left:0;top:0;height:100%;width:0%;background:var(--primary);border-radius:3px;"></div>
                     </div>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#64748b;margin-top:2px;">
+                <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#94A3B8;margin-top:2px;">
                     <span id="fsNpTimeCur">0:00</span><span id="fsNpTimeTot">0:00</span>
                 </div>
                 <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin-top:18px;">
@@ -2221,8 +2228,8 @@
             }
 
             // iTunes Search API (publik, gratis, tanpa kunci, country ID, limit 50):
-            // katalog mainstream — Ajeng Febria, Denny Caknan, Coldplay, dll.
-            // Hasilnya preview 30 detik, bukan lagu penuh — ditulis jelas di daftar.
+            // katalog mainstream, Ajeng Febria, Denny Caknan, Coldplay, dll.
+            // Hasilnya preview 30 detik, bukan lagu penuh, ditulis jelas di daftar.
             // Deezer dicek 17 Nov 2026: ada hasilnya, tapi API-nya tidak mengizinkan
             // CORS dari browser, jadi tidak dipakai.
             function fsRadioItunesToItems(d) {
@@ -2295,7 +2302,7 @@
                     // 17 Nov 2026 (perbaikan San: Sadewok Dahlia tidak ketemu):
                     // Audius 0 hasil + iTunes 0 hasil untuk artis Jawa/dangdut,
                     // padahal YouTube (Invidious) mengembalikan 20 hasil untuk
-                    // "Sadewok Dahlia" — jadi YouTube WAJIB dicari juga, bukan
+                    // "Sadewok Dahlia", jadi YouTube WAJIB dicari juga, bukan
                     // cuma dipakai saat memutar lagu iTunes.
                     var audiusItems = fsRadioAudiusToItems(tracks);
                     if (statusEl) statusEl.textContent = '⏳ Mencari di YouTube + Audius + iTunes...';
@@ -2317,7 +2324,7 @@
                             merged.forEach(function(t){ if (t.source === 'youtube') nYt++; else if (t.source === 'itunes') nPrev++; });
                             var nFull = merged.length - nPrev;
                             fsRadioRenderItems(merged, statusEl, list,
-                                merged.length + ' lagu ditemukan — tanpa batas'
+                                merged.length + ' lagu ditemukan, tanpa batas'
                                 + (nFull ? ' • ' + nFull + ' lagu penuh' : '')
                                 + (nYt ? ' • ' + nYt + ' dari YouTube' : '')
                                 + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''), 'grid');
@@ -2342,7 +2349,7 @@
                                     if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                                     return;
                                 }
-                                fsRadioRenderItems(merged, statusEl, list, merged.length + ' lagu ditemukan — tanpa batas', 'grid');
+                                fsRadioRenderItems(merged, statusEl, list, merged.length + ' lagu ditemukan, tanpa batas', 'grid');
                             });
                         }).catch(function(){
                             _fsRadioLoading = false;
@@ -2410,7 +2417,7 @@
             }
 
             // Genre = beberapa query YouTube sekaligus (terbaru + lawas + DJ) + Audius,
-            // digabung dan dibuang duplikatnya. Dulu genre cuma cari Audius — untuk
+            // digabung dan dibuang duplikatnya. Dulu genre cuma cari Audius, untuk
             // lagu Jawa/DJ hasilnya hampir selalu kosong.
             function fsRadioGenreSearch(queries, audiusQ, statusText) {
                 if (_fsRadioLoading) return;
@@ -2440,14 +2447,14 @@
                     var nYt = 0;
                     merged.forEach(function(t){ if (t.source === 'youtube') nYt++; });
                     fsRadioRenderItems(merged, statusEl, list,
-                        merged.length + ' lagu ditemukan — terbaru sampai terlama'
+                        merged.length + ' lagu ditemukan, terbaru sampai terlama'
                         + (nYt ? ' • ' + nYt + ' dari YouTube' : ''), 'grid');
                 }).catch(function(){
                     _fsRadioLoading = false;
                     if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                 });
             }
-            // ARTIS (17 Nov 2026, perintah San: kayak YT Music — ketuk nama
+            // ARTIS (17 Nov 2026, perintah San: kayak YT Music, ketuk nama
             // artis -> semua lagunya): pakai jalur genre yang sama (3 query
             // YouTube x 3 halaman + Audius, tanpa batas lewat Muat lebih banyak).
             function fsRadioArtist(name, btn) {
@@ -2459,7 +2466,7 @@
                 var inp = document.getElementById('fsRadioInput');
                 if (inp) inp.value = name;
                 fsRadioGenreSearch([name, name + ' lagu terbaru', name + ' lagu lawas'], name,
-                    '⏳ Mencari semua lagu ' + name + ' — terbaru sampai terlama...');
+                    '⏳ Mencari semua lagu ' + name + ', terbaru sampai terlama...');
                 var t = document.getElementById('fsRadioListTitle');
                 if (t) t.textContent = '🎤 ' + name;
             }
@@ -2489,17 +2496,17 @@
             // --- YouTube penuh TANPA IKLAN, MUSIK SAJA (stream audio langsung) ---
             // Seperti manusia yang memakai pemutar tanpa iklan: lagunya
             // diputar dari stream audio YouTube-nya langsung. TIDAK ADA VIDEO
-            // di tab ini — pemutar embed resmi YouTube DIHAPUS total 17 Nov
+            // di tab ini, pemutar embed resmi YouTube DIHAPUS total 17 Nov
             // 2026 atas perintah San, karena video sempat muncul di layar.
             // Repo gratis yang dicari: Musike (Ernani1234/musike, MIT) memang
             // memutar katalog YouTube Music penuh, TAPI butuh server sendiri
-            // untuk menarik stream audio-nya — tidak bisa dicopy ke website
+            // untuk menarik stream audio-nya, tidak bisa dicopy ke website
             // statis. Yang dipakai di sini: Invidious (API publik gratis,
             // tanpa kunci, CORS terbuka) yang mengembalikan URL stream audio
-            // siap putar (itag 251 opus / 140 m4a) — diambil dari HP user
+            // siap putar (itag 251 opus / 140 m4a), diambil dari HP user
             // sendiri, jadi tidak perlu server. Jujur: cara ini tidak resmi,
             // melawan aturan YouTube soal iklan, dan bisa mati sewaktu-waktu
-            // kalau mirror-nya mati — kalau gagal, jatuh ke preview iTunes
+            // kalau mirror-nya mati, kalau gagal, jatuh ke preview iTunes
             // 30 dtk, TIDAK PERNAH ke video.
             var _fsYtToken = 0;
             var _fsYtAudioVideoId = '';
@@ -2552,12 +2559,12 @@
                     return fsRadioYtToItems(all);
                 });
             }
-            // TANPA BATAS (17 Nov 2026, perintah San: jangan ada batasan 20/60 lagu —
+            // TANPA BATAS (17 Nov 2026, perintah San: jangan ada batasan 20/60 lagu,
             // kalau orang cari lagu, lagunya harus ada): hasil pertama menarik 3 halaman
             // YouTube sekaligus, lalu tombol "Muat lebih banyak lagu" menarik halaman
             // 3, 4, 5, ... terus sampai habis. Tiap halaman = 20 lagu; tidak ada
             // angka maksimum di mana pun. Spotify/Joox tidak bisa dicari langsung
-            // dari website statis (butuh kunci API berbayar) — tapi katalognya
+            // dari website statis (butuh kunci API berbayar), tapi katalognya
             // hampir selalu ada juga di YouTube (audio resmi / Topic), jadi
             // pencarian YouTube yang dalam ini yang menjamin lagu ketemu.
             var _fsRadioMoreQueries = [];
@@ -2596,7 +2603,7 @@
                     var list = document.getElementById('fsRadioList');
                     var statusEl = document.getElementById('fsRadioStatus');
                     fsRadioRenderItems(merged, statusEl, list,
-                        merged.length + ' lagu ditemukan — tanpa batas, tekan Muat lebih banyak untuk lagu lain', 'grid');
+                        merged.length + ' lagu ditemukan, tanpa batas, tekan Muat lebih banyak untuk lagu lain', 'grid');
                     if (btn) btn.textContent = '⬇ Muat lebih banyak lagu';
                 }).catch(function(){
                     _fsRadioMoreBusy = false;
@@ -2692,7 +2699,7 @@
                 fsRadioSyncMini(); fsRadioSyncNp();
             }
             // Putar lagu YouTube yang videoId-nya SUDAH diketahui dari hasil cari
-            // (tanpa cari ulang — dulu cari ulang by judul sering dapat video salah).
+            // (tanpa cari ulang, dulu cari ulang by judul sering dapat video salah).
             function fsRadioPlayYoutubeById(videoId, title, artist) {
                 var token = ++_fsYtToken;
                 _fsYtAudioVideoId = videoId || '';
@@ -2781,7 +2788,7 @@
                 if (typeof fsRadioRecRender === 'function') fsRadioRecRender();
                 fsRadioSetArt(t.art);
                 fsRadioMarkPlaying();
-                // Reset seek bar langsung — jangan tampilkan waktu lagu lama
+                // Reset seek bar langsung, jangan tampilkan waktu lagu lama
                 // selagi lagu baru dicari.
                 var _fill = document.getElementById('fsRadioSeekFill');
                 if (_fill) _fill.style.width = '0%';
@@ -2805,7 +2812,7 @@
                 var hist = [];
                 try { hist = JSON.parse(localStorage.getItem('fsRadioHistory') || '[]'); } catch(e) {}
                 if (!hist.length) {
-                    st.textContent = 'Putar beberapa lagu dulu — rekomendasi muncul dari artis yang sering kamu dengarkan.';
+                    st.textContent = 'Putar beberapa lagu dulu, rekomendasi muncul dari artis yang sering kamu dengarkan.';
                     list.innerHTML = ''; _fsRecTracks = []; _fsRecTop = null;
                     return;
                 }
@@ -2829,7 +2836,7 @@
                     var fresh = items.filter(function(t){ return !seen[((t.title || '') + '|' + (t.artist || '')).toLowerCase()]; }).slice(0, 5);
                     if (!fresh.length) fresh = items.slice(0, 5);
                     _fsRecTracks = fresh;
-                    st.textContent = 'Karena kamu suka ' + top + ' — ' + fresh.length + ' rekomendasi';
+                    st.textContent = 'Karena kamu suka ' + top + ', ' + fresh.length + ' rekomendasi';
                     list.innerHTML = '';
                     fresh.forEach(function(t, idx){
                         var card = document.createElement('div');
@@ -2843,7 +2850,7 @@
                     });
                 }).catch(function(){
                     _fsRecBusy = false;
-                    st.textContent = 'Rekomendasi gagal dimuat — coba lagi nanti.';
+                    st.textContent = 'Rekomendasi gagal dimuat, coba lagi nanti.';
                 });
             }
             function fsRecPlay(i) {
@@ -2867,10 +2874,10 @@
                     if (!row || !row.style) return;
                     if (idx === _fsRadioIndex) {
                         row.style.borderColor = 'rgba(56,189,248,0.7)';
-                        row.style.background = 'linear-gradient(160deg, rgba(56,189,248,0.18), rgba(56,189,248,0.06))';
+                        row.style.background = 'rgba(56,189,248,0.18)';
                     } else {
                         row.style.borderColor = 'rgba(255,255,255,0.16)';
-                        row.style.background = 'linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06))';
+                        row.style.background = 'rgba(255,255,255,0.10)';
                     }
                 });
             }
@@ -2935,7 +2942,7 @@
                 fsRadioSyncMini(); fsRadioSyncNp();
             }
 
-            // Lirik ala BitChord — LRCLIB (API publik gratis, tanpa kunci).
+            // Lirik ala BitChord, LRCLIB (API publik gratis, tanpa kunci).
             // BitChord mencantumkan LRCLIB sebagai salah satu penyedia liriknya.
             // Hanya teks lirik polos yang dipakai; kalau tidak ada, tampilkan pesan, jangan diam.
             function fsRadioLyrics(title, artist) {
@@ -3009,7 +3016,7 @@
 
             // Error stream: abaikan error sesaat saat lagu sedang jalan
             // (itu yang dulu memicu munculnya video). Tampilkan pesan hanya
-            // kalau lagu memang gagal mulai — TIDAK PERNAH memunculkan video.
+            // kalau lagu memang gagal mulai, TIDAK PERNAH memunculkan video.
             document.getElementById('fsRadioAudio').addEventListener('error', function(){
                 if (!this.paused) return;
                 var errEl = document.getElementById('fsRadioError');
@@ -3131,7 +3138,7 @@
                 var items = _fsRadioQueue === 'local' ? _fsLocalTracks : _fsRadioTracks;
                 var cur = _fsRadioQueue === 'local' ? _fsLocalIndex : _fsRadioIndex;
                 q.innerHTML = '';
-                if (!items.length) { q.innerHTML = '<div style="font-size:0.7rem;color:#64748b;text-align:center;padding:10px;">Antrean kosong.</div>'; return; }
+                if (!items.length) { q.innerHTML = '<div style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:10px;">Antrean kosong.</div>'; return; }
                 items.forEach(function(t, i){
                     var row = document.createElement('div');
                     row.style.cssText = 'display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:10px;cursor:pointer;' + (i === cur ? 'background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);' : 'border:1px solid rgba(255,255,255,0.08);');
@@ -3238,7 +3245,7 @@
                 var name = String(fileName || '').replace(/\.(mp3|m4a|flac|ogg|wav|aac)$/i, '');
                 name = name.replace(/\[.*?\]|\(.*?\)/g, ' ').replace(/^\s*\d{1,3}[\s.\-_]+/, '').replace(/\s+/g, ' ').trim();
                 var title = name || 'Tanpa judul', artist = 'Tidak dikenal';
-                var m = name.match(/^(.*?)\s+[-–—]\s+(.*)$/);
+                var m = name.match(/^(.*?)\s+[-–,]\s+(.*)$/);
                 if (m) { artist = m[1].trim() || artist; title = m[2].trim() || title; }
                 return { title: title, artist: artist, album: '', duration: 0, art: '' };
             }
@@ -3375,22 +3382,22 @@
                 if (_fsLocalFilter === 'top') items = items.slice().sort(function(a, b){ return (b.playCount || 0) - (a.playCount || 0); }).slice(0, 10);
                 if (st) st.textContent = _fsLocalTracks.length
                     ? (items.length + ' dari ' + _fsLocalTracks.length + ' lagu di pustaka' + (q ? ' untuk "' + q + '"' : ''))
-                    : 'Belum ada MP3 — ketuk "＋ Tambah MP3" untuk memilih file dari HP.';
+                    : 'Belum ada MP3, ketuk "＋ Tambah MP3" untuk memilih file dari HP.';
                 list.innerHTML = '';
                 items.forEach(function(t){
                     var idx = _fsLocalTracks.indexOf(t);
                     var row = document.createElement('div');
-                    row.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;cursor:pointer;' + (idx === _fsLocalIndex ? 'border-color:rgba(56,189,248,0.7);background:linear-gradient(160deg, rgba(56,189,248,0.18), rgba(56,189,248,0.06));' : '');
+                    row.style.cssText = 'display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;cursor:pointer;' + (idx === _fsLocalIndex ? 'border-color:rgba(56,189,248,0.7);background:rgba(56,189,248,0.18);' : '');
                     row.innerHTML =
                         (t.art ? '<img src="' + t.art + '" alt="" loading="lazy" style="width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:48px;height:48px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🎵</div>') +
                         '<div style="flex:1;min-width:0;">' +
                             '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.title) + '</div>' +
                             '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + (t.album ? ' • ' + esc(t.album) : '') + '</div>' +
-                            '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">⏱ ' + fsRadioFmtDur(t.duration) + (t.playCount ? ' · ▶ ' + t.playCount + ' diputar' : '') + '</div>' +
+                            '<div style="font-size:0.6rem;color:#94A3B8;margin-top:2px;">⏱ ' + fsRadioFmtDur(t.duration) + (t.playCount ? ' · ▶ ' + t.playCount + ' diputar' : '') + '</div>' +
                         '</div>' +
-                        '<button onclick="event.stopPropagation();fsLocalToggleFav(\'' + t.id + '\')" title="Favorit" style="flex-shrink:0;background:none;border:none;font-size:1.05rem;cursor:pointer;padding:6px;color:' + (t.fav ? '#fbbf24' : '#475569') + ';font-family:inherit;">' + (t.fav ? '★' : '☆') + '</button>' +
-                        '<button onclick="event.stopPropagation();fsPlAdd(\'' + t.id + '\')" title="Tambah ke playlist aktif" style="flex-shrink:0;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:#64748b;font-family:inherit;">＋</button>' +
-                        '<button onclick="event.stopPropagation();fsLocalDelete(\'' + t.id + '\')" title="Hapus dari pustaka" style="flex-shrink:0;background:none;border:none;font-size:0.95rem;cursor:pointer;padding:6px;color:#64748b;font-family:inherit;">🗑</button>';
+                        '<button onclick="event.stopPropagation();fsLocalToggleFav(\'' + t.id + '\')" title="Favorit" style="flex-shrink:0;background:none;border:none;font-size:1.05rem;cursor:pointer;padding:6px;color:' + (t.fav ? '#fbbf24' : '#94A3B8') + ';font-family:inherit;">' + (t.fav ? '★' : '☆') + '</button>' +
+                        '<button onclick="event.stopPropagation();fsPlAdd(\'' + t.id + '\')" title="Tambah ke playlist aktif" style="flex-shrink:0;background:none;border:none;font-size:1rem;cursor:pointer;padding:6px;color:#94A3B8;font-family:inherit;">＋</button>' +
+                        '<button onclick="event.stopPropagation();fsLocalDelete(\'' + t.id + '\')" title="Hapus dari pustaka" style="flex-shrink:0;background:none;border:none;font-size:0.95rem;cursor:pointer;padding:6px;color:#94A3B8;font-family:inherit;">🗑</button>';
                     row.onclick = function(){ fsLocalPlayTrack(idx); };
                     list.appendChild(row);
                 });
@@ -3582,7 +3589,7 @@
                         _fsLocalPendingMeta = {};
                         songs.forEach(function(s){ if (s.fileName) _fsLocalPendingMeta[s.fileName] = s; });
                         var st = document.getElementById('fsLocalStatus');
-                        if (st) st.textContent = '📥 Cadangan dibaca (' + songs.length + ' lagu). Sekarang pilih file MP3-nya — favorit & jumlah putar akan kembali.';
+                        if (st) st.textContent = '📥 Cadangan dibaca (' + songs.length + ' lagu). Sekarang pilih file MP3-nya, favorit & jumlah putar akan kembali.';
                         document.getElementById('fsLocalFiles').click();
                     } catch(e) {}
                 };
@@ -3614,9 +3621,9 @@
             </script>
         </div>
 
-        <!-- ===== AL QUR'AN TAB (fitur mengikuti QuranKu — Rafigibran, MIT, Flutter) ===== -->
+        <!-- ===== AL QUR'AN TAB (fitur mengikuti QuranKu, Rafigibran, MIT, Flutter) ===== -->
         <!-- QuranKu itu aplikasi Flutter/Dart: kodenya TIDAK bisa dipakai langsung di
-             website statis. Yang diambil: fiturnya — 114 surah, teks Arab + terjemahan
+             website statis. Yang diambil: fiturnya, 114 surah, teks Arab + terjemahan
              Indonesia, cari surah, lompat ke ayat, murotal ayat berurutan, mini/full
              player, bookmark terakhir dibaca. Data dari AlQuran Cloud (API publik
              gratis, tanpa kunci, CORS *): 1 request mengambil Arab + latin +
@@ -3664,7 +3671,7 @@
                 <div id="fsRiwayatHome" style="display:none;">
                     <div id="fsRiwayatList"></div>
                 </div>
-                <div style="font-size:0.58rem;color:#475569;margin-top:16px;text-align:center;line-height:1.6;">Data manga: MangaDex API (api.mangadex.org) lewat Worker FS — reader terinspirasi repo open-source Adolla (GPL-3.0) &amp; HTML5-Comic-Book-Reader (Apache-2.0). Novel &amp; buku: Open Library (openlibrary.org) + Archive.org — gratis &amp; legal (domain publik).</div>
+                <div style="font-size:0.58rem;color:#94A3B8;margin-top:16px;text-align:center;line-height:1.6;">Data manga: MangaDex API (api.mangadex.org) lewat Worker FS, reader terinspirasi repo open-source Adolla (GPL-3.0) &amp; HTML5-Comic-Book-Reader (Apache-2.0). Novel &amp; buku: Open Library (openlibrary.org) + Archive.org, gratis &amp; legal (domain publik).</div>
             </div>
 
             <!-- DETAIL MANGA -->
@@ -3710,43 +3717,43 @@
                     <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
                     <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">🎮 GAME</div>
                 </div>
-                <div style="font-size:0.68rem;color:#94a3b8;">Game open-source gratis — main langsung di sini, tanpa instal, tanpa iklan.</div>
+                <div style="font-size:0.68rem;color:#94a3b8;">Game open-source gratis, main langsung di sini, tanpa instal, tanpa iklan.</div>
             </div>
 
             <!-- Launcher: 6 game open-source (jsDelivr, kode asli dari GitHub). -->
             <div id="fsGameHome" style="padding:14px 14px 24px;">
-                <div class="fs-game-hero" onclick="fsGameOpen('g2048')" style="background:linear-gradient(135deg,#f59e0b,#b45309);">
+                <div class="fs-game-hero" onclick="fsGameOpen('g2048')" style="background:#b45309;">
                     <div style="display:flex;align-items:center;gap:12px;">
                         <div style="font-size:2.2rem;line-height:1;">🧩</div>
                         <div>
                             <div style="font-size:0.55rem;letter-spacing:2px;opacity:0.85;font-weight:800;">⭐ PALING POPULER</div>
                             <div style="font-size:1.15rem;font-weight:900;">2048</div>
-                            <div style="font-size:0.65rem;opacity:0.9;">Puzzle angka — gabung sampai 2048!</div>
+                            <div style="font-size:0.65rem;opacity:0.9;">Puzzle angka, gabung sampai 2048!</div>
                         </div>
                         <div style="margin-left:auto;font-size:0.65rem;font-weight:800;background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:20px;white-space:nowrap;">▶ MAINKAN</div>
                     </div>
                 </div>
                 <div class="fs-game-grid">
-                    <div class="fs-game-card" onclick="fsGameOpen('dino')" style="background:linear-gradient(135deg,#22c55e,#166534);">
+                    <div class="fs-game-card" onclick="fsGameOpen('dino')" style="background:#166534;">
                         <div class="fs-gc-ico">🦖</div><div class="fs-gc-name">Dino Run</div><div class="fs-gc-tag">Arcade lari</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
-                    <div class="fs-game-card" onclick="fsGameOpen('tetris')" style="background:linear-gradient(135deg,#3b82f6,#1e3a8a);">
+                    <div class="fs-game-card" onclick="fsGameOpen('tetris')" style="background:#1e3a8a;">
                         <div class="fs-gc-ico">🕹️</div><div class="fs-gc-name">Tetris</div><div class="fs-gc-tag">Puzzle klasik</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
-                    <div class="fs-game-card" onclick="fsGameOpen('mines')" style="background:linear-gradient(135deg,#ef4444,#7f1d1d);">
+                    <div class="fs-game-card" onclick="fsGameOpen('mines')" style="background:#7f1d1d;">
                         <div class="fs-gc-ico">💣</div><div class="fs-gc-name">Minesweeper</div><div class="fs-gc-tag">Logika</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
-                    <div class="fs-game-card" onclick="fsGameOpen('breakout')" style="background:linear-gradient(135deg,#a855f7,#581c87);">
+                    <div class="fs-game-card" onclick="fsGameOpen('breakout')" style="background:#581c87;">
                         <div class="fs-gc-ico">🧱</div><div class="fs-gc-name">Breakout</div><div class="fs-gc-tag">Arcade</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
-                    <div class="fs-game-card" onclick="fsGameOpen('flappy')" style="background:linear-gradient(135deg,#06b6d4,#155e75);">
+                    <div class="fs-game-card" onclick="fsGameOpen('flappy')" style="background:#155e75;">
                         <div class="fs-gc-ico">🐤</div><div class="fs-gc-name">Flappy Bird</div><div class="fs-gc-tag">Arcade</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
-                    <div class="fs-game-card" onclick="fsGameOpen('g2048')" style="background:linear-gradient(135deg,#f97316,#9a3412);">
+                    <div class="fs-game-card" onclick="fsGameOpen('g2048')" style="background:#9a3412;">
                         <div class="fs-gc-ico">🔢</div><div class="fs-gc-name">2048</div><div class="fs-gc-tag">Puzzle angka</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
                 </div>
-                <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;line-height:1.6;">Kode asli (open-source): 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) · Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) · Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0) — dimuat dari jsDelivr (CDN yang sama seperti PDF Tools).</div>
+                <div style="font-size:0.58rem;color:#94A3B8;margin-top:14px;text-align:center;line-height:1.6;">Kode asli (open-source): 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) · Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) · Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0), dimuat dari jsDelivr (CDN yang sama seperti PDF Tools).</div>
             </div>
 
             <!-- Play view: satu game penuh + tombol kembali. -->
@@ -3806,7 +3813,7 @@
                         var poster = 'https://archive.org/services/img/' + encodeURIComponent(f.id);
                         card.innerHTML = '<img src="' + poster + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="width:100%;height:170px;object-fit:cover;display:block;background:#1e293b;">'
                             + '<div style="padding:6px;font-size:0.62rem;color:#cbd5e1;font-weight:700;line-height:1.25;height:2.6em;overflow:hidden;">' + esc(f.title) + '</div>'
-                            + '<div style="padding:0 6px 6px;font-size:0.58rem;color:#64748b;">' + esc(f.year) + ' · Archive.org</div>';
+                            + '<div style="padding:0 6px 6px;font-size:0.58rem;color:#94A3B8;">' + esc(f.year) + ' · Archive.org</div>';
                         row.appendChild(card);
                     });
                 }).catch(function(){
@@ -3867,7 +3874,7 @@
         }
 
         // =============================================
-        // FREEDOM SYNDICATE LIVE TV — IFRAME EMBED
+        // FREEDOM SYNDICATE LIVE TV, IFRAME EMBED
         // =============================================
         let tvActiveCh = null;
 
@@ -3892,7 +3899,7 @@
             document.querySelectorAll('.tv-subtab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('pane-' + paneId).classList.add('active');
             btnEl.classList.add('active');
-            // PANGGIL FUNGSINYA DI SINI — lazy load iframe tvWorld
+            // PANGGIL FUNGSINYA DI SINI, lazy load iframe tvWorld
             if (paneId === 'tvWorld') _lazyLoadIframe('tvWorld');
             // Muat jadwal & skor pertandingan mendatang saat tab Sport pertama kali dibuka
             if (paneId === 'tv4') { tv4LoadLivescore(false); if (typeof fsSchedInit === 'function') fsSchedInit(); }
@@ -3901,7 +3908,7 @@
         }
 
                 // =============================================
-        // FREEDOM SYNDICATE TV1 — GABUNGAN NASIONAL + IPTV-ORG + SPORT + URL SAYA
+        // FREEDOM SYNDICATE TV1, GABUNGAN NASIONAL + IPTV-ORG + SPORT + URL SAYA
         // =============================================
         let tv1AllChannels = [];
         let tv1Hls = null;
@@ -4010,7 +4017,7 @@
 
             if (genre === 'nasional') {
                 tv1AllChannels = TV1_NASIONAL.map(ch => ({ name: ch.name, url: ch.url, group: ch.group, type: 'iframe' }));
-                status.textContent = `✅ ${tv1AllChannels.length} channel — tap untuk tonton`;
+                status.textContent = `✅ ${tv1AllChannels.length} channel, tap untuk tonton`;
                 renderTv1Groups(tv1AllChannels);
                 return;
             }
@@ -4039,7 +4046,7 @@
                 status.textContent = '⚠️ Tidak ada channel untuk genre ini. Coba genre lain atau cek koneksi.';
                 return;
             }
-            status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan — tap untuk play`;
+            status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan, tap untuk play`;
             renderTv1Groups(tv1AllChannels);
         }
 
@@ -4100,7 +4107,7 @@
             const status = document.getElementById('tv1Status');
 
             if (!q) {
-                status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan — tap untuk play`;
+                status.textContent = `✅ ${tv1AllChannels.length} channel ditemukan, tap untuk play`;
                 renderTv1Groups(tv1AllChannels);
                 return;
             }
@@ -4275,7 +4282,7 @@
             if (!history.length) return;
 
             const label = document.createElement('div');
-            label.style.cssText = 'font-size:0.6rem;color:#64748b;margin-bottom:2px;';
+            label.style.cssText = 'font-size:0.6rem;color:#94A3B8;margin-bottom:2px;';
             label.textContent = 'RIWAYAT URL DI PERANGKAT INI';
             wrap.appendChild(label);
 
@@ -4288,7 +4295,7 @@
                 nameLine.style.cssText = 'font-size:0.72rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
                 nameLine.textContent = h.name;
                 const urlLine = document.createElement('div');
-                urlLine.style.cssText = 'font-size:0.55rem;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+                urlLine.style.cssText = 'font-size:0.55rem;color:#94A3B8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
                 urlLine.textContent = h.url;
                 nameDiv.appendChild(nameLine);
                 nameDiv.appendChild(urlLine);
@@ -4303,7 +4310,7 @@
         }
 
         // =============================================
-        // TV3 — DATA SUMBER SPORT (dipakai genre Sport/Indonesia/Movies/News/Asia/Lainnya di TV1)
+        // TV3, DATA SUMBER SPORT (dipakai genre Sport/Indonesia/Movies/News/Asia/Lainnya di TV1)
         // =============================================
 let tv3Hls = null;
         let tv3CurrentCat = 'live';
@@ -4319,7 +4326,7 @@ let tv3Hls = null;
         };
 
         // =============================================
-        // LIVESCORE — dirender sendiri dari data API TheSportsDB, gabungan banyak liga top sekaligus
+        // LIVESCORE, dirender sendiri dari data API TheSportsDB, gabungan banyak liga top sekaligus
         // =============================================
         let tv4ScoreLoadedAt = 0;
         let tv4ScoreRefreshTimer = null;
@@ -4497,7 +4504,7 @@ let tv3Hls = null;
                                        tv4ScoreLeagueActive.toLowerCase().includes((ev.strLeague || '').toLowerCase().split(' ')[0]));
 
             if (filtered.length === 0) {
-                list.innerHTML = '<div style="font-size:0.65rem;color:#475569;text-align:center;padding:20px 0;">Tidak ada pertandingan mendatang untuk liga ini.</div>';
+                list.innerHTML = '<div style="font-size:0.65rem;color:#94A3B8;text-align:center;padding:20px 0;">Tidak ada pertandingan mendatang untuk liga ini.</div>';
                 return;
             }
 
@@ -4535,12 +4542,12 @@ let tv3Hls = null;
                 const statusBadge = isLive
                     ? `<span style="color:#4ade80;font-weight:700;">🔴 LIVE ${ev.strProgress ? '· ' + esc(ev.strProgress) : ''}</span>`
                     : isFinished
-                        ? `<span style="color:#64748b;font-weight:700;">✅ SELESAI ${dayDiff !== 0 ? '· ' + esc(dateLabelTxt.trim()) : ''}</span>`
+                        ? `<span style="color:#94A3B8;font-weight:700;">✅ SELESAI ${dayDiff !== 0 ? '· ' + esc(dateLabelTxt.trim()) : ''}</span>`
                         : `<span style="color:#38bdf8;font-weight:700;">⏳ ${esc(dateLabelTxt)}${esc((ev.strTime || '').slice(0, 5))} WIB</span>`;
 
                 card.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                        <span style="font-size:0.6rem;color:#475569;">${esc(ev.strLeague || '')}</span>
+                        <span style="font-size:0.6rem;color:#94A3B8;">${esc(ev.strLeague || '')}</span>
                         <span style="font-size:0.62rem;">${statusBadge}</span>
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
@@ -4556,7 +4563,7 @@ let tv3Hls = null;
         }
 
 // =============================================
-// JADWAL PERTANDINGAN — openfootball/football.json (CC0, GitHub, tanpa kunci)
+// JADWAL PERTANDINGAN, openfootball/football.json (CC0, GitHub, tanpa kunci)
 // =============================================
 const FS_SCHED_LEAGUES = [
     { code: 'en.1', name: 'Premier League' },
@@ -4661,7 +4668,7 @@ function fsSchedRender(matches) {
         card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px 14px;';
         card.innerHTML =
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
-                '<span style="font-size:0.6rem;color:#475569;">' + esc(x.m.round || '') + '</span>' +
+                '<span style="font-size:0.6rem;color:#94A3B8;">' + esc(x.m.round || '') + '</span>' +
                 '<span style="font-size:0.62rem;color:#38bdf8;font-weight:700;">⏳ ' + esc(fsSchedFmtDate(x.dt) + ' · ' + (x.m.time || '').slice(0, 5)) + '</span>' +
             '</div>' +
             '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
@@ -4679,8 +4686,8 @@ function fsSchedRender(matches) {
             card.style.cssText = 'background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px 14px;';
             card.innerHTML =
                 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
-                    '<span style="font-size:0.6rem;color:#475569;">' + esc(x.m.round || '') + '</span>' +
-                    '<span style="font-size:0.62rem;color:#64748b;font-weight:700;">✅ SELESAI · ' + esc(fsSchedFmtDate(x.dt)) + '</span>' +
+                    '<span style="font-size:0.6rem;color:#94A3B8;">' + esc(x.m.round || '') + '</span>' +
+                    '<span style="font-size:0.62rem;color:#94A3B8;font-weight:700;">✅ SELESAI · ' + esc(fsSchedFmtDate(x.dt)) + '</span>' +
                 '</div>' +
                 '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
                     '<div style="flex:1;font-size:0.78rem;font-weight:700;color:#e2e8f0;text-align:right;">' + esc(x.m.team1 || '') + '</div>' +
@@ -4704,7 +4711,7 @@ function fsSchedRender(matches) {
 
         // --- KOMIK v2: reader MangaDex (via Worker fs-ai) + Novel Open Library ---
         // MangaDex tidak mengizinkan fetch langsung dari browser (tanpa
-        // Access-Control-Allow-Origin) — semua panggilan lewat Worker
+        // Access-Control-Allow-Origin), semua panggilan lewat Worker
         // https://fs-ai.sanlana1903.workers.dev/mdx/* (proxy + gambar /mdx-img).
         // Bahasa chapter: Indonesia dulu (translatedLanguage[]=id), fallback EN.
         // Deskripsi EN bisa diterjemahkan ke ID di tempat (MyMemory, gratis).
@@ -4819,10 +4826,10 @@ function fsSchedRender(matches) {
                 .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
                 .then(function(d){
                     _fsKomikTotal = d.total || 0;
-                    fsKomikStatus('🔥 Manga populer — ' + _fsKomikTotal.toLocaleString('id-ID') + ' judul di MangaDex');
+                    fsKomikStatus('🔥 Manga populer, ' + _fsKomikTotal.toLocaleString('id-ID') + ' judul di MangaDex');
                     fsKomikRenderList(d.data || [], false);
                 })
-                .catch(function(e){ fsKomikStatus('⚠️ Gagal memuat manga: ' + e.message + ' — coba lagi nanti.'); });
+                .catch(function(e){ fsKomikStatus('⚠️ Gagal memuat manga: ' + e.message + ', coba lagi nanti.'); });
         }
         function fsKomikSearch() {
             var q = (document.getElementById('fsKomikQ') || {}).value || '';
@@ -4901,7 +4908,7 @@ function fsSchedRender(matches) {
                 '</div></div>';
             if (showDesc) {
                 html += '<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.65;margin-top:12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;"><div id="fsKomikDescText">' + _fsEsc(showDesc.slice(0, 600)) + (showDesc.length > 600 ? '…' : '') + '</div>' +
-                (descLang === 'en' ? '<button id="fsKomikTrBtn" onclick="fsKomikTranslateDesc(this)" style="margin-top:10px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.72rem;cursor:pointer;font-family:inherit;">🌐 Terjemahkan deskripsi ke Bahasa Indonesia</button>' : '<div style="font-size:0.62rem;color:#64748b;margin-top:8px;">Deskripsi Bahasa Indonesia</div>') +
+                (descLang === 'en' ? '<button id="fsKomikTrBtn" onclick="fsKomikTranslateDesc(this)" style="margin-top:10px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.72rem;cursor:pointer;font-family:inherit;">🌐 Terjemahkan deskripsi ke Bahasa Indonesia</button>' : '<div style="font-size:0.62rem;color:#94A3B8;margin-top:8px;">Deskripsi Bahasa Indonesia</div>') +
                 '</div>';
             }
             if (hist) {
@@ -4923,7 +4930,7 @@ function fsSchedRender(matches) {
             });
             if (!filtered.length && all.length) {
                 var onlyLang = (_fsKomikLang === 'id') ? 'English' : 'Indonesia';
-                list.innerHTML = '<div style="font-size:0.75rem;color:#fbbf24;margin-top:8px;">⚠️ Belum ada chapter Bahasa ' + (_fsKomikLang === 'id' ? 'Indonesia' : 'English') + ' — menampilkan chapter ' + onlyLang + '.</div>';
+                list.innerHTML = '<div style="font-size:0.75rem;color:#fbbf24;margin-top:8px;">⚠️ Belum ada chapter Bahasa ' + (_fsKomikLang === 'id' ? 'Indonesia' : 'English') + ', menampilkan chapter ' + onlyLang + '.</div>';
                 filtered = all.filter(function(c){ return (c.attributes || {}).translatedLanguage === (_fsKomikLang === 'id' ? 'en' : 'id'); });
             }
             if (!filtered.length) {
@@ -4938,7 +4945,7 @@ function fsSchedRender(matches) {
                     if (rels[i].type === 'scanlation_group' && rels[i].attributes) { grp = rels[i].attributes.name || ''; break; }
                 }
                 var ch = (at.chapter == null || at.chapter === '') ? 'Oneshot' : ('Ch. ' + at.chapter);
-                var ttl = at.title ? (' — ' + at.title) : '';
+                var ttl = at.title ? (', ' + at.title) : '';
                 var d = (at.publishAt || '').slice(0, 10);
                 var lang = at.translatedLanguage || '';
                 var badge = lang === 'id' ? '🇮🇩 ID' : (lang === 'en' ? '🇬🇧 EN' : lang.toUpperCase());
@@ -4960,7 +4967,7 @@ function fsSchedRender(matches) {
             function next() {
                 if (i >= chunks.length) {
                     var el = document.getElementById('fsKomikDescText');
-                    if (el) el.textContent = out.join(' ') + (_fsKomikDescEn.length > 800 ? ' …(diterjemahkan otomatis — lanjutan dalam Bahasa Inggris)' : '');
+                    if (el) el.textContent = out.join(' ') + (_fsKomikDescEn.length > 800 ? ' …(diterjemahkan otomatis, lanjutan dalam Bahasa Inggris)' : '');
                     btn.textContent = '✅ Diterjemahkan (otomatis)';
                     return;
                 }
@@ -4989,7 +4996,7 @@ function fsSchedRender(matches) {
             var at = ch ? ch.attributes : {};
             var chLabel = (at.chapter == null || at.chapter === '') ? 'Oneshot' : ('Ch. ' + at.chapter);
             var mangaTitle = _fsKomikDetail ? fsMdxTitle(_fsKomikDetail.attributes.title) : 'Manga';
-            if (titleEl) titleEl.textContent = mangaTitle + ' — ' + chLabel + (at.title ? (' — ' + at.title) : '');
+            if (titleEl) titleEl.textContent = mangaTitle + ', ' + chLabel + (at.title ? (', ' + at.title) : '');
             if (stEl) stEl.textContent = '⏳ Memuat halaman...';
             if (pagesEl) pagesEl.innerHTML = '';
             fsKomikUpdateNavBtns();
@@ -5056,7 +5063,7 @@ function fsSchedRender(matches) {
             var h = [];
             try { h = JSON.parse(localStorage.getItem('fsKomikHistory') || '[]'); } catch(e) {}
             if (!h.length) {
-                wrap.innerHTML = '<div style="font-size:0.78rem;color:#94a3b8;">Belum ada riwayat baca. Buka manga lalu baca satu chapter — riwayatmu muncul di sini.</div>';
+                wrap.innerHTML = '<div style="font-size:0.78rem;color:#94a3b8;">Belum ada riwayat baca. Buka manga lalu baca satu chapter, riwayatmu muncul di sini.</div>';
                 return;
             }
             wrap.innerHTML = h.map(function(x){
@@ -5069,7 +5076,7 @@ function fsSchedRender(matches) {
                     '<span style="font-size:0.68rem;font-weight:800;color:var(--primary);">Lanjutkan →</span></div>';
             }).join('');
         }
-        // --- NOVEL (Open Library, langsung dari browser — CORS terbuka) ---
+        // --- NOVEL (Open Library, langsung dari browser, CORS terbuka) ---
         function fsNovelStatus(t) {
             var el = document.getElementById('fsNovelStatus');
             if (el) el.textContent = t || '';
@@ -5123,7 +5130,7 @@ function fsSchedRender(matches) {
                                 html += '<iframe src="https://archive.org/embed/' + _fsEsc(ia) + '" style="width:100%;height:calc(100vh - 220px);min-height:480px;border:none;background:#000;border-radius:12px;" allowfullscreen></iframe>' +
                                     '<div style="text-align:center;margin-top:10px;"><a href="https://archive.org/details/' + _fsEsc(ia) + '" target="_blank" rel="noopener" style="color:var(--primary);font-size:0.75rem;">Buka di Archive.org ↗</a></div>';
                             } else {
-                                html += '<div style="font-size:0.78rem;color:#fbbf24;">⚠️ Buku ini belum tersedia untuk dibaca online gratis di Archive.org — coba judul lain.</div>';
+                                html += '<div style="font-size:0.78rem;color:#fbbf24;">⚠️ Buku ini belum tersedia untuk dibaca online gratis di Archive.org, coba judul lain.</div>';
                             }
                             if (body) body.innerHTML = html;
                         });
@@ -5184,7 +5191,7 @@ function fsSchedRender(matches) {
             if (tabId === 'quran' && typeof fsQuranInit === 'function') { fsQuranInit(); }
             if (tabId === 'movie' && typeof fsCinemaHomeInit === 'function') { fsCinemaHomeInit(); }
 
-            // Tutup sidebar setelah memilih (khusus mobile friendly) —
+            // Tutup sidebar setelah memilih (khusus mobile friendly),
             // hanya kalau sidebar memang sedang terbuka, supaya panggilan
             // dari bottomnav/topbar tidak malah membukanya.
             if (sidebar.classList.contains('active')) toggleSidebar();
@@ -5232,7 +5239,7 @@ function fsSchedRender(matches) {
 
         // --- LAZY LOAD IFRAMES (komik, TV World & Game) ---
         // Komik + Game sudah diganti reader/launcher native (tidak pakai iframe
-        // situs pihak ketiga lagi) — yang tersisa di sini hanya TV World.
+        // situs pihak ketiga lagi), yang tersisa di sini hanya TV World.
         const _iframeSrcs = {
             tvWorld:  'https://tvgarden.world/'
         };
@@ -5272,7 +5279,7 @@ function fsSchedRender(matches) {
             if (fb) fb.style.display = 'none';
         }
 
-        // Alias — dipakai tombol World (nama lama tetap dipertahankan)
+        // Alias, dipakai tombol World (nama lama tetap dipertahankan)
         function tvWorldReload() { _komikReload('tvWorld'); }
 
         // --- GAME v2: 6 game open-source (jsDelivr, commit terpin) ---
@@ -5490,7 +5497,7 @@ function fsSchedRender(matches) {
             return 'Gagal login: ' + (err && err.message ? err.message : err);
         }
 
-        // Tombol "Login lewat popup" — muncul hanya kalau redirect gagal.
+        // Tombol "Login lewat popup", muncul hanya kalau redirect gagal.
         // Popup butuh ketukan pengguna langsung (gesture), jadi tidak bisa
         // dipanggil otomatis dari catch.
         function _fsShowPopupBtn() {
@@ -5574,7 +5581,7 @@ function fsSchedRender(matches) {
         }
 
         // Jalankan gate setiap kali tab dewasa dibuka (ganti patch PIN lama).
-        // Auth state dipulihkan async setelah redirect login — cek ulang saat berubah.
+        // Auth state dipulihkan async setelah redirect login, cek ulang saat berubah.
         document.addEventListener('DOMContentLoaded', () => {
             const origOpenTab = window.openTab;
             window.openTab = function(tabId, btnElement) {
@@ -5653,9 +5660,9 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
     pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
       + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
       + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#94A3B8;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });

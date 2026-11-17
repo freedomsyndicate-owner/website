@@ -1,12 +1,19 @@
         :root {
-            --primary: #38bdf8;
-            --primary-glow: rgba(56, 189, 248, 0.4);
+            --primary: #E8A90C;
+            --primary-glow: rgba(232, 169, 12, 0.4);
             --bg-dark: #020617;
+            --card: #0B1220;
+            --card-2: #111827;
+            --line: #1E293B;
+            --text: #F1F5F9;
+            --muted: #94A3B8;
+            --gold: #E8A90C;
+            --blue: #38BDF8;
             --panel-bg: rgba(15, 23, 42, 0.6);
-            /* Glass ringan: blur tipis (10px), cuma di kartu utama + sidebar,
+            /* Kaca halus: blur 10px, cuma di kartu utama + sidebar + topbar,
                supaya tetap ringan di HP. Jangan naikkan blur di atas 12px. */
-            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(148,163,184,0.05));
-            --glass-border: rgba(255,255,255,0.12);
+            --glass-bg: rgba(17, 24, 39, 0.78);
+            --glass-border: #1E293B;
             --glass-blur: blur(10px) saturate(1.25);
         }
         html { font-size: 16px; -webkit-text-size-adjust: 100%; }
@@ -17,8 +24,7 @@
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(56,189,248,0.14), transparent),
-                              radial-gradient(ellipse 60% 40% at 90% 110%, rgba(56,189,248,0.08), transparent);
+            background-image: linear-gradient(180deg, #020617 0%, #060D1F 100%);
             background-attachment: fixed;
             color: #FFFFFF;
             margin: 0; padding: 0;
@@ -31,14 +37,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes journalGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.3); }
-            50% { box-shadow: 0 0 22px rgba(56, 189, 248, 0.6); border-color: var(--primary); }
         }
 
         /* --- SIDEBAR & TOMBOL MENU --- */
@@ -56,7 +54,7 @@
             font-size: 1.5rem;
             backdrop-filter: blur(8px) saturate(1.2);
             -webkit-backdrop-filter: blur(8px) saturate(1.2);
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .menu-toggle:hover {
@@ -106,7 +104,7 @@
             font-weight: 600;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
             border-left: 4px solid transparent;
         }
 
@@ -151,7 +149,7 @@
             .main-wrapper:has(#game.active),
             .main-wrapper:has(#komik.active) { padding: 76px 10px 40px; }
             h1 { font-size: 1.7rem; letter-spacing: 2px; }
-            .intro-box, .content-box { padding: 22px 18px; border-radius: 16px; }
+            .intro-box, .content-box { padding: 22px 18px; border-radius: 10px; }
             .social-grid { gap: 10px; }
             .social-btn { min-height: 52px; display: flex; align-items: center; justify-content: center; }
             .sidebar { width: min(280px, 84vw); }
@@ -182,17 +180,16 @@
             margin: 0 0 30px 0;
             letter-spacing: 3px;
             text-transform: uppercase;
-            background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
+            background: linear-gradient(to bottom, #FFFFFF 30%, #E8A90C 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: float 4s infinite ease-in-out;
         }
 
         .intro-box, .content-box {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 10px;
             margin-bottom: 30px;
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
@@ -208,19 +205,18 @@
         .journal-btn {
             display: block;
             text-decoration: none;
-            background: rgba(56, 189, 248, 0.05);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 20px;
+            background: rgba(232, 169, 12, 0.06);
+            border: 1px solid rgba(232, 169, 12, 0.4);
+            border-radius: 10px;
             padding: 22px;
             margin: 20px 0;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: journalGlow 3s infinite ease-in-out;
+            transition: background-color 0.4s, transform 0.4s;
             cursor: pointer;
         }
 
         .journal-btn:hover {
-            background: rgba(56, 189, 248, 0.15);
+            background: rgba(232, 169, 12, 0.12);
             transform: scale(1.03);
         }
 
@@ -243,17 +239,9 @@
         }
 
         /* --- MOD BUTTONS --- */
-        @keyframes modPulseApp {
-            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), 0 8px 25px rgba(0,0,0,0.4); }
-            50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.6), 0 8px 24px rgba(56, 189, 248, 0.2); }
-        }
-        @keyframes modPulseGame {
-            0%, 100% { box-shadow: 0 0 15px rgba(167, 139, 250, 0.25), 0 8px 25px rgba(0,0,0,0.4); }
-            50% { box-shadow: 0 0 24px rgba(167, 139, 250, 0.6), 0 8px 24px rgba(167, 139, 250, 0.2); }
-        }
         /* shimmer dihapus: strip ::before-nya berada di left:-100% (di luar tombol
            dan terpotong overflow:hidden) dan animasi background-position pada
-           gradient seukuran elemen adalah no-op — jadi efeknya memang tidak
+           gradient seukuran elemen adalah no-op, jadi efeknya memang tidak
            pernah terlihat, hanya membebani repaint tiap frame. */
         @keyframes arrowBounce {
             0%, 100% { transform: translateX(0); }
@@ -265,7 +253,7 @@
             align-items: center;
             gap: 16px;
             text-decoration: none;
-            border-radius: 18px;
+            border-radius: 10px;
             padding: 22px 24px;
             margin: 16px 0;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
@@ -281,15 +269,13 @@
         .mod-btn:active { transform: scale(0.97); }
 
         .mod-btn-app {
-            background: linear-gradient(135deg, rgba(14,30,60,0.9) 0%, rgba(20,50,90,0.9) 100%);
+            background: #0E1E3C;
             border: 1px solid rgba(56, 189, 248, 0.45);
-            animation: modPulseApp 3s infinite ease-in-out;
         }
 
         .mod-btn-game {
-            background: linear-gradient(135deg, rgba(30,14,60,0.9) 0%, rgba(50,20,90,0.9) 100%);
+            background: #1E1038;
             border: 1px solid rgba(167, 139, 250, 0.45);
-            animation: modPulseGame 3s infinite ease-in-out;
         }
 
         .mod-btn-icon {
@@ -329,30 +315,9 @@
         }
 
         /* --- KONTEN 18+ REDESIGN --- */
-        @keyframes fireFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-8px) scale(1.1); }
-        }
-        @keyframes redGlow {
-            0%, 100% { text-shadow: 0 0 10px rgba(248,113,113,0.3); }
-            50% { text-shadow: 0 0 25px rgba(248,113,113,0.8), 0 0 50px rgba(248,113,113,0.3); }
-        }
-        @keyframes joinPulseTg {
-            0%, 100% { box-shadow: 0 0 12px rgba(0,136,204,0.2), 0 6px 20px rgba(0,0,0,0.4); }
-            50% { box-shadow: 0 0 20px rgba(0,136,204,0.6), 0 6px 22px rgba(0,136,204,0.15); }
-        }
-        @keyframes joinPulseDc {
-            0%, 100% { box-shadow: 0 0 12px rgba(88,101,242,0.2), 0 6px 20px rgba(0,0,0,0.4); }
-            50% { box-shadow: 0 0 20px rgba(88,101,242,0.6), 0 6px 22px rgba(88,101,242,0.15); }
-        }
-        @keyframes joinPulseWa {
-            0%, 100% { box-shadow: 0 0 12px rgba(37,211,102,0.2), 0 6px 20px rgba(0,0,0,0.4); }
-            50% { box-shadow: 0 0 20px rgba(37,211,102,0.6), 0 6px 22px rgba(37,211,102,0.15); }
-        }
 
         .adult-fire {
             font-size: 3rem;
-            animation: fireFloat 2s infinite ease-in-out;
             display: block;
             margin-bottom: 6px;
         }
@@ -362,7 +327,6 @@
             letter-spacing: 3px;
             color: #f87171;
             margin: 0 0 14px;
-            animation: redGlow 2.5s infinite ease-in-out;
         }
         .adult-tagline {
             color: #94a3b8;
@@ -398,7 +362,7 @@
             align-items: center;
             gap: 14px;
             text-decoration: none;
-            border-radius: 16px;
+            border-radius: 10px;
             padding: 18px 20px;
             margin: 12px 0;
             position: relative;
@@ -412,23 +376,20 @@
         .adult-join-btn:active { transform: scale(0.97); }
 
         .btn-join-tg {
-            background: linear-gradient(135deg, rgba(0,80,130,0.85), rgba(0,50,90,0.9));
+            background: #0A3A55;
             border: 1px solid rgba(0,136,204,0.5);
-            animation: joinPulseTg 3s infinite ease-in-out;
         }
         .btn-join-dc {
-            background: linear-gradient(135deg, rgba(50,55,150,0.85), rgba(30,35,110,0.9));
+            background: #323796;
             border: 1px solid rgba(88,101,242,0.5);
-            animation: joinPulseDc 3s infinite ease-in-out;
         }
         .btn-join-wa {
-            background: linear-gradient(135deg, rgba(15,80,40,0.85), rgba(10,55,25,0.9));
+            background: #0F5038;
             border: 1px solid rgba(37,211,102,0.5);
-            animation: joinPulseWa 3s infinite ease-in-out;
         }
         .ajb-icon {
             width: 42px; height: 42px;
-            border-radius: 12px;
+            border-radius: 10px;
             background: rgba(255,255,255,0.1);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
@@ -458,7 +419,7 @@
         }
         .adult-note {
             font-size: 0.72rem;
-            color: #64748b;
+            color: #94A3B8;
             margin-top: 20px;
             line-height: 1.5;
         }
@@ -473,13 +434,13 @@
 
         .social-btn {
             padding: 16px;
-            border-radius: 14px;
+            border-radius: 10px;
             color: #FFFFFF;
             text-decoration: none;
             font-weight: 700;
             font-size: 0.85rem;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
             border: 1px solid var(--glass-border);
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(8px);
@@ -500,7 +461,7 @@
         textarea {
             width: 100%; height: 120px;
             background: rgba(0,0,0,0.3); border: 1px solid #475569;
-            border-radius: 12px; padding: 15px; color: #fff;
+            border-radius: 10px; padding: 15px; color: #fff;
             font-family: inherit; resize: none; box-sizing: border-box;
         }
         textarea:focus { outline: none; border-color: var(--primary); }
@@ -513,8 +474,8 @@
         .alert-msg { font-size: 0.85rem; color: #f87171; display: none; margin-top: 5px; }
 
         /* --- KONTEN 18+ (BLUR & LOGIN) --- */
-        .adult-container { position: relative; overflow: hidden; border-radius: 20px; }
-        .adult-content { filter: blur(15px); pointer-events: none; user-select: none; transition: 0.5s; padding: 20px; background: rgba(0,0,0,0.5); }
+        .adult-container { position: relative; overflow: hidden; border-radius: 10px; }
+        .adult-content { filter: blur(15px); pointer-events: none; user-select: none; transition: filter 0.5s; padding: 20px; background: rgba(0,0,0,0.5); }
         .adult-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -522,7 +483,7 @@
         }
         .btn-google {
             background: #fff; color: #333; border: none; padding: 12px 24px;
-            border-radius: 25px; font-weight: bold; cursor: pointer; display: flex;
+            border-radius: 10px; font-weight: bold; cursor: pointer; display: flex;
             align-items: center; gap: 10px; margin-top: 15px; transition: 0.3s;
         }
         .btn-google:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
@@ -574,7 +535,7 @@
             font-size: 1.25rem;
             font-weight: 800;
             font-family: inherit;
-            border-radius: 14px;
+            border-radius: 10px;
             padding: 16px 0;
             cursor: pointer;
             transition: background 0.15s, transform 0.1s, box-shadow 0.15s, border-color 0.15s;
@@ -608,14 +569,14 @@
         .fs-cat-btn {
             flex-shrink: 0;
             padding: 7px 14px;
-            border-radius: 20px;
+            border-radius: 10px;
             border: 1px solid rgba(56,189,248,0.25);
             background: transparent;
-            color: #64748b;
+            color: #94A3B8;
             font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
             white-space: nowrap;
             font-family: inherit;
         }
@@ -630,7 +591,7 @@
             gap: 6px;
             margin-bottom: 14px;
             background: rgba(2,6,23,0.5);
-            border-radius: 14px;
+            border-radius: 10px;
             padding: 5px;
             border: 1px solid rgba(56,189,248,0.15);
         }
@@ -640,20 +601,19 @@
             border-radius: 10px;
             border: none;
             background: transparent;
-            color: #64748b;
+            color: #94A3B8;
             font-size: 0.72rem;
             font-weight: 800;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
             font-family: inherit;
             white-space: nowrap;
         }
         .tv-subtab-btn.active {
-            background: linear-gradient(135deg,rgba(56,189,248,0.25),rgba(14,165,233,0.15));
+            background: rgba(232,169,12,0.16);
             color: #fff;
-            border: 1px solid rgba(56,189,248,0.4);
-            text-shadow: 0 0 8px rgba(56,189,248,0.6);
+            border: 1px solid rgba(232,169,12,0.45);
         }
         .tv-subtab-pane { display: none; }
         .tv-subtab-pane.active { display: block; }
@@ -667,14 +627,14 @@
         .tv-ch-card {
             background: rgba(15,23,42,0.7);
             border: 1px solid rgba(56,189,248,0.13);
-            border-radius: 13px;
+            border-radius: 10px;
             padding: 13px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 7px;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -705,7 +665,7 @@
             letter-spacing: 1px;
             background: rgba(74,222,128,0.1);
             border: 1px solid rgba(74,222,128,0.3);
-            border-radius: 20px;
+            border-radius: 10px;
             padding: 2px 7px;
         }
 
@@ -715,14 +675,14 @@
             display: none; align-items: center; gap: 10px;
             background: rgba(10,18,36,0.92); backdrop-filter: blur(12px) saturate(1.25);
             -webkit-backdrop-filter: blur(12px) saturate(1.25);
-            border: 1px solid rgba(56,189,248,0.35); border-radius: 14px;
+            border: 1px solid rgba(232,169,12,0.4); border-radius: 10px;
             padding: 8px 10px; box-shadow: 0 8px 28px rgba(0,0,0,0.5); cursor: pointer;
         }
         .fs-miniplayer.show { display: flex; }
         .fs-miniplayer img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
         .fs-mp-art-fallback {
             width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
-            background: linear-gradient(135deg,rgba(56,189,248,0.4),rgba(168,85,247,0.4));
+            background: #1E293B;
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
         }
         .fs-np-overlay {
@@ -737,15 +697,15 @@
         .fs-track-lane { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
         /* Grid kartu lagu (hasil cari) */
         .fs-track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 2px; }
-        .fs-track-card { cursor: pointer; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 8px; background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(56,189,248,0.04)); }
+        .fs-track-card { cursor: pointer; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px; background: #111827; }
         .fs-track-lane .fs-track-card { flex: 0 0 132px; }
         .fs-track-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover; display: block; }
-        .fs-track-card .fs-tc-art-fb { width: 100%; aspect-ratio: 1; border-radius: 8px; background: linear-gradient(135deg, rgba(56,189,248,0.4), rgba(168,85,247,0.4)); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+        .fs-track-card .fs-tc-art-fb { width: 100%; aspect-ratio: 1; border-radius: 8px; background: #1E293B; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
         .fs-track-card .fs-tc-title { font-size: 0.68rem; color: #fff; font-weight: 700; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .fs-track-card .fs-tc-artist { font-size: 0.6rem; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         /* Tile genre ala Spotify Browse */
         .fs-genre-lane { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
-        .fs-genre-tile { flex: 0 0 118px; height: 64px; border: none; border-radius: 12px; color: #fff; font-size: 0.75rem; font-weight: 800; cursor: pointer; font-family: inherit; text-align: left; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .fs-genre-tile { flex: 0 0 118px; height: 64px; border: none; border-radius: 10px; color: #fff; font-size: 0.75rem; font-weight: 800; cursor: pointer; font-family: inherit; text-align: left; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
         .fs-genre-tile .fs-gt-ico { font-size: 1.15rem; line-height: 1; }
         .fs-genre-tile.active { outline: 2px solid #fff; outline-offset: 2px; }
         /* Dots hero musik */
@@ -756,7 +716,7 @@
 
         /* --- TOOLS v2: grid kartu alat ala launcher aplikasi --- */
         .fs-tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-        .fs-tool-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 12px; padding: 12px 6px; color: #fff; text-decoration: none; text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+        .fs-tool-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 10px; padding: 12px 6px; color: #fff; text-decoration: none; text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
         .fs-tool-tile .fs-tt-ico { font-size: 1.35rem; line-height: 1; }
         .fs-tool-tile .fs-tt-name { font-size: 0.68rem; font-weight: 800; line-height: 1.2; }
         .fs-tool-tile .fs-tt-desc { font-size: 0.53rem; opacity: 0.85; line-height: 1.3; }
@@ -766,23 +726,23 @@
         #tools .fs-tool-view.fs-open { display: block; }
         /* GAME v2: launcher kartu warna + main di tempat (jsDelivr, open-source). */
         .fs-game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .fs-game-card { border-radius: 16px; padding: 14px 12px; color: #fff; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .fs-game-card { border-radius: 10px; padding: 14px 12px; color: #fff; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
         .fs-game-card .fs-gc-ico { font-size: 1.8rem; line-height: 1; }
         .fs-game-card .fs-gc-name { font-size: 0.85rem; font-weight: 900; margin-top: 6px; }
         .fs-game-card .fs-gc-tag { font-size: 0.6rem; opacity: 0.85; margin-top: 2px; }
-        .fs-game-card .fs-gc-play { font-size: 0.62rem; font-weight: 800; margin-top: 8px; background: rgba(0,0,0,0.25); display: inline-block; padding: 4px 10px; border-radius: 20px; }
-        .fs-game-hero { border-radius: 16px; padding: 16px; color: #fff; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.4); margin-bottom: 10px; }
+        .fs-game-card .fs-gc-play { font-size: 0.62rem; font-weight: 800; margin-top: 8px; background: rgba(0,0,0,0.25); display: inline-block; padding: 4px 10px; border-radius: 10px; }
+        .fs-game-hero { border-radius: 10px; padding: 16px; color: #fff; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.4); margin-bottom: 10px; }
         /* KOMIK v2: grid manga/novel + reader (MangaDex via Worker + Open Library). */
         .fs-manga-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .fs-manga-card { cursor: pointer; }
         .fs-manga-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; display: block; background: #0f172a; }
         .fs-manga-card .fs-mc-title { font-size: 0.68rem; font-weight: 800; color: #fff; margin-top: 6px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .fs-manga-card .fs-mc-meta { font-size: 0.58rem; color: #94a3b8; margin-top: 2px; }
-        .fs-komik-lang { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(56,189,248,0.3); border-radius: 20px; padding: 6px 12px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .fs-komik-lang { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(56,189,248,0.3); border-radius: 10px; padding: 6px 12px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: inherit; }
         .fs-komik-lang.active { background: var(--primary); color: #000; border-color: transparent; }
         .fs-komik-ch { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(15,23,42,0.7); border: 1px solid rgba(56,189,248,0.15); border-radius: 10px; margin-top: 6px; cursor: pointer; }
         .fs-komik-ch:hover { border-color: rgba(56,189,248,0.5); }
-        .fs-komik-badge { font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 20px; background: #1e293b; color: #e2e8f0; white-space: nowrap; }
+        .fs-komik-badge { font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; background: #1e293b; color: #e2e8f0; white-space: nowrap; }
         .fs-komik-badge.id { background: #16a34a; color: #fff; }
         .fs-komik-page { width: 100%; display: block; margin: 0 auto; max-width: 720px; }
 
@@ -790,7 +750,7 @@
         .tv-iframe-wrap {
             position: relative;
             width: 100%;
-            border-radius: 14px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid rgba(56,189,248,0.25);
             margin-bottom: 12px;
@@ -808,7 +768,7 @@
         /* --- TV2 (IPTV-ORG) ACCORDION --- */
         .tv2-acc {
             border: 1px solid rgba(56,189,248,0.13);
-            border-radius: 13px;
+            border-radius: 10px;
             background: rgba(15,23,42,0.5);
             overflow: hidden;
         }
@@ -825,7 +785,7 @@
         }
         .tv2-acc-header .count {
             font-size: 0.62rem;
-            color: #64748b;
+            color: #94A3B8;
             font-weight: 700;
             background: rgba(56,189,248,0.08);
             border-radius: 10px;
@@ -847,7 +807,7 @@
         .tv-tile {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 12px 6px 10px;
             text-align: center;
             cursor: pointer;
@@ -1071,7 +1031,7 @@
             50% { opacity: 1; }
         }
 
-        /* Energy Rings — ukuran dasar 800px, membesar via transform scale
+        /* Energy Rings, ukuran dasar 800px, membesar via transform scale
            (compositor-only), bukan width/height yang memicu layout tiap frame */
         .intro-energy-ring {
             position: absolute;
@@ -1248,8 +1208,8 @@
             }
         }
         :root {
-            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));
-            --glass-border: rgba(255,255,255,0.16);
+            --glass-bg: rgba(17, 24, 39, 0.78);
+            --glass-border: #1E293B;
             --glass-blur: blur(12px) saturate(1.25);
         }
         /* Judul besar di atas konten: cuma tampil di Beranda, tab lain tidak
@@ -1272,8 +1232,8 @@
         .topbar-title { flex: 1; text-align: center; font-weight: 900; font-size: 0.82rem; letter-spacing: 3px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .topbar-title b { color: var(--primary); }
         .topbar-ai {
-            background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #fff;
-            border-radius: 20px; padding: 8px 14px; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+            background: rgba(232,169,12,0.12); border: 1px solid rgba(232,169,12,0.4); color: #fff;
+            border-radius: 10px; padding: 8px 14px; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap;
         }
         .main-wrapper { padding-top: 76px !important; }
         /* Header konsisten di semua tab */
@@ -1294,7 +1254,7 @@
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         }
         /* Sidebar: label grup + tombol tutup */
-        .side-label { padding: 18px 30px 6px; font-size: 0.62rem; letter-spacing: 3px; color: #64748b; font-weight: 700; }
+        .side-label { padding: 18px 30px 6px; font-size: 0.62rem; letter-spacing: 3px; color: #94A3B8; font-weight: 700; }
         .sidebar-close {
             position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.14); color: #cbd5e1; border-radius: 10px;
@@ -1306,13 +1266,13 @@
         @media (min-width: 640px) { .menu-grid { grid-template-columns: repeat(3, 1fr); } }
         .menu-card { display: flex; flex-direction: column; align-items: center; gap: 3px;
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 14px; padding: 16px 8px 14px; color: #e2e8f0; text-decoration: none;
+            border-radius: 10px; padding: 16px 8px 14px; color: #e2e8f0; text-decoration: none;
             cursor: pointer; font-family: inherit; }
-        .menu-card:hover { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.08); }
+        .menu-card:hover { border-color: rgba(232,169,12,0.55); background: rgba(232,169,12,0.08); }
         .menu-card .mc-icon { font-size: 1.6rem; }
         .menu-card .mc-title { font-size: 0.85rem; font-weight: 800; }
         .menu-card .mc-sub { font-size: 0.66rem; color: #94a3b8; }
-        .menu-card.mc-green { background: linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.10));
+        .menu-card.mc-green { background: rgba(16,185,129,0.14);
             border-color: rgba(16,185,129,0.5); }
         .menu-card.mc-green .mc-title { color: #a7f3d0; }
         /* Bottom nav HP: 5 tab utama, gampang dijangkau jempol */
@@ -1345,7 +1305,7 @@
         /* === LAYAR PENDEK (HP landscape / mode desktop landscape) ===
            Di layar pendek, menu sidebar isinya lebih panjang dari tinggi layar
            dan splash elang bertumpuk (judul ketutup elang, tombol ENTER tidak
-           kelihatan) — keduanya harus muat, kalau tidak halaman tidak bisa
+           kelihatan), keduanya harus muat, kalau tidak halaman tidak bisa
            diakses. Blok ini ditaruh paling akhir supaya menang atas aturan
            dasar di atas (spesifisitas sama, yang terakhir menang). */
         @media (max-height: 500px) {
@@ -1362,3 +1322,81 @@
             .intro-enter-btn { bottom: 16px; padding: 11px 28px; font-size: 0.85rem; }
             .intro-energy-ring { width: 420px; height: 420px; }
         }
+
+        /* ================= FS REDESIGN v2 (18 Nov 2026) =================
+           Gelap navy + emas (#E8A90C) + biru sekunder (#38BDF8). Kartu padat,
+           radius 10px, tombol 8-10px. Gradasi hanya untuk judul hero; sisanya
+           solid. Kontras teks minimal AA (4.5:1). */
+        .fs-hero-title {
+            font-size: clamp(1.55rem, 7vw, 2.2rem); font-weight: 900; margin: 0 0 30px 0;
+            letter-spacing: 3px; text-transform: uppercase;
+            background: linear-gradient(to bottom, #FFFFFF 30%, #E8A90C 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        button { cursor: pointer; }
+        button:disabled { cursor: not-allowed; }
+        /* Header HP: judul FREEDOM SYNDICATE harus muat di 360px. */
+        @media (max-width: 480px) {
+            .topbar { gap: 8px; padding: 0 8px; }
+            .topbar-title { font-size: 0.72rem; letter-spacing: 1.5px; }
+            .topbar .menu-toggle { padding: 8px 10px; min-width: 44px; }
+            .topbar-ai { padding: 8px 10px; }
+            .topbar .tb-lbl { display: none; }
+        }
+        /* Grid beranda HP: kartu terakhir membentang penuh supaya tidak jomplang. */
+        @media (max-width: 639px) {
+            .menu-grid .menu-card:last-child { grid-column: span 2; }
+        }
+        /* Kartu unggulan beranda: tetap 2 kolom di desktop, jadi blok 2x2. */
+        @media (min-width: 640px) { .menu-grid.fs-feat { grid-template-columns: repeat(2, 1fr); } }
+        /* Daftar baris (FS v2): navigasi berupa baris penuh, bukan kartu grid. */
+        .fs-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .fs-list .fs-row { display: flex; align-items: center; gap: 12px; width: 100%;
+            background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+            padding: 12px 14px; color: var(--text); font-family: inherit; font-size: 1rem;
+            text-align: left; text-decoration: none; cursor: pointer; }
+        .fs-list .fs-row:hover { border-color: rgba(232,169,12,0.55); background: rgba(232,169,12,0.06); }
+        .fs-list .fs-ic { font-size: 1.35rem; flex: 0 0 auto; line-height: 1; }
+        .fs-list .fs-tx { flex: 1 1 auto; min-width: 0; }
+        .fs-list .fs-ti { display: block; font-weight: 800; font-size: 0.92rem; }
+        .fs-list .fs-su { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+        .fs-list .fs-ch { color: var(--gold); font-weight: 800; flex: 0 0 auto; }
+        .fs-list.fs-big .fs-row { padding: 16px 14px; }
+        .fs-list.fs-big .fs-ic { font-size: 1.7rem; }
+        .fs-list.fs-big .fs-ti { font-size: 1rem; }
+        /* Label seksi kecil (FS v2): pemisah antarkelompok, bukan judul besar. */
+        .fs-nav-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--gold); font-weight: 800; margin: 24px 0 10px; text-align: left; }
+        /* Beranda (FS v2): hero rata kiri, bukan tengah. */
+        .main-wrapper.fs-home { text-align: left; }
+        .main-wrapper.fs-home .fs-hero-title { text-align: left; margin-bottom: 10px; }
+        .main-wrapper.fs-home .intro-box { text-align: left; }
+        .main-wrapper.fs-home .fs-home-kicker { color: var(--gold); font-size: 0.72rem; font-weight: 800;
+            letter-spacing: 2px; text-transform: uppercase; margin: 0 0 8px; }
+        .main-wrapper.fs-home footer { text-align: center; }
+        /* Daftar isi polos (FS v2): tanpa kotak, penanda emas saja. */
+        .fs-isi { list-style: none; margin: 14px 0 0; padding: 0; text-align: left; }
+        .fs-isi li { padding: 7px 0 7px 18px; position: relative; border-bottom: 1px solid var(--line);
+            font-size: 0.92rem; color: var(--text); }
+        .fs-isi li:last-child { border-bottom: none; }
+        .fs-isi li::before { content: ""; position: absolute; left: 0; top: 15px; width: 8px; height: 8px;
+            background: var(--gold); border-radius: 2px; }
+        .fs-isi li a { color: var(--text); text-decoration: none; font-weight: 700; }
+        .fs-isi li a:hover { color: var(--gold); }
+        /* Baris tautan (FS v2): tautan teks dengan pemisah titik emas. */
+        .fs-linkrow { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--muted); }
+        .fs-linkrow a { color: var(--blue); font-weight: 700; text-decoration: none; }
+        .fs-linkrow a:hover { text-decoration: underline; }
+        .fs-linkrow span[aria-hidden="true"] { color: var(--gold); margin: 0 8px; }
+        /* Strip tab hiburan (FS v2): pindah tab tanpa buka hamburger, menempel di bawah topbar. */
+        .fs-tabstrip { position: sticky; top: 56px; z-index: 800; display: flex; gap: 8px; overflow-x: auto; padding: 6px 2px 12px; margin-top: 6px; background: #020617; scrollbar-width: none; }
+        .fs-tabstrip::-webkit-scrollbar { display: none; }
+        .fs-tabstrip button { flex: 0 0 auto; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 10px; padding: 10px 14px; font-weight: 800; font-size: 0.85rem; font-family: inherit; cursor: pointer; white-space: nowrap; }
+        .fs-tabstrip button:hover { border-color: rgba(232,169,12,0.55); }
+        /* Label kelompok tools (FS v2): pemisah antarkelompok di dalam grid. */
+        .fs-tool-label { grid-column: 1 / -1; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 800; margin: 10px 0 2px; text-align: left; }
+        .fs-tool-grid .fs-tool-label:first-child { margin-top: 0; }
+        /* Daftar surah 2 kolom di desktop (FS v2): lebih padat, tanpa scroll panjang. */
+        #fsQuranList { display: grid !important; grid-template-columns: 1fr; }
+        @media (min-width: 700px) { #fsQuranList { grid-template-columns: 1fr 1fr; } }

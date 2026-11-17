@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Tools</title>
     <meta name="description" content="Tools gratis Freedom Syndicate: PDF Tools, Open Gym, Podcast, dan Download App.">
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A — blokir hanya di luar input/textarea
+            // Ctrl+A, blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,7 +79,7 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK, Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
@@ -87,7 +87,7 @@
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
                 '<div style="font-size:3.5rem;">🛡️</div>',
                 '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.75rem;color:#94A3B8;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
                 '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
@@ -127,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -141,12 +141,12 @@
     })();
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
-        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
+        var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#E8A90C', 'rgba(232,169,12,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'biru';
-        var th = T[n] || T.biru;
+        var n = localStorage.getItem('fsTheme') || 'emas';
+        var th = T[n] || T.emas;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
@@ -171,7 +171,7 @@ function _fsFetchJson(url, ms) {
     </script>
 </head>
 <body>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 <span class="tb-lbl">Chat Ai</span></button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
@@ -203,25 +203,28 @@ function _fsFetchJson(url, ms) {
     </nav>
 
     <div class="main-wrapper">
-        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+        <h2 class="fs-hero-title">FREEDOM SYNDICATE</h2>
 
 <!-- ===== TOOLS TAB (PDF Tools + Open Gym + Podcast/Sound Center) ===== -->
         <!-- Ketiga aplikasi itu native (Kotlin / React+Node / Flutter): kodenya TIDAK
              bisa dipaste ke website statis. Yang diterapkan: FITUR intinya, ditulis
-             ulang sebagai web app yang jalan 100% di browser HP — tanpa instal,
+             ulang sebagai web app yang jalan 100% di browser HP, tanpa instal,
              tanpa daftar, tanpa iklan, file tidak diunggah ke server mana pun. -->
         <div id="tools" class="tab-content active" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🛠️ TOOLS</h3><p>Sembilan alat gratis, jalan langsung di browser — tanpa instal, tanpa daftar, tanpa iklan.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>🛠️ TOOLS</h3><p>Sembilan alat gratis, jalan langsung di browser, tanpa instal, tanpa daftar, tanpa iklan.</p></div>
             <div class="fs-tool-grid" id="fsToolsHome">
-                <a href="#fsToolsPdf" onclick="fsToolOpen('fsToolsPdf');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#f97316,#9a3412);"><span class="fs-tt-ico">📄</span><span class="fs-tt-name">PDF Tools</span><span class="fs-tt-desc">Gabung &amp; pisah PDF</span></a>
-                <a href="#fsToolsGym" onclick="fsToolOpen('fsToolsGym');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#22c55e,#15803d);"><span class="fs-tt-ico">🏋️</span><span class="fs-tt-name">Open Gym</span><span class="fs-tt-desc">Latihan &amp; progres</span></a>
-                <a href="#fsToolsPod" onclick="fsToolOpen('fsToolsPod');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#a855f7,#6b21a8);"><span class="fs-tt-ico">🎙️</span><span class="fs-tt-name">Podcast</span><span class="fs-tt-desc">Rekam &amp; dengar</span></a>
-                <a href="#fsToolsSub" onclick="fsToolOpen('fsToolsSub');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#3b82f6,#1e40af);"><span class="fs-tt-ico">💳</span><span class="fs-tt-name">Langganan</span><span class="fs-tt-desc">Kelola langganan</span></a>
-                <a href="#fsToolsFoot" onclick="fsToolOpen('fsToolsFoot');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#14b8a6,#0f766e);"><span class="fs-tt-ico">⚽</span><span class="fs-tt-name">Skor Bola</span><span class="fs-tt-desc">Skor langsung</span></a>
-                <a href="#fsToolsTrans" onclick="fsToolOpen('fsToolsTrans');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#06b6d4,#155e75);"><span class="fs-tt-ico">🌐</span><span class="fs-tt-name">Translator</span><span class="fs-tt-desc">Terjemah bahasa</span></a>
-                <a href="#fsToolsIp" onclick="fsToolOpen('fsToolsIp');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#ef4444,#7f1d1d);"><span class="fs-tt-ico">🛡️</span><span class="fs-tt-name">Cek IP &amp; VPN</span><span class="fs-tt-desc">Cek IP &amp; VPN</span></a>
-                <a href="#fsToolsWa" onclick="fsToolOpen('fsToolsWa');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#25d366,#128c7e);"><span class="fs-tt-ico">💬</span><span class="fs-tt-name">Kirim WhatsApp</span><span class="fs-tt-desc">Kirim WA cepat</span></a>
-                <a href="#fsToolsTheme" onclick="fsToolOpen('fsToolsTheme');return false;" class="fs-tool-tile" style="background:linear-gradient(135deg,#ec4899,#9d174d);"><span class="fs-tt-ico">🎨</span><span class="fs-tt-name">Tema</span><span class="fs-tt-desc">Ganti tema situs</span></a>
+                <div class="fs-tool-label">File dan suara</div>
+                <a href="#fsToolsPdf" onclick="fsToolOpen('fsToolsPdf');return false;" class="fs-tool-tile" style="background:#9a3412;"><span class="fs-tt-ico">📄</span><span class="fs-tt-name">PDF Tools</span><span class="fs-tt-desc">Gabung &amp; pisah PDF</span></a>
+                <a href="#fsToolsPod" onclick="fsToolOpen('fsToolsPod');return false;" class="fs-tool-tile" style="background:#6b21a8;"><span class="fs-tt-ico">🎙️</span><span class="fs-tt-name">Podcast</span><span class="fs-tt-desc">Rekam &amp; dengar</span></a>
+                <div class="fs-tool-label">Cek dan info</div>
+                <a href="#fsToolsFoot" onclick="fsToolOpen('fsToolsFoot');return false;" class="fs-tool-tile" style="background:#0f766e;"><span class="fs-tt-ico">⚽</span><span class="fs-tt-name">Skor Bola</span><span class="fs-tt-desc">Skor langsung</span></a>
+                <a href="#fsToolsIp" onclick="fsToolOpen('fsToolsIp');return false;" class="fs-tool-tile" style="background:#7f1d1d;"><span class="fs-tt-ico">🛡️</span><span class="fs-tt-name">Cek IP &amp; VPN</span><span class="fs-tt-desc">Cek IP &amp; VPN</span></a>
+                <a href="#fsToolsTrans" onclick="fsToolOpen('fsToolsTrans');return false;" class="fs-tool-tile" style="background:#155e75;"><span class="fs-tt-ico">🌐</span><span class="fs-tt-name">Translator</span><span class="fs-tt-desc">Terjemah bahasa</span></a>
+                <div class="fs-tool-label">Harian</div>
+                <a href="#fsToolsGym" onclick="fsToolOpen('fsToolsGym');return false;" class="fs-tool-tile" style="background:#15803d;"><span class="fs-tt-ico">🏋️</span><span class="fs-tt-name">Open Gym</span><span class="fs-tt-desc">Latihan &amp; progres</span></a>
+                <a href="#fsToolsSub" onclick="fsToolOpen('fsToolsSub');return false;" class="fs-tool-tile" style="background:#1e40af;"><span class="fs-tt-ico">💳</span><span class="fs-tt-name">Langganan</span><span class="fs-tt-desc">Kelola langganan</span></a>
+                <a href="#fsToolsWa" onclick="fsToolOpen('fsToolsWa');return false;" class="fs-tool-tile" style="background:#128c7e;"><span class="fs-tt-ico">💬</span><span class="fs-tt-name">Kirim WhatsApp</span><span class="fs-tt-desc">Kirim WA cepat</span></a>
+                <a href="#fsToolsTheme" onclick="fsToolOpen('fsToolsTheme');return false;" class="fs-tool-tile" style="background:#9d174d;"><span class="fs-tt-ico">🎨</span><span class="fs-tt-name">Tema</span><span class="fs-tt-desc">Ganti tema situs</span></a>
             </div>
 
             <!-- Bar kembali (Tools v3): muncul saat satu tool dibuka. -->
@@ -231,9 +234,9 @@ function _fsFetchJson(url, ms) {
             </div>
 
             <!-- ===== PDF TOOLS (ala sammyZi/pdf-tools, MIT) ===== -->
-            <div id="fsToolsPdf" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(56,189,248,0.06));border:1px solid rgba(249,115,22,0.3);border-radius:14px;padding:14px;">
+            <div id="fsToolsPdf" class="fs-tool-view" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:14px;padding:14px;">
                 <div style="font-size:0.9rem;font-weight:900;color:#fff;">📄 PDF Tools</div>
-                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Gabung, pisah &amp; foto jadi PDF — semuanya jalan di HP ini (pdf-lib), file tidak diunggah ke mana pun. <a href="https://github.com/sammyZi/pdf-tools" target="_blank" rel="noopener" style="color:var(--primary);">github.com/sammyZi/pdf-tools</a> (MIT)</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Gabung, pisah &amp; foto jadi PDF, semuanya jalan di HP ini (pdf-lib), file tidak diunggah ke mana pun. <a href="https://github.com/sammyZi/pdf-tools" target="_blank" rel="noopener" style="color:var(--primary);">github.com/sammyZi/pdf-tools</a> (MIT)</div>
                 <input type="file" id="fsPdfFiles" accept="application/pdf,.pdf" multiple style="display:none;" onchange="fsPdfAddFiles(this.files); this.value='';">
                 <button onclick="document.getElementById('fsPdfFiles').click()" style="width:100%;margin-top:10px;background:#f97316;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">＋ Pilih File PDF</button>
                 <div id="fsPdfList" style="margin-top:10px;"></div>
@@ -252,9 +255,9 @@ function _fsFetchJson(url, ms) {
             </div>
 
             <!-- ===== OPEN GYM (ala alexpcosta/opengym) ===== -->
-            <div id="fsToolsGym" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(74,222,128,0.08),rgba(56,189,248,0.06));border:1px solid rgba(74,222,128,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+            <div id="fsToolsGym" class="fs-tool-view" style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:14px;padding:14px;margin-top:14px;">
                 <div style="font-size:0.9rem;font-weight:900;color:#fff;">🏋️ Open Gym</div>
-                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Rencanakan latihan, catat set &amp; beban, pantau progres — data tersimpan di HP ini saja. <a href="https://github.com/alexpcosta/opengym" target="_blank" rel="noopener" style="color:var(--primary);">github.com/alexpcosta/opengym</a></div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Rencanakan latihan, catat set &amp; beban, pantau progres, data tersimpan di HP ini saja. <a href="https://github.com/alexpcosta/opengym" target="_blank" rel="noopener" style="color:var(--primary);">github.com/alexpcosta/opengym</a></div>
                 <div id="fsGymStats" style="display:flex;gap:8px;margin-top:10px;"></div>
                 <div style="font-size:0.72rem;font-weight:800;color:#fff;margin-top:12px;">Pilih Rutin</div>
                 <div id="fsGymRoutines" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
@@ -268,10 +271,10 @@ function _fsFetchJson(url, ms) {
                 <div id="fsGymHistory" style="margin-top:6px;"></div>
             </div>
 
-            <!-- ===== PODCAST (ala Sound Center — Azare77/sound_center, GPL-3.0) ===== -->
-            <div id="fsToolsPod" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(56,189,248,0.06));border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+            <!-- ===== PODCAST (ala Sound Center, Azare77/sound_center, GPL-3.0) ===== -->
+            <div id="fsToolsPod" class="fs-tool-view" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;margin-top:14px;">
                 <div style="font-size:0.9rem;font-weight:900;color:#fff;">🎙️ Podcast</div>
-                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Streaming podcast &amp; dengarkan episode — ala Sound Center (Flutter, podcast streaming + background playback). <a href="https://github.com/Azare77/sound_center" target="_blank" rel="noopener" style="color:var(--primary);">github.com/Azare77/sound_center</a> (GPL-3.0)</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Streaming podcast &amp; dengarkan episode, ala Sound Center (Flutter, podcast streaming + background playback). <a href="https://github.com/Azare77/sound_center" target="_blank" rel="noopener" style="color:var(--primary);">github.com/Azare77/sound_center</a> (GPL-3.0)</div>
                 <div style="display:flex;gap:8px;margin-top:10px;">
                     <input id="fsPodInput" type="text" placeholder="🔍 Cari podcast..." onkeydown="if(event.key==='Enter')fsPodSearch()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.9rem;outline:none;min-width:0;">
                     <button onclick="fsPodSearch()" style="background:#a855f7;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">CARI</button>
@@ -285,14 +288,14 @@ function _fsFetchJson(url, ms) {
                 <div id="fsPodEps" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;"></div>
             </div>
 
-<!-- ===== SUBSCRIPTION TRACKER (ala konsep "Subscription Tracker" — junaidjamel.com) ===== -->
+<!-- ===== SUBSCRIPTION TRACKER (ala konsep "Subscription Tracker", junaidjamel.com) ===== -->
 <!-- "Subscription Tracker" di thread junaidjamel.com itu KONSEP DESAIN UI, bukan
-     repo open source — tidak ada repo GitHub-nya di github.com/junaidjamel
+     repo open source, tidak ada repo GitHub-nya di github.com/junaidjamel
      (dicek 17 Nov 2026). Yang diterapkan: FITUR intinya, ditulis ulang sebagai
      web app lokal. Data hanya tersimpan di HP ini (localStorage fsSubList). -->
-<div id="fsToolsSub" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(56,189,248,0.06));border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+<div id="fsToolsSub" class="fs-tool-view" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px;margin-top:14px;">
     <div style="font-size:0.9rem;font-weight:900;color:#fff;">💳 Subscription Tracker</div>
-    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Catat semua langganan (Netflix, Spotify, dll) — total per bulan &amp; hitung mundur ke tanggal renewal. Data tersimpan di HP ini saja, tidak dikirim ke mana pun.</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Catat semua langganan (Netflix, Spotify, dll), total per bulan &amp; hitung mundur ke tanggal renewal. Data tersimpan di HP ini saja, tidak dikirim ke mana pun.</div>
     <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
         <input id="fsSubName" type="text" placeholder="Nama langganan (cth: Netflix)" style="flex:2;min-width:140px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
         <input id="fsSubPrice" type="number" inputmode="decimal" min="0" placeholder="Harga (Rp)" style="flex:1;min-width:100px;background:rgba(255,255,255,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 12px;color:#fff;font-size:0.85rem;outline:none;">
@@ -310,14 +313,14 @@ function _fsFetchJson(url, ms) {
     <div id="fsSubStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
 </div>
 
-<!-- ===== SKOR BOLA (ala konsep "Football Match States" — junaidjamel.com) ===== -->
+<!-- ===== SKOR BOLA (ala konsep "Football Match States", junaidjamel.com) ===== -->
 <!-- "Football Match States" di thread itu juga KONSEP DESAIN UI, bukan repo.
      Skor live diambil dari API publik ESPN (site.api.espn.com, tanpa kunci,
      terverifikasi HTTP 200 dari VM 17 Nov 2026 untuk eng.1/esp.1/ita.1/ger.1/
      uefa.champions). -->
-<div id="fsToolsFoot" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(56,189,248,0.06));border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+<div id="fsToolsFoot" class="fs-tool-view" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:14px;padding:14px;margin-top:14px;">
     <div style="font-size:0.9rem;font-weight:900;color:#fff;">⚽ Skor Bola</div>
-    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Skor live &amp; jadwal 5 liga top Eropa — data ESPN (tanpa kunci, tanpa daftar). Pilih liga di bawah, ketuk 🔄 untuk refresh.</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Skor live &amp; jadwal 5 liga top Eropa, data ESPN (tanpa kunci, tanpa daftar). Pilih liga di bawah, ketuk 🔄 untuk refresh.</div>
     <div id="fsFootLeagues" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
         <button data-league="eng.1" onclick="fsFootLoad('eng.1', this)" style="background:#22c55e;border:1px solid rgba(34,197,94,0.4);color:#000;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🏴󐁧󐁢󐁥󐁮󐁧󐁿 EPL</button>
         <button data-league="esp.1" onclick="fsFootLoad('esp.1', this)" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);color:#86efac;border-radius:16px;padding:8px 14px;font-size:0.72rem;font-weight:800;cursor:pointer;font-family:inherit;">🇪🇸 La Liga</button>
@@ -330,18 +333,18 @@ function _fsFetchJson(url, ms) {
     <div id="fsFootList" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
 </div>
 
-<!-- ===== TRANSLATOR (ala "Speaksy" — junaidjamel.com) ===== -->
+<!-- ===== TRANSLATOR (ala "Speaksy", junaidjamel.com) ===== -->
 <!-- "Speaksy" di thread itu KONSEP DESAIN UI aplikasi translator (teks + suara).
      Tidak ada repo open source-nya; speaksy.in yang asli adalah layanan AI phone
-     agent berbayar (bukan translator gratis). Yang diterapkan: FITUR intinya —
+     agent berbayar (bukan translator gratis). Yang diterapkan: FITUR intinya,
      terjemahan teks via MyMemory (gratis, tanpa kunci) + suara via Web Speech API
      bawaan browser. Batas gratis MyMemory ±5.000 karakter/hari per IP (anonim):
      dari IP VM ini kuotanya sedang habis (HTTP 429, terverifikasi 17 Nov 2026),
      dari HP San kuota IP-nya sendiri masih tersedia. Kalau MyMemory habis,
      otomatis dicoba ke LibreTranslate (instance publik libretranslate.de). -->
-<div id="fsToolsTrans" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(56,189,248,0.1),rgba(168,85,247,0.06));border:1px solid rgba(56,189,248,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+<div id="fsToolsTrans" class="fs-tool-view" style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:14px;padding:14px;margin-top:14px;">
     <div style="font-size:0.9rem;font-weight:900;color:#fff;">🌐 Translator</div>
-    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Terjemahkan teks &amp; suara, lalu dengarkan hasilnya — ala Speaksy. Gratis via MyMemory (tanpa kunci, batas ±5.000 karakter/hari per IP — kalau kuota IP kamu habis hari ini, coba lagi besok).</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Terjemahkan teks &amp; suara, lalu dengarkan hasilnya, ala Speaksy. Gratis via MyMemory (tanpa kunci, batas ±5.000 karakter/hari per IP, kalau kuota IP kamu habis hari ini, coba lagi besok).</div>
     <div style="display:flex;gap:6px;align-items:center;margin-top:10px;">
         <select id="fsTransFrom" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:10px;color:#fff;font-size:0.85rem;outline:none;min-width:0;">
             <option value="en" style="color:#000;" selected>🇬🇧 English</option>
@@ -398,24 +401,24 @@ function _fsFetchJson(url, ms) {
     <div id="fsTransStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
 </div>
 
-<!-- ===== CEK IP & VPN (ala Proxy Cloud — code3-dev/ProxyCloud, MIT) ===== -->
+<!-- ===== CEK IP & VPN (ala Proxy Cloud, code3-dev/ProxyCloud, MIT) ===== -->
 <!-- ProxyCloud itu aplikasi VPN Flutter (Android): VPN TIDAK BISA jalan dari tab
-     browser — butuh aplikasi yang mengubah koneksi di level sistem. Seksi ini
+     browser, butuh aplikasi yang mengubah koneksi di level sistem. Seksi ini
      JUJUR soal itu: hanya menampilkan IP/lokasi kamu + tautan unduh aplikasinya.
      IP dicek via ipinfo.io (tanpa kunci, HTTP 200 terverifikasi 17 Nov 2026),
      cadangan ipwho.is (HTTP 200 terverifikasi). -->
-<div id="fsToolsIp" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(248,113,113,0.1),rgba(56,189,248,0.06));border:1px solid rgba(248,113,113,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+<div id="fsToolsIp" class="fs-tool-view" style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:14px;padding:14px;margin-top:14px;">
     <div style="font-size:0.9rem;font-weight:900;color:#fff;">🛡️ Cek IP &amp; VPN</div>
-    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Lihat IP &amp; lokasi yang terlihat oleh internet — ala ProxyCloud. <a href="https://github.com/code3-dev/ProxyCloud" target="_blank" rel="noopener" style="color:var(--primary);">github.com/code3-dev/ProxyCloud</a> (Flutter, MIT)</div>
-    <div style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:10px;margin-top:10px;font-size:0.68rem;color:#fecaca;line-height:1.6;">⚠️ <b>IP asli kamu terlihat.</b> Setiap situs yang kamu kunjungi bisa melihat alamat IP, kota &amp; ISP kamu. Browser <b>tidak bisa</b> memberi VPN — VPN butuh aplikasi yang mengubah koneksi di level sistem HP/PC. Di bawah ini aplikasi VPN gratisnya.</div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Lihat IP &amp; lokasi yang terlihat oleh internet, ala ProxyCloud. <a href="https://github.com/code3-dev/ProxyCloud" target="_blank" rel="noopener" style="color:var(--primary);">github.com/code3-dev/ProxyCloud</a> (Flutter, MIT)</div>
+    <div style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:10px;margin-top:10px;font-size:0.68rem;color:#fecaca;line-height:1.6;">⚠️ <b>IP asli kamu terlihat.</b> Setiap situs yang kamu kunjungi bisa melihat alamat IP, kota &amp; ISP kamu. Browser <b>tidak bisa</b> memberi VPN, VPN butuh aplikasi yang mengubah koneksi di level sistem HP/PC. Di bawah ini aplikasi VPN gratisnya.</div>
     <div id="fsIpGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px;"></div>
     <div style="display:flex;gap:6px;margin-top:10px;">
         <button onclick="fsIpCheck()" style="flex:1;background:#f87171;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">🔄 Cek Ulang IP Saya</button>
     </div>
     <div id="fsIpStatus" style="font-size:0.65rem;color:#94a3b8;margin-top:8px;"></div>
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;margin-top:10px;">
-        <div style="font-size:0.78rem;font-weight:800;color:#fff;">☁️ ProxyCloud — VPN Gratis (Flutter)</div>
-        <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">VPN open source untuk Android — sembunyikan IP asli &amp; buka situs yang diblokir. Unduh APK dari halaman Releases resmi, instal di HP (bukan dari browser ini).</div>
+        <div style="font-size:0.78rem;font-weight:800;color:#fff;">☁️ ProxyCloud, VPN Gratis (Flutter)</div>
+        <div style="font-size:0.65rem;color:#94a3b8;line-height:1.6;margin-top:4px;">VPN open source untuk Android, sembunyikan IP asli &amp; buka situs yang diblokir. Unduh APK dari halaman Releases resmi, instal di HP (bukan dari browser ini).</div>
         <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
             <a href="https://github.com/code3-dev/ProxyCloud/releases" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#f87171;color:#000;border-radius:10px;padding:11px 12px;font-weight:900;font-size:0.8rem;text-decoration:none;min-width:140px;">⬇ Unduh ProxyCloud</a>
             <a href="https://github.com/code3-dev/ProxyCloud" target="_blank" rel="noopener" style="flex:1;text-align:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:11px 12px;font-weight:800;font-size:0.8rem;text-decoration:none;min-width:110px;">⭐ GitHub</a>
@@ -423,16 +426,16 @@ function _fsFetchJson(url, ms) {
     </div>
 </div>
 
-<!-- ===== KIRIM WHATSAPP (ala Chat App Flutter — MoazSayed7) ===== -->
+<!-- ===== KIRIM WHATSAPP (ala Chat App Flutter, MoazSayed7) ===== -->
 <!-- Chat App-nya MoazSayed7 (Flutter-Chat-App-Firebase-Authentication-Messaging-
-     WhatsApp-Like) butuh Firebase Auth + Firestore + backend — TIDAK BISA jalan
+     WhatsApp-Like) butuh Firebase Auth + Firestore + backend, TIDAK BISA jalan
      di website statis, dan repo itu tidak punya file LICENSE. Yang diterapkan:
-     FITUR paling berguna tanpa backend: pembuat tautan wa.me — ketik nomor +
+     FITUR paling berguna tanpa backend: pembuat tautan wa.me, ketik nomor +
      pesan, buka langsung di WhatsApp resmi. Bukan aplikasi chat, tidak
      menyimpan pesan, tidak butuh login. -->
-<div id="fsToolsWa" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(37,211,102,0.1),rgba(56,189,248,0.06));border:1px solid rgba(37,211,102,0.3);border-radius:14px;padding:14px;margin-top:14px;">
+<div id="fsToolsWa" class="fs-tool-view" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:14px;padding:14px;margin-top:14px;">
     <div style="font-size:0.9rem;font-weight:900;color:#fff;">💬 Kirim WhatsApp</div>
-    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ketik nomor &amp; pesan → buka langsung di WhatsApp, tanpa simpan nomor dulu. Ala Chat App Flutter (MoazSayed7) — versi web ini hanya pembuat tautan wa.me, bukan aplikasi chat. <a href="https://github.com/MoazSayed7/Flutter-Chat-App-Firebase-Authentication-Messaging-WhatsApp-Like" target="_blank" rel="noopener" style="color:var(--primary);">Lihat repo aslinya</a></div>
+    <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ketik nomor &amp; pesan → buka langsung di WhatsApp, tanpa simpan nomor dulu. Ala Chat App Flutter (MoazSayed7), versi web ini hanya pembuat tautan wa.me, bukan aplikasi chat. <a href="https://github.com/MoazSayed7/Flutter-Chat-App-Firebase-Authentication-Messaging-WhatsApp-Like" target="_blank" rel="noopener" style="color:var(--primary);">Lihat repo aslinya</a></div>
     <input id="fsWaPhone" type="tel" inputmode="tel" placeholder="Nomor tujuan, cth: 081234567890" style="width:100%;box-sizing:border-box;margin-top:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(37,211,102,0.3);border-radius:10px;padding:12px;color:#fff;font-size:0.9rem;outline:none;">
     <textarea id="fsWaMsg" rows="3" placeholder="Tulis pesan..." style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(37,211,102,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;"></textarea>
     <button onclick="fsWaMake()" style="width:100%;margin-top:8px;background:#25d366;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">💬 Buat Link WhatsApp</button>
@@ -450,14 +453,14 @@ function _fsFetchJson(url, ms) {
 
             <!-- ===== TEMA SITUS (ala Open Tune: ganti warna aksen) ===== -->
             <!-- Open Tune itu pemutar YouTube Music (GPL-3.0): kodenya TIDAK bisa
-                 dipakai di website statis. Yang diambil: idenya — tema warna yang
+                 dipakai di website statis. Yang diambil: idenya, tema warna yang
                  bisa diganti member. Tema tersimpan di HP, berlaku di semua halaman. -->
-            <div id="fsToolsTheme" class="fs-tool-view" style="background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(56,189,248,0.06));border:1px solid rgba(167,139,250,0.3);border-radius:14px;padding:14px;margin-top:12px;">
+            <div id="fsToolsTheme" class="fs-tool-view" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:14px;padding:14px;margin-top:12px;">
                 <div style="font-size:0.9rem;font-weight:900;color:#fff;">🎨 Tema Situs</div>
-                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ganti warna aksen seluruh situs — tersimpan di HP ini dan langsung berlaku di semua halaman. Terinspirasi Open Tune: <a href="https://github.com/justshivv/Opentune" target="_blank" rel="noopener" style="color:var(--primary);">github.com/justshivv/Opentune</a> (GPL-3.0)</div>
+                <div style="font-size:0.68rem;color:#94a3b8;line-height:1.6;margin-top:4px;">Ganti warna aksen seluruh situs, tersimpan di HP ini dan langsung berlaku di semua halaman. Terinspirasi Open Tune: <a href="https://github.com/justshivv/Opentune" target="_blank" rel="noopener" style="color:var(--primary);">github.com/justshivv/Opentune</a> (GPL-3.0)</div>
                 <div id="fsThemeRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"></div>
             </div>
-            <div id="fsToolsFootNote" style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">PDF: pdf-lib (MIT) via jsDelivr · Podcast: iTunes API (tanpa kunci) · Skor bola: ESPN (tanpa kunci) · Terjemahan: MyMemory gratis (±5rb karakter/hari/IP) · Cek IP: ipinfo.io (tanpa kunci) · Gym &amp; Langganan: data lokal di HP · Showcase apps: junaidjamel.com</div>
+            <div id="fsToolsFootNote" style="font-size:0.58rem;color:#94A3B8;margin-top:14px;text-align:center;">PDF: pdf-lib (MIT) via jsDelivr · Podcast: iTunes API (tanpa kunci) · Skor bola: ESPN (tanpa kunci) · Terjemahan: MyMemory gratis (±5rb karakter/hari/IP) · Cek IP: ipinfo.io (tanpa kunci) · Gym &amp; Langganan: data lokal di HP · Showcase apps: junaidjamel.com</div>
 
             <script>
             // ================= PDF TOOLS =================
@@ -552,7 +555,7 @@ function _fsFetchJson(url, ms) {
                     }
                     var bytes = await out.save();
                     fsPdfDownload(bytes, 'gabungan.pdf');
-                    fsPdfStatus('✅ Berhasil digabung — ' + out.getPageCount() + ' halaman, tersimpan sebagai gabungan.pdf.');
+                    fsPdfStatus('✅ Berhasil digabung, ' + out.getPageCount() + ' halaman, tersimpan sebagai gabungan.pdf.');
                 } catch(e) {
                     fsPdfStatus('⚠️ Gagal menggabung: ' + (e && e.message ? e.message : e));
                 }
@@ -573,7 +576,7 @@ function _fsFetchJson(url, ms) {
                     pages.forEach(function(p){ out.addPage(p); });
                     var bytes = await out.save();
                     fsPdfDownload(bytes, 'pisahan.pdf');
-                    fsPdfStatus('✅ Berhasil dipisah — ' + idxs.length + ' halaman, tersimpan sebagai pisahan.pdf.');
+                    fsPdfStatus('✅ Berhasil dipisah, ' + idxs.length + ' halaman, tersimpan sebagai pisahan.pdf.');
                 } catch(e) {
                     fsPdfStatus('⚠️ Gagal memisah: ' + (e && e.message ? e.message : e));
                 }
@@ -671,7 +674,7 @@ function _fsFetchJson(url, ms) {
                 var r = FS_GYM_ROUTINES[_fsGymRoutine];
                 var head = document.createElement('div');
                 head.style.cssText = 'font-size:0.8rem;font-weight:800;color:#fff;margin-bottom:6px;';
-                head.textContent = r.icon + ' ' + r.name + ' — isi beban (kg) & repetisi tiap set, centang kalau selesai.';
+                head.textContent = r.icon + ' ' + r.name + ', isi beban (kg) & repetisi tiap set, centang kalau selesai.';
                 box.appendChild(head);
                 r.ex.forEach(function(name, ei){
                     var card = document.createElement('div');
@@ -699,7 +702,7 @@ function _fsFetchJson(url, ms) {
                         chk.onclick = function(){ set.done = !set.done; chk.textContent = set.done ? '✅' : '⬜'; };
                         row.appendChild(w); row.appendChild(rp); row.appendChild(chk);
                         var lbl = document.createElement('span');
-                        lbl.style.cssText = 'font-size:0.6rem;color:#64748b;width:28px;';
+                        lbl.style.cssText = 'font-size:0.6rem;color:#94A3B8;width:28px;';
                         lbl.textContent = 'Set ' + (si + 1);
                         row.insertBefore(lbl, row.firstChild);
                         card.appendChild(row);
@@ -737,7 +740,7 @@ function _fsFetchJson(url, ms) {
                 if (!box) return;
                 var log = fsGymLoad('fsGymLog', []);
                 box.innerHTML = '';
-                if (!log.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#64748b;">Belum ada latihan tercatat.</div>'; return; }
+                if (!log.length) { box.innerHTML = '<div style="font-size:0.65rem;color:#94A3B8;">Belum ada latihan tercatat.</div>'; return; }
                 log.slice(0, 10).forEach(function(w){
                     var vol = 0;
                     (w.sets || []).forEach(function(s){ vol += (s.w || 0) * (s.r || 0); });
@@ -792,7 +795,7 @@ function _fsFetchJson(url, ms) {
                     var d = await _fsFetchJson('https://itunes.apple.com/search?term=' + encodeURIComponent(q) + '&media=podcast&limit=12&country=ID', 10000);
                     var res = (d && d.results) || [];
                     if (!res.length) { if (st) st.textContent = 'Tidak ada podcast untuk "' + q + '".'; list.innerHTML = ''; _fsPodSearching = false; return; }
-                    if (st) st.textContent = res.length + ' podcast ditemukan — ketuk untuk lihat episode.';
+                    if (st) st.textContent = res.length + ' podcast ditemukan, ketuk untuk lihat episode.';
                     list.innerHTML = '';
                     res.forEach(function(p){
                         var row = document.createElement('div');
@@ -817,7 +820,7 @@ function _fsFetchJson(url, ms) {
                     var d = await _fsFetchJson('https://itunes.apple.com/lookup?id=' + id + '&entity=podcastEpisode&limit=20&country=ID', 10000);
                     var list = ((d && d.results) || []).filter(function(r){ return r.wrapperType === 'podcastEpisode' && r.episodeUrl; });
                     if (!list.length) { if (st) st.textContent = 'Episode tidak tersedia untuk podcast ini.'; return; }
-                    if (st) st.textContent = '🎙️ ' + name + ' — ' + list.length + ' episode terbaru.';
+                    if (st) st.textContent = '🎙️ ' + name + ', ' + list.length + ' episode terbaru.';
                     eps.innerHTML = '';
                     list.forEach(function(ep){
                         var mins = ep.trackTimeMillis ? Math.round(ep.trackTimeMillis / 60000) + ' mnt' : '';
@@ -847,7 +850,7 @@ function _fsFetchJson(url, ms) {
             }
             </script>
             <script>
-            // ===== 5 SEKSI BARU (batch 2, 17 Nov 2026) — di-inline dari tools-new-sections.js =====
+            // ===== 5 SEKSI BARU (batch 2, 17 Nov 2026), di-inline dari tools-new-sections.js =====
 
 // ================= 1. SUBSCRIPTION TRACKER (fsSub*) =================
 function fsSubLoad() {
@@ -944,7 +947,7 @@ function fsSubRender() {
     }
     box.innerHTML = '';
     if (!list.length) {
-        box.innerHTML = '<div style="font-size:0.65rem;color:#64748b;padding:6px 0;">Belum ada langganan. Contoh: Netflix Rp 54.000/bulan, renewal tiap tanggal 1.</div>';
+        box.innerHTML = '<div style="font-size:0.65rem;color:#94A3B8;padding:6px 0;">Belum ada langganan. Contoh: Netflix Rp 54.000/bulan, renewal tiap tanggal 1.</div>';
         return;
     }
     list.forEach(function (s, i) {
@@ -1014,12 +1017,12 @@ async function fsFootLoad(league, btn) {
         var events = (d && d.events) || [];
         var leagueName = (d && d.leagues && d.leagues[0] && d.leagues[0].name) || fsFootLeagueName(league);
         if (!events.length) {
-            if (st) st.textContent = leagueName + ' — tidak ada pertandingan hari ini. Coba liga lain atau refresh nanti.';
+            if (st) st.textContent = leagueName + ', tidak ada pertandingan hari ini. Coba liga lain atau refresh nanti.';
             list.innerHTML = '';
             _fsFootLoading = false;
             return;
         }
-        if (st) st.textContent = '⚽ ' + leagueName + ' — ' + events.length + ' pertandingan (jadwal & skor hari ini, waktu WIB).';
+        if (st) st.textContent = '⚽ ' + leagueName + ', ' + events.length + ' pertandingan (jadwal & skor hari ini, waktu WIB).';
         list.innerHTML = '';
         events.forEach(function (ev) {
             var comp = (ev.competitions && ev.competitions[0]) || null;
@@ -1055,7 +1058,7 @@ async function fsFootLoad(league, btn) {
                 + '<div style="font-size:1rem;font-weight:900;color:#fff;background:rgba(0,0,0,0.35);border-radius:8px;padding:4px 10px;flex-shrink:0;">' + esc(String(homeScore)) + ' - ' + esc(String(awayScore)) + '</div>'
                 + '<div style="flex:1;min-width:0;font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(away.team.shortDisplayName || away.team.displayName || '') + '</div>'
                 + '</div>'
-                + (ev.venue && ev.venue.fullName ? '<div style="font-size:0.6rem;color:#64748b;margin-top:5px;text-align:center;">📍 ' + esc(ev.venue.fullName) + '</div>' : '');
+                + (ev.venue && ev.venue.fullName ? '<div style="font-size:0.6rem;color:#94A3B8;margin-top:5px;text-align:center;">📍 ' + esc(ev.venue.fullName) + '</div>' : '');
             list.appendChild(row);
         });
         if (!list.children.length && st) st.textContent = 'Tidak ada pertandingan yang bisa ditampilkan untuk liga ini.';
@@ -1067,7 +1070,7 @@ async function fsFootLoad(league, btn) {
 
 // ================= 3. TRANSLATOR (fsTrans*) =================
 // Utama: MyMemory (gratis, tanpa kunci). Batas anonim ±5.000 karakter/hari per
-// IP — dari IP VM ini kuota habis (HTTP 429, 17 Nov 2026); dari HP pengguna
+// IP, dari IP VM ini kuota habis (HTTP 429, 17 Nov 2026); dari HP pengguna
 // kuota IP-nya sendiri yang berlaku. Cadangan: LibreTranslate publik.
 // TIDAK ada terjemahan dummy: kalau kedua API gagal, tampilkan pesan jujur.
 var _fsTransLast = '';
@@ -1126,7 +1129,7 @@ async function fsTransGo() {
         if (out) out.textContent = result;
         if (st) st.textContent = '✅ Selesai (via MyMemory, gratis).';
     } catch (e1) {
-        if (st) st.textContent = 'MyMemory gagal (' + (e1 && e1.message ? e1.message : 'kuota/limit') + ') — mencoba cadangan LibreTranslate...';
+        if (st) st.textContent = 'MyMemory gagal (' + (e1 && e1.message ? e1.message : 'kuota/limit') + '), mencoba cadangan LibreTranslate...';
         try {
             var result2 = await fsTransLibre(text, from.value, to.value);
             _fsTransLast = result2;
@@ -1134,7 +1137,7 @@ async function fsTransGo() {
             if (st) st.textContent = '✅ Selesai (via LibreTranslate, gratis).';
         } catch (e2) {
             if (out) out.textContent = 'Terjemahan gagal.';
-            if (st) st.textContent = '⚠️ Kedua layanan gratis gagal saat ini (MyMemory: kuota harian IP ini habis; LibreTranslate: tidak terjangkau). Coba lagi besok atau ganti jaringan/Wi-Fi — tidak ada hasil palsu yang ditampilkan.';
+            if (st) st.textContent = '⚠️ Kedua layanan gratis gagal saat ini (MyMemory: kuota harian IP ini habis; LibreTranslate: tidak terjangkau). Coba lagi besok atau ganti jaringan/Wi-Fi, tidak ada hasil palsu yang ditampilkan.';
         }
     }
     _fsTransBusy = false;
@@ -1168,7 +1171,7 @@ function fsTransMic() {
         if (st) st.textContent = '🎤 Mendengarkan... bicara sekarang.';
         rec.onresult = function (ev) {
             var txt = ev.results && ev.results[0] && ev.results[0][0] && ev.results[0][0].transcript;
-            if (txt && inp) { inp.value = txt; if (st) st.textContent = '🎤 Terdengar: "' + txt + '" — menerjemahkan...'; fsTransGo(); }
+            if (txt && inp) { inp.value = txt; if (st) st.textContent = '🎤 Terdengar: "' + txt + '", menerjemahkan...'; fsTransGo(); }
         };
         rec.onerror = function () { if (st) st.textContent = '⚠️ Mic gagal / tidak ada izin mikrofon.'; };
         rec.onend = function () {};
@@ -1181,7 +1184,7 @@ function fsTransCopy() {
     var st = document.getElementById('fsTransStatus');
     if (!_fsTransLast) { if (st) st.textContent = 'Belum ada hasil untuk disalin.'; return; }
     var done = function () { if (st) st.textContent = '📋 Hasil disalin.'; };
-    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin — salin manual dari kotak hasil.'; };
+    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin, salin manual dari kotak hasil.'; };
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(_fsTransLast).then(done, fail);
     } else {
@@ -1200,7 +1203,7 @@ function fsTransCopy() {
 // ================= 4. CEK IP & VPN (fsIp*) =================
 // Utama: ipinfo.io/json (tanpa kunci, HTTP 200 terverifikasi 17 Nov 2026).
 // Cadangan: ipwho.is (tanpa kunci, HTTP 200 terverifikasi).
-// JUJUR: browser tidak bisa memberi VPN — VPN butuh aplikasi (ProxyCloud).
+// JUJUR: browser tidak bisa memberi VPN, VPN butuh aplikasi (ProxyCloud).
 var _fsIpBusy = false;
 function fsIpCard(label, value) {
     var d = document.createElement('div');
@@ -1253,15 +1256,15 @@ async function fsIpCheck() {
     grid.appendChild(fsIpCard('🏳️ Negara', info.country));
     grid.appendChild(fsIpCard('🏢 ISP / Operator', info.isp));
     grid.appendChild(fsIpCard('🕒 Zona Waktu', info.tz));
-    grid.appendChild(fsIpCard('🔒 Status', 'IP asli terlihat — pakai VPN untuk menyembunyikan'));
-    if (st) st.textContent = '✅ IP dicek. Ingat: ini HANYA menampilkan IP kamu — untuk menyembunyikannya, instal aplikasi VPN (ProxyCloud) di bawah.';
+    grid.appendChild(fsIpCard('🔒 Status', 'IP asli terlihat, pakai VPN untuk menyembunyikan'));
+    if (st) st.textContent = '✅ IP dicek. Ingat: ini HANYA menampilkan IP kamu, untuk menyembunyikannya, instal aplikasi VPN (ProxyCloud) di bawah.';
     _fsIpBusy = false;
 }
 
 // ================= 5. KIRIM WHATSAPP (fsWa*) =================
-// Pembuat tautan wa.me — bukan aplikasi chat, tanpa backend, tanpa login.
+// Pembuat tautan wa.me, bukan aplikasi chat, tanpa backend, tanpa login.
 // Repo inspirasi: MoazSayed7/Flutter-Chat-App-Firebase-Authentication-
-// Messaging-WhatsApp-Like (butuh Firebase — tidak bisa jalan di web statis;
+// Messaging-WhatsApp-Like (butuh Firebase, tidak bisa jalan di web statis;
 // repo tidak punya file LICENSE).
 var _fsWaLink = '';
 function fsWaNormalize(raw) {
@@ -1294,13 +1297,13 @@ function fsWaMake() {
     if (linkEl) linkEl.textContent = _fsWaLink;
     if (openEl) openEl.href = _fsWaLink;
     if (res) res.style.display = 'block';
-    if (st) st.textContent = '✅ Link siap — ketuk "Buka di WhatsApp". Nomor harus aktif & terdaftar di WhatsApp, kalau tidak chat tidak akan terbuka.';
+    if (st) st.textContent = '✅ Link siap, ketuk "Buka di WhatsApp". Nomor harus aktif & terdaftar di WhatsApp, kalau tidak chat tidak akan terbuka.';
 }
 function fsWaCopy() {
     var st = document.getElementById('fsWaStatus');
     if (!_fsWaLink) { if (st) st.textContent = 'Buat dulu link-nya.'; return; }
     var done = function () { if (st) st.textContent = '📋 Link disalin: ' + _fsWaLink; };
-    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin — salin manual link di atas.'; };
+    var fail = function () { if (st) st.textContent = '⚠️ Gagal menyalin, salin manual link di atas.'; };
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(_fsWaLink).then(done, fail);
     } else {
@@ -1324,15 +1327,15 @@ fsIpCheck();
         </div>
 
 <div id="download" class="tab-content">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>⬇️ DOWNLOAD APP</h3><p>Aplikasi resmi Freedom Syndicate — lebih cepat dan stabil di HP.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>⬇️ DOWNLOAD APP</h3><p>Aplikasi resmi Freedom Syndicate, lebih cepat dan stabil di HP.</p></div>
             <div class="content-box" style="text-align:center;">
                 <div style="font-size:3rem; margin-bottom:6px; animation: float 3s infinite ease-in-out;">📲</div>
                 <h3 style="margin-top:0; color: var(--primary); font-size:1.3rem; letter-spacing:2px;">FREEDOM SYNDICATE APP</h3>
                 <p style="color:#94a3b8; font-size:0.95rem; line-height:1.7; margin-bottom: 8px;">
                     Akses lebih <span style="color:var(--primary); font-weight:700;">cepat</span>, lebih <span style="color:#a78bfa; font-weight:700;">stabil</span>, dan lebih <b style="color:#fff;">eksklusif</b> langsung dari genggamanmu!<br><br>
-                    Install aplikasi resmi <b style="color:#fff;">FREEDOM SYNDICATE</b> sekarang dan jadi bagian dari pergerakan jiwa-jiwa bebas — sinyal trading, info garapan cuan, hiburan, dan komunitas, semua dalam satu genggaman 🔥
+                    Install aplikasi resmi <b style="color:#fff;">FREEDOM SYNDICATE</b> sekarang dan jadi bagian dari pergerakan jiwa-jiwa bebas, sinyal trading, info garapan cuan, hiburan, dan komunitas, semua dalam satu genggaman 🔥
                 </p>
-                <p style="color:#64748b; font-size:0.78rem; letter-spacing:1px; margin-bottom: 28px;">📥 GRATIS • RINGAN • ANTI LAG</p>
+                <p style="color:#94A3B8; font-size:0.78rem; letter-spacing:1px; margin-bottom: 28px;">📥 GRATIS • RINGAN • ANTI LAG</p>
 
                 <a href="https://freedomsyndicate.my.id/freedom-syndicate.apk" target="_blank" rel="noopener noreferrer" class="mod-btn mod-btn-app">
                     <span class="mod-btn-icon">⬇️</span>
@@ -1351,12 +1354,12 @@ fsIpCheck();
                     <span class="mod-btn-arrow">→</span>
                 </button>
 
-                <p style="color:#94a3b8; font-size:0.78rem; line-height:1.7; margin-top:14px;">🕌 Baru di v1.1.4: widget jadwal sholat — tekan lama layar utama → Widget → Freedom Syndicate.</p>
+                <p style="color:#94a3b8; font-size:0.78rem; line-height:1.7; margin-top:14px;">🕌 Baru di v1.1.4: widget jadwal sholat, tekan lama layar utama → Widget → Freedom Syndicate.</p>
 
-                <p style="color:#64748b; font-size:0.75rem; line-height:1.6; margin-top:20px;">
+                <p style="color:#94A3B8; font-size:0.75rem; line-height:1.6; margin-top:20px;">
                     💡 Tips: Jika muncul peringatan "Install dari sumber tidak dikenal", izinkan saja di setting HP-mu. Aplikasi ini 100% aman untuk anggota Syndicate.
                 </p>
-                    <p id="fsPwaHint" style="color:#94a3b8; font-size:0.78rem; line-height:1.7; margin-top:14px;">📲 Tanpa APK juga bisa: buka situs ini di Chrome → titik tiga → <b style="color:#fff;">Instal aplikasi</b> — langsung jadi aplikasi di HP.</p>
+                    <p id="fsPwaHint" style="color:#94a3b8; font-size:0.78rem; line-height:1.7; margin-top:14px;">📲 Tanpa APK juga bisa: buka situs ini di Chrome → titik tiga → <b style="color:#fff;">Instal aplikasi</b>, langsung jadi aplikasi di HP.</p>
 
             </div>
         </div>
@@ -1400,7 +1403,7 @@ fsIpCheck();
         }
         function fsThemeRender() {
             var row = document.getElementById('fsThemeRow'); if (!row) return;
-            var cur = ''; try { cur = localStorage.getItem('fsTheme') || 'biru'; } catch(e) {}
+            var cur = ''; try { cur = localStorage.getItem('fsTheme') || 'emas'; } catch(e) {}
             var names = { biru: '🔵 Biru', hijau: '🟢 Hijau', ungu: '🟣 Ungu', merah: '🔴 Merah', emas: '🟡 Emas' };
             var T = window.FS_THEMES || {};
             row.innerHTML = '';
@@ -1490,9 +1493,9 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
     pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
       + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
       + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#94A3B8;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });

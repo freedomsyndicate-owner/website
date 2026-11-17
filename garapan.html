@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#020617">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Info Garapan</title>
-    <meta name="description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
+    <meta name="description" content="Info garapan gratis Freedom Syndicate, hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
     <meta property="og:title" content="Freedom Syndicate | Info Garapan">
-    <meta property="og:description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
+    <meta property="og:description" content="Info garapan gratis Freedom Syndicate, hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/garapan.html">
     <meta name="keywords" content="garapan gratis, penghasil uang, airdrop gratis, tanpa modal, tanpa deposit">
     <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Freedom Syndicate | Info Garapan">
-    <meta name="twitter:description" content="Info garapan gratis Freedom Syndicate — hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
+    <meta name="twitter:description" content="Info garapan gratis Freedom Syndicate, hanya yang gratis dan sudah dicek, tanpa modal, gas, atau deposit.">
     <link rel="canonical" href="https://freedomsyndicate.my.id/garapan.html">
 
     <script>
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A — blokir hanya di luar input/textarea
+            // Ctrl+A, blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,7 +79,7 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK, Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
@@ -87,7 +87,7 @@
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
                 '<div style="font-size:3.5rem;">🛡️</div>',
                 '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.75rem;color:#94A3B8;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
                 '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
@@ -127,7 +127,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -291,7 +291,7 @@
             text-transform: uppercase;
             text-align: center;
             margin-bottom: 6px;
-            background: linear-gradient(to bottom, #FFFFFF 30%, #38bdf8 100%);
+            background: #38bdf8;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: float 4s infinite ease-in-out;
@@ -375,7 +375,7 @@
             position: absolute;
             top: 0; left: -100%;
             width: 60%; height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(56,189,248,0.05), transparent);
+            background: rgba(56,189,248,0.05);
             animation: shimmer 3s infinite linear;
         }
         .link-card:hover {
@@ -428,7 +428,7 @@
             background: rgba(241,196,15,0.02);
         }
         .bank-card::before {
-            background: linear-gradient(120deg, transparent, rgba(241,196,15,0.04), transparent);
+            background: rgba(241,196,15,0.04);
         }
         .bank-card:hover {
             border-color: var(--yellow);
@@ -515,7 +515,7 @@
     <!-- FS REDESIGN v2: topbar + bottomnav + glass lebih terasa -->
     <style>
         :root {
-            --glass-bg: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));
+            --glass-bg: rgba(255,255,255,0.10);
             --glass-border: rgba(255,255,255,0.16);
             --glass-blur: blur(12px) saturate(1.25);
         }
@@ -553,7 +553,7 @@
         }
         /* Sidebar glass + label grup + tombol tutup */
         .sidebar { background: rgba(10,15,28,0.82); backdrop-filter: blur(12px) saturate(1.25); -webkit-backdrop-filter: blur(12px) saturate(1.25); padding-top: 70px; }
-        .side-label { padding: 18px 30px 6px; font-size: 0.62rem; letter-spacing: 3px; color: #64748b; font-weight: 700; }
+        .side-label { padding: 18px 30px 6px; font-size: 0.62rem; letter-spacing: 3px; color: #94A3B8; font-weight: 700; }
         .sidebar-close {
             position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.14); color: #cbd5e1; border-radius: 10px;
@@ -594,12 +594,26 @@
             *, *::before, *::after { animation: none !important; transition: none !important; }
         }
         button:focus-visible, a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        /* Daftar baris garapan: halaman ini tidak memakai style.css, aturan disalin ke sini. */
+        .fs-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .fs-list .fs-row { display: flex; align-items: center; gap: 12px; width: 100%;
+            background: #0B1220; border: 1px solid #1E293B; border-radius: 10px;
+            padding: 12px 14px; color: #F1F5F9; font-family: inherit; font-size: 1rem;
+            text-align: left; text-decoration: none; cursor: pointer; }
+        .fs-list .fs-row:hover { border-color: rgba(232,169,12,0.55); background: rgba(232,169,12,0.06); }
+        .fs-list .fs-ic { font-size: 1.35rem; flex: 0 0 auto; line-height: 1; }
+        .fs-list .fs-tx { flex: 1 1 auto; min-width: 0; }
+        .fs-list .fs-ti { display: block; font-weight: 800; font-size: 0.92rem; }
+        .fs-list .fs-su { display: block; font-size: 0.72rem; color: #94A3B8; margin-top: 1px; }
+        .fs-list .fs-ch { color: #E8A90C; font-weight: 800; flex: 0 0 auto; }
+        .fs-nav-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+            color: #E8A90C; font-weight: 800; margin: 24px 0 10px; text-align: left; }
     </style>
 </head>
 <body>
 
     <!-- Topbar kaca -->
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><a class="topbar-ai" href="index.html#chatai">🤖 Chat Ai</a></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><a class="topbar-ai" href="index.html#chatai">🤖 <span class="tb-lbl">Chat Ai</span></a></header>
 
     <!-- Overlay -->
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
@@ -630,18 +644,28 @@
         <!-- Beranda -->
         <div id="tab-utama" class="content-card tab-pane active">
             <h2>🏠 Beranda Garapan</h2>
-            <p class="content-desc">Selamat datang di pusat navigasi garapan Freedom Syndicate. Di sini kamu bisa menemukan berbagai peluang penghasil cuan — mulai dari Airdrop Crypto, website dollar, bank digital, hingga promo kebutuhan harian. Pilih kategori di menu untuk mulai.</p>
+            <p class="content-desc">Selamat datang di pusat navigasi garapan Freedom Syndicate. Di sini kamu bisa menemukan berbagai peluang penghasil cuan, mulai dari Airdrop Crypto, website dollar, bank digital, hingga promo kebutuhan harian. Pilih kategori di menu untuk mulai.</p>
             <div class="feature-grid">
                 <div class="feature-item">⚡ Update Cepat</div>
                 <div class="feature-item">👥 Komunitas Solid</div>
                 <div class="feature-item">✅ Terverifikasi</div>
             </div>
+            <h3 class="fs-nav-label">Semua kategori</h3>
+            <nav class="fs-list" aria-label="Kategori garapan">
+                <button type="button" class="fs-row" onclick="showTab('airdrop', document.querySelector('.sidebar-menu button[onclick*=\'airdrop\']'))"><span class="fs-ic">🪂</span><span class="fs-tx"><span class="fs-ti">Airdrop</span><span class="fs-su">Airdrop, testnet, node</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+                <button type="button" class="fs-row" onclick="showTab('kebutuhan', document.querySelector('.sidebar-menu button[onclick*=\'kebutuhan\']'))"><span class="fs-ic">🛒</span><span class="fs-tx"><span class="fs-ti">Kebutuhan</span><span class="fs-su">Promo Alfamart, Indomaret</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+                <button type="button" class="fs-row" onclick="showTab('gratisan', document.querySelector('.sidebar-menu button[onclick*=\'gratisan\']'))"><span class="fs-ic">🎁</span><span class="fs-tx"><span class="fs-ti">Gratisan</span><span class="fs-su">Kuota gratis, eSIM, premium</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+                <button type="button" class="fs-row" onclick="showTab('garapanweb', document.querySelector('.sidebar-menu button[onclick*=\'garapanweb\']'))"><span class="fs-ic">🌐</span><span class="fs-tx"><span class="fs-ti">Garapan Website</span><span class="fs-su">Website penghasil dollar</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+                <button type="button" class="fs-row" onclick="showTab('bank', document.querySelector('.sidebar-menu button[onclick*=\'bank\']'))"><span class="fs-ic">🏦</span><span class="fs-tx"><span class="fs-ti">Bank</span><span class="fs-su">Bank digital pilihan</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+                <button type="button" class="fs-row" onclick="showTab('share', document.querySelector('.sidebar-menu button[onclick*=\'share\']'))"><span class="fs-ic">🔗</span><span class="fs-tx"><span class="fs-ti">Share Garapan</span><span class="fs-su">Bagikan garapanmu</span></span><span class="fs-ch" aria-hidden="true">›</span></button>
+            </nav>
         </div>
 
         <!-- Airdrop -->
+
         <div id="tab-airdrop" class="content-card tab-pane">
             <h2>🪂 Airdrop & Crypto</h2>
-            <p class="content-desc">Semua garapan Airdrop, Testnet, Node, dan Cloud Mining dibagikan langsung di channel Telegram kami. Bergabung sekarang agar tidak ketinggalan update terbaru — hanya project dengan fundamental kuat yang kami pilihkan untuk anggota Syndicate.</p>
+            <p class="content-desc">Semua garapan Airdrop, Testnet, Node, dan Cloud Mining dibagikan langsung di channel Telegram kami. Bergabung sekarang agar tidak ketinggalan update terbaru, hanya project dengan fundamental kuat yang kami pilihkan untuk anggota Syndicate.</p>
             <a href="https://t.me/freedomsyndicate" target="_blank" rel="noopener noreferrer" class="visit-btn" style="margin-top:16px;">
                 <i class="fab fa-telegram-plane"></i> Gabung Channel Telegram
             </a>
@@ -656,7 +680,7 @@
         <!-- Gratisan -->
         <div id="tab-gratisan" class="content-card tab-pane">
             <h2>🎁 Zona Gratisan</h2>
-            <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang — klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Semua sudah difilter — hanya yang benar-benar bermanfaat, bukan scam.</p>
+            <p class="content-desc">Siapa yang tidak suka gratisan? Di sini kami rutin bagikan info kuota internet gratis, promo eSIM, akses aplikasi premium tanpa biaya, hingga aplikasi penghasil uang, klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Semua sudah difilter, hanya yang benar-benar bermanfaat, bukan scam.</p>
 
             <div class="link-card">
                 <div class="img-frame" id="img1-frame">
@@ -672,7 +696,7 @@
                     ➖ Masukkan EID perangkat kamu<br>
                     ➖ eSIM akan dikirim ke email<br>
                     ➖ Tinggal pasang eSIM → langsung aktif 🚀<br>
-                ⚠️ <em>Kuota 120GB / 1 tahun ini belum kami verifikasi sendiri — pastikan di halaman XL sebelum klaim.</em>
+                ⚠️ <em>Kuota 120GB / 1 tahun ini belum kami verifikasi sendiri, pastikan di halaman XL sebelum klaim.</em>
                 </div>
                 <a href="https://www.xl.co.id/produk/bundling/apple-iphone" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Klaim Sekarang</a>
             </div>
@@ -685,7 +709,7 @@
                 </div>
                 <div class="site-name"><i class="fas fa-wifi"></i> Bansos eSIM Gratis Hyfe.id <span class="badge">5GB · 7 Hari</span></div>
                 <div class="site-desc">
-                    📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis 5GB 7 Hari — Hyfeid</strong><br><br>
+                    📌 <strong style="color:#e2e8f0;">Bansos eSIM Gratis 5GB 7 Hari, Hyfeid</strong><br><br>
                     ➡️ <strong style="color:var(--primary);">Cara pasang:</strong><br>
                     ➖ Buka <strong style="color:#e2e8f0;">Hyfe.id</strong><br>
                     ➖ Klik <strong style="color:#e2e8f0;">Try Free eSIM</strong><br>
@@ -698,17 +722,17 @@
         <!-- Garapan Website -->
         <div id="tab-garapanweb" class="content-card tab-pane">
             <h2>💰 Garapan Website Penghasil Dollar</h2>
-            <p class="content-desc">Kumpulan website penghasil dollar — klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Daftar sekarang dan mulai hasilkan dollar dari mana saja — cukup modal HP dan internet!</p>
+            <p class="content-desc">Kumpulan website penghasil dollar, klaim pembayaran berasal dari platform, belum diverifikasi Freedom Syndicate. Daftar sekarang dan mulai hasilkan dollar dari mana saja, cukup modal HP dan internet!</p>
 
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-bolt"></i> InventMoney <span class="badge">Instant Pay</span></div>
-                <div class="site-desc">🚀 Financial SuperApp untuk internet earner di seluruh dunia! Selesaikan berbagai task online, dapatkan bayaran instan langsung ke akunmu. Cocok untuk pemula maupun yang berpengalaman — daftar gratis dan mulai hasilkan dollar hari ini juga!</div>
+                <div class="site-desc">🚀 Financial SuperApp untuk internet earner di seluruh dunia! Selesaikan berbagai task online, dapatkan bayaran instan langsung ke akunmu. Cocok untuk pemula maupun yang berpengalaman, daftar gratis dan mulai hasilkan dollar hari ini juga!</div>
                 <a href="https://app.inventmoney.com/r/7QT7M4U4" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
             </div>
 
             <div class="link-card">
                 <div class="site-name"><i class="fas fa-star"></i> Swagbucks <span class="badge">Paling Populer</span></div>
-                <div class="site-desc">🌟 Platform penghasil poin (SBs) nomor 1 di dunia yang sudah membayar jutaan pengguna! Kumpulkan poin dari survey, nonton video, belanja online, sampai main game — tukar dengan PayPal Cash atau Gift Card. Terbukti LEGIT sejak 2008!</div>
+                <div class="site-desc">🌟 Platform penghasil poin (SBs) nomor 1 di dunia yang sudah membayar jutaan pengguna! Kumpulkan poin dari survey, nonton video, belanja online, sampai main game, tukar dengan PayPal Cash atau Gift Card. Terbukti LEGIT sejak 2008!</div>
                 <a href="https://www.swagbucks.com/p/register?rb=214943199&rp=1" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Sekarang</a>
             </div>
 
@@ -726,19 +750,19 @@
 
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-university"></i> Krom Bank <span class="badge gold">0% Admin</span></div>
-                <div class="site-desc">🏅 Bank digital generasi baru dari grup Kredivo! Tabungan bunga kompetitif, transfer antar bank GRATIS tanpa batas, tampilan aplikasi modern. Buka rekening 100% online dalam 5 menit — tanpa antri, tanpa ribet!</div>
+                <div class="site-desc">🏅 Bank digital generasi baru dari grup Kredivo! Tabungan bunga kompetitif, transfer antar bank GRATIS tanpa batas, tampilan aplikasi modern. Buka rekening 100% online dalam 5 menit, tanpa antri, tanpa ribet!</div>
                 <a href="https://krom.id/referral/?code=LWLC9820" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
             </div>
 
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-exchange-alt"></i> Wise <span class="badge gold">Multi-Valuta</span></div>
-                <div class="site-desc">🌍 Solusi terbaik transfer uang internasional dengan kurs real-time tanpa markup tersembunyi! Rekening multi-valuta — simpan, kirim, dan terima uang dalam 50+ mata uang termasuk USD, EUR, GBP. Wajib punya buat kamu yang punya penghasilan dollar!</div>
+                <div class="site-desc">🌍 Solusi terbaik transfer uang internasional dengan kurs real-time tanpa markup tersembunyi! Rekening multi-valuta, simpan, kirim, dan terima uang dalam 50+ mata uang termasuk USD, EUR, GBP. Wajib punya buat kamu yang punya penghasilan dollar!</div>
                 <a href="https://wise.com/invite/ahpc/muhammadikhsanm1" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Daftar Wise</a>
             </div>
 
             <div class="link-card bank-card">
                 <div class="site-name"><i class="fas fa-gem"></i> Aladin Bank <span class="badge gold">Syariah</span></div>
-                <div class="site-desc">✨ Bank syariah digital pertama di Indonesia hadir 100% lewat aplikasi! Bagi hasil kompetitif, transfer gratis, bayar tagihan, hingga investasi reksa dana — semua dalam satu aplikasi. Halal, aman, dan praktis!</div>
+                <div class="site-desc">✨ Bank syariah digital pertama di Indonesia hadir 100% lewat aplikasi! Bagi hasil kompetitif, transfer gratis, bayar tagihan, hingga investasi reksa dana, semua dalam satu aplikasi. Halal, aman, dan praktis!</div>
                 <a href="https://account.aladinbank.id/gabung/OHG5FN" target="_blank" rel="noopener noreferrer" class="visit-btn"><i class="fas fa-arrow-right"></i> Buka Rekening</a>
             </div>
         </div>
@@ -750,7 +774,7 @@
             <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
                 <input id="shareNama" type="text" placeholder="Nama kamu (opsional)" style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);color:#fff;padding:12px 16px;border-radius:10px;font-size:0.95rem;outline:none;font-family:inherit;" />
                 <textarea id="shareMsg" rows="5" placeholder="Tulis garapanmu di sini... (link, deskripsi, dll)" style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);color:#fff;padding:12px 16px;border-radius:10px;font-size:0.95rem;outline:none;resize:vertical;font-family:inherit;"></textarea>
-                <button onclick="kirimShare()" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;color:#020617;padding:13px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                <button onclick="kirimShare()" style="background:#0ea5e9;border:none;color:#020617;padding:13px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:1px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                     📤 Kirim ke Komunitas
                 </button>
                 <p id="shareStatus" style="text-align:center;font-size:0.85rem;color:#38bdf8;min-height:20px;"></p>
@@ -835,7 +859,7 @@
             const teks = `📢 Share Garapan\n👤 ${nama || 'Anonim'}\n\n${pesan}`;
             try { await navigator.clipboard.writeText(teks); } catch (e) {}
             status.style.color = '#38bdf8';
-            status.textContent = '🔗 Membuka Telegram — pesan sudah terisi & tersalin, tinggal pilih grup Freedom Syndicate lalu kirim.';
+            status.textContent = '🔗 Membuka Telegram, pesan sudah terisi & tersalin, tinggal pilih grup Freedom Syndicate lalu kirim.';
             window.open('https://t.me/share/url?url=' + encodeURIComponent('https://freedomsyndicate.my.id') + '&text=' + encodeURIComponent(teks), '_blank', 'noopener');
             document.getElementById('shareMsg').value = '';
             document.getElementById('shareNama').value = '';
@@ -879,9 +903,9 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
     pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
       + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
       + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#94A3B8;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
