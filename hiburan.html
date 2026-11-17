@@ -1882,6 +1882,39 @@
                     <button class="fs-genre-tile" onclick="fsRadioGenre('k-pop',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">💜</span><span>K-Pop</span></button>
                     <button class="fs-genre-tile" onclick="fsRadioGenre('indonesia',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">🇮🇩</span><span>Indonesia</span></button>
                 </div>
+                <!-- ARTIS INDONESIA (17 Nov 2026, perintah San: daftar lagu Indonesia terutama dari artis harus ada, kayak YT Music) — ketuk nama artis -> semua lagunya dicari langsung di YouTube (terbaru s.d. terlama, tanpa batas lewat tombol Muat lebih banyak). Artis lain yang tidak ada di sini tetap bisa dicari lewat kolom cari di atas. -->
+                <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:16px;">🎤 Artis Indonesia</div>
+                <div style="font-size:0.62rem;color:#64748b;margin:2px 0 8px;">Ketuk nama artis untuk melihat semua lagunya — terbaru sampai terlama.</div>
+                <div id="fsRadioArtists" class="fs-genre-lane">
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Didi Kempot',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>Didi Kempot</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Denny Caknan',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">D</span><span>Denny Caknan</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Happy Asmara',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">H</span><span>Happy Asmara</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nella Kharisma',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">N</span><span>Nella Kharisma</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Guyon Waton',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">G</span><span>Guyon Waton</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('NDX AKA',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">N</span><span>NDX AKA</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Via Vallen',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">V</span><span>Via Vallen</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Farel Prayoga',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">F</span><span>Farel Prayoga</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Jihan Audy',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">J</span><span>Jihan Audy</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Yeni Inka',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">Y</span><span>Yeni Inka</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Safira Inema',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">S</span><span>Safira Inema</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Gilga Sahid',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">G</span><span>Gilga Sahid</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rhoma Irama',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">R</span><span>Rhoma Irama</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sodiq Monata',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">S</span><span>Sodiq Monata</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Noah',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">N</span><span>Noah</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Sheila On 7',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">S</span><span>Sheila On 7</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Dewa 19',this)" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);"><span class="fs-gt-ico">D</span><span>Dewa 19</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Slank',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">S</span><span>Slank</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Iwan Fals',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">I</span><span>Iwan Fals</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Raisa',this)" style="background:linear-gradient(135deg,#db2777,#500724);"><span class="fs-gt-ico">R</span><span>Raisa</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Tulus',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">T</span><span>Tulus</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Nadin Amizah',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">N</span><span>Nadin Amizah</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Bernadya',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">B</span><span>Bernadya</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Hindia',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">H</span><span>Hindia</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Judika',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">J</span><span>Judika</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Rizky Febian',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">R</span><span>Rizky Febian</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Mahalini',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">M</span><span>Mahalini</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioArtist('Lyodra',this)" style="background:linear-gradient(135deg,#ea580c,#7c2d12);"><span class="fs-gt-ico">L</span><span>Lyodra</span></button>
+                </div>
             </div>
 
             <!-- Rekomendasi untukmu (ala Flow: rekomendasi dari yang sering didengar) -->
@@ -1900,7 +1933,7 @@
             <div id="fsRadioList" class="fs-track-lane" style="margin-top:6px;"></div>
             <button id="fsRadioMoreBtn" onclick="fsRadioLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">⬇ Muat lebih banyak lagu</button>
             <div id="fsRadioMoreNote" style="display:none;font-size:0.58rem;color:#475569;margin-top:6px;text-align:center;">Tidak ada batas jumlah lagu — terus tekan sampai ketemu lagunya. Semua lagu di YouTube dicari halaman demi halaman, terbaru sampai terlama.</div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus — lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus — lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Baris 🎤 Artis Indonesia: ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama — artis lain ketik saja namanya di kolom cari · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
             </div><!-- /fsRadioStreamPane -->
 
             <!-- ===== MP3 SAYA (ala Beatfy: pustaka lokal + cadangan) ===== -->
@@ -2276,12 +2309,12 @@
             // Genre = beberapa query YouTube sekaligus (terbaru + lawas + DJ) + Audius,
             // digabung dan dibuang duplikatnya. Dulu genre cuma cari Audius — untuk
             // lagu Jawa/DJ hasilnya hampir selalu kosong.
-            function fsRadioGenreSearch(queries, audiusQ) {
+            function fsRadioGenreSearch(queries, audiusQ, statusText) {
                 if (_fsRadioLoading) return;
                 _fsRadioLoading = true;
                 var list = document.getElementById('fsRadioList');
                 var statusEl = document.getElementById('fsRadioStatus');
-                if (statusEl) statusEl.textContent = '⏳ Mencari lagu Jawa/DJ terbaru sampai terlama...';
+                if (statusEl) statusEl.textContent = statusText || '⏳ Mencari lagu Jawa/DJ terbaru sampai terlama...';
                 fsRadioSetMode(true);
                 var ytJobs = queries.map(function(q){ return fsRadioInvSearch(q).catch(function(){ return []; }); });
                 var audiusJob = fetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(audiusQ) + '&' + FS_AUDIUS_APP + '&limit=50')
@@ -2311,9 +2344,27 @@
                     if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                 });
             }
+            // ARTIS (17 Nov 2026, perintah San: kayak YT Music — ketuk nama
+            // artis -> semua lagunya): pakai jalur genre yang sama (3 query
+            // YouTube x 3 halaman + Audius, tanpa batas lewat Muat lebih banyak).
+            function fsRadioArtist(name, btn) {
+                var chips = document.querySelectorAll('#fsRadioChips button');
+                chips.forEach(function(b){ b.classList.remove('active'); });
+                var abtns = document.querySelectorAll('#fsRadioArtists button');
+                abtns.forEach(function(b){ b.classList.remove('active'); });
+                if (btn) btn.classList.add('active');
+                var inp = document.getElementById('fsRadioInput');
+                if (inp) inp.value = name;
+                fsRadioGenreSearch([name, name + ' lagu terbaru', name + ' lagu lawas'], name,
+                    '⏳ Mencari semua lagu ' + name + ' — terbaru sampai terlama...');
+                var t = document.getElementById('fsRadioListTitle');
+                if (t) t.textContent = '🎤 ' + name;
+            }
             function fsRadioGenre(genre, btn) {
                 var chips = document.querySelectorAll('#fsRadioChips button');
                 chips.forEach(function(b){ b.classList.remove('active'); });
+                var abtns = document.querySelectorAll('#fsRadioArtists button');
+                abtns.forEach(function(b){ b.classList.remove('active'); });
                 if (btn) btn.classList.add('active');
                 if (genre === 'trending') {
                     fsRadioLoadTrending();
