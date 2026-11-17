@@ -256,7 +256,7 @@ function extractFromMessage(msg: any): string | null {
   return null;
 }
 
-async function callChatApi(base: string, model: string, key: string | null, messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string; http?: number }> {
+async function callChatApi(base: string, model: string, key: string | null, messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string; http?: number; retryAfter?: number }> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (key) headers["Authorization"] = `Bearer ${key}`;
   try {
@@ -271,8 +271,9 @@ async function callChatApi(base: string, model: string, key: string | null, mess
       console.log(`[phone] LLM ${base} HTTP ${res.status}: ${body.slice(0, 200)}`);
       if (res.status === 429) {
         let wait = "";
-        try { const e = JSON.parse(body); const s = e?.error?.retry_after; if (typeof s === "number") wait = s >= 3600 ? ` sekitar ${Math.round(s / 3600)} jam lagi` : ` sekitar ${Math.ceil(s / 60)} menit lagi`; } catch {}
-        return { ok: false, http: 429, reason: `Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi${wait}.` };
+        let retryAfter = 0;
+        try { const e = JSON.parse(body); const s = e?.error?.retry_after; if (typeof s === "number") { retryAfter = s; wait = s >= 3600 ? ` sekitar ${Math.round(s / 3600)} jam lagi` : ` sekitar ${Math.ceil(s / 60)} menit lagi`; } } catch {}
+        return { ok: false, http: 429, retryAfter, reason: `Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi${wait}.` };
       }
       return { ok: false, http: res.status, reason: `Otak error HTTP ${res.status}. Coba lagi sebentar lagi.` };
     }
@@ -318,7 +319,10 @@ async function callLlm(messages: any[]): Promise<{ ok: boolean; text?: string; r
   // 3. LLM7 gpt-oss:20b (may be quota-exhausted or reasoning-only).
   const last = await callChatApi(LLM_BASE, LLM_MODEL, "llm7", messages);
   if (last.ok) return last;
-  return { ok: false, reason: last.reason || fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
+  // Report the LONGEST wait, not the last error (a 60s rate-limit can hide a 25h daily quota).
+  const fails = [primary, fallback, last];
+  const worst = fails.reduce((a, b) => (b.retryAfter ?? -1) > (a.retryAfter ?? -1) ? b : a, fails[0]);
+  return { ok: false, reason: worst.reason || last.reason || fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
 }
 
 // ---------- HTTP server (page + SSE chat) ----------
