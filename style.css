@@ -732,6 +732,28 @@
         }
         .fs-np-overlay.show { display: flex; }
 
+        /* --- MUSIK v4 (ala Spotify/Joox, pola Netflix Film): hero + tile genre + baris kartu --- */
+        /* Baris kartu lagu horizontal (ala baris poster Film) */
+        .fs-track-lane { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+        /* Grid kartu lagu (hasil cari) */
+        .fs-track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 2px; }
+        .fs-track-card { cursor: pointer; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 8px; background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(56,189,248,0.04)); }
+        .fs-track-lane .fs-track-card { flex: 0 0 132px; }
+        .fs-track-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover; display: block; }
+        .fs-track-card .fs-tc-art-fb { width: 100%; aspect-ratio: 1; border-radius: 8px; background: linear-gradient(135deg, rgba(56,189,248,0.4), rgba(168,85,247,0.4)); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+        .fs-track-card .fs-tc-title { font-size: 0.68rem; color: #fff; font-weight: 700; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fs-track-card .fs-tc-artist { font-size: 0.6rem; color: #94a3b8; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Tile genre ala Spotify Browse */
+        .fs-genre-lane { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+        .fs-genre-tile { flex: 0 0 118px; height: 64px; border: none; border-radius: 12px; color: #fff; font-size: 0.75rem; font-weight: 800; cursor: pointer; font-family: inherit; text-align: left; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .fs-genre-tile .fs-gt-ico { font-size: 1.15rem; line-height: 1; }
+        .fs-genre-tile.active { outline: 2px solid #fff; outline-offset: 2px; }
+        /* Dots hero musik */
+        .fs-hero-dots span { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.35); cursor: pointer; }
+        .fs-hero-dots span.on { width: 18px; background: var(--primary); }
+        /* Mode cari: sembunyikan beranda (hero + genre + rekomendasi) */
+        #fsRadioStreamPane.searching .fs-home-only { display: none !important; }
+
         /* iframe player */
         .tv-iframe-wrap {
             position: relative;

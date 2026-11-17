@@ -1513,6 +1513,20 @@
             </div>
 
             <div id="fsRadioStreamPane">
+            <!-- Hero billboard ala Film (lagu trending pilihan, berputar otomatis) -->
+            <div id="fsRadioHero" class="fs-home-only" style="display:none;position:relative;height:220px;overflow:hidden;background:#0f172a;border-radius:16px;margin-bottom:14px;">
+                <img id="fsRadioHeroBg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.1) 0%,rgba(2,6,23,0.55) 55%,rgba(2,6,23,0.97) 100%);"></div>
+                <div style="position:absolute;left:16px;right:16px;bottom:14px;">
+                    <div style="font-size:0.55rem;letter-spacing:3px;color:var(--primary);font-weight:800;">🔥 LAGU TRENDING</div>
+                    <div id="fsRadioHeroTitle" style="font-size:1.2rem;font-weight:900;color:#fff;line-height:1.15;margin-top:4px;"></div>
+                    <div id="fsRadioHeroMeta" style="font-size:0.65rem;color:#cbd5e1;margin-top:4px;"></div>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button id="fsRadioHeroPlay" style="background:#fff;color:#000;border:none;border-radius:8px;padding:9px 18px;font-weight:900;font-size:0.8rem;cursor:pointer;font-family:inherit;">▶ Putar</button>
+                    </div>
+                    <div id="fsRadioHeroDots" class="fs-hero-dots" style="display:flex;gap:5px;margin-top:10px;"></div>
+                </div>
+            </div>
             <!-- Player ala Spotify / YT Music — MUSIK SAJA, tanpa video sama sekali.
                  Desain mengikuti pola clone Spotify (vanilla HTML/CSS/JS, MIT):
                  kartu now-playing + cover besar, seek bar, kontrol bulat. -->
@@ -1562,27 +1576,32 @@
                     <button onclick="fsRadioSearch()" 
                         style="background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:0.85rem;cursor:pointer;white-space:nowrap;min-height:48px;">CARI</button>
                 </div>
-                <div id="fsRadioChips" style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-                    <button onclick="fsRadioGenre('trending',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">🔥 Trending</button>
-                    <button onclick="fsRadioGenre('pop',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Pop</button>
-                    <button onclick="fsRadioGenre('rock',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Rock</button>
-                    <button onclick="fsRadioGenre('dangdut',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Dangdut</button>
-                    <button onclick="fsRadioGenre('jazz',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Jazz</button>
-                    <button onclick="fsRadioGenre('lo-fi',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Lo-Fi</button>
-                    <button onclick="fsRadioGenre('k-pop',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">K-Pop</button>
-                    <button onclick="fsRadioGenre('indonesia',this)" style="min-height:40px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;">🇮🇩 Indonesia</button>
+                <div id="fsRadioChips" class="fs-genre-lane fs-home-only">
+                    <button class="fs-genre-tile active" onclick="fsRadioGenre('trending',this)" style="background:linear-gradient(135deg,#e11d48,#7c2d12);"><span class="fs-gt-ico">🔥</span><span>Trending</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('pop',this)" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><span class="fs-gt-ico">🎤</span><span>Pop</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('rock',this)" style="background:linear-gradient(135deg,#dc2626,#450a0a);"><span class="fs-gt-ico">🎸</span><span>Rock</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('dangdut',this)" style="background:linear-gradient(135deg,#f59e0b,#92400e);"><span class="fs-gt-ico">🪘</span><span>Dangdut</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('jazz',this)" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95);"><span class="fs-gt-ico">🎷</span><span>Jazz</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('lo-fi',this)" style="background:linear-gradient(135deg,#14b8a6,#134e4a);"><span class="fs-gt-ico">🌙</span><span>Lo-Fi</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('k-pop',this)" style="background:linear-gradient(135deg,#ec4899,#831843);"><span class="fs-gt-ico">💜</span><span>K-Pop</span></button>
+                    <button class="fs-genre-tile" onclick="fsRadioGenre('indonesia',this)" style="background:linear-gradient(135deg,#22c55e,#14532d);"><span class="fs-gt-ico">🇮🇩</span><span>Indonesia</span></button>
                 </div>
             </div>
 
             <!-- Rekomendasi untukmu (ala Flow: rekomendasi dari yang sering didengar) -->
+            <div class="fs-home-only">
             <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:18px;">🎯 Rekomendasi untukmu</div>
             <div id="fsRecStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">Putar beberapa lagu dulu — rekomendasi muncul dari artis yang sering kamu dengarkan.</div>
-            <div id="fsRecList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
+            <div id="fsRecList" class="fs-track-lane" style="margin-top:6px;"></div>
+            </div>
 
-            <!-- Daftar lagu -->
-            <div style="font-size:0.8rem;font-weight:800;color:#fff;margin-top:18px;">🎵 Daftar Lagu</div>
+            <!-- Daftar lagu / hasil cari -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px;">
+                <div id="fsRadioListTitle" style="font-size:0.8rem;font-weight:800;color:#fff;">🔥 Trending</div>
+                <button id="fsRadioBackBtn" onclick="fsRadioLoadTrending()" style="display:none;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:var(--primary);border-radius:14px;padding:4px 10px;font-size:0.62rem;font-weight:700;cursor:pointer;font-family:inherit;">✕ Tutup hasil</button>
+            </div>
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat lagu trending...</div>
-            <div id="fsRadioList" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;"></div>
+            <div id="fsRadioList" class="fs-track-lane" style="margin-top:6px;"></div>
             <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci artis dicari di Audius (lagu penuh) + iTunes (katalog) sekaligus · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
             </div><!-- /fsRadioStreamPane -->
 
@@ -1702,7 +1721,7 @@
             // Render dari daftar ternormalisasi {url,title,artist,genre,art,sub}
             // supaya Audius (lagu penuh) dan iTunes (preview 30 dtk) tampil sama,
             // dan antrean Sebelumnya/Berikutnya jalan untuk keduanya.
-            function fsRadioRenderItems(items, statusEl, list, statusText) {
+            function fsRadioRenderItems(items, statusEl, list, statusText, layout) {
                 if (!items.length) {
                     if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
                     list.innerHTML = '';
@@ -1711,28 +1730,31 @@
                 }
                 if (statusEl) statusEl.textContent = statusText || (items.length + ' lagu ditemukan');
                 list.innerHTML = '';
+                // Tata letak kartu ala Netflix: 'row' = baris horizontal (beranda),
+                // 'grid' = grid 3 kolom (hasil cari).
+                if (list.id === 'fsRadioList') {
+                    list.classList.remove('fs-track-lane', 'fs-track-grid');
+                    list.classList.add(layout === 'grid' ? 'fs-track-grid' : 'fs-track-lane');
+                }
                 _fsRadioTracks = items.map(function(t){
                     return { url: t.url, title: t.title, artist: t.artist, genre: t.genre || '', source: t.source || 'audius', art: t.art || '' };
                 });
                 _fsRadioRows = [];
                 items.forEach(function(t, idx){
                     var item = document.createElement('div');
-                    item.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;cursor:pointer;';
+                    item.className = 'fs-track-card';
                     item.innerHTML =
-                        (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
-                        '<div style="flex:1;min-width:0;">' +
-                            '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.title) + '</div>' +
-                            '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + (t.genre ? ' • ' + esc(t.genre) : '') + '</div>' +
-                            '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">' + esc(t.sub || '') + '</div>' +
-                        '</div>' +
-                        '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
-                    item.querySelector('button').onclick = function(ev){ if (ev) ev.stopPropagation(); fsRadioPlayTrack(idx); };
+                        (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy">' : '<div class="fs-tc-art-fb">🎵</div>') +
+                        '<div class="fs-tc-title">' + esc(t.title) + '</div>' +
+                        '<div class="fs-tc-artist">' + esc(t.artist) + '</div>';
                     item.onclick = function(){ fsRadioPlayTrack(idx); };
                     _fsRadioRows.push(item);
                     list.appendChild(item);
                 });
                 fsRadioMarkPlaying();
                 fsRadioRestoreStream();
+                // Beranda: isi hero billboard dari lagu yang ada covernya.
+                if (layout === 'row' && list.id === 'fsRadioList') fsRadioHeroSet(items);
             }
 
             function fsRadioAudiusToItems(tracks) {
@@ -1748,7 +1770,7 @@
                 });
             }
 
-            function fsRadioRender(tracks, statusEl, list) {
+            function fsRadioRender(tracks, statusEl, list, layout) {
                 var items = fsRadioAudiusToItems(tracks);
                 if (!items.length) {
                     if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
@@ -1756,7 +1778,7 @@
                     _fsRadioTracks = [];
                     return;
                 }
-                fsRadioRenderItems(items, statusEl, list, items.length + ' lagu ditemukan');
+                fsRadioRenderItems(items, statusEl, list, items.length + ' lagu ditemukan', layout || 'row');
             }
 
             // iTunes Search API (publik, gratis, tanpa kunci, country ID, limit 50):
@@ -1802,6 +1824,17 @@
                 return out;
             }
 
+            // Mode beranda vs mode cari (ala Film: cari aktif -> sembunyikan
+            // hero + baris, tampilkan grid hasil + tombol kembali).
+            function fsRadioSetMode(searching) {
+                var pane = document.getElementById('fsRadioStreamPane');
+                if (pane) pane.classList.toggle('searching', !!searching);
+                var t = document.getElementById('fsRadioListTitle');
+                if (t) t.textContent = searching ? '🔍 Hasil Pencarian' : '🔥 Trending';
+                var b = document.getElementById('fsRadioBackBtn');
+                if (b) b.style.display = searching ? 'block' : 'none';
+            }
+
             function fsRadioFetch(url) {
                 if (_fsRadioLoading) return;
                 _fsRadioLoading = true;
@@ -1810,12 +1843,13 @@
                 if (statusEl) statusEl.textContent = '⏳ Memuat lagu...';
                 var m = url.match(/[?&]query=([^&]*)/);
                 var q = (m && m[1]) ? decodeURIComponent(m[1]) : '';
+                fsRadioSetMode(!!q);
                 fetch(url).then(function(r){ return r.json(); }).then(function(d){
                     var tracks = (d && d.data) || [];
                     // Bukan pencarian (mis. Trending) -> Audius saja, seperti semula.
                     if (!q) {
                         _fsRadioLoading = false;
-                        fsRadioRender(tracks, statusEl, list);
+                        fsRadioRender(tracks, statusEl, list, 'row');
                         return;
                     }
                     // Pencarian kata kunci: gabung Audius + iTunes, tanpa batasan satu sumber.
@@ -1838,11 +1872,11 @@
                         fsRadioRenderItems(merged, statusEl, list,
                             merged.length + ' lagu ditemukan'
                             + (nFull ? ' — ' + nFull + ' lagu penuh' : '')
-                            + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''));
+                            + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''), 'grid');
                     }).catch(function(){
                         // iTunes gagal -> tampilkan hasil Audius saja, jangan kosong.
                         _fsRadioLoading = false;
-                        fsRadioRender(tracks, statusEl, list);
+                        fsRadioRender(tracks, statusEl, list, 'grid');
                     });
                 }).catch(function(){
                     // Audius gagal -> coba iTunes saja, jangan langsung error.
@@ -1853,7 +1887,7 @@
                                 if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                                 return;
                             }
-                            fsRadioRenderItems(itunesItems, statusEl, list, itunesItems.length + ' lagu ditemukan di iTunes (preview 30 detik)');
+                            fsRadioRenderItems(itunesItems, statusEl, list, itunesItems.length + ' lagu ditemukan di iTunes (preview 30 detik)', 'grid');
                         }).catch(function(){
                             _fsRadioLoading = false;
                             if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
@@ -1869,6 +1903,50 @@
                 fsRadioFetch(FS_AUDIUS + '/tracks/trending?' + FS_AUDIUS_APP + '&limit=20');
             }
 
+            // --- HERO BILLBOARD MUSIK (ala Film: lagu trending pilihan, berputar) ---
+            var _fsRadioHeroItems = [];
+            var _fsRadioHeroIdx = 0;
+            var _fsRadioHeroTimer = null;
+            function fsRadioHeroSet(items) {
+                var withArt = (items || []).filter(function(t){ return t.art; }).slice(0, 5);
+                _fsRadioHeroItems = withArt.map(function(t){
+                    return { idx: items.indexOf(t), title: t.title, artist: t.artist, art: t.art, sub: t.sub || '' };
+                });
+                _fsRadioHeroIdx = 0;
+                var hero = document.getElementById('fsRadioHero');
+                if (!hero || !_fsRadioHeroItems.length) { if (hero) hero.style.display = 'none'; return; }
+                hero.style.display = 'block';
+                fsRadioHeroShow(0);
+                if (_fsRadioHeroTimer) clearInterval(_fsRadioHeroTimer);
+                _fsRadioHeroTimer = setInterval(function(){
+                    var mv = document.getElementById('musik');
+                    if (!mv || !mv.classList.contains('active')) return;
+                    _fsRadioHeroIdx = (_fsRadioHeroIdx + 1) % _fsRadioHeroItems.length;
+                    fsRadioHeroShow(_fsRadioHeroIdx);
+                }, 6000);
+            }
+            function fsRadioHeroShow(i) {
+                var it = _fsRadioHeroItems[i];
+                if (!it) return;
+                _fsRadioHeroIdx = i;
+                var bg = document.getElementById('fsRadioHeroBg');
+                if (bg) bg.src = it.art || '';
+                var tt = document.getElementById('fsRadioHeroTitle'); if (tt) tt.textContent = it.title;
+                var mm = document.getElementById('fsRadioHeroMeta'); if (mm) mm.textContent = it.artist + (it.sub ? '  •  ' + it.sub : '');
+                var play = document.getElementById('fsRadioHeroPlay');
+                if (play) play.onclick = function(){ fsRadioPlayTrack(_fsRadioHeroItems[_fsRadioHeroIdx].idx); };
+                var dots = document.getElementById('fsRadioHeroDots');
+                if (dots) {
+                    dots.innerHTML = '';
+                    _fsRadioHeroItems.forEach(function(_, j){
+                        var d = document.createElement('span');
+                        d.className = (j === i) ? 'on' : '';
+                        d.onclick = function(){ fsRadioHeroShow(j); };
+                        dots.appendChild(d);
+                    });
+                }
+            }
+
             function fsRadioSearch() {
                 var q = document.getElementById('fsRadioInput').value.trim();
                 if (!q) { fsRadioLoadTrending(); return; }
@@ -1877,8 +1955,8 @@
 
             function fsRadioGenre(genre, btn) {
                 var chips = document.querySelectorAll('#fsRadioChips button');
-                chips.forEach(function(b){ b.style.background = 'rgba(56,189,248,0.08)'; b.style.color = '#94a3b8'; });
-                if (btn) { btn.style.background = 'var(--primary)'; btn.style.color = '#000'; }
+                chips.forEach(function(b){ b.classList.remove('active'); });
+                if (btn) btn.classList.add('active');
                 if (genre === 'trending') {
                     fsRadioLoadTrending();
                 } else if (genre === 'indonesia') {
@@ -2088,19 +2166,14 @@
                     st.textContent = 'Karena kamu suka ' + top + ' — ' + fresh.length + ' rekomendasi';
                     list.innerHTML = '';
                     fresh.forEach(function(t, idx){
-                        var row = document.createElement('div');
-                        row.style.cssText = 'display:flex;align-items:center;gap:10px;background:linear-gradient(160deg, rgba(255,255,255,0.10), rgba(56,189,248,0.06));border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 12px;cursor:pointer;';
-                        row.innerHTML =
-                            (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0;">' : '<div style="width:56px;height:56px;border-radius:10px;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎵</div>') +
-                            '<div style="flex:1;min-width:0;">' +
-                                '<div style="font-size:0.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.title) + '</div>' +
-                                '<div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(t.artist) + '</div>' +
-                                '<div style="font-size:0.6rem;color:#64748b;margin-top:2px;">' + esc(t.sub || '') + '</div>' +
-                            '</div>' +
-                            '<button style="flex-shrink:0;min-height:48px;min-width:76px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 14px;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:inherit;">▶ Putar</button>';
-                        row.querySelector('button').onclick = function(ev){ if (ev) ev.stopPropagation(); fsRecPlay(idx); };
-                        row.onclick = function(){ fsRecPlay(idx); };
-                        list.appendChild(row);
+                        var card = document.createElement('div');
+                        card.className = 'fs-track-card';
+                        card.innerHTML =
+                            (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy">' : '<div class="fs-tc-art-fb">🎵</div>') +
+                            '<div class="fs-tc-title">' + esc(t.title) + '</div>' +
+                            '<div class="fs-tc-artist">' + esc(t.artist) + '</div>';
+                        card.onclick = function(){ fsRecPlay(idx); };
+                        list.appendChild(card);
                     });
                 }).catch(function(){
                     _fsRecBusy = false;
