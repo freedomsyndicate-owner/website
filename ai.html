@@ -393,5 +393,64 @@ function _fsFetchJson(url, ms) {
 // PWA: daftarkan service worker supaya situs bisa diinstal dari Chrome (tanpa APK).
 if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 </script>
+
+<script>
+// PWA: pop-up instal saat pertama buka + tombol instal di tab download.
+(function(){
+  var DISMISS_KEY = 'fsPwaDismissedAt';
+  var DISMISS_MS = 7*24*60*60*1000;
+  function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+  function dismissedRecently(){ try { var t = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10); return (Date.now() - t) < DISMISS_MS; } catch(e){ return false; } }
+  function markDismissed(){ try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch(e){} }
+  function hidePop(){ var p = document.getElementById('fsPwaPop'); if (p) p.remove(); }
+  function showPop(){
+    if (isStandalone() || dismissedRecently() || document.getElementById('fsPwaPop')) return;
+    var pop = document.createElement('div');
+    pop.id = 'fsPwaPop';
+    pop.setAttribute('role', 'dialog');
+    pop.setAttribute('aria-label', 'Instal aplikasi Freedom Syndicate');
+    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
+    pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
+      + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
+      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
+      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+    document.body.appendChild(pop);
+    document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
+    document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
+  }
+  // Dipakai untuk tes: paksa tampilkan pop-up.
+  window.fsPwaShow = function(){ try { localStorage.removeItem(DISMISS_KEY); } catch(e){} showPop(); };
+  function doInstall(){
+    var p = window._fsPwaPrompt;
+    if (p) {
+      hidePop();
+      p.prompt();
+      if (p.userChoice) { p.userChoice.then(function(choice){ if (choice && choice.outcome === 'accepted') { markDismissed(); } window._fsPwaPrompt = null; syncDownloadBtn(); }); }
+      else { window._fsPwaPrompt = null; syncDownloadBtn(); }
+    } else {
+      var h = document.getElementById('fsPwaHint');
+      if (h) { h.style.color = '#fff'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
+    }
+  }
+  function syncDownloadBtn(){
+    var b = document.getElementById('fsPwaInstallBtn');
+    if (!b) return;
+    if (isStandalone()) { b.style.display = 'none'; return; }
+    b.style.display = '';
+    var sub = b.querySelector('.mod-btn-sub');
+    if (sub) sub.textContent = window._fsPwaPrompt ? 'Instal langsung dari Chrome (PWA)' : 'Buka di Chrome \u2192 titik tiga \u2192 Instal aplikasi';
+  }
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    window._fsPwaPrompt = e;
+    syncDownloadBtn();
+    setTimeout(showPop, 1500);
+  });
+  window.addEventListener('appinstalled', function(){ markDismissed(); hidePop(); syncDownloadBtn(); });
+  var dl = document.getElementById('fsPwaInstallBtn');
+  if (dl) { dl.addEventListener('click', function(){ doInstall(); }); syncDownloadBtn(); }
+})();
+</script>
 </body>
 </html>
