@@ -754,8 +754,8 @@
                     <div style="font-size:0.68rem;color:#94a3b8;line-height:1.7;">
                         1️⃣ Pilih <b style="color:#fff;">MOVIE</b> atau <b style="color:#fff;">SERIES</b> → ketik judul → tekan <b style="color:#fff;">CARI</b><br>
                         2️⃣ Klik poster film yang muncul → langsung play<br>
-                        3️⃣ <b style="color:#f87171;">Video error / layar hitam?</b> Ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
-                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server filmnya — tutup saja tabnya, video tetap jalan di sini. (Player sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
+                        3️⃣ Server bawaan adalah <b style="color:#fff;">FS Player (tanpa iklan)</b> — film diputar langsung di player sendiri, tanpa iklan dan tanpa tab baru. Kalau FS Player tidak jalan di perangkatmu, ganti server di dropdown <b style="color:#fff;">(VidSrc → VidSrc.cc → VidLink → VidEasy → SuperEmbed → 2Embed)</b> — langsung pindah, tidak perlu tekan Putar lagi. Atau tekan tombol 🔄 Coba server lain di bawah player<br>
+                        4️⃣ <b style="color:#fbbf24;">Muncul tab/popup baru?</b> Itu iklan dari server film lain (bukan FS Player) — tutup saja tabnya, video tetap jalan di sini. (Player lain sengaja TIDAK dikunci sandbox, karena VidSrc menolak dimuat di frame bersandbox dan video jadi tidak muncul sama sekali.)<br>
                         5️⃣ <b style="color:#fbbf24;">Halaman putih / tidak load?</b> Tekan tombol 🔄 Coba server lain di bawah player (selalu terlihat saat video diputar)
                     </div>
                 </div>
@@ -775,6 +775,7 @@
                         <button onclick="fsSetType('tv',this)" id="fsBtnTV"
                             style="flex:1;padding:6px;border-radius:8px;border:1px solid rgba(56,189,248,0.3);background:transparent;color:var(--primary);font-size:0.7rem;font-weight:700;cursor:pointer;letter-spacing:1px;">📺 SERIES</button>
                         <select onchange="fsCinemaServerChanged()" id="fsServerSelect" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(56,189,248,0.25);border-radius:8px;color:#94a3b8;font-size:0.7rem;padding:4px 6px;outline:none;">
+                            <option value="fsplayer" selected>FS Player (tanpa iklan)</option>
                             <option value="vidsrc">VidSrc</option>
                             <option value="vidsrccc">VidSrc.cc</option>
                             <option value="vidlink">VidLink</option>
@@ -853,6 +854,9 @@
                         <button onclick="fsCinemaTryNextServer()" style="margin-top:6px;background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;margin-right:6px;">🔄 Coba server lain</button><button onclick="document.getElementById('fsErrorToast').style.display='none'" style="margin-top:6px;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;font-size:0.6rem;padding:3px 10px;border-radius:6px;cursor:pointer;">Tutup</button>
                     </div>
                     <iframe id="fsPlayerFrame" src="" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;border:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="no-referrer"></iframe>
+                    <video id="fsDirectVideo" controls playsinline preload="metadata" style="display:none;width:100%;aspect-ratio:16/9;max-height:420px;background:#000;"></video>
+                    <div id="fsDirectBar" style="display:none;gap:6px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:rgba(5,10,20,0.98);"></div>
+                    <div id="fsDirectNote" style="display:none;font-size:0.62rem;color:#64748b;padding:0 14px 10px;background:rgba(5,10,20,0.98);"></div>
                     <div id="fsPlayerBar" style="display:none;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px 14px;background:rgba(5,10,20,0.98);">
                         <button onclick="fsCinemaTryNextServer()" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.72rem;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;">🔄 Coba server lain</button>
                         <span style="font-size:0.62rem;color:#64748b;">Video tidak muncul / layar hitam? Tekan tombol di samping — langsung pindah server, tanpa tekan Putar lagi.</span>
@@ -1105,6 +1109,120 @@
                     { key: 'autoembed',  label: 'AutoEmbed',  origin: 'https://player.autoembed.cc' }
                 ];
                 var _fsLastTmdb = null;
+                var FS_STREAM = 'https://fs-ai.sanlana1903.workers.dev/stream';
+                // --- FS PLAYER (tanpa iklan) — 17 Nov 2026 ---
+                // Film diambil LANGSUNG (bukan iframe): Worker fs-ai mengambil
+                // URL MP4 dari VidLink lalu diputar di <video> sendiri — tanpa
+                // iklan, tanpa tab baru. Kalau video tidak bisa diputar di
+                // perangkat ini (mis. codec HEVC tidak didukung browser
+                // desktop), otomatis jatuh ke server iframe berikutnya.
+                var _fsDirectToken = 0;
+                var _fsDirectQualities = [];
+                function _fsDirectSetNote(txt) {
+                    var n = document.getElementById('fsDirectNote');
+                    if (n) { n.style.display = txt ? 'block' : 'none'; n.textContent = txt || ''; }
+                }
+                function _fsDirectStop() {
+                    var v = document.getElementById('fsDirectVideo');
+                    if (v) { v.onerror = null; try { v.pause(); } catch(e){} v.removeAttribute('src'); v.load(); v.style.display = 'none'; }
+                    var b = document.getElementById('fsDirectBar'); if (b) { b.style.display = 'none'; b.innerHTML = ''; }
+                    _fsDirectSetNote('');
+                }
+                function _fsDirectPick(list) {
+                    // Utamakan h264 (jalan di semua browser), lalu HEVC (jalan
+                    // di kebanyakan Android); dalam codec yang sama 720p dulu.
+                    var order = ['720','1080','480','360'];
+                    for (var c = 0; c < 2; c++) {
+                        var codec = c === 0 ? 'h264' : 'hevc';
+                        for (var i = 0; i < order.length; i++) {
+                            for (var j = 0; j < list.length; j++) {
+                                if (list[j].quality === order[i] && (list[j].codec || '').toLowerCase().indexOf(codec) === 0) return list[j];
+                            }
+                        }
+                    }
+                    return list[0] || null;
+                }
+                function _fsDirectRenderBar(active) {
+                    var b = document.getElementById('fsDirectBar');
+                    if (!b) return;
+                    b.innerHTML = '';
+                    b.style.display = 'flex';
+                    var chip = document.createElement('span');
+                    chip.style.cssText = 'font-size:0.62rem;color:#4ade80;font-weight:800;';
+                    chip.textContent = '✓ Tanpa iklan';
+                    b.appendChild(chip);
+                    _fsDirectQualities.forEach(function(q){
+                        var btn = document.createElement('button');
+                        var isActive = active && q.quality === active.quality && q.codec === active.codec;
+                        btn.style.cssText = 'background:' + (isActive ? 'rgba(56,189,248,0.35)' : 'rgba(56,189,248,0.12)') + ';border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.68rem;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;';
+                        btn.textContent = q.quality + 'p' + ((q.codec || '').toLowerCase().indexOf('hevc') === 0 ? ' HEVC' : '');
+                        btn.onclick = function(){ _fsDirectPlayQuality(q); };
+                        b.appendChild(btn);
+                    });
+                }
+                function _fsDirectPlayQuality(q, resumeTime) {
+                    var v = document.getElementById('fsDirectVideo');
+                    if (!v || !q) return;
+                    var t = (typeof resumeTime === 'number') ? resumeTime : v.currentTime;
+                    var tracks = v.querySelectorAll('track'); for (var i = 0; i < tracks.length; i++) tracks[i].remove();
+                    v.src = q.url;
+                    v.load();
+                    v.onloadedmetadata = function(){ if (t > 0 && t < (v.duration || 0)) { try { v.currentTime = t; } catch(e){} } };
+                    var p = v.play(); if (p && p.catch) p.catch(function(){});
+                    _fsDirectSetNote('▶ FS Player — ' + q.quality + 'p' + (q.codec ? ' (' + q.codec + ')' : '') + ' · tanpa iklan');
+                    _fsDirectRenderBar(q);
+                }
+                async function fsPlayDirect(tmdbId, title, season, ep) {
+                    var myToken = ++_fsDirectToken;
+                    var v = document.getElementById('fsDirectVideo');
+                    var frame = document.getElementById('fsPlayerFrame');
+                    if (frame) { frame.onload = null; frame.onerror = null; frame.src = ''; frame.style.display = 'none'; }
+                    document.getElementById('fsPlayerPlaceholder').style.display = 'none';
+                    document.getElementById('fsErrorToast').style.display = 'none';
+                    var _bar = document.getElementById('fsPlayerBar');
+                    if (_bar) _bar.style.display = 'flex';
+                    if (v) v.style.display = 'block';
+                    _fsDirectSetNote('⏳ Mengambil video tanpa iklan…');
+                    document.getElementById('fsResults').style.display = 'none';
+                    var s = Math.max(1, season || 1), e = Math.max(1, ep || 1);
+                    var tmdbNum = _fsLastTmdb ? String(_fsLastTmdb) : String(tmdbId);
+                    var path = fsMediaType === 'movie'
+                        ? FS_STREAM + '/movie/' + tmdbNum
+                        : FS_STREAM + '/tv/' + tmdbNum + '/' + s + '/' + e;
+                    var data = null;
+                    try {
+                        var r = await fetch(path, { cache: 'no-store' });
+                        data = await r.json();
+                    } catch (err) { data = null; }
+                    if (myToken !== _fsDirectToken) return; // sudah ganti film/server
+                    if (!data || !data.ok || !data.qualities || !data.qualities.length) {
+                        // Worker lama (belum di-deploy ulang) atau film tidak
+                        // ada stream-nya: jatuh ke server iframe berikutnya.
+                        _fsDirectSetNote('⚠️ FS Player belum bisa untuk film ini — pindah ke server lain…');
+                        _fsDirectStop();
+                        _fsPlayNextServer();
+                        return;
+                    }
+                    _fsDirectQualities = data.qualities;
+                    var pick = _fsDirectPick(data.qualities);
+                    // Subtitle: utamakan Indonesia, lalu English.
+                    if (v && data.captions && data.captions.length) {
+                        var cap = null;
+                        for (var ci = 0; ci < data.captions.length; ci++) if (data.captions[ci].label === 'Indonesian') { cap = data.captions[ci]; break; }
+                        if (!cap) for (var ce = 0; ce < data.captions.length; ce++) if (data.captions[ce].label === 'English') { cap = data.captions[ce]; break; }
+                        if (!cap) cap = data.captions[0];
+                        var tr = document.createElement('track');
+                        tr.kind = 'subtitles'; tr.label = cap.label; tr.srclang = cap.label === 'Indonesian' ? 'id' : 'en'; tr.src = cap.url; tr.default = true;
+                        v.appendChild(tr);
+                    }
+                    v.onerror = function(){
+                        if (myToken !== _fsDirectToken) return;
+                        _fsDirectSetNote('⚠️ Video tidak bisa diputar di perangkat ini — pindah ke server lain…');
+                        _fsDirectStop();
+                        _fsPlayNextServer();
+                    };
+                    _fsDirectPlayQuality(pick, 0);
+                }
                 function _fsServerByKey(k) {
                     for (var i = 0; i < FS_SERVERS.length; i++) if (FS_SERVERS[i].key === k) return FS_SERVERS[i];
                     return FS_SERVERS[0];
@@ -1156,11 +1274,12 @@
                     if (/^\d+$/.test(String(tmdbId))) _fsLastTmdb = tmdbId;
                     _fsLastPlay = { id: tmdbId, title: title, season: s, ep: e };
                     var sel = document.getElementById('fsServerSelect');
-                    var chosen = (sel && sel.value) || 'vidsrc';
+                    var chosen = (sel && sel.value) || 'fsplayer';
                     var order = [chosen];
                     FS_SERVERS.forEach(function(sv){ if (order.indexOf(sv.key) === -1) order.push(sv.key); });
                     _fsPlayOrder = order;
                     _fsPlayAttempt = 0;
+                    if (chosen === 'fsplayer') { fsPlayDirect(tmdbId, title, s, e); return; }
                     _fsSetNote('\u23F3 Memutar via ' + _fsServerByKey(chosen).label + '…');
                     _fsStartPlayer(_fsEmbedUrl(chosen, tmdbId, s, e));
                 }
@@ -1171,7 +1290,9 @@
                     var next = _fsPlayOrder[_fsPlayAttempt];
                     var sel = document.getElementById('fsServerSelect');
                     if (sel) sel.value = next;
-                    _fsSetNote('\u26A0\uFE0F Server sebelumnya tidak memuat — coba ' + _fsServerByKey(next).label + '…');
+                    var label = next === 'fsplayer' ? 'FS Player (tanpa iklan)' : _fsServerByKey(next).label;
+                    _fsSetNote('\u26A0\uFE0F Server sebelumnya tidak memuat — coba ' + label + '…');
+                    if (next === 'fsplayer') { fsPlayDirect(_fsLastPlay.id, _fsLastPlay.title, _fsLastPlay.season, _fsLastPlay.ep); return true; }
                     _fsStartPlayer(_fsEmbedUrl(next, _fsLastPlay.id, _fsLastPlay.season, _fsLastPlay.ep));
                     return true;
                 }
@@ -1181,6 +1302,8 @@
                     fsPlay(_fsLastPlay.id, _fsLastPlay.title, _fsLastPlay.season, _fsLastPlay.ep);
                 }
                 function _fsStartPlayer(url) {
+                    _fsDirectToken++;
+                    _fsDirectStop();
                     document.getElementById('fsPlayerPlaceholder').style.display = 'none';
                     document.getElementById('fsErrorToast').style.display = 'none';
                     var _bar = document.getElementById('fsPlayerBar');
@@ -1214,7 +1337,7 @@
                 function fsCinemaTryNextServer() {
                     if (!_fsLastPlay) return;
                     var sel = document.getElementById('fsServerSelect');
-                    var order = ['vidsrc', 'vidsrccc', 'vidlink', 'videasy', 'multiembed', '2embed', 'autoembed'];
+                    var order = ['fsplayer', 'vidsrc', 'vidsrccc', 'vidlink', 'videasy', 'multiembed', '2embed', 'autoembed'];
                     var cur = sel ? sel.value : 'vidsrc';
                     var idx = order.indexOf(cur);
                     var next = order[(idx + 1) % order.length];
