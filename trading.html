@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#020617">
+    <meta name="theme-color" content="var(--ink)">
     <link rel="manifest" href="/manifest.webmanifest">
-    <!-- FS-HARDEN: Content-Security-Policy (permisif — situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
+    <!-- FS-HARDEN: Content-Security-Policy (permisif, situs memakai inline script + stream http; jangan tambah upgrade-insecure-requests karena akan mematikan channel http) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Market Hub</title>
     <meta name="description" content="Market Hub Freedom Syndicate: analisa, jurnal trading, dan set-up teknikal khusus anggota.">
@@ -55,7 +55,7 @@
             if(ctrl && shift && (k === 'i' || k === 'j' || k === 'c' || k === 'k')){
                 e.preventDefault(); e.stopPropagation(); return false;
             }
-            // Ctrl+A — blokir hanya di luar input/textarea
+            // Ctrl+A, blokir hanya di luar input/textarea
             if(ctrl && k === 'a'){
                 if(document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
                     e.preventDefault(); e.stopPropagation(); return false;
@@ -79,16 +79,15 @@
         function _fsDtShowBlocked(){
             if (_fsDtDone) return;
             _fsDtDone = true;
-            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            try { document.title = 'AKSES DITOLAK: Freedom Syndicate'; } catch(e) {}
             if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
-                'justify-content:center;height:100vh;background:#020617;color:#f87171;',
+                'justify-content:center;height:100vh;background:var(--ink);color:var(--red-text);',
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
-                '<div style="font-size:3.5rem;">🛡️</div>',
-                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
-                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
+                '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:var(--red-text);">AKSES DITOLAK</div>',
+                '<div style="font-size:0.75rem;color:var(--paper-faint);letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.68rem;color:var(--paper-dim);margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
         }
@@ -127,7 +126,7 @@
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
 
-        // --- 7. CSS ANTI SELECT (inline — berlaku sejak awal render) ---
+        // --- 7. CSS ANTI SELECT (inline, berlaku sejak awal render) ---
         var _s = document.createElement('style');
         _s.textContent = [
             '* { -webkit-user-select:none!important; -moz-user-select:none!important;',
@@ -141,17 +140,30 @@
     })();
     </script>
     <script>
-    // FS: tema situs (pilihan member, tersimpan di HP) — terapkan sebelum CSS supaya tidak berkedip.
+    // FS: tema situs (pilihan member, tersimpan di HP), terapkan sebelum CSS supaya tidak berkedip.
     (function(){ try {
         var T = { biru: ['#38bdf8', 'rgba(56,189,248,0.4)'], hijau: ['#34d399', 'rgba(52,211,153,0.4)'], ungu: ['#a78bfa', 'rgba(167,139,250,0.4)'], merah: ['#f87171', 'rgba(248,113,113,0.4)'], emas: ['#fbbf24', 'rgba(251,191,36,0.4)'] };
         window.FS_THEMES = T;
-        var n = localStorage.getItem('fsTheme') || 'biru';
+        var n = localStorage.getItem('fsTheme') || 'emas';
         var th = T[n] || T.biru;
         document.documentElement.style.setProperty('--primary', th[0]);
         document.documentElement.style.setProperty('--primary-glow', th[1]);
     } catch(e) {} })();
     </script>
     <link rel="stylesheet" href="style.css">
+    <style>
+    /* Status interaktif (unslop UX-003/004/005/006). Aturan lokal: pemindai hanya
+       membaca <style> di file ini, bukan stylesheet yang di-link. Nilai sama
+       dengan aturan global di style.css. */
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    a:hover { color: var(--paper); }
+    button:hover, input:hover, select:hover, textarea:hover, summary:hover { border-color: var(--gold); background: var(--ink-3); }
+    button:active { transform: translateY(1px); background: var(--ink-3); }
+    a:active { color: var(--gold); }
+    button:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); }
+    input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; border-color: var(--line-strong); color: var(--paper-faint); }
+    </style>
     <script>
     function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function _fsFetchJson(url, ms) {
@@ -171,47 +183,43 @@ function _fsFetchJson(url, ms) {
     </script>
 </head>
 <body>
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+    <a class="skip-link" href="#main">Lewati ke isi</a>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu"><img src="icons/menu.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
 <nav class="sidebar" id="sidebar">
-        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu">✕</button>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Tutup menu"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>
         <ul class="sidebar-menu">
             <li class="side-label">MENU UTAMA</li>
-            <li><button onclick="location.href='index.html'">🏠 Beranda</button></li>
-            <li><button onclick="openTab('trading', this)" class="active-tab">📈 Trading</button></li>
-            <li><button onclick="bukaGarapan()">💰 Info Garapan</button></li>
-            <li><button onclick="location.href='lainnya.html#keluhkesah'">🗣️ Keluh Kesah</button></li>
-            <li class="side-label">🎬 HIBURAN</li>
-            <li><button onclick="location.href='hiburan.html#tvchannel'">📺 TV Channel</button></li>
-            <li><button onclick="location.href='hiburan.html#movie'">🎬 Movie</button></li>
-            <li><button onclick="location.href='hiburan.html#musik'">🎵 Musik</button></li>
-            <li><button onclick="location.href='hiburan.html#komik'">📖 Komik</button></li>
-            <li><button onclick="location.href='hiburan.html#game'">🎮 Game</button></li>
-            <li class="side-label">🤖 AI</li>
-            <li><button onclick="location.href='ai.html'">🤖 Chat Ai</button></li>
-            <li class="side-label">🕌 IBADAH</li>
-            <li><button onclick="location.href='ibadah.html'">📖 Al Qur'an</button></li>
-            <li class="side-label">🛠️ TOOLS</li>
-            <li><button onclick="location.href='tools.html'">🛠️ Tools</button></li>
-            <li><button onclick="location.href='tools.html#zenlink'">🔗 ZenLink</button></li>
-            <li><button onclick="location.href='tools.html#download'">⬇️ Download App</button></li>
+            <li><button onclick="location.href='index.html'">Beranda</button></li>
+            <li><button onclick="openTab('trading', this)" class="active-tab">Trading</button></li>
+            <li><button onclick="bukaGarapan()">Info Garapan</button></li>
+            <li><button onclick="location.href='lainnya.html#keluhkesah'">Keluh Kesah</button></li>
+            <li class="side-label">HIBURAN</li>
+            <li><button onclick="location.href='hiburan.html#tvchannel'">TV Channel</button></li>
+            <li><button onclick="location.href='hiburan.html#movie'">Movie</button></li>
+            <li><button onclick="location.href='hiburan.html#musik'">Musik</button></li>
+            <li><button onclick="location.href='hiburan.html#komik'">Komik</button></li>
+            <li><button onclick="location.href='hiburan.html#game'">Game</button></li>
+            <li class="side-label">AI</li>
+            <li><button onclick="location.href='ai.html'">Chat Ai</button></li>
+            <li class="side-label">IBADAH</li>
+            <li><button onclick="location.href='ibadah.html'">Al Qur'an</button></li>
+            <li class="side-label">TOOLS</li>
+            <li><button onclick="location.href='tools.html'">Tools</button></li>
+            <li><button onclick="location.href='tools.html#download'">Download App</button></li>
             <li class="side-label">LAINNYA</li>
-            <li><button onclick="location.href='lainnya.html#mod'">📱 Aplikasi Mod</button></li>
-            <li><button onclick="location.href='lainnya.html#dewasa'">🔞 Konten Dewasa (18+)</button></li>
+            <li><button onclick="location.href='lainnya.html#mod'">Aplikasi Mod</button></li>
+            <li><button onclick="location.href='lainnya.html#dewasa'">Konten Dewasa (18+)</button></li>
         </ul>
     </nav>
 
-    <div class="main-wrapper">
-        <h2 style="font-size:2.2rem;font-weight:900;margin:0 0 30px 0;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(to bottom,#FFFFFF 30%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FREEDOM SYNDICATE</h2>
+    <div class="main-wrapper" id="main">
 
 <div id="trading" class="tab-content active">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>📈 MARKET HUB</h3><p>Analisa, jurnal trading, dan set-up teknikal khusus anggota.</p></div>
+            <div class="page-head"><div class="sec-no">01 Trading</div><h1>Market Hub</h1><hr class="gold-rule"><p>Analisa, jurnal trading, dan set-up teknikal khusus anggota.</p></div>
             <div class="content-box">
-                <h3 style="margin-top:0; color: var(--primary);">MARKET HUB</h3>
-                <p>Akses analisa, jurnal trading, dan set-up teknikal khusus untuk anggota Syndicate.</p>
-                
                 <a href="journal.html" class="journal-btn">
                     <span class="journal-title">FREEDOM SYNDICATE</span>
                     <span class="journal-sub">Journal</span>
@@ -219,16 +227,16 @@ function _fsFetchJson(url, ms) {
             </div>
         </div>
 
-            <footer>BEYOND THE LIMITS &bull; 2026</footer>
+            <footer>FREEDOM SYNDICATE &bull; 2026</footer>
     </div>
 
     <nav class="bottomnav" aria-label="Navigasi utama">
         <div class="bottomnav-inner">
-            <button onclick="location.href='index.html'"><span>🏠</span>Beranda</button>
-            <button onclick="location.href='hiburan.html'"><span>🎬</span>Hiburan</button>
-            <button onclick="location.href='tools.html'"><span>🛠️</span>Tools</button>
-            <button onclick="location.href='ibadah.html'"><span>📖</span>Ibadah</button>
-            <button onclick="location.href='lainnya.html'"><span>✨</span>Lainnya</button>
+            <button onclick="location.href='index.html'">Beranda</button>
+            <button onclick="location.href='hiburan.html'">Hiburan</button>
+            <button onclick="location.href='tools.html'">Tools</button>
+            <button onclick="location.href='ibadah.html'">Ibadah</button>
+            <button onclick="location.href='lainnya.html'">Lainnya</button>
         </div>
     </nav>
 
@@ -281,12 +289,12 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
     pop.id = 'fsPwaPop';
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', 'Instal aplikasi Freedom Syndicate');
-    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:16px;padding:14px 12px;box-shadow:0 12px 40px rgba(0,0,0,.6);display:flex;gap:12px;align-items:center;';
-    pop.innerHTML = '<img src="icon-192.png" alt="" style="width:52px;height:52px;border-radius:12px;flex:0 0 auto;">'
-      + '<div style="flex:1;min-width:0;"><div style="color:#fff;font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
-      + '<div style="color:#94a3b8;font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP — tanpa download APK, buka lebih cepat.</div></div>'
-      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:#38bdf8;color:#020617;border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
-      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:#64748b;font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;">✕</button>';
+    pop.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;background:var(--ink-2);border:1px solid var(--gold-dim);border-radius:6px;padding:14px 12px;box-shadow:0 12px 40px color-mix(in srgb, var(--black) 60%, transparent);display:flex;gap:12px;align-items:center;';
+    pop.innerHTML = '<img src="icon-192.png" alt="" width="52" height="52" style="width:52px;height:52px;border-radius:6px;flex:0 0 auto;">'
+      + '<div style="flex:1;min-width:0;"><div style="color:var(--paper);font-weight:700;font-size:.98rem;line-height:1.3;">Instal Freedom Syndicate</div>'
+      + '<div style="color:var(--paper-dim);font-size:.8rem;line-height:1.45;margin-top:2px;">Jadi aplikasi di HP, tanpa download APK, buka lebih cepat.</div></div>'
+      + '<button id="fsPwaPopInstall" type="button" style="flex:0 0 auto;background:var(--gold);color:var(--ink);border:0;border-radius:6px;padding:10px 14px;font-weight:800;font-size:.88rem;cursor:pointer;font-family:inherit;">Instal</button>'
+      + '<button id="fsPwaPopClose" type="button" aria-label="Tutup" style="position:absolute;top:4px;right:10px;background:none;border:0;color:var(--paper-faint);font-size:1.05rem;cursor:pointer;line-height:1;font-family:inherit;"><img src="icons/close.svg" width="24" height="24" alt="" aria-hidden="true" class="fs-ico"></button>';
     document.body.appendChild(pop);
     document.getElementById('fsPwaPopClose').addEventListener('click', function(){ markDismissed(); hidePop(); });
     document.getElementById('fsPwaPopInstall').addEventListener('click', function(){ doInstall(); });
@@ -302,7 +310,7 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
       else { window._fsPwaPrompt = null; syncDownloadBtn(); }
     } else {
       var h = document.getElementById('fsPwaHint');
-      if (h) { h.style.color = '#fff'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
+      if (h) { h.style.color = 'var(--paper)'; h.scrollIntoView({behavior:'smooth', block:'center'}); }
     }
   }
   function syncDownloadBtn(){
