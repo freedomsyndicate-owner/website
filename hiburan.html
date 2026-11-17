@@ -1732,7 +1732,9 @@
             </div>
             <div id="fsRadioStatus" style="font-size:0.7rem;color:#475569;text-align:center;padding:8px 0 6px;">⏳ Memuat lagu trending...</div>
             <div id="fsRadioList" class="fs-track-lane" style="margin-top:6px;"></div>
-            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus — lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
+            <button id="fsRadioMoreBtn" onclick="fsRadioLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">⬇ Muat lebih banyak lagu</button>
+            <div id="fsRadioMoreNote" style="display:none;font-size:0.58rem;color:#475569;margin-top:6px;text-align:center;">Tidak ada batas jumlah lagu — terus tekan sampai ketemu lagunya. Semua lagu di YouTube dicari halaman demi halaman, terbaru sampai terlama.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus — lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja — tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci — dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
             </div><!-- /fsRadioStreamPane -->
 
             <!-- ===== MP3 SAYA (ala Beatfy: pustaka lokal + cadangan) ===== -->
@@ -1883,6 +1885,11 @@
                 });
                 fsRadioMarkPlaying();
                 fsRadioRestoreStream();
+                var _mb = document.getElementById('fsRadioMoreBtn');
+                var _mn = document.getElementById('fsRadioMoreNote');
+                var _showMore = (layout === 'grid' && _fsRadioMoreQueries.length && !_fsRadioMoreDone);
+                if (_mb) { _mb.style.display = _showMore ? 'block' : 'none'; if (_showMore) { _mb.disabled = false; _mb.textContent = '⬇ Muat lebih banyak lagu'; } }
+                if (_mn) _mn.style.display = _showMore ? 'block' : 'none';
                 // Beranda: isi hero billboard dari lagu yang ada covernya.
                 if (layout === 'row' && list.id === 'fsRadioList') fsRadioHeroSet(items);
             }
@@ -1993,6 +2000,10 @@
                     fsRadioFetchItunesItems(q).catch(function(){ return []; }).then(function(itunesItems){
                         return fsRadioInvSearch(q).catch(function(){ return []; }).then(function(ytItems){
                             _fsRadioLoading = false;
+                            _fsRadioMoreQueries = [q];
+                            _fsRadioMorePage = 3;
+                            _fsRadioMoreDatePage = 2;
+                            _fsRadioMoreDone = false;
                             var merged = fsRadioMergeItems(fsRadioMergeItems(audiusItems, itunesItems), ytItems);
                             if (!merged.length) {
                                 if (statusEl) statusEl.textContent = 'Tidak ada lagu ditemukan. Coba kata kunci lain.';
@@ -2004,8 +2015,8 @@
                             merged.forEach(function(t){ if (t.source === 'youtube') nYt++; else if (t.source === 'itunes') nPrev++; });
                             var nFull = merged.length - nPrev;
                             fsRadioRenderItems(merged, statusEl, list,
-                                merged.length + ' lagu ditemukan'
-                                + (nFull ? ' — ' + nFull + ' lagu penuh' : '')
+                                merged.length + ' lagu ditemukan — tanpa batas'
+                                + (nFull ? ' • ' + nFull + ' lagu penuh' : '')
                                 + (nYt ? ' • ' + nYt + ' dari YouTube' : '')
                                 + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''), 'grid');
                         });
@@ -2020,12 +2031,16 @@
                         fsRadioFetchItunesItems(q).catch(function(){ return []; }).then(function(itunesItems){
                             return fsRadioInvSearch(q).catch(function(){ return []; }).then(function(ytItems){
                                 _fsRadioLoading = false;
+                                _fsRadioMoreQueries = [q];
+                                _fsRadioMorePage = 3;
+                                _fsRadioMoreDatePage = 2;
+                                _fsRadioMoreDone = false;
                                 var merged = fsRadioMergeItems(itunesItems, ytItems);
                                 if (!merged.length) {
                                     if (statusEl) statusEl.textContent = '⚠️ Gagal memuat lagu. Cek koneksi lalu coba lagi.';
                                     return;
                                 }
-                                fsRadioRenderItems(merged, statusEl, list, merged.length + ' lagu ditemukan', 'grid');
+                                fsRadioRenderItems(merged, statusEl, list, merged.length + ' lagu ditemukan — tanpa batas', 'grid');
                             });
                         }).catch(function(){
                             _fsRadioLoading = false;
@@ -2106,6 +2121,10 @@
                 var audiusJob = fetch(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(audiusQ) + '&' + FS_AUDIUS_APP + '&limit=50')
                     .then(function(r){ return r.json(); }).then(function(d){ return fsRadioAudiusToItems((d && d.data) || []); })
                     .catch(function(){ return []; });
+                _fsRadioMoreQueries = queries.slice();
+                _fsRadioMorePage = 3;
+                _fsRadioMoreDatePage = 2;
+                _fsRadioMoreDone = false;
                 Promise.all(ytJobs.concat([audiusJob])).then(function(parts){
                     _fsRadioLoading = false;
                     var merged = [];
@@ -2213,6 +2232,57 @@
                     return fsRadioYtToItems(all);
                 });
             }
+            // TANPA BATAS (17 Nov 2026, perintah San: jangan ada batasan 20/60 lagu —
+            // kalau orang cari lagu, lagunya harus ada): hasil pertama menarik 3 halaman
+            // YouTube sekaligus, lalu tombol "Muat lebih banyak lagu" menarik halaman
+            // 3, 4, 5, ... terus sampai habis. Tiap halaman = 20 lagu; tidak ada
+            // angka maksimum di mana pun. Spotify/Joox tidak bisa dicari langsung
+            // dari website statis (butuh kunci API berbayar) — tapi katalognya
+            // hampir selalu ada juga di YouTube (audio resmi / Topic), jadi
+            // pencarian YouTube yang dalam ini yang menjamin lagu ketemu.
+            var _fsRadioMoreQueries = [];
+            var _fsRadioMorePage = 3;
+            var _fsRadioMoreDatePage = 2;
+            var _fsRadioMoreBusy = false;
+            var _fsRadioMoreDone = false;
+            function fsRadioInvSearchPage(q, page, sortBy) {
+                var p = '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video&page=' + page;
+                if (sortBy) p += '&sort_by=' + sortBy;
+                return _fsInvTryMirror(0, p).then(function(d){ return fsRadioYtToItems(d); }).catch(function(){ return []; });
+            }
+            function fsRadioLoadMore() {
+                if (_fsRadioMoreBusy || _fsRadioMoreDone || !_fsRadioMoreQueries.length) return;
+                _fsRadioMoreBusy = true;
+                var btn = document.getElementById('fsRadioMoreBtn');
+                if (btn) btn.textContent = '⏳ Memuat lagu lainnya...';
+                var jobs = [];
+                _fsRadioMoreQueries.forEach(function(q){
+                    jobs.push(fsRadioInvSearchPage(q, _fsRadioMorePage, ''));
+                    jobs.push(fsRadioInvSearchPage(q, _fsRadioMoreDatePage, 'upload_date'));
+                });
+                Promise.all(jobs).then(function(parts){
+                    var added = [];
+                    parts.forEach(function(p){ added = fsRadioMergeItems(added, p); });
+                    var before = _fsRadioTracks.length;
+                    var merged = fsRadioMergeItems(_fsRadioTracks, added);
+                    _fsRadioMoreBusy = false;
+                    if (merged.length === before) {
+                        _fsRadioMoreDone = true;
+                        if (btn) { btn.textContent = '✅ Sudah semua lagu yang ditemukan'; btn.disabled = true; }
+                        return;
+                    }
+                    _fsRadioMorePage++;
+                    _fsRadioMoreDatePage++;
+                    var list = document.getElementById('fsRadioList');
+                    var statusEl = document.getElementById('fsRadioStatus');
+                    fsRadioRenderItems(merged, statusEl, list,
+                        merged.length + ' lagu ditemukan — tanpa batas, tekan Muat lebih banyak untuk lagu lain', 'grid');
+                    if (btn) btn.textContent = '⬇ Muat lebih banyak lagu';
+                }).catch(function(){
+                    _fsRadioMoreBusy = false;
+                    if (btn) btn.textContent = '⬇ Muat lebih banyak lagu';
+                });
+            }
             function fsRadioYtToItems(d) {
                 var out = [];
                 (d || []).forEach(function(v){
@@ -2228,7 +2298,7 @@
                         sub: '⏱ ' + fsRadioFmtDur(v.lengthSeconds || 0) + ' · ▶ YouTube • Lagu penuh'
                     });
                 });
-                return out.slice(0, 60);
+                return out;
             }
             function fsRadioInvVideo(videoId) {
                 return _fsInvTryMirror(0, '/api/v1/videos/' + encodeURIComponent(videoId));
