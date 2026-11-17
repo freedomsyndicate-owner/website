@@ -9,10 +9,16 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: http: data: blob:; script-src 'self' https: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: http: data: blob:; connect-src 'self' https: http: wss: ws:; font-src 'self' https: data:; media-src 'self' https: http: blob: data:; frame-src https: http:; object-src 'none'; base-uri 'self'">
     <title>Freedom Syndicate | Lainnya</title>
     <meta name="description" content="Lainnya: Keluh Kesah anonim, Aplikasi Mod, dan Konten Dewasa (18+).">
-    <meta property="og:title" content="Freedom Syndicate | Tools">
-    <meta property="og:description" content="Tools gratis Freedom Syndicate: PDF Tools, Open Gym, Podcast, ZenLink, dan Download App.">
+    <meta property="og:title" content="Freedom Syndicate | Lainnya">
+    <meta property="og:description" content="Lainnya: Keluh Kesah anonim, Aplikasi Mod, dan Konten Dewasa (18+).">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/lainnya.html">
+    <meta name="keywords" content="keluh kesah, curhat anonim, aplikasi mod, konten dewasa">
+    <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Freedom Syndicate | Lainnya">
+    <meta name="twitter:description" content="Lainnya: Keluh Kesah anonim, Aplikasi Mod, dan Konten Dewasa (18+).">
+    <link rel="canonical" href="https://freedomsyndicate.my.id/lainnya.html">
 
     <script>
     (function(){
@@ -397,6 +403,50 @@ function _fsFetchJson(url, ms) {
             return true;
         }
 
+        // Pesan error login yang ramah (Firebase mengembalikan teks Inggris teknis).
+        function _fsLoginErrMsg(err) {
+            var code = err && err.code ? err.code : '';
+            if (code === 'auth/network-request-failed') return 'Koneksi internet lambat / tidak stabil. Periksa sinyal lalu coba lagi.';
+            if (code === 'auth/popup-blocked') return 'Popup login diblokir browser. Izinkan popup untuk situs ini lalu coba lagi.';
+            if (code === 'auth/popup-closed-by-user') return 'Login dibatalkan.';
+            if (code === 'auth/cancelled-popup-request') return 'Login dibatalkan.';
+            if (code === 'auth/unauthorized-domain') return 'Domain ini belum diizinkan di Firebase. Laporkan ke admin.';
+            if (code === 'auth/web-storage-unsupported') return 'Browser memblokir penyimpanan login. Matikan mode privat / izinkan cookie situs ini.';
+            return 'Gagal login: ' + (err && err.message ? err.message : err);
+        }
+
+        // Tombol "Login lewat popup" — muncul hanya kalau redirect gagal.
+        // Popup butuh ketukan pengguna langsung (gesture), jadi tidak bisa
+        // dipanggil otomatis dari catch.
+        function _fsShowPopupBtn() {
+            var btn = document.getElementById('dewasaPopupBtn');
+            if (btn) { btn.style.display = 'inline-block'; return; }
+            var loginBtn = document.getElementById('dewasaLoginBtn');
+            if (!loginBtn) return;
+            btn = document.createElement('button');
+            btn.id = 'dewasaPopupBtn';
+            btn.type = 'button';
+            btn.textContent = '🔄 Login lewat popup';
+            btn.style.cssText = 'margin-top:10px;display:inline-block;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;cursor:pointer;';
+            btn.onclick = function(){ _fsLoginPopup(); };
+            loginBtn.parentNode.insertBefore(btn, loginBtn.nextSibling);
+        }
+
+        function _fsLoginPopup() {
+            var st = document.getElementById('dewasaLoginStatus');
+            if (st) st.textContent = '⏳ Membuka popup login Google...';
+            if (!_fsFirebaseInit()) {
+                if (st) st.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
+                return;
+            }
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then(function(){
+                if (st) st.textContent = '✅ Login berhasil, memuat...';
+            }).catch(function(err){
+                if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
+            });
+        }
+
         function dewasaLoginGoogle() {
             var st = document.getElementById('dewasaLoginStatus');
             if (st) st.textContent = '⏳ Membuka login Google...';
@@ -405,9 +455,23 @@ function _fsFetchJson(url, ms) {
                 return;
             }
             var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithRedirect(provider).catch(function(err){
-                if (st) st.textContent = '⚠️ Gagal login: ' + (err && err.message ? err.message : err);
-            });
+            var tried = 0;
+            function attempt() {
+                tried++;
+                firebase.auth().signInWithRedirect(provider).catch(function(err){
+                    // Redirect gagal sebelum pindah halaman (biasanya koneksi
+                    // putus/lambat): coba sekali lagi otomatis, lalu tawarkan
+                    // login lewat popup.
+                    if (err && err.code === 'auth/network-request-failed' && tried < 2) {
+                        if (st) st.textContent = '⏳ Koneksi lambat, mencoba lagi...';
+                        setTimeout(attempt, 1500);
+                        return;
+                    }
+                    if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
+                    _fsShowPopupBtn();
+                });
+            }
+            attempt();
         }
 
         function dewasaGate() {
@@ -448,6 +512,16 @@ function _fsFetchJson(url, ms) {
                     firebase.auth().onAuthStateChanged(function(){
                         var dw = document.getElementById('dewasa');
                         if (dw && dw.classList.contains('active')) dewasaGate();
+                    });
+                } catch (e) {}
+                // Kalau kembali dari redirect Google dengan error, tampilkan
+                // pesannya (tanpa ini, kegagalan redirect diam-diam kembali
+                // ke layar login).
+                try {
+                    firebase.auth().getRedirectResult().catch(function(err){
+                        var st0 = document.getElementById('dewasaLoginStatus');
+                        var dw = document.getElementById('dewasa');
+                        if (st0 && dw && dw.classList.contains('active')) st0.textContent = '⚠️ ' + _fsLoginErrMsg(err);
                     });
                 } catch (e) {}
             }

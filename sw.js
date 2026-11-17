@@ -1,12 +1,27 @@
-// FS PWA — service worker: cache shell situs, jangan sentuh API/stream luar.
-var FS_CACHE = 'fs-v1';
+// FS PWA — service worker: cache shell situs + data Qur'an, cache jawaban
+// API Qur'an/jadwal sholat yang sudah pernah dimuat (offline). Jangan
+// sentuh stream audio/video, APK, atau request non-GET.
+var FS_CACHE = 'fs-v2';
 var FS_SHELL = [
   '/', '/index.html', '/hiburan.html', '/tools.html', '/ibadah.html',
   '/ai.html', '/trading.html', '/lainnya.html', '/garapan.html', '/journal.html',
   '/style.css', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'
 ];
+// Data Qur'an lokal (Arab + Latin + terjemahan ID, ~3,1 MB / ~0,8 MB gzip).
+// Diunduh sekali saat install; kalau gagal (mis. koneksi putus), install
+// tetap lanjut dan file dimuat malas oleh tab Qur'an lalu tersimpan di cache.
+var FS_QURAN_DATA = '/data/quran.json';
+// Host API yang jawabannya boleh disimpan untuk offline (GET saja).
+var FS_API_HOSTS = [
+  'api.alquran.cloud', 'api.myquran.com', 'api.aladhan.com',
+  'fonts.googleapis.com', 'fonts.gstatic.com'
+];
 self.addEventListener('install', function(e){
-  e.waitUntil(caches.open(FS_CACHE).then(function(c){ return c.addAll(FS_SHELL); }).then(function(){ return self.skipWaiting(); }));
+  e.waitUntil(
+    caches.open(FS_CACHE).then(function(c){ return c.addAll(FS_SHELL); })
+      .then(function(){ return caches.open(FS_CACHE).then(function(c){ return c.add(FS_QURAN_DATA).catch(function(){}); }); })
+      .then(function(){ return self.skipWaiting(); })
+  );
 });
 self.addEventListener('activate', function(e){
   e.waitUntil(caches.keys().then(function(keys){
@@ -17,8 +32,22 @@ self.addEventListener('fetch', function(e){
   var req = e.request;
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
-  // Hanya layani asal sendiri; API, stream, audio, dan APK lewat tanpa disentuh.
-  if (url.origin !== self.location.origin) return;
+  // API Qur'an / jadwal sholat / font: cache dulu, perbarui di belakang
+  // layar — yang pernah dimuat sekali tetap tampil saat offline.
+  if (url.origin !== self.location.origin) {
+    if (FS_API_HOSTS.indexOf(url.hostname) !== -1) {
+      e.respondWith(caches.open(FS_CACHE).then(function(c){
+        return c.match(req).then(function(cached){
+          var net = fetch(req).then(function(res){
+            if (res && res.ok) { var copy = res.clone(); c.put(req, copy); }
+            return res;
+          }).catch(function(){ return cached; });
+          return cached || net;
+        });
+      }));
+    }
+    return;
+  }
   if (url.pathname.endsWith('.apk')) return;
   if (req.headers.get('range')) return;
   var isPage = req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/';
@@ -30,7 +59,7 @@ self.addEventListener('fetch', function(e){
       return res;
     }).catch(function(){ return caches.match(req).then(function(r){ return r || caches.match('/index.html'); }); }));
   } else {
-    // Aset statis: cache dulu, perbarui di belakang layar.
+    // Aset statis (termasuk data/quran.json): cache dulu, perbarui di belakang layar.
     e.respondWith(caches.match(req).then(function(cached){
       var net = fetch(req).then(function(res){
         if (res && res.ok) { var copy = res.clone(); caches.open(FS_CACHE).then(function(c){ c.put(req, copy); }); }

@@ -13,6 +13,12 @@
     <meta property="og:description" content="Baca Al Qur'an online gratis: 114 surah, terjemahan Indonesia, dan murotal per ayat.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/ibadah.html">
+    <meta name="keywords" content="al quran online, baca quran, terjemahan indonesia, murotal, jadwal sholat, hijriah, tasbih, offline">
+    <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Freedom Syndicate | Al Qur'an">
+    <meta name="twitter:description" content="Baca Al Qur'an online gratis: 114 surah, terjemahan Indonesia, dan murotal per ayat.">
+    <link rel="canonical" href="https://freedomsyndicate.my.id/ibadah.html">
 
     <script>
     (function(){
@@ -295,7 +301,7 @@ function _fsFetchJson(url, ms) {
                 <audio id="fsQuranAudio" preload="none" style="display:none;"></audio>
             </div>
 
-            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">Sumber teks, terjemahan &amp; audio: AlQuran Cloud (api.alquran.cloud) — gratis, tanpa kunci • Murotal: Mishary Rashid Alafasy • Huruf Arab: Amiri (dipakai QuranKu) • Fitur mengikuti QuranKu (Rafigibran, MIT) — aplikasinya Flutter, jadi fiturnya ditulis ulang di sini.</div>
+            <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;">Sumber teks, terjemahan &amp; audio: AlQuran Cloud (api.alquran.cloud) — gratis, tanpa kunci • Teks Arab, Latin &amp; terjemahan tersimpan di situs (data/quran.json) — bisa dibaca offline setelah pertama kali dimuat; audio murotal tetap butuh internet • Murotal: Mishary Rashid Alafasy • Huruf Arab: Amiri (dipakai QuranKu) • Fitur mengikuti QuranKu (Rafigibran, MIT) — aplikasinya Flutter, jadi fiturnya ditulis ulang di sini.</div>
 
             <script>
             // --- AL QUR'AN (AlQuran Cloud, API publik gratis tanpa kunci, CORS *) ---
@@ -385,6 +391,9 @@ function _fsFetchJson(url, ms) {
                         if (st2) st2.textContent = '⚠️ Gagal memuat daftar surah. Cek koneksi lalu buka lagi tab ini.';
                     }
                 }
+                // Muat data Qur'an lokal di latar (sekali saja) supaya
+                // surah bisa dibuka offline di kunjungan berikutnya.
+                fsQuranLoadLocal().catch(function(){});
                 // Fitur islami: jadwal sholat, ayat harian, tasbih.
                 fsSholatInit();
                 fsAyahToday();
@@ -684,6 +693,57 @@ function _fsFetchJson(url, ms) {
                 });
             }
 
+            // ===== DATA QUR'AN LOKAL (offline): data/quran.json =====
+            // Seluruh teks Arab (Uthmani) + Latin + terjemahan Indonesia
+            // (6236 ayat, 114 surah, ~3,1 MB / ~0,8 MB gzip) tersimpan di
+            // situs sendiri, sumbernya AlQuran Cloud. Setelah file ini
+            // sekali termuat (di latar saat tab dibuka), semua surah bisa
+            // dibaca TANPA internet. Audio murotal tetap butuh internet
+            // (file audio per ayat, terlalu besar untuk dibundel).
+            var _fsQuranLocal = null;
+            var _fsQuranLocalLoading = null;
+            function fsQuranLoadLocal() {
+                if (_fsQuranLocal) return Promise.resolve(_fsQuranLocal);
+                if (_fsQuranLocalLoading) return _fsQuranLocalLoading;
+                _fsQuranLocalLoading = fetch('data/quran.json').then(function(r){
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                }).then(function(d){
+                    if (!d || !d.ar || d.ar.length !== 114) throw new Error('bad local data');
+                    _fsQuranLocal = d;
+                    return d;
+                }).catch(function(e){
+                    _fsQuranLocalLoading = null;
+                    throw e;
+                });
+                return _fsQuranLocalLoading;
+            }
+            function fsQuranAyahsFromLocal(n, edition) {
+                var d = _fsQuranLocal;
+                if (!d) return null;
+                // Bundle lokal hanya berisi terjemahan Indonesia.
+                if (edition !== 'id.indonesian') return null;
+                var ar = d.ar[n-1], lat = d.lat[n-1], tr = d.id[n-1];
+                if (!ar || !lat || !tr) return null;
+                var base = 0;
+                for (var i = 0; i < n-1; i++) base += (d.ar[i] ? d.ar[i].length : 0);
+                var out = [];
+                for (var j = 0; j < ar.length; j++) {
+                    out.push({
+                        n: j + 1, arab: ar[j], latin: lat[j], tr: tr[j] || '',
+                        audio: 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/' + (base + j + 1) + '.mp3'
+                    });
+                }
+                return out;
+            }
+            function fsQuranScrollToAyah() {
+                if (_fsQuranScrollTo > 0) {
+                    var el = document.getElementById('fsQuranAyah-' + _fsQuranScrollTo);
+                    if (el) setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+                    _fsQuranScrollTo = 0;
+                }
+            }
+
             function fsQuranOpen(n, scrollAyah) {
                 _fsQuranSurah = n;
                 _fsQuranScrollTo = scrollAyah || 0;
@@ -699,25 +759,32 @@ function _fsFetchJson(url, ms) {
                 document.getElementById('fsQuranReaderStatus').textContent = '⏳ Memuat surah...';
                 document.getElementById('fsQuranAyahs').innerHTML = '';
                 window.scrollTo({ top: 0 });
-                fetch(FS_QURAN_API + '/surah/' + n + '/editions/quran-uthmani,en.transliteration,' + _fsQuranEdition + ',ar.alafasy')
-                    .then(function(r){ return r.json(); })
-                    .then(function(d){
-                        if (!d || !d.data || d.data.length < 4) throw new Error('bad data');
-                        var arab = d.data[0].ayahs || [], latin = d.data[1].ayahs || [], tr = d.data[2].ayahs || [], au = d.data[3].ayahs || [];
-                        _fsQuranAyahs = arab.map(function(a, i){
-                            return { n: a.numberInSurah, arab: a.text, latin: (latin[i] && latin[i].text) || '', tr: (tr[i] && tr[i].text) || '', audio: (au[i] && au[i].audio) || '' };
+                // 1) Coba data lokal dulu (tersimpan di situs — jalan offline).
+                fsQuranLoadLocal().then(function(){
+                    var local = fsQuranAyahsFromLocal(n, _fsQuranEdition);
+                    if (!local) throw new Error('no local');
+                    _fsQuranAyahs = local;
+                    fsQuranRenderAyahs();
+                    document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • 📴 Tersimpan offline — ketuk ▶ di tiap ayat untuk mendengarkan (audio butuh internet), atau ▶ besar untuk murotal satu surah penuh.';
+                    fsQuranScrollToAyah();
+                }).catch(function(){
+                    // 2) Gagal / edisi terjemahan lain: API seperti dulu (perlu internet).
+                    fetch(FS_QURAN_API + '/surah/' + n + '/editions/quran-uthmani,en.transliteration,' + _fsQuranEdition + ',ar.alafasy')
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            if (!d || !d.data || d.data.length < 4) throw new Error('bad data');
+                            var arab = d.data[0].ayahs || [], latin = d.data[1].ayahs || [], tr = d.data[2].ayahs || [], au = d.data[3].ayahs || [];
+                            _fsQuranAyahs = arab.map(function(a, i){
+                                return { n: a.numberInSurah, arab: a.text, latin: (latin[i] && latin[i].text) || '', tr: (tr[i] && tr[i].text) || '', audio: (au[i] && au[i].audio) || '' };
+                            });
+                            fsQuranRenderAyahs();
+                            document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.';
+                            fsQuranScrollToAyah();
+                        })
+                        .catch(function(){
+                            document.getElementById('fsQuranReaderStatus').textContent = '⚠️ Gagal memuat surah. Cek koneksi lalu buka lagi.';
                         });
-                        fsQuranRenderAyahs();
-                        document.getElementById('fsQuranReaderStatus').textContent = _fsQuranAyahs.length + ' ayat • Ketuk ▶ di tiap ayat untuk mendengarkan, atau ▶ besar untuk murotal satu surah penuh.';
-                        if (_fsQuranScrollTo > 0) {
-                            var el = document.getElementById('fsQuranAyah-' + _fsQuranScrollTo);
-                            if (el) setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
-                            _fsQuranScrollTo = 0;
-                        }
-                    })
-                    .catch(function(){
-                        document.getElementById('fsQuranReaderStatus').textContent = '⚠️ Gagal memuat surah. Cek koneksi lalu buka lagi.';
-                    });
+                });
             }
 
             function fsQuranRenderAyahs() {
@@ -754,6 +821,11 @@ function _fsFetchJson(url, ms) {
                 if (i < 0 || i >= _fsQuranAyahs.length) { fsQuranStop(); return; }
                 var a = _fsQuranAyahs[i];
                 if (!a.audio) return;
+                if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+                    var _st0 = document.getElementById('fsQuranReaderStatus');
+                    if (_st0) _st0.textContent = '⚠️ Audio butuh internet — teks surah tetap bisa dibaca offline.';
+                    return;
+                }
                 _fsQuranPlayIdx = i;
                 _fsQuranPlayAll = !!auto;
                 fsQuranMarkPlaying();

@@ -13,6 +13,15 @@
     <meta property="og:description" content="Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/">
+    <meta name="keywords" content="freedom syndicate, komunitas trading, garapan gratis, trading indonesia, al quran online, musik gratis, game gratis, live tv, chat ai">
+    <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Freedom Syndicate | Official Hub">
+    <meta name="twitter:description" content="Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.">
+    <link rel="canonical" href="https://freedomsyndicate.my.id/">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"Freedom Syndicate","url":"https://freedomsyndicate.my.id/","description":"Hub resmi Freedom Syndicate: trading, garapan gratis, musik, game, nobar, dan komunitas.","inLanguage":"id"}
+    </script>
     <!-- ======================================================
          FREEDOM SYNDICATE — SECURITY SHIELD v3.0
          Anti Inspect · Anti Copy · Anti DevTools · Stable
@@ -156,6 +165,38 @@
     } catch(e) {} })();
     </script>
     <link rel="stylesheet" href="style.css">
+    <style>
+    /* FS-SEARCH + FAQ + KONTAK — inline index.html (saran review Wafa, 17 Nov 2026). */
+    .topbar-search { background: rgba(16,185,129,.14); border: 1px solid rgba(16,185,129,.45); color: #fff; border-radius: 20px; padding: 8px 12px; font-size: .8rem; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .fs-search-overlay { position: fixed; inset: 0; z-index: 10002; background: rgba(2,6,23,.93); display: flex; align-items: flex-start; justify-content: center; padding: 70px 14px 20px; }
+    .fs-search-box { width: 100%; max-width: 560px; background: #0f172a; border: 1px solid rgba(16,185,129,.4); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+    .fs-search-bar { display: flex; gap: 8px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .fs-search-bar input { flex: 1; min-width: 0; background: #020617; border: 1px solid rgba(16,185,129,.4); border-radius: 10px; padding: 11px 12px; color: #fff; font-size: .9rem; font-family: inherit; outline: none; }
+    .fs-search-bar button { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 0 14px; font-size: .9rem; cursor: pointer; font-family: inherit; }
+    .fs-search-results { max-height: 60vh; overflow-y: auto; padding: 6px; }
+    .fs-search-item { display: block; padding: 10px 12px; border-radius: 10px; cursor: pointer; text-decoration: none; }
+    .fs-search-item:hover { background: rgba(16,185,129,.12); }
+    .fs-search-item .fs-sr-title { color: #fff; font-size: .85rem; font-weight: 800; }
+    .fs-search-item .fs-sr-desc { color: #94a3b8; font-size: .68rem; margin-top: 2px; }
+    .fs-search-item .fs-sr-tag { float: right; font-size: .58rem; font-weight: 800; color: #10b981; background: rgba(16,185,129,.12); border-radius: 20px; padding: 2px 8px; margin-left: 8px; }
+    .fs-search-empty { color: #94a3b8; font-size: .8rem; padding: 16px 12px; text-align: center; }
+    .fs-search-hint { color: #475569; font-size: .62rem; text-align: center; padding: 8px 0 10px; }
+    .fs-home-section { margin: 28px 0 8px; text-align: left; }
+    .fs-home-h { font-size: 1.05rem; font-weight: 900; color: #fff; margin: 0 0 4px; letter-spacing: .5px; }
+    .fs-home-sub { font-size: .72rem; color: #94a3b8; margin: 0 0 12px; line-height: 1.6; }
+    .fs-faq { background: rgba(255,255,255,.05); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; margin-top: 8px; overflow: hidden; }
+    .fs-faq summary { padding: 12px 14px; font-size: .82rem; font-weight: 800; color: #fff; cursor: pointer; list-style: none; }
+    .fs-faq summary::-webkit-details-marker { display: none; }
+    .fs-faq summary::before { content: '+ '; color: #10b981; }
+    .fs-faq[open ] summary::before { content: '- '; }
+    .fs-faq p { padding: 0 14px 12px; font-size: .76rem; color: #cbd5e1; line-height: 1.7; margin: 0; }
+    .fs-faq a { color: #10b981; }
+    .fs-kontak-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .fs-kontak-card { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.05); border: 1px solid rgba(16,185,129,.25); border-radius: 12px; padding: 12px; text-decoration: none; color: #fff; }
+    .fs-kontak-card .fs-kc-ico { font-size: 1.3rem; flex-shrink: 0; }
+    .fs-kontak-card .fs-kc-name { font-size: .8rem; font-weight: 800; }
+    .fs-kontak-card .fs-kc-desc { font-size: .62rem; color: #94a3b8; margin-top: 2px; line-height: 1.4; }
+    </style>
 
     <!-- FS REDESIGN v2: topbar + bottomnav + header tab konsisten + glass lebih terasa -->
 </head>
@@ -280,7 +321,7 @@
 
     <!-- === MAIN CONTENT === -->
 
-    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
+    <header class="topbar"><button class="menu-toggle" onclick="toggleSidebar()" aria-label="Buka menu">☰</button><span class="topbar-title">FREEDOM <b>SYNDICATE</b></span><button class="topbar-search" onclick="fsSearchOpen()" aria-label="Cari di situs">🔍 Cari</button><button class="topbar-ai" onclick="location.href='ai.html'">🤖 Chat Ai</button></header>
 
     <div class="page-overlay" id="pageOverlay" onclick="toggleSidebar()"></div>
 
@@ -329,6 +370,31 @@
                 <a href="https://www.instagram.com/freedom__syndicate" class="social-btn btn-ig">INSTAGRAM</a>
                 <a href="https://www.facebook.com/share/18TPqtZgH2/" class="social-btn btn-fb">FACEBOOK</a>
             </div>
+            <!-- ===== FAQ (saran review Wafa, 17 Nov 2026) ===== -->
+            <section id="faq" class="fs-home-section">
+                <h3 class="fs-home-h">❓ Pertanyaan Umum (FAQ)</h3>
+                <p class="fs-home-sub">Jawaban cepat untuk hal yang paling sering ditanyakan member.</p>
+                <details class="fs-faq"><summary>Apa itu FREEDOM SYNDICATE?</summary><p>FREEDOM SYNDICATE adalah komunitas dan hub online untuk jiwa-jiwa bebas: tempat berkumpulnya dunia trading, garapan gratis, musik, game, movie, Live TV, komik, Chat Ai, Al Qur'an, sampai ruang Keluh Kesah. Semua bisa diakses gratis dari satu website ini.</p></details>
+                <details class="fs-faq"><summary>Apakah semua fitur di website ini gratis?</summary><p>Ya, semua fitur di website ini gratis — tanpa biaya berlangganan. Garapan yang kami bagikan juga hanya yang gratis dan sudah dicek: tanpa modal, tanpa gas, tanpa deposit. Kalau ada yang meminta bayaran atas nama kami, itu bukan dari Freedom Syndicate.</p></details>
+                <details class="fs-faq"><summary>Bagaimana cara gabung ke Telegram / Discord?</summary><p>Klik tombol Telegram atau Discord di Beranda, atau lihat bagian Kontak di bawah. Telegram: channel @freedomsyndicate dan bot @freedom_syndicate_Bot. Discord: discord.gg/hUf7D4jaNJ. Ada juga channel WhatsApp, TikTok, dan Instagram kami.</p></details>
+                <details class="fs-faq"><summary>Apa itu Chat Ai, Journal, dan Tools?</summary><p><a href="ai.html">Chat Ai</a>: asisten AI — tanya apa saja, analisa chart XAUUSD &amp; BTC, tanpa login. <a href="journal.html">Journal</a>: jurnal trading untuk mencatat analisa dan sinyal. <a href="tools.html">Tools</a>: alat gratis seperti PDF Tools, Translator, Cek IP &amp; VPN, Skor Bola, Podcast, dan Kirim WhatsApp.</p></details>
+                <details class="fs-faq"><summary>Bagaimana cara install aplikasi Freedom Syndicate di HP?</summary><p>Buka freedomsyndicate.my.id di Chrome HP, ketuk titik tiga di kanan atas, lalu pilih "Instal aplikasi" — situs ini PWA, jadi langsung jadi aplikasi tanpa download APK. Atau unduh APK-nya di <a href="tools.html#download">Tools → Download App</a>.</p></details>
+                <details class="fs-faq"><summary>Apakah Al-Qur'an bisa dibaca offline?</summary><p>Bisa. Teks surah — Arab, Latin, dan terjemahan Indonesia — bisa dibaca offline setelah pertama kali dibuka, karena datanya tersimpan di HP. Murotal/audio per ayat tetap butuh internet.</p></details>
+            </section>
+            <!-- ===== KONTAK (saran review Wafa, 17 Nov 2026) ===== -->
+            <section id="kontak" class="fs-home-section">
+                <h3 class="fs-home-h">📬 Kontak &amp; Komunitas</h3>
+                <p class="fs-home-sub">Gabung komunitas atau hubungi kami lewat channel resmi di bawah ini.</p>
+                <div class="fs-kontak-grid">
+                    <a class="fs-kontak-card" href="https://t.me/freedomsyndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">📨</span><span><span class="fs-kc-name">Telegram Channel</span><span class="fs-kc-desc" style="display:block;">@freedomsyndicate — info &amp; update garapan</span></span></a>
+                    <a class="fs-kontak-card" href="https://t.me/freedom_syndicate_Bot" target="_blank" rel="noopener"><span class="fs-kc-ico">🤖</span><span><span class="fs-kc-name">Telegram Bot</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate_Bot — bot resmi FS</span></span></a>
+                    <a class="fs-kontak-card" href="https://discord.gg/hUf7D4jaNJ" target="_blank" rel="noopener"><span class="fs-kc-ico">🎮</span><span><span class="fs-kc-name">Discord</span><span class="fs-kc-desc" style="display:block;">Server Freedom Syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://whatsapp.com/channel/0029VanKWrx7oQhdS7iEh43l" target="_blank" rel="noopener"><span class="fs-kc-ico">💬</span><span><span class="fs-kc-name">WhatsApp Channel</span><span class="fs-kc-desc" style="display:block;">Channel resmi FS di WhatsApp</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.tiktok.com/@freedom_syndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">🎵</span><span><span class="fs-kc-name">TikTok</span><span class="fs-kc-desc" style="display:block;">@freedom_syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.instagram.com/freedom__syndicate" target="_blank" rel="noopener"><span class="fs-kc-ico">📷</span><span><span class="fs-kc-name">Instagram</span><span class="fs-kc-desc" style="display:block;">@freedom__syndicate</span></span></a>
+                    <a class="fs-kontak-card" href="https://www.facebook.com/share/18TPqtZgH2/" target="_blank" rel="noopener"><span class="fs-kc-ico">👍</span><span><span class="fs-kc-name">Facebook</span><span class="fs-kc-desc" style="display:block;">Halaman Freedom Syndicate</span></span></a>
+                </div>
+            </section>
         </div>
 
         <div id="garapan" class="tab-content">
@@ -561,5 +627,115 @@ if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ 
   if (dl) { dl.addEventListener('click', function(){ doInstall(); }); syncDownloadBtn(); }
 })();
 </script>
+    <!-- FS-SEARCH global (saran review Wafa, 17 Nov 2026) -->
+    <div id="fsSearchOverlay" class="fs-search-overlay" style="display:none;" role="dialog" aria-label="Pencarian" onclick="if(event.target===this)fsSearchClose()">
+        <div class="fs-search-box">
+            <div class="fs-search-bar">
+                <input id="fsSearchInput" type="search" placeholder="Cari halaman, tool, surah, atau FAQ..." autocomplete="off" oninput="fsSearchRun(this.value)">
+                <button type="button" onclick="fsSearchClose()" aria-label="Tutup">✕</button>
+            </div>
+            <div id="fsSearchResults" class="fs-search-results"></div>
+            <div class="fs-search-hint">Enter untuk membuka hasil pertama • Esc untuk menutup • Ctrl+K untuk mencari</div>
+        </div>
+    </div>
+    <script>
+    // FS-SEARCH: indeks kecil tertanam di halaman (halaman + tool + 114 surah + FAQ + kontak).
+    var FS_SEARCH_SURAHS = [[1,"Al-Faatiha"],[2,"Al-Baqara"],[3,"Aal-i-Imraan"],[4,"An-Nisaa"],[5,"Al-Maaida"],[6,"Al-An'aam"],[7,"Al-A'raaf"],[8,"Al-Anfaal"],[9,"At-Tawba"],[10,"Yunus"],[11,"Hud"],[12,"Yusuf"],[13,"Ar-Ra'd"],[14,"Ibrahim"],[15,"Al-Hijr"],[16,"An-Nahl"],[17,"Al-Israa"],[18,"Al-Kahf"],[19,"Maryam"],[20,"Taa-Haa"],[21,"Al-Anbiyaa"],[22,"Al-Hajj"],[23,"Al-Muminoon"],[24,"An-Noor"],[25,"Al-Furqaan"],[26,"Ash-Shu'araa"],[27,"An-Naml"],[28,"Al-Qasas"],[29,"Al-Ankaboot"],[30,"Ar-Room"],[31,"Luqman"],[32,"As-Sajda"],[33,"Al-Ahzaab"],[34,"Saba"],[35,"Faatir"],[36,"Yaseen"],[37,"As-Saaffaat"],[38,"Saad"],[39,"Az-Zumar"],[40,"Ghafir"],[41,"Fussilat"],[42,"Ash-Shura"],[43,"Az-Zukhruf"],[44,"Ad-Dukhaan"],[45,"Al-Jaathiya"],[46,"Al-Ahqaf"],[47,"Muhammad"],[48,"Al-Fath"],[49,"Al-Hujuraat"],[50,"Qaaf"],[51,"Adh-Dhaariyat"],[52,"At-Tur"],[53,"An-Najm"],[54,"Al-Qamar"],[55,"Ar-Rahmaan"],[56,"Al-Waaqia"],[57,"Al-Hadid"],[58,"Al-Mujaadila"],[59,"Al-Hashr"],[60,"Al-Mumtahana"],[61,"As-Saff"],[62,"Al-Jumu'a"],[63,"Al-Munaafiqoon"],[64,"At-Taghaabun"],[65,"At-Talaaq"],[66,"At-Tahrim"],[67,"Al-Mulk"],[68,"Al-Qalam"],[69,"Al-Haaqqa"],[70,"Al-Ma'aarij"],[71,"Nooh"],[72,"Al-Jinn"],[73,"Al-Muzzammil"],[74,"Al-Muddaththir"],[75,"Al-Qiyaama"],[76,"Al-Insaan"],[77,"Al-Mursalaat"],[78,"An-Naba"],[79,"An-Naazi'aat"],[80,"Abasa"],[81,"At-Takwir"],[82,"Al-Infitaar"],[83,"Al-Mutaffifin"],[84,"Al-Inshiqaaq"],[85,"Al-Burooj"],[86,"At-Taariq"],[87,"Al-A'laa"],[88,"Al-Ghaashiya"],[89,"Al-Fajr"],[90,"Al-Balad"],[91,"Ash-Shams"],[92,"Al-Lail"],[93,"Ad-Dhuhaa"],[94,"Ash-Sharh"],[95,"At-Tin"],[96,"Al-Alaq"],[97,"Al-Qadr"],[98,"Al-Bayyina"],[99,"Az-Zalzala"],[100,"Al-Aadiyaat"],[101,"Al-Qaari'a"],[102,"At-Takaathur"],[103,"Al-Asr"],[104,"Al-Humaza"],[105,"Al-Fil"],[106,"Quraish"],[107,"Al-Maa'un"],[108,"Al-Kawthar"],[109,"Al-Kaafiroon"],[110,"An-Nasr"],[111,"Al-Masad"],[112,"Al-Ikhlaas"],[113,"Al-Falaq"],[114,"An-Naas"]];
+    var FS_SEARCH_INDEX = [
+        {t:'Beranda', d:'Halaman utama Freedom Syndicate', u:'index.html', k:'home beranda utama', c:'Halaman', m:1},
+        {t:'Hiburan', d:'Live TV, Movie, Musik, Komik, dan Game', u:'hiburan.html', k:'hiburan tv movie musik komik game nobar', c:'Halaman', m:1},
+        {t:'TV Channel', d:'Live TV gratis — Hiburan', u:'hiburan.html#tvchannel', k:'tv channel live streaming', c:'Halaman'},
+        {t:'Movie', d:'Nonton film — Hiburan', u:'hiburan.html#movie', k:'movie film nonton', c:'Halaman'},
+        {t:'Musik', d:'Musik gratis — Hiburan', u:'hiburan.html#musik', k:'musik lagu spotify', c:'Halaman'},
+        {t:'Komik', d:'Baca komik — Hiburan', u:'hiburan.html#komik', k:'komik manga baca', c:'Halaman'},
+        {t:'Game', d:'Game gratis — Hiburan', u:'hiburan.html#game', k:'game main 2048 tetris', c:'Halaman'},
+        {t:'Tools', d:'Alat gratis: PDF, Translator, Cek IP, dan lainnya', u:'tools.html', k:'tools alat pdf translator ip vpn whatsapp', c:'Halaman', m:1},
+        {t:'PDF Tools', d:'Gabung, pisah & kompres PDF — Tools', u:'tools.html#fsToolsPdf', k:'pdf gabung pisah kompres', c:'Tool'},
+        {t:'Open Gym', d:'Latihan gym — Tools', u:'tools.html#fsToolsGym', k:'gym latihan olahraga fitness', c:'Tool'},
+        {t:'Podcast', d:'Podcast — Tools', u:'tools.html#fsToolsPod', k:'podcast audio dengar', c:'Tool'},
+        {t:'Langganan', d:'Kelola langganan — Tools', u:'tools.html#fsToolsSub', k:'langganan subscription kelola', c:'Tool'},
+        {t:'Skor Bola', d:'Skor pertandingan — Tools', u:'tools.html#fsToolsFoot', k:'skor bola sepakbola livescore', c:'Tool'},
+        {t:'Translator', d:'Terjemah bahasa — Tools', u:'tools.html#fsToolsTrans', k:'translator terjemah translate bahasa', c:'Tool'},
+        {t:'Cek IP & VPN', d:'Cek alamat IP & VPN — Tools', u:'tools.html#fsToolsIp', k:'cek ip vpn alamat proxy', c:'Tool'},
+        {t:'Kirim WhatsApp', d:'Pembuat tautan wa.me — Tools', u:'tools.html#fsToolsWa', k:'whatsapp wa kirim pesan tautan', c:'Tool'},
+        {t:'Tema', d:'Ganti warna tema situs — Tools', u:'tools.html#fsToolsTheme', k:'tema warna tampilan', c:'Tool'},
+        {t:'ZenLink', d:'Pemendek tautan — Tools', u:'tools.html#zenlink', k:'zenlink shortlink pendek tautan', c:'Tool'},
+        {t:'Download App', d:'Instal aplikasi / unduh APK — Tools', u:'tools.html#download', k:'download aplikasi apk instal pwa', c:'Tool'},
+        {t:"Al Qur'an", d:'Baca 114 surah + jadwal sholat — Ibadah', u:'ibadah.html', k:'quran surah ayat terjemahan murotal sholat ibadah', c:'Halaman', m:1},
+        {t:'Chat Ai', d:'Tanya apa saja, analisa chart — AI', u:'ai.html', k:'chat ai tanya analisa chart xauusd btc', c:'Halaman', m:1},
+        {t:'Trading', d:'Market Hub: analisa & jurnal trading', u:'trading.html', k:'trading forex crypto analisa jurnal market', c:'Halaman', m:1},
+        {t:'Lainnya', d:'Keluh Kesah, Aplikasi Mod, Konten Dewasa (18+)', u:'lainnya.html', k:'lainnya keluh kesah mod dewasa curhat', c:'Halaman', m:1},
+        {t:'Keluh Kesah', d:'Curhat anonim — Lainnya', u:'lainnya.html#keluhkesah', k:'keluh kesah curhat anonim', c:'Halaman'},
+        {t:'Aplikasi Mod', d:'APK & game mod — Lainnya', u:'lainnya.html#mod', k:'aplikasi mod apk game', c:'Halaman'},
+        {t:'Konten Dewasa (18+)', d:'Khusus dewasa — Lainnya', u:'lainnya.html#dewasa', k:'dewasa 18 konten', c:'Halaman'},
+        {t:'Info Garapan', d:'Garapan gratis yang sudah dicek', u:'garapan.html', k:'garapan airdrop gratis cuan tanpa modal', c:'Halaman', m:1},
+        {t:'Journal', d:'Jurnal trading anggota', u:'journal.html', k:'journal jurnal trading sinyal', c:'Halaman', m:1},
+        {t:'Apa itu FREEDOM SYNDICATE?', d:'FAQ — tentang komunitas ini', u:'index.html#faq', k:'faq apa itu freedom syndicate komunitas', c:'FAQ'},
+        {t:'Apakah semua fitur di website ini gratis?', d:'FAQ — biaya & garapan gratis', u:'index.html#faq', k:'faq gratis biaya bayar langganan', c:'FAQ'},
+        {t:'Bagaimana cara gabung ke Telegram / Discord?', d:'FAQ — gabung komunitas', u:'index.html#faq', k:'faq gabung telegram discord join', c:'FAQ'},
+        {t:'Apa itu Chat Ai, Journal, dan Tools?', d:'FAQ — fitur Chat Ai, Journal, Tools', u:'index.html#faq', k:'faq chat ai journal tools fitur', c:'FAQ'},
+        {t:'Bagaimana cara install aplikasi di HP?', d:'FAQ — instal PWA / unduh APK', u:'index.html#faq', k:'faq instal aplikasi hp pwa apk download', c:'FAQ'},
+        {t:'Apakah Al-Qur\u2019an bisa dibaca offline?', d:'FAQ — baca surah tanpa internet', u:'index.html#faq', k:'faq quran offline tanpa internet baca', c:'FAQ'},
+        {t:'Telegram Channel', d:'Kontak — @freedomsyndicate', u:'index.html#kontak', k:'kontak telegram channel', c:'Kontak'},
+        {t:'Discord', d:'Kontak — server Discord FS', u:'index.html#kontak', k:'kontak discord server', c:'Kontak'},
+        {t:'WhatsApp Channel', d:'Kontak — channel WhatsApp FS', u:'index.html#kontak', k:'kontak whatsapp channel', c:'Kontak'}
+    ];
+    FS_SEARCH_SURAHS.forEach(function(s){
+        FS_SEARCH_INDEX.push({t:s[1], d:'Surah ke-' + s[0] + ' • Al Qur\u2019an', u:'ibadah.html', k:'surah quran ' + s[0] + ' ' + s[1].toLowerCase(), c:'Surah'});
+    });
+    function _fsSearchEsc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function _fsSearchNorm(s){ return String(s || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+    // Samakan ejaan (huruf ganda + 'h' akhir dibuang) lalu buang vokal,
+    // supaya "yasin" ketemu "Yaseen" dan "baqarah" ketemu "Al-Baqara".
+    function _fsSearchFold(s){ return _fsSearchNorm(s).replace(/(.)\1+/g, '$1').replace(/h$/, ''); }
+    function _fsSearchNoVowel(s){ return _fsSearchFold(s).replace(/[aeiou]/g, ''); }
+    function fsSearchOpen(){
+        var o = document.getElementById('fsSearchOverlay'); if (!o) return;
+        o.style.display = 'flex';
+        fsSearchRun('');
+        var i = document.getElementById('fsSearchInput');
+        if (i) setTimeout(function(){ i.focus(); }, 60);
+    }
+    function fsSearchClose(){
+        var o = document.getElementById('fsSearchOverlay'); if (o) o.style.display = 'none';
+        var i = document.getElementById('fsSearchInput'); if (i) i.value = '';
+    }
+    function fsSearchRun(q){
+        var box = document.getElementById('fsSearchResults'); if (!box) return;
+        var nq = _fsSearchNorm(q);
+        var out;
+        if (!nq) {
+            out = FS_SEARCH_INDEX.filter(function(e){ return e.m === 1; });
+        } else {
+            var words = nq.split(' ');
+            out = FS_SEARCH_INDEX.filter(function(e){
+                var hay = _fsSearchNorm(e.t + ' ' + e.d + ' ' + e.k);
+                if (words.every(function(w){ return hay.indexOf(w) !== -1; })) return true;
+                var hayNV = _fsSearchNoVowel(e.t + ' ' + e.d + ' ' + e.k);
+                var wordsNV = words.map(function(w){ return _fsSearchNoVowel(w); });
+                return wordsNV.every(function(w){ return w.length >= 3 && hayNV.indexOf(w) !== -1; });
+            });
+        }
+        out = out.slice(0, 12);
+        if (!out.length) {
+            box.innerHTML = '<div class="fs-search-empty">Tidak ketemu untuk &ldquo;' + _fsSearchEsc(q) + '&rdquo;. Coba kata lain.</div>';
+            return;
+        }
+        box.innerHTML = out.map(function(e){
+            return '<a class="fs-search-item" href="' + _fsSearchEsc(e.u) + '"><span class="fs-sr-tag">' + _fsSearchEsc(e.c) + '</span><div class="fs-sr-title">' + _fsSearchEsc(e.t) + '</div><div class="fs-sr-desc">' + _fsSearchEsc(e.d) + '</div></a>';
+        }).join('');
+    }
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') fsSearchClose();
+        if ((e.ctrlKey || e.metaKey) && (e.key || '').toLowerCase() === 'k') { e.preventDefault(); fsSearchOpen(); }
+        if (e.key === 'Enter') {
+            var o = document.getElementById('fsSearchOverlay');
+            if (o && o.style.display === 'flex') {
+                var first = document.querySelector('#fsSearchResults .fs-search-item');
+                if (first) location.href = first.getAttribute('href');
+            }
+        }
+    });
+    </script>
 </body>
 </html>

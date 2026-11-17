@@ -760,6 +760,31 @@
         .fs-tool-tile .fs-tt-ico { font-size: 1.35rem; line-height: 1; }
         .fs-tool-tile .fs-tt-name { font-size: 0.68rem; font-weight: 800; line-height: 1.2; }
         .fs-tool-tile .fs-tt-desc { font-size: 0.53rem; opacity: 0.85; line-height: 1.3; }
+        /* TOOLS v3: launcher grid + satu tool per tampilan (tanpa scroll panjang). */
+        /* TOOLS v3: launcher grid + satu tool per tampilan (tanpa scroll panjang). */
+        #tools .fs-tool-view { display: none; }
+        #tools .fs-tool-view.fs-open { display: block; }
+        /* GAME v2: launcher kartu warna + main di tempat (jsDelivr, open-source). */
+        .fs-game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .fs-game-card { border-radius: 16px; padding: 14px 12px; color: #fff; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .fs-game-card .fs-gc-ico { font-size: 1.8rem; line-height: 1; }
+        .fs-game-card .fs-gc-name { font-size: 0.85rem; font-weight: 900; margin-top: 6px; }
+        .fs-game-card .fs-gc-tag { font-size: 0.6rem; opacity: 0.85; margin-top: 2px; }
+        .fs-game-card .fs-gc-play { font-size: 0.62rem; font-weight: 800; margin-top: 8px; background: rgba(0,0,0,0.25); display: inline-block; padding: 4px 10px; border-radius: 20px; }
+        .fs-game-hero { border-radius: 16px; padding: 16px; color: #fff; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.4); margin-bottom: 10px; }
+        /* KOMIK v2: grid manga/novel + reader (MangaDex via Worker + Open Library). */
+        .fs-manga-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .fs-manga-card { cursor: pointer; }
+        .fs-manga-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 10px; display: block; background: #0f172a; }
+        .fs-manga-card .fs-mc-title { font-size: 0.68rem; font-weight: 800; color: #fff; margin-top: 6px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .fs-manga-card .fs-mc-meta { font-size: 0.58rem; color: #94a3b8; margin-top: 2px; }
+        .fs-komik-lang { background: #1e293b; color: #e2e8f0; border: 1px solid rgba(56,189,248,0.3); border-radius: 20px; padding: 6px 12px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+        .fs-komik-lang.active { background: var(--primary); color: #000; border-color: transparent; }
+        .fs-komik-ch { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(15,23,42,0.7); border: 1px solid rgba(56,189,248,0.15); border-radius: 10px; margin-top: 6px; cursor: pointer; }
+        .fs-komik-ch:hover { border-color: rgba(56,189,248,0.5); }
+        .fs-komik-badge { font-size: 0.58rem; font-weight: 800; padding: 2px 7px; border-radius: 20px; background: #1e293b; color: #e2e8f0; white-space: nowrap; }
+        .fs-komik-badge.id { background: #16a34a; color: #fff; }
+        .fs-komik-page { width: 100%; display: block; margin: 0 auto; max-width: 720px; }
 
         /* iframe player */
         .tv-iframe-wrap {

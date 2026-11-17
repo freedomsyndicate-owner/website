@@ -13,6 +13,12 @@
     <meta property="og:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game — gratis.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freedomsyndicate.my.id/hiburan.html">
+    <meta name="keywords" content="live tv gratis, nonton movie, musik gratis, komik online, game gratis, nobar">
+    <meta property="og:image" content="https://freedomsyndicate.my.id/icon-512.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Freedom Syndicate | Hiburan">
+    <meta name="twitter:description" content="Hiburan Freedom Syndicate: Live TV, Movie, Musik, Komik, dan Game — gratis.">
+    <link rel="canonical" href="https://freedomsyndicate.my.id/hiburan.html">
 
     <script>
     (function(){
@@ -2961,103 +2967,137 @@
             <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
                 <div style="margin-bottom:8px;">
                     <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
-                    <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">📖 KOMIK</div>
+                    <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">📖 KOMIK &amp; BACAAN</div>
                 </div>
                 <div class="tv-subtab-bar" style="margin-bottom:0;">
-                    <button class="tv-subtab-btn active" id="skomik1" onclick="switchKomikTab('rosy',this)">📚 ROSYSCANS</button>
-                    <button class="tv-subtab-btn" id="skomik2" onclick="switchKomikTab('ryzu',this)">📗 RYZUKOMIK</button>
+                    <button class="tv-subtab-btn active" id="skomik1" onclick="fsKomikShowHome('manga',this)">🔥 Manga</button>
+                    <button class="tv-subtab-btn" id="skomik2" onclick="fsKomikShowHome('novel',this)">📚 Novel</button>
+                    <button class="tv-subtab-btn" id="skomik3" onclick="fsKomikShowHome('riwayat',this)">📖 Riwayat</button>
                 </div>
             </div>
 
-            <div class="komik-pane active" id="pane-rosy" style="position:relative;height:calc(100vh - 140px);min-height:500px;">
-                <iframe id="iframeRosy" src="" title="RosyScans" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                ></iframe>
-                <div id="rosyFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('rosy')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📚 Layar hitam / komik tidak muncul?</div>
-                    <button onclick="_komikReload('rosy')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+            <!-- HOME -->
+            <div id="fsKomikHome" style="padding:14px 14px 24px;">
+                <div id="fsMangaHome">
+                    <div style="display:flex;gap:8px;margin-bottom:10px;">
+                        <input id="fsKomikQ" type="search" placeholder="🔍 Cari manga (mis. One Piece)..." style="flex:1;background:#0f172a;border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.8rem;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter')fsKomikSearch()">
+                        <button onclick="fsKomikSearch()" style="background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">Cari</button>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+                        <span style="font-size:0.68rem;color:#94a3b8;align-self:center;">Bahasa chapter:</span>
+                        <button class="fs-komik-lang active" onclick="fsKomikSetLang('id',this)">🇮🇩 Indonesia</button>
+                        <button class="fs-komik-lang" onclick="fsKomikSetLang('en',this)">🇬🇧 English</button>
+                        <button class="fs-komik-lang" onclick="fsKomikSetLang('all',this)">🌐 Semua</button>
+                    </div>
+                    <div id="fsKomikStatus" style="font-size:0.72rem;color:#94a3b8;margin-bottom:10px;"></div>
+                    <div id="fsKomikGrid" class="fs-manga-grid"></div>
+                    <div id="fsKomikMore" style="text-align:center;margin-top:14px;display:none;"><button onclick="fsKomikMore()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:10px 20px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">Muat lagi ↓</button></div>
+                </div>
+                <div id="fsNovelHome" style="display:none;">
+                    <div style="display:flex;gap:8px;margin-bottom:10px;">
+                        <input id="fsNovelQ" type="search" placeholder="🔍 Cari novel / buku (mis. Sherlock Holmes)..." style="flex:1;background:#0f172a;border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px 12px;color:#fff;font-size:0.8rem;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter')fsNovelSearch()">
+                        <button onclick="fsNovelSearch()" style="background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">Cari</button>
+                    </div>
+                    <div id="fsNovelStatus" style="font-size:0.72rem;color:#94a3b8;margin-bottom:10px;"></div>
+                    <div id="fsNovelGrid" class="fs-manga-grid"></div>
+                </div>
+                <div id="fsRiwayatHome" style="display:none;">
+                    <div id="fsRiwayatList"></div>
+                </div>
+                <div style="font-size:0.58rem;color:#475569;margin-top:16px;text-align:center;line-height:1.6;">Data manga: MangaDex API (api.mangadex.org) lewat Worker FS — reader terinspirasi repo open-source Adolla (GPL-3.0) &amp; HTML5-Comic-Book-Reader (Apache-2.0). Novel &amp; buku: Open Library (openlibrary.org) + Archive.org — gratis &amp; legal (domain publik).</div>
+            </div>
+
+            <!-- DETAIL MANGA -->
+            <div id="fsKomikDetail" style="display:none;padding:14px 14px 24px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                    <button onclick="fsKomikBackHome()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">← Kembali</button>
+                    <span style="font-size:0.85rem;font-weight:900;color:#fff;">Detail Manga</span>
+                </div>
+                <div id="fsKomikDetailBody"></div>
+            </div>
+
+            <!-- READER MANGA -->
+            <div id="fsKomikReader" style="display:none;padding:0 0 24px;">
+                <div style="display:flex;align-items:center;gap:8px;padding:12px 14px 8px;flex-wrap:wrap;">
+                    <button onclick="fsKomikBackDetail()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 12px;font-weight:800;font-size:0.75rem;cursor:pointer;font-family:inherit;">← Daftar Chapter</button>
+                    <span id="fsKomikReaderTitle" style="font-size:0.8rem;font-weight:900;color:#fff;flex:1;"></span>
+                </div>
+                <div style="display:flex;gap:8px;padding:0 14px 10px;">
+                    <button id="fsKomikPrevBtn" onclick="fsKomikStepChapter(-1)" style="flex:1;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:10px;font-weight:800;font-size:0.78rem;cursor:pointer;font-family:inherit;">← Chapter Sebelumnya</button>
+                    <button id="fsKomikNextBtn" onclick="fsKomikStepChapter(1)" style="flex:1;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px;font-weight:800;font-size:0.78rem;cursor:pointer;font-family:inherit;">Chapter Berikutnya →</button>
+                </div>
+                <div id="fsKomikReaderStatus" style="font-size:0.72rem;color:#94a3b8;padding:0 14px 8px;"></div>
+                <div id="fsKomikPages"></div>
+                <div style="display:flex;gap:8px;padding:12px 14px 0;">
+                    <button onclick="fsKomikStepChapter(-1)" style="flex:1;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:10px;font-weight:800;font-size:0.78rem;cursor:pointer;font-family:inherit;">← Sebelumnya</button>
+                    <button onclick="fsKomikStepChapter(1)" style="flex:1;background:var(--primary);color:#000;border:none;border-radius:10px;padding:10px;font-weight:800;font-size:0.78rem;cursor:pointer;font-family:inherit;">Berikutnya →</button>
                 </div>
             </div>
 
-            <div class="komik-pane" id="pane-ryzu" style="display:none;position:relative;height:calc(100vh - 140px);min-height:500px;">
-                <iframe id="iframeRyzu" src="" title="RyzuKomik" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                ></iframe>
-                <div id="ryzuFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('ryzu')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">📗 Layar hitam / komik tidak muncul?</div>
-                    <button onclick="_komikReload('ryzu')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+            <!-- READER NOVEL -->
+            <div id="fsNovelReader" style="display:none;padding:0 0 24px;">
+                <div style="display:flex;align-items:center;gap:10px;padding:12px 14px 8px;">
+                    <button onclick="fsNovelBackHome()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">← Semua Novel</button>
+                    <span id="fsNovelReaderTitle" style="font-size:0.85rem;font-weight:900;color:#fff;"></span>
                 </div>
+                <div id="fsNovelReaderBody" style="padding:0 14px;"></div>
             </div>
         </div>
 
 <div id="game" class="tab-content" style="padding:0;margin:0;">
             <div style="position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.97);padding:10px 16px 8px;border-bottom:1px solid rgba(56,189,248,0.15);">
-                <div style="margin-bottom:8px;">
+                <div style="margin-bottom:6px;">
                     <div style="font-size:0.55rem;letter-spacing:4px;color:var(--primary);font-weight:700;text-transform:uppercase;">FREEDOM SYNDICATE</div>
                     <div style="font-size:0.95rem;font-weight:900;letter-spacing:2px;color:#fff;line-height:1.2;">🎮 GAME</div>
                 </div>
-                <div class="tv-subtab-bar" style="margin-bottom:0;flex-wrap:wrap;">
-                    <button class="tv-subtab-btn active" id="sgame1" onclick="switchGameTab('emulator',this)">🕹️ EMULATORGAMEZONE</button>
-                    <button class="tv-subtab-btn" id="sgame2" onclick="switchGameTab('venge',this)">🔫 VENGE.IO</button>
-                    <button class="tv-subtab-btn" id="sgame3" onclick="switchGameTab('crazy',this)">🎯 CRAZYGAMES</button>
-                    <button class="tv-subtab-btn" id="sgame4" onclick="switchGameTab('quenq',this)">🎲 QUENQ</button>
-                </div>
+                <div style="font-size:0.68rem;color:#94a3b8;">Game open-source gratis — main langsung di sini, tanpa instal, tanpa iklan.</div>
             </div>
 
-            <div class="komik-pane active" id="pane-emulator" style="position:relative;height:calc(100vh - 160px);min-height:500px;">
-                <iframe id="iframeEmulator" src="" title="EmulatorGameZone" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    allowfullscreen allow="autoplay; encrypted-media; fullscreen; gamepad"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-presentation"
-                ></iframe>
-                <div id="emulatorFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('emulator')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🕹️ Layar hitam / lag / game tidak muncul?</div>
-                    <button onclick="_komikReload('emulator')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+            <!-- Launcher: 6 game open-source (jsDelivr, kode asli dari GitHub). -->
+            <div id="fsGameHome" style="padding:14px 14px 24px;">
+                <div class="fs-game-hero" onclick="fsGameOpen('g2048')" style="background:linear-gradient(135deg,#f59e0b,#b45309);">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="font-size:2.2rem;line-height:1;">🧩</div>
+                        <div>
+                            <div style="font-size:0.55rem;letter-spacing:2px;opacity:0.85;font-weight:800;">⭐ PALING POPULER</div>
+                            <div style="font-size:1.15rem;font-weight:900;">2048</div>
+                            <div style="font-size:0.65rem;opacity:0.9;">Puzzle angka — gabung sampai 2048!</div>
+                        </div>
+                        <div style="margin-left:auto;font-size:0.65rem;font-weight:800;background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:20px;white-space:nowrap;">▶ MAINKAN</div>
+                    </div>
                 </div>
+                <div class="fs-game-grid">
+                    <div class="fs-game-card" onclick="fsGameOpen('dino')" style="background:linear-gradient(135deg,#22c55e,#166534);">
+                        <div class="fs-gc-ico">🦖</div><div class="fs-gc-name">Dino Run</div><div class="fs-gc-tag">Arcade lari</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                    <div class="fs-game-card" onclick="fsGameOpen('tetris')" style="background:linear-gradient(135deg,#3b82f6,#1e3a8a);">
+                        <div class="fs-gc-ico">🕹️</div><div class="fs-gc-name">Tetris</div><div class="fs-gc-tag">Puzzle klasik</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                    <div class="fs-game-card" onclick="fsGameOpen('mines')" style="background:linear-gradient(135deg,#ef4444,#7f1d1d);">
+                        <div class="fs-gc-ico">💣</div><div class="fs-gc-name">Minesweeper</div><div class="fs-gc-tag">Logika</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                    <div class="fs-game-card" onclick="fsGameOpen('breakout')" style="background:linear-gradient(135deg,#a855f7,#581c87);">
+                        <div class="fs-gc-ico">🧱</div><div class="fs-gc-name">Breakout</div><div class="fs-gc-tag">Arcade</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                    <div class="fs-game-card" onclick="fsGameOpen('flappy')" style="background:linear-gradient(135deg,#06b6d4,#155e75);">
+                        <div class="fs-gc-ico">🐤</div><div class="fs-gc-name">Flappy Bird</div><div class="fs-gc-tag">Arcade</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                    <div class="fs-game-card" onclick="fsGameOpen('g2048')" style="background:linear-gradient(135deg,#f97316,#9a3412);">
+                        <div class="fs-gc-ico">🔢</div><div class="fs-gc-name">2048</div><div class="fs-gc-tag">Puzzle angka</div><div class="fs-gc-play">▶ Mainkan</div>
+                    </div>
+                </div>
+                <div style="font-size:0.58rem;color:#475569;margin-top:14px;text-align:center;line-height:1.6;">Kode asli (open-source): 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) · Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) · Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0) — dimuat dari jsDelivr (CDN yang sama seperti PDF Tools).</div>
             </div>
 
-            <div class="komik-pane" id="pane-venge" style="display:none;position:relative;height:calc(100vh - 160px);min-height:500px;">
-                <iframe id="iframeVenge" src="" title="Venge.io" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    allowfullscreen allow="autoplay; encrypted-media; fullscreen; gamepad; pointer-lock"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-presentation"
-                ></iframe>
-                <div id="vengeFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('venge')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🔫 Layar hitam / lag / game tidak muncul?</div>
-                    <button onclick="_komikReload('venge')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
+            <!-- Play view: satu game penuh + tombol kembali. -->
+            <div id="fsGamePlay" style="display:none;padding:0 0 24px;">
+                <div style="display:flex;align-items:center;gap:10px;padding:12px 14px 8px;">
+                    <button onclick="fsGameBack()" style="background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">← Semua Game</button>
+                    <span id="fsGameTitle" style="font-size:0.9rem;font-weight:900;color:#fff;"></span>
+                    <button onclick="fsGameReload()" style="margin-left:auto;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 12px;font-weight:800;font-size:0.75rem;cursor:pointer;font-family:inherit;">🔁 Muat Ulang</button>
                 </div>
-            </div>
-
-            <div class="komik-pane" id="pane-crazy" style="display:none;position:relative;height:calc(100vh - 160px);min-height:500px;">
-                <iframe id="iframeCrazy" src="" title="CrazyGames" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    allowfullscreen allow="autoplay; encrypted-media; fullscreen; gamepad; pointer-lock"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-presentation"
-                ></iframe>
-                <div id="crazyFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('crazy')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🎯 Layar hitam / lag / game tidak muncul?</div>
-                    <button onclick="_komikReload('crazy')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
-                </div>
-            </div>
-
-            <div class="komik-pane" id="pane-quenq" style="display:none;position:relative;height:calc(100vh - 160px);min-height:500px;">
-                <iframe id="iframeQuenq" src="" title="Quenq" loading="lazy"
-                    style="width:100%;height:100%;border:none;display:block;background:#000;"
-                    allowfullscreen allow="autoplay; encrypted-media; fullscreen; gamepad; pointer-lock"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-presentation"
-                ></iframe>
-                <div id="quenqFallback" style="display:none;position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.9);border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px 16px;text-align:center;min-width:260px;z-index:5;backdrop-filter:blur(8px);">
-                    <button onclick="_fbClose('quenq')" aria-label="Tutup" style="position:absolute;top:4px;right:6px;background:none;border:none;color:#64748b;font-size:1rem;line-height:1;cursor:pointer;padding:4px;">✕</button>
-                    <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">🎲 Layar hitam / lag / game tidak muncul?</div>
-                    <button onclick="_komikReload('quenq')" style="background:var(--primary);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:0.72rem;cursor:pointer;">🔁 Muat Ulang</button>
-                </div>
+                <div id="fsGameHint" style="font-size:0.68rem;color:#94a3b8;padding:0 14px 8px;"></div>
+                <iframe id="fsGameFrame" title="Game" allowfullscreen style="width:100%;height:calc(100vh - 190px);min-height:480px;border:none;display:block;background:#000;"></iframe>
             </div>
         </div>
 
@@ -4620,17 +4660,437 @@ function fsSchedRender(matches) {
             btnEl.classList.add('active');
         }
 
-        // --- LOGIC KOMIK SUB-TABS ---
-        function switchKomikTab(paneId, btnEl) {
-            document.querySelectorAll('#komik .komik-pane').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
-            document.querySelectorAll('#komik .tv-subtab-btn').forEach(b => b.classList.remove('active'));
-            const pane = document.getElementById('pane-' + paneId);
-            pane.classList.add('active');
-            pane.style.display = 'block';
-            btnEl.classList.add('active');
-            // PANGGIL FUNGSINYA DI SINI — lazy load iframe komik
-            _lazyLoadIframe(paneId);
+        // --- KOMIK v2: reader MangaDex (via Worker fs-ai) + Novel Open Library ---
+        // MangaDex tidak mengizinkan fetch langsung dari browser (tanpa
+        // Access-Control-Allow-Origin) — semua panggilan lewat Worker
+        // https://fs-ai.sanlana1903.workers.dev/mdx/* (proxy + gambar /mdx-img).
+        // Bahasa chapter: Indonesia dulu (translatedLanguage[]=id), fallback EN.
+        // Deskripsi EN bisa diterjemahkan ke ID di tempat (MyMemory, gratis).
+        var FS_MDX = 'https://fs-ai.sanlana1903.workers.dev/mdx';
+        var FS_MDX_IMG = 'https://fs-ai.sanlana1903.workers.dev/mdx-img?u=';
+        var _fsKomikLang = 'id';
+        try { _fsKomikLang = localStorage.getItem('fsKomikLang') || 'id'; } catch(e) {}
+        var _fsKomikInit = false;
+        var _fsKomikOffset = 0;
+        var _fsKomikQuery = '';
+        var _fsKomikTotal = 0;
+        var _fsKomikDetail = null;
+        var _fsKomikChapters = [];
+        var _fsKomikChapterIdx = -1;
+        var _fsKomikDescEn = '';
+        var _fsNovelInit = false;
+
+        function _fsEsc(s) {
+            return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
+        function fsMdxImg(u) { return FS_MDX_IMG + encodeURIComponent(u); }
+        function fsMdxTitle(t) {
+            if (!t) return 'Tanpa judul';
+            if (t.id) return t.id;
+            if (t.en) return t.en;
+            var k = Object.keys(t); return k.length ? t[k[0]] : 'Tanpa judul';
+        }
+        function fsMdxCleanDesc(s) {
+            return String(s || '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_#>`]/g, '').replace(/\n{3,}/g, '\n\n').trim();
+        }
+        function fsKomikCoverUrl(m) {
+            var rels = m.relationships || [];
+            for (var i = 0; i < rels.length; i++) {
+                if (rels[i].type === 'cover_art' && rels[i].attributes && rels[i].attributes.fileName) {
+                    return fsMdxImg('https://uploads.mangadex.org/covers/' + m.id + '/' + rels[i].attributes.fileName + '.256.jpg');
+                }
+            }
+            return '';
+        }
+        function fsKomikMeta(m) {
+            var a = m.attributes || {};
+            var parts = [];
+            if (a.status) parts.push(a.status === 'ongoing' ? 'Ongoing' : (a.status === 'completed' ? 'Tamat' : a.status));
+            if (a.year) parts.push(a.year);
+            if (a.contentRating) parts.push(a.contentRating);
+            return parts.join(' • ');
+        }
+        function fsKomikShowView(v) {
+            ['fsKomikHome','fsKomikDetail','fsKomikReader','fsNovelReader'].forEach(function(id){
+                var el = document.getElementById(id);
+                if (el) el.style.display = (id === v) ? 'block' : 'none';
+            });
+            window.scrollTo(0, 0);
+        }
+        function fsKomikInit() {
+            if (_fsKomikInit) return;
+            _fsKomikInit = true;
+            document.querySelectorAll('.fs-komik-lang').forEach(function(b){
+                b.classList.toggle('active', b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'" + _fsKomikLang + "'") !== -1);
+            });
+            fsKomikLoadTrending();
+            fsKomikRenderRiwayat();
+        }
+        function fsKomikShowHome(kind, btnEl) {
+            fsKomikShowView('fsKomikHome');
+            document.querySelectorAll('#komik .tv-subtab-btn').forEach(function(b){ b.classList.remove('active'); });
+            if (btnEl) btnEl.classList.add('active');
+            var mh = document.getElementById('fsMangaHome');
+            var nh = document.getElementById('fsNovelHome');
+            var rh = document.getElementById('fsRiwayatHome');
+            if (mh) mh.style.display = (kind === 'manga') ? 'block' : 'none';
+            if (nh) nh.style.display = (kind === 'novel') ? 'block' : 'none';
+            if (rh) rh.style.display = (kind === 'riwayat') ? 'block' : 'none';
+            if (kind === 'novel' && !_fsNovelInit) { _fsNovelInit = true; fsNovelSearch('sherlock holmes'); }
+            if (kind === 'riwayat') fsKomikRenderRiwayat();
+        }
+        function fsKomikSetLang(lang, btnEl) {
+            _fsKomikLang = lang;
+            try { localStorage.setItem('fsKomikLang', lang); } catch(e) {}
+            document.querySelectorAll('.fs-komik-lang').forEach(function(b){ b.classList.remove('active'); });
+            if (btnEl) btnEl.classList.add('active');
+            if (_fsKomikDetail) fsKomikRenderChapters();
+        }
+        function fsKomikStatus(t) {
+            var el = document.getElementById('fsKomikStatus');
+            if (el) el.textContent = t || '';
+        }
+        function fsKomikCard(m) {
+            var a = m.attributes || {};
+            var cover = fsKomikCoverUrl(m);
+            var title = fsMdxTitle(a.title);
+            var rating = '';
+            if (a.rating && a.rating.bayesian) rating = ' ★ ' + (Math.round(a.rating.bayesian * 10) / 10);
+            var img = cover ? '<img src="' + cover + '" alt="" loading="lazy">' : '<div style="width:100%;aspect-ratio:2/3;border-radius:10px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2rem;">📖</div>';
+            return '<div class="fs-manga-card" onclick="fsKomikOpenDetail(\'' + m.id + '\')">' + img +
+                '<div class="fs-mc-title">' + _fsEsc(title) + '</div>' +
+                '<div class="fs-mc-meta">' + _fsEsc(fsKomikMeta(m)) + _fsEsc(rating) + '</div></div>';
+        }
+        function fsKomikRenderList(list, append) {
+            var grid = document.getElementById('fsKomikGrid');
+            if (!grid) return;
+            var html = list.map(fsKomikCard).join('');
+            if (append) grid.innerHTML += html; else grid.innerHTML = html;
+            var more = document.getElementById('fsKomikMore');
+            if (more) more.style.display = (_fsKomikOffset + list.length < _fsKomikTotal) ? 'block' : 'none';
+        }
+        function fsKomikLoadTrending() {
+            _fsKomikQuery = '';
+            _fsKomikOffset = 0;
+            fsKomikStatus('⏳ Memuat manga populer...');
+            fetch(FS_MDX + '/manga?limit=18&offset=0&order[followedCount]=desc&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive&hasAvailableChapters=true')
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(d){
+                    _fsKomikTotal = d.total || 0;
+                    fsKomikStatus('🔥 Manga populer — ' + _fsKomikTotal.toLocaleString('id-ID') + ' judul di MangaDex');
+                    fsKomikRenderList(d.data || [], false);
+                })
+                .catch(function(e){ fsKomikStatus('⚠️ Gagal memuat manga: ' + e.message + ' — coba lagi nanti.'); });
+        }
+        function fsKomikSearch() {
+            var q = (document.getElementById('fsKomikQ') || {}).value || '';
+            q = q.trim();
+            if (!q) { fsKomikLoadTrending(); return; }
+            _fsKomikQuery = q;
+            _fsKomikOffset = 0;
+            fsKomikStatus('⏳ Mencari "' + q + '"...');
+            fetch(FS_MDX + '/manga?title=' + encodeURIComponent(q) + '&limit=18&offset=0&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive&order[relevance]=desc&hasAvailableChapters=true')
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(d){
+                    _fsKomikTotal = d.total || 0;
+                    fsKomikStatus(_fsKomikTotal ? ('🔍 ' + _fsKomikTotal + ' hasil untuk "' + q + '"') : ('😕 Tidak ada hasil untuk "' + q + '"'));
+                    fsKomikRenderList(d.data || [], false);
+                })
+                .catch(function(e){ fsKomikStatus('⚠️ Gagal mencari: ' + e.message); });
+        }
+        function fsKomikMore() {
+            _fsKomikOffset += 18;
+            var base = _fsKomikQuery
+                ? '/manga?title=' + encodeURIComponent(_fsKomikQuery) + '&order[relevance]=desc'
+                : '/manga?order[followedCount]=desc';
+            fsKomikStatus('⏳ Memuat lagi...');
+            fetch(FS_MDX + base + '&limit=18&offset=' + _fsKomikOffset + '&includes[]=cover_art&contentRating[]=safe&contentRating[]=suggestive&hasAvailableChapters=true')
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(d){
+                    fsKomikStatus('');
+                    fsKomikRenderList(d.data || [], true);
+                })
+                .catch(function(e){ fsKomikStatus('⚠️ Gagal memuat lagi: ' + e.message); });
+        }
+        function fsKomikOpenDetail(id) {
+            fsKomikShowView('fsKomikDetail');
+            var body = document.getElementById('fsKomikDetailBody');
+            if (body) body.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">⏳ Memuat detail manga...</div>';
+            Promise.all([
+                fetch(FS_MDX + '/manga/' + id + '?includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=tag').then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+                fetch(FS_MDX + '/manga/' + id + '/feed?limit=100&offset=0&translatedLanguage[]=id&translatedLanguage[]=en&order[chapter]=desc&includes[]=scanlation_group&contentRating[]=safe&contentRating[]=suggestive').then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+            ]).then(function(res){
+                var m = res[0].data;
+                _fsKomikDetail = m;
+                _fsKomikChapters = res[1].data || [];
+                _fsKomikChapterIdx = -1;
+                fsKomikRenderDetail();
+            }).catch(function(e){
+                if (body) body.innerHTML = '<div style="color:#fca5a5;font-size:0.8rem;">⚠️ Gagal memuat detail: ' + _fsEsc(e.message) + '</div>';
+            });
+        }
+        function fsKomikRenderDetail() {
+            var m = _fsKomikDetail;
+            if (!m) return;
+            var body = document.getElementById('fsKomikDetailBody');
+            if (!body) return;
+            var a = m.attributes || {};
+            var title = fsMdxTitle(a.title);
+            var cover = fsKomikCoverUrl(m);
+            var desc = a.description || {};
+            var descId = desc.id ? fsMdxCleanDesc(desc.id) : '';
+            var descEn = desc.en ? fsMdxCleanDesc(desc.en) : '';
+            _fsKomikDescEn = descEn;
+            var showDesc = descId || descEn;
+            var descLang = descId ? 'id' : 'en';
+            var authors = (m.relationships || []).filter(function(r){ return r.type === 'author' || r.type === 'artist'; }).map(function(r){ return (r.attributes || {}).name; }).filter(function(x, i, arr){ return x && arr.indexOf(x) === i; });
+            var tags = (a.tags || []).map(function(t){ var n = (t.attributes || {}).name || {}; return n.en || n.id || ''; }).filter(Boolean).slice(0, 8);
+            var hist = null;
+            try {
+                var h = JSON.parse(localStorage.getItem('fsKomikHistory') || '[]');
+                hist = h.filter(function(x){ return x.mangaId === m.id; })[0] || null;
+            } catch(e) {}
+            var html = '<div style="display:flex;gap:12px;">' +
+                (cover ? '<img src="' + cover + '" alt="" style="width:110px;border-radius:10px;object-fit:cover;align-self:flex-start;">' : '') +
+                '<div style="min-width:0;"><div style="font-size:1rem;font-weight:900;color:#fff;line-height:1.3;">' + _fsEsc(title) + '</div>' +
+                '<div style="font-size:0.68rem;color:#94a3b8;margin-top:4px;">' + _fsEsc(fsKomikMeta(m)) + '</div>' +
+                (authors.length ? '<div style="font-size:0.68rem;color:#94a3b8;margin-top:2px;">✏️ ' + _fsEsc(authors.join(', ')) + '</div>' : '') +
+                (tags.length ? '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;">' + tags.map(function(t){ return '<span style="font-size:0.6rem;background:#1e293b;border:1px solid rgba(56,189,248,0.25);border-radius:20px;padding:3px 9px;color:#e2e8f0;">' + _fsEsc(t) + '</span>'; }).join('') + '</div>' : '') +
+                '</div></div>';
+            if (showDesc) {
+                html += '<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.65;margin-top:12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;"><div id="fsKomikDescText">' + _fsEsc(showDesc.slice(0, 600)) + (showDesc.length > 600 ? '…' : '') + '</div>' +
+                (descLang === 'en' ? '<button id="fsKomikTrBtn" onclick="fsKomikTranslateDesc(this)" style="margin-top:10px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);border-radius:10px;padding:8px 14px;font-weight:800;font-size:0.72rem;cursor:pointer;font-family:inherit;">🌐 Terjemahkan deskripsi ke Bahasa Indonesia</button>' : '<div style="font-size:0.62rem;color:#64748b;margin-top:8px;">Deskripsi Bahasa Indonesia</div>') +
+                '</div>';
+            }
+            if (hist) {
+                html += '<button onclick="fsKomikResume(\'' + m.id + '\',\'' + hist.chapterId + '\')" style="width:100%;margin-top:12px;background:var(--primary);color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.82rem;cursor:pointer;font-family:inherit;">📖 Lanjutkan: Ch. ' + _fsEsc(hist.chapter || '?') + ' (' + _fsEsc(hist.lang || '') + ')</button>';
+            }
+            html += '<div style="font-size:0.85rem;font-weight:900;color:#fff;margin-top:16px;">📚 Daftar Chapter</div>';
+            html += '<div id="fsKomikChapterList"></div>';
+            body.innerHTML = html;
+            fsKomikRenderChapters();
+        }
+        function fsKomikRenderChapters() {
+            var list = document.getElementById('fsKomikChapterList');
+            if (!list) return;
+            var all = _fsKomikChapters || [];
+            var filtered = all.filter(function(c){
+                var lang = (c.attributes || {}).translatedLanguage;
+                if (_fsKomikLang === 'all') return true;
+                return lang === _fsKomikLang;
+            });
+            if (!filtered.length && all.length) {
+                var onlyLang = (_fsKomikLang === 'id') ? 'English' : 'Indonesia';
+                list.innerHTML = '<div style="font-size:0.75rem;color:#fbbf24;margin-top:8px;">⚠️ Belum ada chapter Bahasa ' + (_fsKomikLang === 'id' ? 'Indonesia' : 'English') + ' — menampilkan chapter ' + onlyLang + '.</div>';
+                filtered = all.filter(function(c){ return (c.attributes || {}).translatedLanguage === (_fsKomikLang === 'id' ? 'en' : 'id'); });
+            }
+            if (!filtered.length) {
+                list.innerHTML = '<div style="font-size:0.75rem;color:#94a3b8;margin-top:8px;">Belum ada chapter untuk manga ini.</div>';
+                return;
+            }
+            list.innerHTML = filtered.map(function(c){
+                var at = c.attributes || {};
+                var grp = '';
+                var rels = c.relationships || [];
+                for (var i = 0; i < rels.length; i++) {
+                    if (rels[i].type === 'scanlation_group' && rels[i].attributes) { grp = rels[i].attributes.name || ''; break; }
+                }
+                var ch = (at.chapter == null || at.chapter === '') ? 'Oneshot' : ('Ch. ' + at.chapter);
+                var ttl = at.title ? (' — ' + at.title) : '';
+                var d = (at.publishAt || '').slice(0, 10);
+                var lang = at.translatedLanguage || '';
+                var badge = lang === 'id' ? '🇮🇩 ID' : (lang === 'en' ? '🇬🇧 EN' : lang.toUpperCase());
+                return '<div class="fs-komik-ch" onclick="fsKomikOpenChapter(\'' + c.id + '\')">' +
+                    '<div style="min-width:0;flex:1;"><div style="font-size:0.78rem;font-weight:800;color:#fff;">' + _fsEsc(ch + ttl) + '</div>' +
+                    '<div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">' + _fsEsc(grp) + (grp && d ? ' • ' : '') + _fsEsc(d) + '</div></div>' +
+                    '<span class="fs-komik-badge ' + _fsEsc(lang) + '">' + _fsEsc(badge) + '</span></div>';
+            }).join('');
+        }
+        function fsKomikTranslateDesc(btn) {
+            if (!btn || btn.disabled || !_fsKomikDescEn) return;
+            btn.disabled = true;
+            btn.textContent = '⏳ Menerjemahkan...';
+            var text = _fsKomikDescEn.slice(0, 800);
+            var chunks = [];
+            while (text.length > 0 && chunks.length < 2) { chunks.push(text.slice(0, 400)); text = text.slice(400); }
+            var out = [];
+            var i = 0;
+            function next() {
+                if (i >= chunks.length) {
+                    var el = document.getElementById('fsKomikDescText');
+                    if (el) el.textContent = out.join(' ') + (_fsKomikDescEn.length > 800 ? ' …(diterjemahkan otomatis — lanjutan dalam Bahasa Inggris)' : '');
+                    btn.textContent = '✅ Diterjemahkan (otomatis)';
+                    return;
+                }
+                fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(chunks[i]) + '&langpair=en|id')
+                    .then(function(r){ return r.json(); })
+                    .then(function(d){
+                        out.push((d.responseData && d.responseData.translatedText) ? d.responseData.translatedText : chunks[i]);
+                        i++; next();
+                    })
+                    .catch(function(){ out.push(chunks[i]); i++; next(); });
+            }
+            next();
+        }
+        function fsKomikBackHome() { fsKomikShowView('fsKomikHome'); }
+        function fsKomikBackDetail() { fsKomikShowView('fsKomikDetail'); }
+        function fsKomikResume(mangaId, chapterId) { fsKomikOpenChapter(chapterId); }
+        function fsKomikOpenChapter(chapterId) {
+            var ch = null;
+            for (var i = 0; i < _fsKomikChapters.length; i++) {
+                if (_fsKomikChapters[i].id === chapterId) { ch = _fsKomikChapters[i]; _fsKomikChapterIdx = i; break; }
+            }
+            fsKomikShowView('fsKomikReader');
+            var titleEl = document.getElementById('fsKomikReaderTitle');
+            var stEl = document.getElementById('fsKomikReaderStatus');
+            var pagesEl = document.getElementById('fsKomikPages');
+            var at = ch ? ch.attributes : {};
+            var chLabel = (at.chapter == null || at.chapter === '') ? 'Oneshot' : ('Ch. ' + at.chapter);
+            var mangaTitle = _fsKomikDetail ? fsMdxTitle(_fsKomikDetail.attributes.title) : 'Manga';
+            if (titleEl) titleEl.textContent = mangaTitle + ' — ' + chLabel + (at.title ? (' — ' + at.title) : '');
+            if (stEl) stEl.textContent = '⏳ Memuat halaman...';
+            if (pagesEl) pagesEl.innerHTML = '';
+            fsKomikUpdateNavBtns();
+            fetch(FS_MDX + '/at-home/server/' + chapterId)
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(d){
+                    var base = d.baseUrl;
+                    var hash = d.chapter.hash;
+                    var files = d.chapter.data || [];
+                    if (!files.length) throw new Error('chapter kosong');
+                    if (stEl) stEl.textContent = files.length + ' halaman • Bahasa ' + ((at.translatedLanguage || '').toUpperCase());
+                    if (pagesEl) {
+                        pagesEl.innerHTML = files.map(function(f){
+                            var u = base + '/data/' + hash + '/' + f;
+                            return '<img class="fs-komik-page" src="' + fsMdxImg(u) + '" data-alt="' + fsMdxImg(base + '/data-saver/' + hash + '/' + f) + '" loading="lazy" alt="Halaman" onerror="fsKomikImgFallback(this)">';
+                        }).join('');
+                    }
+                    if (_fsKomikDetail && ch) {
+                        fsKomikSaveHistory({
+                            mangaId: _fsKomikDetail.id,
+                            title: mangaTitle,
+                            cover: fsKomikCoverUrl(_fsKomikDetail),
+                            chapterId: chapterId,
+                            chapter: at.chapter || '',
+                            lang: at.translatedLanguage || ''
+                        });
+                    }
+                })
+                .catch(function(e){
+                    if (stEl) stEl.textContent = '⚠️ Gagal memuat chapter: ' + e.message;
+                });
+        }
+        function fsKomikImgFallback(img) {
+            var alt = img.getAttribute('data-alt');
+            if (alt && img.src !== alt) { img.src = alt; return; }
+            img.style.display = 'none';
+        }
+        function fsKomikUpdateNavBtns() {
+            var prev = document.getElementById('fsKomikPrevBtn');
+            var next = document.getElementById('fsKomikNextBtn');
+            if (prev) prev.disabled = (_fsKomikChapterIdx + 1 >= _fsKomikChapters.length);
+            if (next) next.disabled = (_fsKomikChapterIdx - 1 < 0);
+            if (prev) prev.style.opacity = prev.disabled ? '0.4' : '1';
+            if (next) next.style.opacity = next.disabled ? '0.4' : '1';
+        }
+        function fsKomikStepChapter(dir) {
+            // Daftar chapter urut terbaru dulu: "Berikutnya" = chapter lebih baru (idx-1).
+            var ni = _fsKomikChapterIdx + (dir === 1 ? -1 : 1);
+            if (ni < 0 || ni >= _fsKomikChapters.length) return;
+            fsKomikOpenChapter(_fsKomikChapters[ni].id);
+        }
+        function fsKomikSaveHistory(entry) {
+            try {
+                var h = JSON.parse(localStorage.getItem('fsKomikHistory') || '[]');
+                h = h.filter(function(x){ return x.mangaId !== entry.mangaId; });
+                entry.at = Date.now();
+                h.unshift(entry);
+                localStorage.setItem('fsKomikHistory', JSON.stringify(h.slice(0, 8)));
+            } catch(e) {}
+        }
+        function fsKomikRenderRiwayat() {
+            var wrap = document.getElementById('fsRiwayatList');
+            if (!wrap) return;
+            var h = [];
+            try { h = JSON.parse(localStorage.getItem('fsKomikHistory') || '[]'); } catch(e) {}
+            if (!h.length) {
+                wrap.innerHTML = '<div style="font-size:0.78rem;color:#94a3b8;">Belum ada riwayat baca. Buka manga lalu baca satu chapter — riwayatmu muncul di sini.</div>';
+                return;
+            }
+            wrap.innerHTML = h.map(function(x){
+                var d = new Date(x.at || 0);
+                var when = isNaN(d.getTime()) ? '' : d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                return '<div class="fs-komik-ch" onclick="fsKomikResume(\'' + _fsEsc(x.mangaId) + '\',\'' + _fsEsc(x.chapterId) + '\')">' +
+                    (x.cover ? '<img src="' + _fsEsc(x.cover) + '" style="width:40px;height:60px;object-fit:cover;border-radius:6px;">' : '') +
+                    '<div style="min-width:0;flex:1;"><div style="font-size:0.78rem;font-weight:800;color:#fff;">' + _fsEsc(x.title) + '</div>' +
+                    '<div style="font-size:0.62rem;color:#94a3b8;margin-top:2px;">Ch. ' + _fsEsc(x.chapter || '?') + ' (' + _fsEsc((x.lang || '').toUpperCase()) + ')' + (when ? ' • ' + when : '') + '</div></div>' +
+                    '<span style="font-size:0.68rem;font-weight:800;color:var(--primary);">Lanjutkan →</span></div>';
+            }).join('');
+        }
+        // --- NOVEL (Open Library, langsung dari browser — CORS terbuka) ---
+        function fsNovelStatus(t) {
+            var el = document.getElementById('fsNovelStatus');
+            if (el) el.textContent = t || '';
+        }
+        function fsNovelSearch(q) {
+            var query = (typeof q === 'string' ? q : ((document.getElementById('fsNovelQ') || {}).value || '')).trim();
+            if (!query) query = 'sherlock holmes';
+            fsNovelStatus('⏳ Mencari buku "' + query + '"...');
+            fetch('https://openlibrary.org/search.json?q=' + encodeURIComponent(query) + '&limit=18&fields=key,title,author_name,first_publish_year,cover_i,ia')
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(d){
+                    var docs = d.docs || [];
+                    fsNovelStatus(docs.length ? (docs.length + ' buku ditemukan') : '😕 Tidak ada hasil untuk "' + query + '"');
+                    var grid = document.getElementById('fsNovelGrid');
+                    if (!grid) return;
+                    grid.innerHTML = docs.map(function(b){
+                        var cover = b.cover_i ? ('https://covers.openlibrary.org/b/id/' + b.cover_i + '-M.jpg') : '';
+                        var img = cover ? '<img src="' + cover + '" alt="" loading="lazy">' : '<div style="width:100%;aspect-ratio:2/3;border-radius:10px;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:2rem;">📚</div>';
+                        var key = String(b.key || '').replace(/'/g, '');
+                        return '<div class="fs-manga-card" onclick="fsNovelOpen(\'' + _fsEsc(key) + '\',\'' + _fsEsc((b.title || '').replace(/'/g, '')) + '\')">' + img +
+                            '<div class="fs-mc-title">' + _fsEsc(b.title || 'Tanpa judul') + '</div>' +
+                            '<div class="fs-mc-meta">' + _fsEsc((b.author_name || []).join(', ') || '') + (b.first_publish_year ? ' • ' + b.first_publish_year : '') + '</div></div>';
+                    }).join('');
+                })
+                .catch(function(e){ fsNovelStatus('⚠️ Gagal mencari buku: ' + e.message); });
+        }
+        function fsNovelOpen(key, title) {
+            fsKomikShowView('fsNovelReader');
+            var t = document.getElementById('fsNovelReaderTitle');
+            if (t) t.textContent = title || 'Novel';
+            var body = document.getElementById('fsNovelReaderBody');
+            if (body) body.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">⏳ Memuat info buku...</div>';
+            fetch('https://openlibrary.org' + key + '.json')
+                .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function(w){
+                    var desc = '';
+                    if (typeof w.description === 'string') desc = w.description;
+                    else if (w.description && w.description.value) desc = w.description.value;
+                    desc = fsMdxCleanDesc(desc).slice(0, 600);
+                    var ia = '';
+                    return fetch('https://openlibrary.org/search.json?q=' + encodeURIComponent(title || '') + '&limit=3&fields=ia')
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            var docs = d.docs || [];
+                            for (var i = 0; i < docs.length; i++) {
+                                if (docs[i].ia && docs[i].ia.length) { ia = docs[i].ia[0]; break; }
+                            }
+                            var html = '';
+                            if (desc) html += '<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.65;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:12px;margin-bottom:12px;">' + _fsEsc(desc) + '</div>';
+                            if (ia) {
+                                html += '<iframe src="https://archive.org/embed/' + _fsEsc(ia) + '" style="width:100%;height:calc(100vh - 220px);min-height:480px;border:none;background:#000;border-radius:12px;" allowfullscreen></iframe>' +
+                                    '<div style="text-align:center;margin-top:10px;"><a href="https://archive.org/details/' + _fsEsc(ia) + '" target="_blank" rel="noopener" style="color:var(--primary);font-size:0.75rem;">Buka di Archive.org ↗</a></div>';
+                            } else {
+                                html += '<div style="font-size:0.78rem;color:#fbbf24;">⚠️ Buku ini belum tersedia untuk dibaca online gratis di Archive.org — coba judul lain.</div>';
+                            }
+                            if (body) body.innerHTML = html;
+                        });
+                })
+                .catch(function(e){
+                    if (body) body.innerHTML = '<div style="color:#fca5a5;font-size:0.8rem;">⚠️ Gagal memuat buku: ' + _fsEsc(e.message) + '</div>';
+                });
+        }
+        function fsNovelBackHome() { fsKomikShowHome('novel', document.getElementById('skomik2')); }
 
         // --- LOGIC SIDEBAR ---
         const sidebar = document.getElementById('sidebar');
@@ -4669,9 +5129,8 @@ function fsSchedRender(matches) {
             document.querySelectorAll('.bottomnav button').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tabId); });
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Bug fix: pane ROSYSCANS sudah "active" dari awal jadi iframe-nya
-            // tidak pernah dimuat kalau cuma nunggu klik sub-tab — muat sekarang
-            if (tabId === 'komik') { _lazyLoadIframe('rosy'); }
+            // Komik v2: inisialisasi reader (trending MangaDex) saat tab dibuka
+            if (tabId === 'komik') { fsKomikInit(); }
             if (tabId === 'tvchannel' && typeof loadTv1Genre === 'function') {
                 var _g = document.getElementById('tv1Groups');
                 if (_g && !_g.children.length) {
@@ -4682,7 +5141,6 @@ function fsSchedRender(matches) {
             if (tabId === 'musik' && typeof fsRadioInit === 'function') { fsRadioInit(); }
             if (tabId === 'quran' && typeof fsQuranInit === 'function') { fsQuranInit(); }
             if (tabId === 'movie' && typeof fsCinemaHomeInit === 'function') { fsCinemaHomeInit(); }
-            if (tabId === 'game') { _lazyLoadIframe('emulator'); }
 
             // Tutup sidebar setelah memilih (khusus mobile friendly) —
             // hanya kalau sidebar memang sedang terbuka, supaya panggilan
@@ -4731,18 +5189,14 @@ function fsSchedRender(matches) {
         }
 
         // --- LAZY LOAD IFRAMES (komik, TV World & Game) ---
+        // Komik + Game sudah diganti reader/launcher native (tidak pakai iframe
+        // situs pihak ketiga lagi) — yang tersisa di sini hanya TV World.
         const _iframeSrcs = {
-            rosy:     'https://rosyscans.id/',
-            ryzu:     'https://ryzukomik.my.id/',
-            tvWorld:  'https://tvgarden.world/',
-            emulator: 'https://emulatorgamezone.com/',
-            venge:    'https://venge.io/',
-            crazy:    'https://www.crazygames.com/',
-            quenq:    'https://quenq.com/'
+            tvWorld:  'https://tvgarden.world/'
         };
-        const _iframeLoaded = { rosy: false, ryzu: false, tvWorld: false, emulator: false, venge: false, crazy: false, quenq: false };
-        const _iframeIdMap = { rosy: 'iframeRosy', ryzu: 'iframeRyzu', tvWorld: 'iframeTvWorld', emulator: 'iframeEmulator', venge: 'iframeVenge', crazy: 'iframeCrazy', quenq: 'iframeQuenq' };
-        const _fallbackIdMap = { rosy: 'rosyFallback', ryzu: 'ryzuFallback', tvWorld: 'tvWorldFallback', emulator: 'emulatorFallback', venge: 'vengeFallback', crazy: 'crazyFallback', quenq: 'quenqFallback' };
+        const _iframeLoaded = { tvWorld: false };
+        const _iframeIdMap = { tvWorld: 'iframeTvWorld' };
+        const _fallbackIdMap = { tvWorld: 'tvWorldFallback' };
 
         function _lazyLoadIframe(key) {
             if (_iframeLoaded[key]) return;
@@ -4779,14 +5233,48 @@ function fsSchedRender(matches) {
         // Alias — dipakai tombol World (nama lama tetap dipertahankan)
         function tvWorldReload() { _komikReload('tvWorld'); }
 
-        // Pindah sub-tab Game
-        function switchGameTab(paneId, btnEl) {
-            document.querySelectorAll('#game .komik-pane').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
-            document.querySelectorAll('#game .tv-subtab-btn').forEach(b => b.classList.remove('active'));
-            const pane = document.getElementById('pane-' + paneId);
-            if (pane) { pane.style.display = 'block'; pane.classList.add('active'); }
-            if (btnEl) btnEl.classList.add('active');
-            _lazyLoadIframe(paneId);
+        // --- GAME v2: 6 game open-source (jsDelivr, commit terpin) ---
+        // 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) ·
+        // Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) ·
+        // Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0).
+        // Dipakai lewat jsDelivr (CDN yang sama seperti PDF Tools) karena
+        // connector GitHub tidak bisa push file biner (sprite/audio) ke repo.
+        var FS_GAMES = {
+            g2048:    { name: '2048', icon: '🧩', hint: 'Geser / tombol panah: gabung angka yang sama sampai 2048!', url: 'https://cdn.jsdelivr.net/gh/gabrielecirulli/2048@478b6ec346e3/index.html' },
+            dino:     { name: 'Dino Run', icon: '🦖', hint: 'Spasi / ketuk layar untuk lompat, hindari kaktus!', url: 'https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@5455bfa408ec/index.html' },
+            tetris:   { name: 'Tetris', icon: '🕹️', hint: 'Panah: gerak & putar balok, isi baris penuh!', url: 'https://cdn.jsdelivr.net/gh/simonlc/tetr.js@57e5d07b1892/index.html' },
+            mines:    { name: 'Minesweeper', icon: '💣', hint: 'Klik buka kotak, klik kanan tandai bom. Jangan sampai meledak!', url: 'https://cdn.jsdelivr.net/gh/pwmarcz/kaboom@2c5cc170ae7a/index.html' },
+            breakout: { name: 'Breakout', icon: '🧱', hint: 'Gerakkan paddle (mouse / panah / sentuh), hancurkan semua bata!', url: 'https://cdn.jsdelivr.net/gh/igameproject/Breakout@4961fece5e9b/index.html' },
+            flappy:   { name: 'Flappy Bird', icon: '🐤', hint: 'Ketuk / spasi untuk terbang, lewati pipanya!', url: 'https://cdn.jsdelivr.net/gh/nebez/floppybird@efd2c7f74029/index.html' }
+        };
+        function fsGameOpen(key) {
+            var g = FS_GAMES[key];
+            if (!g) return;
+            var home = document.getElementById('fsGameHome');
+            if (home) home.style.display = 'none';
+            var play = document.getElementById('fsGamePlay');
+            if (play) play.style.display = 'block';
+            var t = document.getElementById('fsGameTitle');
+            if (t) t.textContent = g.icon + ' ' + g.name;
+            var h = document.getElementById('fsGameHint');
+            if (h) h.textContent = g.hint;
+            var fr = document.getElementById('fsGameFrame');
+            if (fr && fr.getAttribute('data-game') !== key) {
+                fr.src = g.url;
+                fr.setAttribute('data-game', key);
+            }
+            window.scrollTo(0, 0);
+        }
+        function fsGameBack() {
+            var play = document.getElementById('fsGamePlay');
+            if (play) play.style.display = 'none';
+            var home = document.getElementById('fsGameHome');
+            if (home) home.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        function fsGameReload() {
+            var fr = document.getElementById('fsGameFrame');
+            if (fr) fr.src = fr.src;
         }
 
         // --- INJECT LINK DEWASA SETELAH LOGIN ---
@@ -4948,6 +5436,50 @@ function fsSchedRender(matches) {
             return true;
         }
 
+        // Pesan error login yang ramah (Firebase mengembalikan teks Inggris teknis).
+        function _fsLoginErrMsg(err) {
+            var code = err && err.code ? err.code : '';
+            if (code === 'auth/network-request-failed') return 'Koneksi internet lambat / tidak stabil. Periksa sinyal lalu coba lagi.';
+            if (code === 'auth/popup-blocked') return 'Popup login diblokir browser. Izinkan popup untuk situs ini lalu coba lagi.';
+            if (code === 'auth/popup-closed-by-user') return 'Login dibatalkan.';
+            if (code === 'auth/cancelled-popup-request') return 'Login dibatalkan.';
+            if (code === 'auth/unauthorized-domain') return 'Domain ini belum diizinkan di Firebase. Laporkan ke admin.';
+            if (code === 'auth/web-storage-unsupported') return 'Browser memblokir penyimpanan login. Matikan mode privat / izinkan cookie situs ini.';
+            return 'Gagal login: ' + (err && err.message ? err.message : err);
+        }
+
+        // Tombol "Login lewat popup" — muncul hanya kalau redirect gagal.
+        // Popup butuh ketukan pengguna langsung (gesture), jadi tidak bisa
+        // dipanggil otomatis dari catch.
+        function _fsShowPopupBtn() {
+            var btn = document.getElementById('dewasaPopupBtn');
+            if (btn) { btn.style.display = 'inline-block'; return; }
+            var loginBtn = document.getElementById('dewasaLoginBtn');
+            if (!loginBtn) return;
+            btn = document.createElement('button');
+            btn.id = 'dewasaPopupBtn';
+            btn.type = 'button';
+            btn.textContent = '🔄 Login lewat popup';
+            btn.style.cssText = 'margin-top:10px;display:inline-block;background:#1e293b;color:#e2e8f0;border:1px solid rgba(56,189,248,0.4);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.8rem;cursor:pointer;';
+            btn.onclick = function(){ _fsLoginPopup(); };
+            loginBtn.parentNode.insertBefore(btn, loginBtn.nextSibling);
+        }
+
+        function _fsLoginPopup() {
+            var st = document.getElementById('dewasaLoginStatus');
+            if (st) st.textContent = '⏳ Membuka popup login Google...';
+            if (!_fsFirebaseInit()) {
+                if (st) st.textContent = '⚠️ Firebase belum termuat. Refresh halaman.';
+                return;
+            }
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then(function(){
+                if (st) st.textContent = '✅ Login berhasil, memuat...';
+            }).catch(function(err){
+                if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
+            });
+        }
+
         function dewasaLoginGoogle() {
             var st = document.getElementById('dewasaLoginStatus');
             if (st) st.textContent = '⏳ Membuka login Google...';
@@ -4956,9 +5488,23 @@ function fsSchedRender(matches) {
                 return;
             }
             var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithRedirect(provider).catch(function(err){
-                if (st) st.textContent = '⚠️ Gagal login: ' + (err && err.message ? err.message : err);
-            });
+            var tried = 0;
+            function attempt() {
+                tried++;
+                firebase.auth().signInWithRedirect(provider).catch(function(err){
+                    // Redirect gagal sebelum pindah halaman (biasanya koneksi
+                    // putus/lambat): coba sekali lagi otomatis, lalu tawarkan
+                    // login lewat popup.
+                    if (err && err.code === 'auth/network-request-failed' && tried < 2) {
+                        if (st) st.textContent = '⏳ Koneksi lambat, mencoba lagi...';
+                        setTimeout(attempt, 1500);
+                        return;
+                    }
+                    if (st) st.textContent = '⚠️ ' + _fsLoginErrMsg(err);
+                    _fsShowPopupBtn();
+                });
+            }
+            attempt();
         }
 
         function dewasaGate() {
@@ -4999,6 +5545,16 @@ function fsSchedRender(matches) {
                     firebase.auth().onAuthStateChanged(function(){
                         var dw = document.getElementById('dewasa');
                         if (dw && dw.classList.contains('active')) dewasaGate();
+                    });
+                } catch (e) {}
+                // Kalau kembali dari redirect Google dengan error, tampilkan
+                // pesannya (tanpa ini, kegagalan redirect diam-diam kembali
+                // ke layar login).
+                try {
+                    firebase.auth().getRedirectResult().catch(function(err){
+                        var st0 = document.getElementById('dewasaLoginStatus');
+                        var dw = document.getElementById('dewasa');
+                        if (st0 && dw && dw.classList.contains('active')) st0.textContent = '⚠️ ' + _fsLoginErrMsg(err);
                     });
                 } catch (e) {}
             }
