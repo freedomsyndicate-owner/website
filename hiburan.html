@@ -1123,20 +1123,35 @@
                 var _fsDirectQualities = [];
                 var _fsDirectUseProxy = false;
                 var _fsDirectCurrent = null;
-                // 17 Nov 2026 (terbukti di lapangan): host video bcdn MENOLAK
-                // fetch dari jaringan Cloudflare Workers (427), padahal link
-                // yang sama lolos dari server lain (206). Jadi FS Player
-                // mengambil video LANGSUNG dari bcdn dulu (pakai IP & browser
-                // penonton sendiri — sama seperti player VidLink asli), dan
-                // baru memakai proxy Worker kalau jalur langsung gagal.
-                // URL langsung didapat dari parameter u di URL proxy Worker
-                // (tidak perlu deploy ulang Worker).
+                // 17 Nov 2026 (riset player VidLink — catatan /tmp/vidlink-research):
+                // VidLink sendiri TIDAK pernah mengambil bcdn langsung dari
+                // browser: player mereka (JW Player, <video> biasa) menulis
+                // ulang semua URL ke proxy mereka surge.flooderrr.store
+                // (/mp{path}?{sign,t}&headers={}&host={origin}). bcdn MENOLAK
+                // UA browser (428) dan egress Cloudflare (427) — makanya jalur
+                // lama (bcdn langsung, lalu proxy Worker) mati di browser.
+                // Jadi jalur pertama FS Player sekarang = proxy surge VidLink
+                // (persis cara player VidLink sendiri), cadangan kedua = proxy
+                // Worker, lalu server iframe. URL bcdn didapat dari parameter
+                // u di URL proxy Worker (tidak perlu deploy ulang Worker).
+                function _fsSurgeUrlOf(bcdnUrl) {
+                    try {
+                        var u = new URL(bcdnUrl);
+                        if (u.hostname !== 'bcdn.hakunaymatata.com') return bcdnUrl;
+                        var keep = ['auth','expires','hash','key','sign','t','token'];
+                        var parts = [];
+                        keep.forEach(function(k){ var v = u.searchParams.get(k); if (v !== null) parts.push(k + '=' + encodeURIComponent(v)); });
+                        parts.push('headers=%7B%7D');
+                        parts.push('host=' + encodeURIComponent(u.origin));
+                        return 'https://surge.flooderrr.store/mp' + u.pathname + '?' + parts.join('&');
+                    } catch(e) { return bcdnUrl; }
+                }
                 function _fsDirectUrlOf(q) {
                     try {
                         var u = new URL(q.url, location.href).searchParams.get('u');
-                        if (u) return u;
+                        if (u) return _fsSurgeUrlOf(u);
                     } catch(e) {}
-                    return q.directUrl || q.url;
+                    return q.directUrl ? _fsSurgeUrlOf(q.directUrl) : q.url;
                 }
                 function _fsDirectSetNote(txt) {
                     var n = document.getElementById('fsDirectNote');
@@ -1244,7 +1259,7 @@
                             // Jalur langsung ditolak host video — coba sekali
                             // lewat proxy Worker sebelum pindah server.
                             _fsDirectUseProxy = true;
-                            _fsDirectSetNote('⏳ Jalur langsung ditolak — coba lewat proxy…');
+                            _fsDirectSetNote('⏳ Jalur VidLink ditolak — coba lewat proxy…');
                             _fsDirectPlayQuality(_cur, 0);
                             return;
                         }
