@@ -69,47 +69,66 @@
             }
         }, true);
 
-        // --- 5. DEVTOOLS DETECTOR ---
-        // Metode: bandingkan window size. Threshold 200px agar tidak false-positive di mobile.
-        var _devOpen = false;
-        var _devCheckActive = true;
-
-        function _onDevToolsOpen(){
-            if(!_devCheckActive) return;
-            _devCheckActive = false; // jalankan sekali saja
-            document.addEventListener('DOMContentLoaded', function(){
-                _showBlocked();
-            });
-            // Jika DOM sudah ready, langsung tampilkan
-            if(document.body) _showBlocked();
-        }
-
-        function _showBlocked(){
+        // --- 5. DEVTOOLS DETECTOR v2 ---
+        // Tiga lapis deteksi: (a) selisih ukuran window = DevTools docked,
+        // (b) jebakan debugger = DevTools undocked / remote debugging,
+        // (c) console getter = console sedang dibuka. Perlu 2 cek positif
+        // beruntun sebelum memblokir (mencegah false positive sesaat).
+        // Kalau terdeteksi, isi halaman diganti layar AKSES DITOLAK sampai refresh.
+        var _fsDtHits = 0;
+        var _fsDtDone = false;
+        var _fsDtImg = new Image();
+        var _fsDtConsole = false;
+        try {
+            Object.defineProperty(_fsDtImg, 'id', { get: function(){ _fsDtConsole = true; } });
+        } catch(e) {}
+        function _fsDtShowBlocked(){
+            if (_fsDtDone) return;
+            _fsDtDone = true;
+            try { document.title = 'AKSES DITOLAK — Freedom Syndicate'; } catch(e) {}
+            if (!document.body) return;
             document.body.innerHTML = [
                 '<div style="display:flex;flex-direction:column;align-items:center;',
                 'justify-content:center;height:100vh;background:#020617;color:#f87171;',
                 'font-family:monospace;text-align:center;gap:14px;padding:20px;">',
                 '<div style="font-size:3.5rem;">🛡️</div>',
                 '<div style="font-size:1.1rem;font-weight:900;letter-spacing:3px;color:#f87171;">AKSES DITOLAK</div>',
-                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.0</div>',
-                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools & refresh halaman.</div>',
+                '<div style="font-size:0.75rem;color:#475569;letter-spacing:2px;">FREEDOM SYNDICATE SECURITY SHIELD v3.1</div>',
+                '<div style="font-size:0.68rem;color:#334155;margin-top:4px;">Tutup Developer Tools &amp; refresh halaman.</div>',
                 '</div>'
             ].join('');
         }
-
-        // Cek setiap 1.5 detik — hanya aktif di desktop (skip mobile kecil)
+        // Hook kecil untuk tes: window.__fsDtBlock() menampilkan layar blokir.
+        try { window.__fsDtBlock = _fsDtShowBlocked; } catch(e) {}
         setInterval(function(){
-            if(!_devCheckActive) return;
-            // Mobile: outerWidth biasanya sama dengan innerWidth, skip
-            if(window.outerWidth < 500) return;
-            var wDiff = window.outerWidth - window.innerWidth;
-            var hDiff = window.outerHeight - window.innerHeight;
-            if(wDiff > 200 || hDiff > 200){
-                if(!_devOpen){ _devOpen = true; _onDevToolsOpen(); }
-            } else {
-                _devOpen = false;
+            if (_fsDtDone) return;
+            var open = false;
+            // (a) DevTools docked: selisih ukuran window (skip layar kecil/mobile).
+            if (window.outerWidth >= 500) {
+                var wDiff = window.outerWidth - window.innerWidth;
+                var hDiff = window.outerHeight - window.innerHeight;
+                if (wDiff > 200 || hDiff > 200) open = true;
             }
-        }, 1500);
+            // (b) DevTools undocked/remote: debugger berhenti lama hanya kalau DevTools terbuka.
+            if (!open) {
+                var t0 = performance.now();
+                debugger;
+                if (performance.now() - t0 > 100) open = true;
+            }
+            // (c) Console terbuka: getter Image terpicu saat console merender log.
+            if (!open) {
+                _fsDtConsole = false;
+                try { console.log('%c', _fsDtImg); } catch(e) {}
+                if (_fsDtConsole) open = true;
+            }
+            if (open) {
+                _fsDtHits++;
+                if (_fsDtHits >= 2) _fsDtShowBlocked();
+            } else {
+                _fsDtHits = 0;
+            }
+        }, 1000);
+
 
         // --- 6. DISABLE PRINT ---
         window.addEventListener('beforeprint', function(e){ e.preventDefault(); window.stop(); });
