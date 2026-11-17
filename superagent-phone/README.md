@@ -12,8 +12,8 @@ phone --HTTPS (Tailscale Funnel)--> Box:8090 (this server, Bun)
 ```
 
 - The page is a simple chat UI (`public/index.html`, Indonesian).
-- The server (`server.ts`) runs the agent loop: it asks LLM7 what to do, sends the shell command to the watcher as a `task_batch`, feeds the result back to LLM7, and streams the final answer to the phone (SSE).
-- The WS bearer token is **never in this repo**: the server reads it from disk at runtime (`~/.superagent-r/remote-agent.json`, or a local `.ws-token` file, mode 600). It is never printed or logged.
+- The server (`server.ts`) runs the agent loop: it asks the brain what to do, sends the shell command to the watcher as a `task_batch`, feeds the result back, and streams the final answer to the phone (SSE). Brain: FreeLLMAPI Gemini on the Box (primary, `http://127.0.0.1:3001`), LLM7 gpt-oss:20b as fallback.
+- The WS bearer token is **never in this repo**: the server reads it from disk at runtime (`~/.superagent-r/remote-agent.json`, or a local `.ws-token` file, mode 600). Same for the FreeLLMAPI client key, if the gateway needs one: `deploy.sh` extracts it opaquely via `extract-key.mjs` into `.freellmapi-key` (mode 600). Neither is ever printed or logged.
 - One task at a time; further messages queue.
 
 ## Deploy (on the Box)

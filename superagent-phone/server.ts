@@ -1,7 +1,7 @@
 // SuperAgent Phone — mini-agent server for the Box.
 // Serves a mobile chat page and runs a small agent loop:
 //   phone --HTTP/SSE--> this server --WS (Muse protocol)--> SuperAgent watch
-//   reasoning LLM: LLM7 gpt-oss:20b (keyless, same free model as the Box bot)
+//   reasoning LLM: FreeLLMAPI Gemini on the Box (primary), LLM7 gpt-oss:20b (fallback)
 //   tool execution: task_batch run_command on the Box via the watcher.
 // The WS bearer token is NEVER in this file: it is read from disk at runtime
 // (~/.superagent-r/remote-agent.json, or a local .ws-token file) and never logged.
@@ -221,54 +221,96 @@ class MuseClient {
   }
 }
 
-// ---------- LLM7 (keyless) ----------
+// ---------- Brains ----------
+// Primary: FreeLLMAPI on this Box (Gemini flash-lite, no shared daily quota).
+// Fallback: LLM7 gpt-oss:20b (keyless, shared quota — can 429 or answer empty).
 // Returns {ok:true,text} or {ok:false,reason} so the phone shows the real cause.
-async function callLlmViaFetch(messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string }> {
+const FREELLMAPI_BASE = process.env.FREELLMAPI_BASE || "http://127.0.0.1:3001/v1";
+const FREELLMAPI_MODEL = process.env.FREELLMAPI_MODEL || "gemini-flash-lite";
+
+let freellmapiKey: string | null = null;
+async function loadFreellmapiKey(): Promise<string | null> {
+  if (freellmapiKey !== null) return freellmapiKey;
+  if (process.env.FREELLMAPI_KEY && process.env.FREELLMAPI_KEY.length >= 8) { freellmapiKey = process.env.FREELLMAPI_KEY; return freellmapiKey; }
   try {
-    const res = await fetch(`${LLM_BASE}/chat/completions`, {
+    const f = Bun.file(".freellmapi-key");
+    if (await f.exists()) {
+      const v = (await f.text()).trim();
+      if (v.length >= 8) { freellmapiKey = v; return v; }
+    }
+  } catch {}
+  freellmapiKey = null;
+  return null;
+}
+
+// gpt-oss via LLM7 sometimes puts its whole reply in the `reasoning` field
+// and leaves `content` empty. If content is empty, try to recover JSON from reasoning.
+function extractFromMessage(msg: any): string | null {
+  const content = typeof msg?.content === "string" ? msg.content.trim() : "";
+  if (content) return content;
+  const reasoning = typeof msg?.reasoning === "string" ? msg.reasoning : "";
+  if (!reasoning) return null;
+  const m = reasoning.match(/\{[\s\S]*?"(tool|answer)"[\s\S]*?\}/);
+  if (m) return m[0];
+  return null;
+}
+
+async function callChatApi(base: string, model: string, key: string | null, messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string; http?: number }> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (key) headers["Authorization"] = `Bearer ${key}`;
+  try {
+    const res = await fetch(`${base}/chat/completions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: "Bearer llm7" },
-      body: JSON.stringify({ model: LLM_MODEL, messages, temperature: 0.2, max_tokens: 4000 }),
+      headers,
+      body: JSON.stringify({ model, messages, temperature: 0.2, max_tokens: 4000 }),
       signal: AbortSignal.timeout(90000),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.log(`[phone] LLM HTTP ${res.status}: ${body.slice(0, 200)}`);
-      if (res.status === 429) return { ok: false, reason: "Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi sekitar 15 menit lagi." };
-      return { ok: false, reason: `Otak (LLM7) error HTTP ${res.status}. Coba lagi sebentar lagi.` };
+      console.log(`[phone] LLM ${base} HTTP ${res.status}: ${body.slice(0, 200)}`);
+      if (res.status === 429) return { ok: false, http: 429, reason: "Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi sekitar 15 menit lagi." };
+      return { ok: false, http: res.status, reason: `Otak error HTTP ${res.status}. Coba lagi sebentar lagi.` };
     }
     const j: any = await res.json();
-    const text = j?.choices?.[0]?.message?.content?.trim();
-    if (!text) { console.log("[phone] LLM empty content, usage:", JSON.stringify(j?.usage)); return { ok: false, reason: "Otak (LLM7) menjawab kosong. Coba lagi." }; }
+    const msg = j?.choices?.[0]?.message;
+    const text = extractFromMessage(msg);
+    if (!text) {
+      console.log(`[phone] LLM ${base} empty content, finish=${j?.choices?.[0]?.finish_reason}, usage=${JSON.stringify(j?.usage)}`);
+      return { ok: false, reason: "Otak menjawab kosong. Coba lagi." };
+    }
     return { ok: true, text };
-  } catch (e) { console.log("[phone] LLM fetch failed", String(e).slice(0, 150)); return { ok: false, reason: "Tidak bisa menghubungi otak (LLM7). Coba lagi sebentar lagi." }; }
+  } catch (e) {
+    console.log(`[phone] LLM ${base} fetch failed`, String(e).slice(0, 150));
+    return { ok: false, reason: "Tidak bisa menghubungi otak. Coba lagi sebentar lagi." };
+  }
 }
 
-async function callLlmViaCurl(messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string }> {
+let freellmapiModel: string | null = null;
+async function resolveFreellmapiModel(): Promise<string> {
+  if (freellmapiModel) return freellmapiModel;
+  if (process.env.FREELLMAPI_MODEL) { freellmapiModel = process.env.FREELLMAPI_MODEL; return freellmapiModel; }
   try {
-    const body = JSON.stringify({ model: LLM_MODEL, messages, temperature: 0.2, max_tokens: 4000 });
-    const proc = Bun.spawn(["curl", "-s", "-m", "90", "-X", "POST", `${LLM_BASE}/chat/completions`,
-      "-H", "Content-Type: application/json", "-H", "Authorization: Bearer llm7", "-d", body],
-      { stdout: "pipe", stderr: "pipe" });
-    const out = await new Response(proc.stdout).text();
-    await proc.exited;
-    const j = JSON.parse(out);
-    if (j?.error) {
-      if (/quota/i.test(j.error.message || "")) return { ok: false, reason: "Kuota harian LLM7 (otak gratis) sedang habis. Coba lagi sekitar 15 menit lagi." };
-      return { ok: false, reason: `Otak (LLM7) error: ${String(j.error.message || "unknown").slice(0, 150)}` };
-    }
-    const text = j?.choices?.[0]?.message?.content?.trim();
-    if (!text) return { ok: false, reason: "Otak (LLM7) menjawab kosong. Coba lagi." };
-    return { ok: true, text };
-  } catch (e) { console.log("[phone] LLM curl failed", String(e).slice(0, 150)); return { ok: false, reason: "Tidak bisa menghubungi otak (LLM7). Coba lagi sebentar lagi." }; }
+    const res = await fetch(`${FREELLMAPI_BASE}/models`, { signal: AbortSignal.timeout(10000) });
+    const j: any = await res.json();
+    const ids: string[] = (j?.data || []).map((m: any) => m?.id).filter(Boolean);
+    const pick = ids.find((id) => /gemini/i.test(id)) || ids[0];
+    if (pick) { freellmapiModel = pick; console.log(`[phone] FreeLLMAPI model: ${pick}`); return pick; }
+  } catch (e) { console.log("[phone] FreeLLMAPI /models failed", String(e).slice(0, 120)); }
+  freellmapiModel = FREELLMAPI_MODEL;
+  return freellmapiModel;
 }
 
 async function callLlm(messages: any[]): Promise<{ ok: boolean; text?: string; reason?: string }> {
-  const viaFetch = await callLlmViaFetch(messages);
-  if (viaFetch.ok) return viaFetch;
-  // Only retry via curl on a transport failure, not on quota errors.
-  if (/Tidak bisa menghubungi/.test(viaFetch.reason || "")) return callLlmViaCurl(messages);
-  return viaFetch;
+  // 1. FreeLLMAPI on the Box (Gemini, local, no shared quota).
+  const key = await loadFreellmapiKey();
+  const model = await resolveFreellmapiModel();
+  const primary = await callChatApi(FREELLMAPI_BASE, model, key, messages);
+  if (primary.ok) return primary;
+  // 401/403/404 from FreeLLMAPI means key/model wrong — still try LLM7.
+  // 2. LLM7 fallback (keyless).
+  const fallback = await callChatApi(LLM_BASE, LLM_MODEL, "llm7", messages);
+  if (fallback.ok) return fallback;
+  return { ok: false, reason: fallback.reason || primary.reason || "Otak tidak menjawab. Coba lagi." };
 }
 
 // ---------- HTTP server (page + SSE chat) ----------
