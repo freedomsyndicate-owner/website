@@ -695,9 +695,17 @@
         /* --- MUSIK v4 (ala Spotify/Joox, pola Netflix Film): hero + tile genre + baris kartu --- */
         /* Baris kartu lagu horizontal (ala baris poster Film) */
         .fs-track-lane { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
-        /* Grid kartu lagu (hasil cari) */
-        .fs-track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 2px; }
-        .fs-track-card { cursor: pointer; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px; background: #111827; }
+        /* Grid kartu lagu (hasil cari) + FSTUBE: HP 2 kolom, laptop 3 kolom.
+           Dulu 3 kolom di semua lebar, jadi di HP kartu cuma ~120px dan judul
+           terpotong (laporan San 19 Nov 19:15). Musik + FSTUBE pakai class
+           yang sama, jadi sekali perbaiki keduanya ikut rapi.
+           minmax(0,1fr) + min-width:0 WAJIB: judul kartu nowrap, tanpa ini
+           kolom grid dipaksa selebar judul terpanjang dan grid meluber ke
+           kanan layar HP (terukur: kolom 214px + 261px, grid 487px di layar
+           500px). */
+        .fs-track-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 2px; }
+        @media (min-width: 700px) { .fs-track-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        .fs-track-card { cursor: pointer; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 8px; background: #111827; min-width: 0; }
         .fs-track-lane .fs-track-card { flex: 0 0 132px; }
         .fs-track-card img { width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover; display: block; }
         .fs-track-card .fs-tc-art-fb { width: 100%; aspect-ratio: 1; border-radius: 8px; background: #1E293B; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
