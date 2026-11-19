@@ -196,6 +196,7 @@
             <li><button onclick="openTab('tvchannel', this)" class="active-tab">📺 TV Channel</button></li>
             <li><button onclick="openTab('movie', this)">🎬 Movie</button></li>
             <li><button onclick="openTab('musik', this)">🎵 Musik</button></li>
+            <li><button onclick="openTab('fstube', this)">FSTUBE</button></li>
             <li><button onclick="openTab('komik', this)">📖 Komik</button></li>
             <li><button onclick="openTab('game', this)">🎮 Game</button></li>
             <li class="side-label">🤖 AI</li>
@@ -217,6 +218,7 @@
             <button type="button" onclick="openTab('tvchannel', null)">📺 TV Channel</button>
             <button type="button" onclick="openTab('movie', null)">🎬 Movie</button>
             <button type="button" onclick="openTab('musik', null)">🎵 Musik</button>
+            <button type="button" onclick="openTab('fstube', null)">FSTUBE</button>
             <button type="button" onclick="openTab('komik', null)">📖 Komik</button>
             <button type="button" onclick="openTab('game', null)">🎮 Game</button>
         </nav>
@@ -3621,6 +3623,190 @@
             </script>
         </div>
 
+        <!-- ===== FSTUBE TAB (cari + putar video YouTube sendiri, tanpa iklan) ===== -->
+        <!-- Bukan kode Yuno (aplikasi Android, tidak bisa jalan di web). Mesin yang
+             dipakai: Invidious yang sama dengan tab Musik (FS_INVIDIOUS_MIRRORS,
+             fsRadioInvSearch, fsRadioInvSearchPage). Video diputar lewat embed
+             Invidious. Kualitas mengikuti sumber video, sampai 1080p. -->
+        <div id="fstube" class="tab-content" style="padding:14px 14px 24px;">
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>FSTUBE</h3><p>Cari video YouTube lalu putar sendiri di sini, tanpa iklan dan tanpa login.</p></div>
+
+            <!-- Area putar 16:9 -->
+            <div id="fsTubePlayerWrap" style="display:none;margin-top:4px;">
+                <div id="fsTubeNowTitle" style="font-size:0.85rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:8px;"></div>
+                <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #1E293B;border-radius:10px;overflow:hidden;">
+                    <iframe id="fsTubeFrame" title="Pemutar FSTUBE" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div id="fsTubePlayerError" style="display:none;font-size:0.72rem;color:#fca5a5;line-height:1.6;margin-top:8px;">Video tidak bisa dimuat. Semua mirror sedang bermasalah, coba lagi nanti.</div>
+            </div>
+
+            <!-- Cari video -->
+            <div style="margin-top:14px;">
+                <div style="display:flex;gap:8px;">
+                    <input id="fsTubeInput" type="text" placeholder="Cari video YouTube..." aria-label="Cari video YouTube" style="flex:1;min-width:0;background:rgba(255,255,255,0.07);border:1px solid rgba(232,169,12,0.35);border-radius:10px;padding:10px 14px;color:#fff;font-size:0.9rem;outline:none;min-height:48px;" onkeydown="if(event.key==='Enter')fsTubeSearch()" />
+                    <button onclick="fsTubeSearch()" style="background:#E8A90C;color:#0D0C0A;border:none;border-radius:8px;padding:10px 18px;font-weight:900;font-size:0.85rem;cursor:pointer;white-space:nowrap;min-height:48px;">CARI</button>
+                </div>
+            </div>
+            <div id="fsTubeStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Ketik judul video atau nama channel di atas, lalu tekan Cari.</div>
+            <div id="fsTubeList" class="fs-track-grid" style="margin-top:6px;"></div>
+            <button id="fsTubeMoreBtn" onclick="fsTubeLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(232,169,12,0.12);border:1px solid rgba(232,169,12,0.4);color:#FDE68A;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">Muat lebih banyak video</button>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;">FSTUBE memakai mesin Invidious yang sama dengan tab Musik. Video diputar lewat embed Invidious, tanpa iklan dan tanpa login. Kualitas mengikuti sumber video, sampai 1080p.</div>
+        </div>
+
+        <script>
+        // ===== FSTUBE: cari + putar video YouTube sendiri =====
+        // Memakai ulang mesin Invidious tab Musik (FS_INVIDIOUS_MIRRORS,
+        // fsRadioInvSearch, fsRadioInvSearchPage). Fungsi-fungsi itu TIDAK
+        // diubah. FSTUBE punya state sendiri (query, halaman, daftar) supaya
+        // tidak mengganggu tab Musik.
+        var _fsTubeQuery = '';
+        var _fsTubePage = 3;
+        var _fsTubeDatePage = 2;
+        var _fsTubeBusy = false;
+        var _fsTubeDone = false;
+        var _fsTubeItems = [];
+        var _fsTubeEmbedTimer = null;
+        var _fsTubeEmbedList = [];
+        var _fsTubeEmbedIdx = 0;
+        var _fsTubeEmbedVideoId = '';
+
+        // Durasi diambil dari sub hasil fsRadioYtToItems ("3:45" di depan).
+        function fsTubeDurFromSub(sub) {
+            var first = String(sub || '').split('·')[0] || '';
+            return first.replace(/[^\d:]/g, '');
+        }
+        function fsTubeRenderItems(items) {
+            var list = document.getElementById('fsTubeList');
+            if (!list) return;
+            list.innerHTML = '';
+            _fsTubeItems = items;
+            items.forEach(function(t){
+                var card = document.createElement('div');
+                card.className = 'fs-track-card';
+                var dur = fsTubeDurFromSub(t.sub);
+                card.innerHTML =
+                    (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="aspect-ratio:16/9;">' : '') +
+                    '<div class="fs-tc-title">' + esc(t.title) + '</div>' +
+                    '<div class="fs-tc-artist">' + esc(t.artist) + '</div>' +
+                    (dur ? '<div style="font-size:0.6rem;color:#94a3b8;margin-top:2px;">' + esc(dur) + '</div>' : '');
+                card.onclick = function(){ fsTubePlay(t.videoId, t.title, t.artist); };
+                list.appendChild(card);
+            });
+        }
+        function fsTubeSearch() {
+            var inp = document.getElementById('fsTubeInput');
+            var q = inp ? inp.value.trim() : '';
+            var statusEl = document.getElementById('fsTubeStatus');
+            var list = document.getElementById('fsTubeList');
+            var btn = document.getElementById('fsTubeMoreBtn');
+            if (!q) {
+                if (statusEl) statusEl.textContent = 'Ketik judul video atau nama channel, lalu tekan Cari.';
+                return;
+            }
+            if (_fsTubeBusy) return;
+            _fsTubeBusy = true;
+            _fsTubeQuery = q;
+            _fsTubePage = 3;
+            _fsTubeDatePage = 2;
+            _fsTubeDone = false;
+            if (statusEl) statusEl.textContent = 'Mencari video...';
+            if (list) list.innerHTML = '';
+            if (btn) btn.style.display = 'none';
+            fsRadioInvSearch(q).then(function(items){
+                _fsTubeBusy = false;
+                if (!items.length) {
+                    // Bedakan "tidak ada hasil" dengan "semua mirror mati":
+                    // coba satu panggilan langsung; kalau gagal total, mirror mati.
+                    _fsInvTryMirror(0, '/api/v1/search?q=' + encodeURIComponent(q) + '&type=video').then(function(){
+                        if (statusEl) statusEl.textContent = 'Tidak ada video ditemukan. Coba kata kunci lain.';
+                    }).catch(function(){
+                        if (statusEl) statusEl.textContent = 'Pencarian YouTube sedang mati, coba lagi nanti.';
+                    });
+                    return;
+                }
+                fsTubeRenderItems(items);
+                if (statusEl) statusEl.textContent = items.length + ' video ditemukan. Ketuk satu untuk memutar.';
+                if (btn) { btn.style.display = 'block'; btn.disabled = false; btn.textContent = 'Muat lebih banyak video'; }
+            }).catch(function(){
+                _fsTubeBusy = false;
+                if (statusEl) statusEl.textContent = 'Pencarian YouTube sedang mati, coba lagi nanti.';
+            });
+        }
+        function fsTubeLoadMore() {
+            if (_fsTubeBusy || _fsTubeDone || !_fsTubeQuery) return;
+            _fsTubeBusy = true;
+            var btn = document.getElementById('fsTubeMoreBtn');
+            if (btn) btn.textContent = 'Memuat video lainnya...';
+            var jobs = [
+                fsRadioInvSearchPage(_fsTubeQuery, _fsTubePage, ''),
+                fsRadioInvSearchPage(_fsTubeQuery, _fsTubeDatePage, 'upload_date')
+            ];
+            Promise.all(jobs).then(function(parts){
+                _fsTubeBusy = false;
+                var seen = {};
+                _fsTubeItems.forEach(function(t){ if (t.videoId) seen[t.videoId] = 1; });
+                var added = [];
+                parts.forEach(function(p){
+                    (p || []).forEach(function(t){
+                        if (t && t.videoId && !seen[t.videoId]) { seen[t.videoId] = 1; added.push(t); }
+                    });
+                });
+                if (!added.length) {
+                    _fsTubeDone = true;
+                    if (btn) { btn.textContent = 'Sudah semua video yang ditemukan'; btn.disabled = true; }
+                    return;
+                }
+                _fsTubePage++;
+                _fsTubeDatePage++;
+                fsTubeRenderItems(_fsTubeItems.concat(added));
+                if (btn) btn.textContent = 'Muat lebih banyak video';
+            }).catch(function(){
+                _fsTubeBusy = false;
+                if (btn) btn.textContent = 'Muat lebih banyak video';
+            });
+        }
+        function fsTubePlay(videoId, title, artist) {
+            if (!videoId) return;
+            // Hentikan audio Musik kalau sedang jalan, supaya tidak bunyi dobel.
+            try { var a = document.getElementById('fsRadioAudio'); if (a) a.pause(); } catch(e){}
+            var wrap = document.getElementById('fsTubePlayerWrap');
+            var frame = document.getElementById('fsTubeFrame');
+            var errEl = document.getElementById('fsTubePlayerError');
+            var titleEl = document.getElementById('fsTubeNowTitle');
+            if (!wrap || !frame) return;
+            if (titleEl) titleEl.textContent = title + (artist ? ' - ' + artist : '');
+            if (errEl) errEl.style.display = 'none';
+            wrap.style.display = 'block';
+            // Daftar mirror embed: mirror aktif dulu, lalu sisanya.
+            var list = [];
+            var first = (typeof FS_INVIDIOUS !== 'undefined' && FS_INVIDIOUS) ? FS_INVIDIOUS : FS_INVIDIOUS_MIRRORS[0];
+            list.push(first);
+            FS_INVIDIOUS_MIRRORS.forEach(function(m){ if (list.indexOf(m) === -1) list.push(m); });
+            _fsTubeEmbedList = list;
+            _fsTubeEmbedIdx = 0;
+            _fsTubeEmbedVideoId = videoId;
+            frame.onload = function(){ if (_fsTubeEmbedTimer) { clearTimeout(_fsTubeEmbedTimer); _fsTubeEmbedTimer = null; } };
+            fsTubeEmbedTry();
+            try { wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e){}
+        }
+        function fsTubeEmbedTry() {
+            var frame = document.getElementById('fsTubeFrame');
+            var errEl = document.getElementById('fsTubePlayerError');
+            if (!frame || _fsTubeEmbedIdx >= _fsTubeEmbedList.length) {
+                if (errEl) errEl.style.display = 'block';
+                return;
+            }
+            var src = _fsTubeEmbedList[_fsTubeEmbedIdx] + '/embed/' + encodeURIComponent(_fsTubeEmbedVideoId) + '?autoplay=1';
+            if (_fsTubeEmbedTimer) clearTimeout(_fsTubeEmbedTimer);
+            _fsTubeEmbedTimer = setTimeout(function(){
+                _fsTubeEmbedTimer = null;
+                _fsTubeEmbedIdx++;
+                fsTubeEmbedTry();
+            }, 8000);
+            frame.src = src;
+        }
+        </script>
+
         <!-- ===== AL QUR'AN TAB (fitur mengikuti QuranKu, Rafigibran, MIT, Flutter) ===== -->
         <!-- QuranKu itu aplikasi Flutter/Dart: kodenya TIDAK bisa dipakai langsung di
              website statis. Yang diambil: fiturnya, 114 surah, teks Arab + terjemahan
@@ -5622,7 +5808,7 @@ function fsSchedRender(matches) {
 
     <script>
     (function(){
-        var tabs = ['tvchannel','movie','musik','komik','game'];
+        var tabs = ['tvchannel','movie','musik','fstube','komik','game'];
         function openHash(){
             var id = (location.hash || '').replace('#','');
             if (tabs.indexOf(id) === -1) return;

@@ -174,7 +174,7 @@
             to { text-shadow: 0 0 10px var(--be), 0 0 20px var(--be); opacity: 1; }
         }
 
-        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999999; pointer-events: auto; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 999999; pointer-events: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 10px; border: 1px solid #1f2937; width: 100%; max-width: 350px; text-align: center; position: relative; z-index: 999999; pointer-events: auto !important; }
         .btn-google { width: 100%; background: white; color: #444; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; position: relative; z-index: 999999; pointer-events: auto !important; touch-action: manipulation; }
         .fixed-top { flex-shrink: 0; padding: 15px 10px 10px 10px; background: var(--bg); z-index: 100; text-align: center; border-bottom: 1px solid #1f2937; }
@@ -1186,6 +1186,10 @@
             <h1 style="font-family:'Orbitron'; color:white; font-size:1.1rem;">FREEDOM SYNDICATE</h1>
             <button class="btn-google" id="googleBtn" onclick="login()"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> LOGIN WITH GOOGLE</button>
             <p style="font-size:0.72rem;color:#94a3b8;margin:16px 0 0;line-height:1.6;">Login dengan Google untuk membuka Journal trading.</p>
+        </div>
+        <div style="width:100%;max-width:350px;text-align:center;margin-top:16px;">
+            <a href="https://main.tailb5991a.ts.net/tradoor" target="_blank" rel="noopener" style="display:block;box-sizing:border-box;background:transparent;border:1px solid #E8A90C;color:#E8A90C;border-radius:10px;padding:12px;font-weight:800;font-size:0.85rem;text-decoration:none;min-height:44px;line-height:20px;">FS Terminal</a>
+            <p style="font-size:0.68rem;color:#94a3b8;margin:8px 0 0;line-height:1.6;">Terminal trading dengan chart live.</p>
         </div>
     </div>
 
