@@ -1,7 +1,12 @@
 // FS PWA — service worker: cache shell situs + data Qur'an, cache jawaban
 // API Qur'an/jadwal sholat yang sudah pernah dimuat (offline). Jangan
 // sentuh stream audio/video, APK, atau request non-GET.
-var FS_CACHE = 'fs-v2';
+// FS-TV-CLEAN 20 Nov 2026: fs-v2 -> fs-v3 supaya semua browser pengunjung
+// langsung mengambil hiburan.html baru (daftar TV bersih); cache lama dihapus
+// otomatis saat aktivasi. Muat halaman juga pakai cache:'no-cache' supaya
+// fetch service worker tidak memakai salinan HTTP lama (GitHub Pages
+// max-age=600) — update halaman jadi langsung tampil, bukan 10 menit kemudian.
+var FS_CACHE = 'fs-v3';
 var FS_SHELL = [
   '/', '/index.html', '/hiburan.html', '/tools.html', '/ibadah.html',
   '/ai.html', '/trading.html', '/lainnya.html', '/garapan.html', '/journal.html',
@@ -53,7 +58,10 @@ self.addEventListener('fetch', function(e){
   var isPage = req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/';
   if (isPage) {
     // Halaman: jaringan dulu, cache sebagai cadangan (supaya update langsung tampil).
-    e.respondWith(fetch(req).then(function(res){
+    // cache:'no-cache' = selalu tanya server (304 kalau belum berubah), jangan
+    // pakai salinan HTTP lama — kalau tidak, push halaman baru baru tampil
+    // setelah cache browser kedaluwarsa.
+    e.respondWith(fetch(req, {cache: 'no-cache'}).then(function(res){
       var copy = res.clone();
       caches.open(FS_CACHE).then(function(c){ c.put(req, copy); });
       return res;
