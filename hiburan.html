@@ -3623,21 +3623,31 @@
             </script>
         </div>
 
-        <!-- ===== FSTUBE TAB (cari + putar video YouTube sendiri, tanpa iklan) ===== -->
-        <!-- Bukan kode Yuno (aplikasi Android, tidak bisa jalan di web). Mesin yang
-             dipakai: Invidious yang sama dengan tab Musik (FS_INVIDIOUS_MIRRORS,
-             fsRadioInvSearch, fsRadioInvSearchPage). Video diputar lewat embed
-             Invidious. Kualitas mengikuti sumber video, sampai 1080p. -->
+        <!-- ===== FSTUBE TAB (cari + putar video YouTube sendiri) ===== -->
+        <!-- Bukan kode Yuno (aplikasi Android, tidak bisa jalan di web). Pencarian
+             memakai Invidious yang sama dengan tab Musik (FS_INVIDIOUS_MIRRORS,
+             fsRadioInvSearch, fsRadioInvSearchPage). Pemutarnya pemutar YouTube
+             asli (youtube-nocookie embed): Invidious embed TIDAK BISA memutar
+             sama sekali sejak 19 Nov 2026 - API videonya hidup tapi tidak
+             mengembalikan stream gabungan (formatStreams=0, cek 19 Nov 19:31
+             WIB), beberapa mirror mati/403/502, dan iframe-nya cuma menampilkan
+             halaman error walau onload jalan. Jadi jangan kembalikan pemutar
+             ke Invidious tanpa bukti putar. -->
         <div id="fstube" class="tab-content" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>FSTUBE</h3><p>Cari video YouTube lalu putar sendiri di sini, tanpa iklan dan tanpa login.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>FSTUBE</h3><p>Cari video YouTube lalu putar sendiri di sini, tanpa login.</p></div>
 
             <!-- Area putar 16:9 -->
             <div id="fsTubePlayerWrap" style="display:none;margin-top:4px;">
                 <div id="fsTubeNowTitle" style="font-size:0.85rem;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:8px;"></div>
                 <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #1E293B;border-radius:10px;overflow:hidden;">
-                    <iframe id="fsTubeFrame" title="Pemutar FSTUBE" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe id="fsTubeFrame" title="Pemutar FSTUBE" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
-                <div id="fsTubePlayerError" style="display:none;font-size:0.72rem;color:#fca5a5;line-height:1.6;margin-top:8px;">Video tidak bisa dimuat. Semua mirror sedang bermasalah, coba lagi nanti.</div>
+                <div id="fsTubePlayerStatus" style="font-size:0.68rem;color:#94A3B8;margin-top:8px;line-height:1.6;"></div>
+                <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                    <button type="button" onclick="fsTubeNextServer()" style="flex:1;min-width:140px;background:rgba(232,169,12,0.12);border:1px solid rgba(232,169,12,0.4);color:#FDE68A;font-size:0.75rem;font-weight:800;padding:10px;border-radius:10px;cursor:pointer;font-family:inherit;">🔄 Coba server lain</button>
+                    <a id="fsTubeYtLink" href="https://www.youtube.com/" target="_blank" rel="noopener" style="flex:1;min-width:140px;text-align:center;background:#1e293b;border:1px solid rgba(56,189,248,0.4);color:#e2e8f0;font-size:0.75rem;font-weight:800;padding:10px;border-radius:10px;text-decoration:none;font-family:inherit;">▶ Buka di YouTube</a>
+                </div>
+                <div id="fsTubePlayerError" style="display:none;font-size:0.72rem;color:#fca5a5;line-height:1.6;margin-top:8px;">Video tidak bisa diputar di semua server. Coba lagi nanti, atau buka langsung di YouTube lewat tombol di atas.</div>
             </div>
 
             <!-- Cari video -->
@@ -3650,7 +3660,7 @@
             <div id="fsTubeStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Ketik judul video atau nama channel di atas, lalu tekan Cari.</div>
             <div id="fsTubeList" class="fs-track-grid" style="margin-top:6px;"></div>
             <button id="fsTubeMoreBtn" onclick="fsTubeLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(232,169,12,0.12);border:1px solid rgba(232,169,12,0.4);color:#FDE68A;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">Muat lebih banyak video</button>
-            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;">FSTUBE memakai mesin Invidious yang sama dengan tab Musik. Video diputar lewat embed Invidious, tanpa iklan dan tanpa login. Kualitas mengikuti sumber video, sampai 1080p.</div>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;">Pencarian memakai mesin Invidious yang sama dengan tab Musik. Video diputar lewat pemutar YouTube, tanpa login; kualitas bisa dipilih di pemutar. Kalau satu server gagal, otomatis pindah ke server lain.</div>
         </div>
 
         <script>
@@ -3773,37 +3783,63 @@
             var frame = document.getElementById('fsTubeFrame');
             var errEl = document.getElementById('fsTubePlayerError');
             var titleEl = document.getElementById('fsTubeNowTitle');
+            var statusEl = document.getElementById('fsTubePlayerStatus');
+            var ytLink = document.getElementById('fsTubeYtLink');
             if (!wrap || !frame) return;
             if (titleEl) titleEl.textContent = title + (artist ? ' - ' + artist : '');
             if (errEl) errEl.style.display = 'none';
+            if (ytLink) ytLink.href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
             wrap.style.display = 'block';
-            // Daftar mirror embed: mirror aktif dulu, lalu sisanya.
-            var list = [];
-            var first = (typeof FS_INVIDIOUS !== 'undefined' && FS_INVIDIOUS) ? FS_INVIDIOUS : FS_INVIDIOUS_MIRRORS[0];
-            list.push(first);
-            FS_INVIDIOUS_MIRRORS.forEach(function(m){ if (list.indexOf(m) === -1) list.push(m); });
+            // Urutan server putar (19 Nov 2026): pemutar YouTube asli dulu -
+            // embed Invidious TIDAK BISA memutar sama sekali (API videonya tidak
+            // mengembalikan stream gabungan, beberapa mirror mati/403/502, dan
+            // iframe error tetap memicu onload sehingga failover lama tidak jalan).
+            // Invidious tetap ada di ujung antrean sebagai cadangan.
+            var id = encodeURIComponent(videoId);
+            var list = [
+                { label: 'YouTube', url: 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1' },
+                { label: 'YouTube (biasa)', url: 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1' }
+            ];
+            FS_INVIDIOUS_MIRRORS.forEach(function(m){
+                list.push({ label: 'Invidious ' + m.replace('https://', ''), url: m + '/embed/' + id + '?autoplay=1' });
+            });
             _fsTubeEmbedList = list;
             _fsTubeEmbedIdx = 0;
             _fsTubeEmbedVideoId = videoId;
-            frame.onload = function(){ if (_fsTubeEmbedTimer) { clearTimeout(_fsTubeEmbedTimer); _fsTubeEmbedTimer = null; } };
+            frame.onload = function(){
+                if (_fsTubeEmbedTimer) { clearTimeout(_fsTubeEmbedTimer); _fsTubeEmbedTimer = null; }
+                if (statusEl && _fsTubeEmbedIdx < _fsTubeEmbedList.length) {
+                    statusEl.textContent = 'Memutar via ' + _fsTubeEmbedList[_fsTubeEmbedIdx].label + ' · kalau macet, ketuk "Coba server lain".';
+                }
+            };
             fsTubeEmbedTry();
             try { wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch(e){}
+        }
+        function fsTubeNextServer() {
+            if (!_fsTubeEmbedList.length) return;
+            _fsTubeEmbedIdx = (_fsTubeEmbedIdx + 1) % _fsTubeEmbedList.length;
+            var errEl = document.getElementById('fsTubePlayerError');
+            if (errEl) errEl.style.display = 'none';
+            fsTubeEmbedTry();
         }
         function fsTubeEmbedTry() {
             var frame = document.getElementById('fsTubeFrame');
             var errEl = document.getElementById('fsTubePlayerError');
+            var statusEl = document.getElementById('fsTubePlayerStatus');
             if (!frame || _fsTubeEmbedIdx >= _fsTubeEmbedList.length) {
                 if (errEl) errEl.style.display = 'block';
+                if (statusEl) statusEl.textContent = 'Gagal memutar di semua server.';
                 return;
             }
-            var src = _fsTubeEmbedList[_fsTubeEmbedIdx] + '/embed/' + encodeURIComponent(_fsTubeEmbedVideoId) + '?autoplay=1';
+            var cur = _fsTubeEmbedList[_fsTubeEmbedIdx];
+            if (statusEl) statusEl.textContent = 'Memuat video… · Server: ' + cur.label + ' (' + (_fsTubeEmbedIdx + 1) + '/' + _fsTubeEmbedList.length + ')';
             if (_fsTubeEmbedTimer) clearTimeout(_fsTubeEmbedTimer);
             _fsTubeEmbedTimer = setTimeout(function(){
                 _fsTubeEmbedTimer = null;
                 _fsTubeEmbedIdx++;
                 fsTubeEmbedTry();
             }, 8000);
-            frame.src = src;
+            frame.src = cur.url;
         }
         </script>
 
