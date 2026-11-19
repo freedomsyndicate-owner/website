@@ -3943,7 +3943,7 @@
                 <div style="font-size:0.68rem;color:#94a3b8;">Game open-source gratis, main langsung di sini, tanpa instal, tanpa iklan.</div>
             </div>
 
-            <!-- Launcher: 6 game open-source (jsDelivr, kode asli dari GitHub). -->
+            <!-- Launcher: 6 game open-source, halaman di-host di repo ini (games/). -->
             <div id="fsGameHome" style="padding:14px 14px 24px;">
                 <div class="fs-game-hero" onclick="fsGameOpen('g2048')" style="background:#b45309;">
                     <div style="display:flex;align-items:center;gap:12px;">
@@ -3976,7 +3976,7 @@
                         <div class="fs-gc-ico">🔢</div><div class="fs-gc-name">2048</div><div class="fs-gc-tag">Puzzle angka</div><div class="fs-gc-play">▶ Mainkan</div>
                     </div>
                 </div>
-                <div style="font-size:0.58rem;color:#94A3B8;margin-top:14px;text-align:center;line-height:1.6;">Kode asli (open-source): 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) · Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) · Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0), dimuat dari jsDelivr (CDN yang sama seperti PDF Tools).</div>
+                <div style="font-size:0.58rem;color:#94A3B8;margin-top:14px;text-align:center;line-height:1.6;">Kode asli (open-source): 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) · Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) · Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0). Halaman game di-host di situs ini supaya langsung bisa dimainkan; aset (css/js/gambar/suara) dimuat dari jsDelivr.</div>
             </div>
 
             <!-- Play view: satu game penuh + tombol kembali. -->
@@ -5505,19 +5505,26 @@ function fsSchedRender(matches) {
         // Alias, dipakai tombol World (nama lama tetap dipertahankan)
         function tvWorldReload() { _komikReload('tvWorld'); }
 
-        // --- GAME v2: 6 game open-source (jsDelivr, commit terpin) ---
+        // --- GAME v2: 6 game open-source, halaman di-host di repo ini ---
         // 2048 gabrielecirulli/2048 (MIT) · Dino wayou/t-rex-runner (BSD-3) ·
         // Tetris simonlc/tetr.js (MIT) · Minesweeper pwmarcz/kaboom (MIT) ·
         // Breakout igameproject/Breakout (MIT) · Flappy nebez/floppybird (Apache-2.0).
-        // Dipakai lewat jsDelivr (CDN yang sama seperti PDF Tools) karena
-        // connector GitHub tidak bisa push file biner (sprite/audio) ke repo.
+        // JANGAN arahkan iframe langsung ke jsDelivr: jsDelivr menyajikan .html
+        // sebagai text/plain + nosniff, jadi iframe cuma menampilkan KODE HTML
+        // (ditemukan 19 Nov 2026, semua 6 game). Statically juga text/plain,
+        // githack 403. Solusinya: index.html tiap game di-host di repo ini
+        // (games/<key>/index.html, GitHub Pages menyajikan text/html), dengan
+        // <base href="cdn.jsdelivr.net/gh/<repo>@<commit>/"> supaya semua aset
+        // relatif (css/js/gambar/suara) tetap dimuat dari jsDelivr dengan MIME
+        // yang benar. Satu-satunya aset 404: tetris bg.webm (tidak ada di repo
+        // aslinya, cuma video latar dekoratif, game tetap jalan).
         var FS_GAMES = {
-            g2048:    { name: '2048', icon: '🧩', hint: 'Geser / tombol panah: gabung angka yang sama sampai 2048!', url: 'https://cdn.jsdelivr.net/gh/gabrielecirulli/2048@478b6ec346e3/index.html' },
-            dino:     { name: 'Dino Run', icon: '🦖', hint: 'Spasi / ketuk layar untuk lompat, hindari kaktus!', url: 'https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@5455bfa408ec/index.html' },
-            tetris:   { name: 'Tetris', icon: '🕹️', hint: 'Panah: gerak & putar balok, isi baris penuh!', url: 'https://cdn.jsdelivr.net/gh/simonlc/tetr.js@57e5d07b1892/index.html' },
-            mines:    { name: 'Minesweeper', icon: '💣', hint: 'Klik buka kotak, klik kanan tandai bom. Jangan sampai meledak!', url: 'https://cdn.jsdelivr.net/gh/pwmarcz/kaboom@2c5cc170ae7a/index.html' },
-            breakout: { name: 'Breakout', icon: '🧱', hint: 'Gerakkan paddle (mouse / panah / sentuh), hancurkan semua bata!', url: 'https://cdn.jsdelivr.net/gh/igameproject/Breakout@4961fece5e9b/index.html' },
-            flappy:   { name: 'Flappy Bird', icon: '🐤', hint: 'Ketuk / spasi untuk terbang, lewati pipanya!', url: 'https://cdn.jsdelivr.net/gh/nebez/floppybird@efd2c7f74029/index.html' }
+            g2048:    { name: '2048', icon: '🧩', hint: 'Geser / tombol panah: gabung angka yang sama sampai 2048!', url: 'games/g2048/index.html' },
+            dino:     { name: 'Dino Run', icon: '🦖', hint: 'Spasi / ketuk layar untuk lompat, hindari kaktus!', url: 'games/dino/index.html' },
+            tetris:   { name: 'Tetris', icon: '🕹️', hint: 'Panah: gerak & putar balok, isi baris penuh!', url: 'games/tetris/index.html' },
+            mines:    { name: 'Minesweeper', icon: '💣', hint: 'Klik buka kotak, klik kanan tandai bom. Jangan sampai meledak!', url: 'games/mines/index.html' },
+            breakout: { name: 'Breakout', icon: '🧱', hint: 'Gerakkan paddle (mouse / panah / sentuh), hancurkan semua bata!', url: 'games/breakout/index.html' },
+            flappy:   { name: 'Flappy Bird', icon: '🐤', hint: 'Ketuk / spasi untuk terbang, lewati pipanya!', url: 'games/flappy/index.html' }
         };
         function fsGameOpen(key) {
             var g = FS_GAMES[key];
