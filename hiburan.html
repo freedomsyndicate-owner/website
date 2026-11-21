@@ -4099,21 +4099,26 @@
                         <div id="fsADetEpisodes" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
                         <div id="fsADetEpNote" style="font-size:0.6rem;color:#94A3B8;margin-top:8px;"></div>
                     </div>
-                    <div style="font-size:0.58rem;color:#94A3B8;margin-top:16px;">Sumber data: Jikan (MyAnimeList) + AniZip · Putar lewat player Movie (FS Player / VidLink / VidSrc).</div>
+                    <div style="font-size:0.58rem;color:#94A3B8;margin-top:16px;">Sumber data: Tenrai (MyAnimeList) + AniZip · Putar lewat player Movie (FS Player / VidLink / VidSrc).</div>
                 </div>
             </div>
 
             <script>
-            // --- TAB ANIME (Jikan + AniZip -> player Movie), 22 Nov 2026 ---
-            // Katalog dari Jikan API (MyAnimeList, gratis tanpa kunci, CORS *).
+            // --- TAB ANIME (Tenrai + AniZip -> player Movie), 22 Nov 2026 ---
+            // Katalog dari Tenrai API (https://api.tenrai.org/v1) — pengganti
+            // Jikan yang API publiknya SUDAH DIMATIKAN 1 Okt 2026 (api.jikan.moe
+            // tidak lagi merespons; itu sebabnya tab Anime sempat kosong terus).
+            // Tenrai kompatibel dengan format Jikan v4 (endpoint + respons sama,
+            // tetap pakai mal_id), gratis tanpa kunci, CORS *.
             // TMDB id didapat dari AniZip mappings (mal_id -> themoviedb_id) supaya
             // bisa diputar lewat player Movie yang sudah ada (FS Player / VidLink /
             // VidSrc / 2Embed). Subtitle di server-server itu Inggris; sub Indo
-            // tidak tersedia di sana. Jikan limit 3 req/detik; AniZip tanpa kunci.
+            // tidak tersedia di sana. Kalau Tenrai ikut mati, tab jatuh ke daftar
+            // populer statis (judul + poster + TMDB dari AniZip saja).
             // Catatan: episode dipetakan lewat AniZip (absolute -> TMDB season/
             // episode); kalau AniZip gagal, jatuh ke S1E<n> (kurang tepat untuk
             // anime multi-season, tapi tetap bisa diputar).
-            var FS_ANIME_JIKAN = 'https://api.jikan.moe/v4';
+            var FS_ANIME_API = 'https://api.tenrai.org/v1';
             var FS_ANIME_ANIZIP = 'https://api.ani.zip/mappings';
             var _fsAInit = false;
             var _fsAMode = 'season';
@@ -4154,11 +4159,12 @@
                 st.style.display = 'block';
                 st.textContent = '⏳ Memuat anime...';
                 var url = mode === 'top'
-                    ? FS_ANIME_JIKAN + '/top/anime?limit=24&filter=bypopularity&sfw=true'
-                    : FS_ANIME_JIKAN + '/seasons/now?limit=24&sfw=true&filter=tv';
+                    ? FS_ANIME_API + '/top/anime?limit=24&filter=bypopularity&sfw=true'
+                    : FS_ANIME_API + '/seasons/now?limit=24&sfw=true&filter=tv';
                 var d = await _fsAFetchJson(url, 12000);
                 if (!d || !d.data || !d.data.length) {
-                    st.innerHTML = '⚠️ Katalog anime tidak bisa dimuat (Jikan lambat / offline). Periksa internet lalu <a href="javascript:void(0)" onclick="fsAnimeLoad(\'' + mode + '\')" style="color:var(--primary);font-weight:800;">🔄 Coba lagi</a>';
+                    // Katalog utama mati -> tampilkan daftar populer (AniZip saja).
+                    await _fsAFallback();
                     return;
                 }
                 await _fsABuildItems(d.data);
@@ -4173,7 +4179,7 @@
                 grid.innerHTML = '';
                 st.style.display = 'block';
                 st.textContent = '⏳ Mencari "' + q + '"...';
-                var d = await _fsAFetchJson(FS_ANIME_JIKAN + '/anime?q=' + encodeURIComponent(q) + '&limit=24&sfw=true&order_by=members&sort=desc', 12000);
+                var d = await _fsAFetchJson(FS_ANIME_API + '/anime?q=' + encodeURIComponent(q) + '&limit=24&sfw=true&order_by=members&sort=desc', 12000);
                 if (!d || !d.data || !d.data.length) {
                     st.textContent = '⚠️ Tidak ketemu / katalog tidak bisa dimuat. Coba kata kunci lain.';
                     return;
@@ -4214,6 +4220,39 @@
                 }
                 _fsASaveTmdbCache();
                 items = items.filter(function(it){ return !!it.tmdbId; });
+                await _fsARenderItems(items, '');
+            }
+            // Daftar populer (mal_id) — dipakai kalau katalog utama (Tenrai) mati.
+            // Judul + poster + TMDB id diambil dari AniZip (satu panggilan per judul).
+            var FS_ANIME_POPULAR = [21, 20, 1735, 16498, 1535, 5114, 38000, 40748, 9253, 11061, 30276, 11757, 269, 813, 223, 20583, 30];
+            async function _fsAFallback(){
+                var st = document.getElementById('fsAStatus'), grid = document.getElementById('fsAGrid');
+                if (!st || !grid) return;
+                st.style.display = 'block';
+                st.textContent = '⏳ Katalog utama offline — memuat daftar anime populer...';
+                var items = [];
+                for (var i = 0; i < FS_ANIME_POPULAR.length; i += 6) {
+                    var chunk = FS_ANIME_POPULAR.slice(i, i + 6);
+                    await Promise.all(chunk.map(async function(mid){
+                        var m = await _fsAFetchJson(FS_ANIME_ANIZIP + '?mal_id=' + mid, 8000);
+                        if (!m || !m.mappings || !m.mappings.themoviedb_id) return;
+                        var poster = '';
+                        if (m.images && m.images.length) {
+                            var p = null;
+                            for (var j = 0; j < m.images.length; j++) { if (m.images[j].coverType === 'Poster') { p = m.images[j]; break; } }
+                            poster = p ? p.url : m.images[0].url;
+                        }
+                        var t = (m.titles && (m.titles.en || m.titles['x-jat'] || m.titles.ja)) || ('Anime #' + mid);
+                        items.push({ mal_id: mid, title: t, poster: poster, score: 0, episodes: m.episodeCount || 0, status: '', year: '', synopsis: '', type: 'tv', tmdbId: String(m.mappings.themoviedb_id) });
+                        _fsATmdbCache[mid] = String(m.mappings.themoviedb_id);
+                    }));
+                }
+                _fsASaveTmdbCache();
+                items.sort(function(a, b){ return FS_ANIME_POPULAR.indexOf(a.mal_id) - FS_ANIME_POPULAR.indexOf(b.mal_id); });
+                await _fsARenderItems(items, 'ℹ️ Katalog utama sedang offline — menampilkan anime populer.');
+            }
+            async function _fsARenderItems(items, note){
+                var st = document.getElementById('fsAStatus'), grid = document.getElementById('fsAGrid');
                 // Oracle ketersediaan stream (fungsi tab Movie; fail-open).
                 try {
                     if (typeof _fsAvailFill === 'function') {
@@ -4224,10 +4263,15 @@
                 _fsAItems = items;
                 if (!items.length) {
                     st.style.display = 'block';
-                    st.textContent = '⚠️ Tidak ada anime yang bisa diputar saat ini. Coba lagi nanti.';
+                    st.innerHTML = '⚠️ Tidak ada anime yang bisa diputar saat ini. Periksa internet lalu <a href="javascript:void(0)" onclick="fsAnimeLoad(\'' + _fsAMode + '\')" style="color:var(--primary);font-weight:800;">🔄 Coba lagi</a>';
                     return;
                 }
-                st.style.display = 'none';
+                if (note) {
+                    st.style.display = 'block';
+                    st.innerHTML = note + ' <a href="javascript:void(0)" onclick="fsAnimeLoad(\'' + _fsAMode + '\')" style="color:var(--primary);font-weight:800;">🔄 Coba lagi</a>';
+                } else {
+                    st.style.display = 'none';
+                }
                 grid.innerHTML = '';
                 items.forEach(function(it){
                     var card = document.createElement('div');
