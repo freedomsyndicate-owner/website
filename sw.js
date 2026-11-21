@@ -3,15 +3,16 @@
 // sentuh stream audio/video, APK, atau request non-GET.
 // FS-TV-CLEAN 20 Nov 2026: fs-v2 -> fs-v3 supaya semua browser pengunjung
 // langsung mengambil hiburan.html baru (daftar TV bersih); cache lama dihapus
-// otomatis saat aktivasi. Muat halaman juga pakai cache:'no-cache' supaya
-// fetch service worker tidak memakai salinan HTTP lama (GitHub Pages
-// max-age=600) — update halaman jadi langsung tampil, bukan 10 menit kemudian.
-var FS_CACHE = 'fs-v3';
+// otomatis saat aktivasi. FS TV MODE 22 Nov 2026: fs-v3 -> fs-v4 (tv.js baru).
+var FS_CACHE = 'fs-v4';
 var FS_SHELL = [
   '/', '/index.html', '/hiburan.html', '/tools.html', '/ibadah.html',
   '/ai.html', '/trading.html', '/lainnya.html', '/garapan.html', '/journal.html',
-  '/style.css', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'
+  '/style.css', '/tv.js', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'
 ];
+// Muat halaman juga pakai cache:'no-cache' supaya fetch service worker tidak
+// memakai salinan HTTP lama (GitHub Pages max-age=600) — update halaman jadi
+// langsung tampil, bukan 10 menit kemudian.
 // Data Qur'an lokal (Arab + Latin + terjemahan ID, ~3,1 MB / ~0,8 MB gzip).
 // Diunduh sekali saat install; kalau gagal (mis. koneksi putus), install
 // tetap lanjut dan file dimuat malas oleh tab Qur'an lalu tersimpan di cache.

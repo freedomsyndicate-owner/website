@@ -1408,3 +1408,49 @@
         /* Daftar surah 2 kolom di desktop (FS v2): lebih padat, tanpa scroll panjang. */
         #fsQuranList { display: grid !important; grid-template-columns: 1fr; }
         @media (min-width: 700px) { #fsQuranList { grid-template-columns: 1fr 1fr; } }
+
+        /* ============ FS TV MODE (Android TV / remote D-pad, 22 Nov 2026) ============
+           Aktif saat <html> punya class tv-mode (tv.js: deteksi UA TV, tombol
+           "📺 TV", atau ?tv=1). Prinsip 10-foot: tulisan besar, kolom lebar,
+           target sentuh besar, dan cincin fokus emas yang kelihatan dari sofa.
+           Jangan ubah aturan dasar di atas — semua di bawah ini hanya berlaku
+           di dalam tv-mode, jadi HP/laptop yang tidak mengaktifkannya tidak kena. */
+        html.tv-mode { font-size: 20px; }
+        html.tv-mode body { line-height: 1.7; }
+        /* Lebar kolom: di TV 1920px jangan lagi kolom sempit 680/1020px. */
+        html.tv-mode .main-wrapper { max-width: 1560px; }
+        html.tv-mode .main-wrapper:has(#tvchannel.active),
+        html.tv-mode .main-wrapper:has(#movie.active),
+        html.tv-mode .main-wrapper:has(#chatai.active),
+        html.tv-mode .main-wrapper:has(#game.active),
+        html.tv-mode .main-wrapper:has(#komik.active) { max-width: 1560px; }
+        /* Cincin fokus: besar, emas, kelihatan dari sofa. Ini inti kontrol remote. */
+        html.tv-mode :focus { outline: 4px solid #E8A90C !important; outline-offset: 3px; box-shadow: 0 0 0 7px rgba(232,169,12,0.28); border-radius: 10px; }
+        html.tv-mode :focus:not(:focus-visible) { outline: 4px solid #E8A90C !important; }
+        /* Target besar: semua tombol/input/select minimal 56px. */
+        html.tv-mode button, html.tv-mode select, html.tv-mode input { min-height: 56px; font-size: 1.05rem; }
+        html.tv-mode .menu-toggle { padding: 14px 20px; font-size: 1.8rem; top: 24px; left: 24px; }
+        /* Strip tab hiburan: tombol besar, bisa dijelajah pakai panah kiri/kanan. */
+        html.tv-mode .fs-tabstrip { top: 64px; gap: 12px; padding: 10px 4px 16px; }
+        html.tv-mode .fs-tabstrip button { padding: 16px 24px; font-size: 1.1rem; border-radius: 12px; }
+        /* Sidebar: lebih lebar, teks menu lebih besar. */
+        html.tv-mode .sidebar { width: 340px; }
+        html.tv-mode .sidebar-menu button, html.tv-mode .sidebar-menu a { font-size: 1.15rem; padding: 16px 18px; }
+        /* Bottomnav: lebih tinggi, ikon + label lebih besar. */
+        html.tv-mode .bottomnav-inner button { font-size: 1rem; padding: 14px 4px 16px; }
+        html.tv-mode .bottomnav-inner button span { font-size: 1.5rem; }
+        /* Grid hiburan: 4 kolom besar di TV (override inline repeat(3,1fr)). */
+        html.tv-mode #fsAGrid, html.tv-mode #fsResultsGrid, html.tv-mode #tvLiveList { grid-template-columns: repeat(4, 1fr) !important; gap: 18px !important; padding: 14px 20px 28px !important; }
+        html.tv-mode .fs-manga-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        html.tv-mode .fs-game-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        html.tv-mode .fs-track-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        html.tv-mode .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        /* Player: hampir selebar layar, tinggi 70vh-an. */
+        html.tv-mode #fsPlayerFrame, html.tv-mode #fsDirectVideo { max-height: 76vh !important; }
+        html.tv-mode #fsPlayerPlaceholder { min-height: 60vh; }
+        /* Modal detail (film/anime): teks + tombol lebih besar. */
+        html.tv-mode #fsCinemaDetail button, html.tv-mode #fsADetail button { min-height: 60px; font-size: 1.05rem; }
+        /* Tombol toggle Mode TV: melayang di kanan bawah, di atas bottomnav
+           (jangan di kanan atas — di sana ada tombol Chat Ai di topbar). */
+        #fsTvToggle { position: fixed; bottom: 84px; right: 16px; z-index: 1002; background: rgba(30,41,59,0.9); border: 1px solid rgba(232,169,12,0.55); color: #E8A90C; border-radius: 10px; padding: 10px 14px; font-weight: 800; font-size: 0.85rem; font-family: inherit; cursor: pointer; backdrop-filter: blur(8px); }
+        html.tv-mode #fsTvToggle { padding: 14px 20px; font-size: 1.05rem; bottom: 96px; right: 24px; background: #E8A90C; color: #020617; }
