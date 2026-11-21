@@ -1205,9 +1205,13 @@
                 // VidSrc juga, autoembed MATI, videasy MATI (gantung setelah TLS),
                 // multiembed diblokir Cloudflare 403. Default pindah ke VidLink
                 // karena FS Player mati total saat ini (Box tidur + /stream basi).
+                // 22 Nov 2026: VidSrc dipindah ke urutan fallback PERTAMA —
+                // dicek di browser, VidSrc SATU-SATUNYA yang punya Tokyo
+                // Revengers S4E1 (VidLink tidak punya S3/S4, vidsrc.cc 522,
+                // 2embed salah episode, embed.su reset, vidsrc.to gagal verifikasi).
                 var FS_SERVERS = [
-                    { key: 'vidlink',  label: 'VidLink',   origin: 'https://vidlink.pro' },
                     { key: 'vidsrcsh', label: 'VidSrc',    origin: 'https://vidsrc.sh' },
+                    { key: 'vidlink',  label: 'VidLink',   origin: 'https://vidlink.pro' },
                     { key: 'vidsrccc', label: 'VidSrc.cc', origin: 'https://vidsrc.cc' },
                     { key: '2embed',   label: '2Embed',    origin: 'https://www.2embed.cc' }
                 ];
