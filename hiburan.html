@@ -1519,6 +1519,15 @@
                 }
                 function fsCinemaTryNextServer() {
                     if (!_fsLastPlay) return;
+                    // Maju lewat urutan putar yang sedang berjalan (_fsPlayOrder):
+                    // cara lama (urutan tetap + fsPlay ulang) terjebak bolak-balik
+                    // VidLink <-> FS Player saat FS Player mati, VidSrc tidak
+                    // pernah tercapai. Di sini satu ketukan = satu server berikut.
+                    if (_fsPlayOrder && _fsPlayOrder.length > 1) {
+                        if (_fsPlayAttempt >= _fsPlayOrder.length - 1) _fsPlayAttempt = -1;
+                        if (!_fsPlayNextServer()) _fsShowPlayerError();
+                        return;
+                    }
                     var sel = document.getElementById('fsServerSelect');
                     var order = ['vidlink', 'fsplayer', 'vidsrcsh', 'vidsrccc', '2embed'];
                     var cur = sel ? sel.value : 'vidlink';
@@ -4344,6 +4353,8 @@
                 var tmdbId = _fsADetail.tmdbId, title = _fsADetail.title, year = _fsADetail.year || '';
                 fsAnimeCloseDetail();
                 if (typeof openTab === 'function') openTab('movie', null);
+                // Langsung lompat ke player (bukan ke panduan di atasnya).
+                setTimeout(function(){ var w = document.getElementById('fsPlayerWrap'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
                 if (typeof fsSetType === 'function') fsSetType('tv', null);
                 else { try { fsMediaType = 'tv'; } catch(e){} }
                 // Server utama FS Player (tanpa iklan); fsPlay jatuh otomatis ke
