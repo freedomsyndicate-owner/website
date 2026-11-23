@@ -893,7 +893,9 @@
                         <div style="display:flex;gap:8px;margin-top:16px;">
                             <button id="fsDetPlay" onclick="fsCinemaPlayDetail()" style="flex:1;background:#fff;color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;font-size:0.85rem;cursor:pointer;font-family:inherit;">▶ Putar</button>
                             <button id="fsDetFav" onclick="fsCinemaToggleFavDetail()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:10px;padding:12px 16px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">＋ Favorit</button>
+                            <button id="fsDetSub" onclick="fsCinemaSubDetail()" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);color:#7dd3fc;border-radius:10px;padding:12px 14px;font-weight:800;font-size:0.8rem;cursor:pointer;font-family:inherit;">💬 Sub Indo</button>
                         </div>
+                        <div id="fsDetSubs" style="display:none;margin-top:12px;"></div>
                         <div id="fsDetOv" style="font-size:0.72rem;color:#94a3b8;line-height:1.7;margin-top:14px;"></div>
                         <div id="fsDetEps" style="display:none;margin-top:16px;">
                             <div style="font-size:0.75rem;font-weight:800;color:#fff;margin-bottom:8px;">📺 Pilih Episode</div>
@@ -1826,6 +1828,7 @@
                     document.getElementById('fsDetMeta').textContent = meta.join('  •  ');
                     document.getElementById('fsDetOv').textContent = item.overview || 'Sinopsis belum tersedia.';
                     document.getElementById('fsDetEps').style.display = 'none';
+                    var _sb = document.getElementById('fsDetSubs'); if (_sb) { _sb.style.display = 'none'; _sb.innerHTML = ''; }
                     fsCinemaPaintFavBtn();
                     document.getElementById('fsCinemaDetail').style.display = 'block';
                     // FS-CINEMA-AVAIL: kalau judul ini dipastikan tidak ada
@@ -1899,6 +1902,57 @@
                     fsCinemaCloseDetail();
                     if (item.source === 'tmdb') fsPlayTmdb(item, isSeries ? _fsDetailSeason : 0, isSeries ? _fsDetailEp : 0);
                     else fsPlay(item.id, item.title, isSeries ? _fsDetailSeason : 0, isSeries ? _fsDetailEp : 0);
+                }
+                // FS-SUB-INDO: unduh subtitle Indonesia (subtitles.website, tanpa kunci).
+                // Pemutar VidSrc/2Embed adalah iframe lintas origin, jadi subtitle TIDAK
+                // bisa disuntik ke dalamnya — yang bisa dilakukan adalah unduh file .vtt/.srt
+                // (bisa dipakai di pemutar video HTML5 lewat <track>). Cari hanya saat tombol
+                // ditekan (1 request per ketuk) karena batas tamu sumbernya 10/hari.
+                var _fsSubCache = {};
+                var _fsSubLoading = false;
+                function fsCinemaSubDetail() {
+                    var box = document.getElementById('fsDetSubs');
+                    if (!box || !_fsDetailItem) return;
+                    var item = _fsDetailItem;
+                    var isSeries = (item.type || fsMediaType) === 'tv';
+                    var imdb = _fsDetailImdb || (item.source === 'omdb' ? item.id : '');
+                    var title = item.title || item.name || '';
+                    var key = (imdb || title) + '|' + (isSeries ? ('S' + _fsDetailSeason + 'E' + _fsDetailEp) : 'movie');
+                    var show = function(html){ box.style.display = 'block'; box.innerHTML = html; };
+                    if (_fsSubCache[key]) { show(_fsSubCache[key]); return; }
+                    if (_fsSubLoading) return;
+                    _fsSubLoading = true;
+                    show('<div style="font-size:0.68rem;color:#94A3B8;">⏳ Mencari subtitle Indonesia...</div>');
+                    var url = imdb
+                        ? 'https://subtitles.website/stremio/subtitles/' + (isSeries ? 'series/' + imdb + ':' + _fsDetailSeason + ':' + _fsDetailEp : 'movie/' + imdb) + '.json'
+                        : 'https://subtitles.website/strapi/api/search/subtitles?language=id&title=' + encodeURIComponent(title);
+                    _fsFetchJson(url, 10000).then(function(d){
+                        _fsSubLoading = false;
+                        var list = [];
+                        if (d && d.subtitles) list = d.subtitles.filter(function(x){ return x.lang === 'id'; });
+                        else if (d && d.data) list = d.data.filter(function(x){ return (x.lang === 'id' || x.language === 'id'); });
+                        var norm = list.map(function(x){
+                            var u = x.url || x.file || (x.attributes && x.attributes.url) || '';
+                            if (u && u.charAt(0) === '/') u = 'https://subtitles.website' + u;
+                            var n = x.name || x.release || x.title || (x.attributes && x.attributes.name) || 'Subtitle Indonesia';
+                            return { name: n, url: u };
+                        }).filter(function(x){ return !!x.url; });
+                        norm.sort(function(a, b){ return (a.url.slice(-4) === '.vtt' ? 0 : 1) - (b.url.slice(-4) === '.vtt' ? 0 : 1); });
+                        if (!norm.length) {
+                            var html = '<div style="font-size:0.68rem;color:#94A3B8;">Subtitle Indonesia belum ditemukan untuk judul ini — atau kuota harian sumbernya sudah habis, coba lagi besok.</div>';
+                            _fsSubCache[key] = html; show(html); return;
+                        }
+                        var html = '<div style="font-size:0.75rem;font-weight:800;color:#fff;margin-bottom:6px;">💬 Subtitle Indonesia (' + norm.length + ')</div>'
+                            + '<div style="font-size:0.62rem;color:#94A3B8;margin-bottom:8px;">Ketuk untuk mengunduh file .vtt/.srt — file bisa dipakai di pemutar video yang mendukung subtitle eksternal.</div>';
+                        norm.slice(0, 6).forEach(function(x){
+                            var ext = x.url.slice(-4) === '.vtt' ? 'VTT' : 'SRT';
+                            html += '<a href="' + x.url.replace(/"/g, '%22') + '" download target="_blank" rel="noopener" style="display:block;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:8px 10px;margin-bottom:6px;color:#e2e8f0;text-decoration:none;font-size:0.68rem;line-height:1.4;">[' + ext + '] ' + x.name.replace(/</g, '&lt;') + '</a>';
+                        });
+                        _fsSubCache[key] = html; show(html);
+                    }).catch(function(){
+                        _fsSubLoading = false;
+                        show('<div style="font-size:0.68rem;color:#94A3B8;">Gagal menghubungi sumber subtitle. Periksa internet lalu coba lagi.</div>');
+                    });
                 }
                 function fsCinemaRenderSeasons(n) {
                     var box = document.getElementById('fsDetSeasons');
