@@ -4,7 +4,9 @@
 // FS-TV-CLEAN 20 Nov 2026: fs-v2 -> fs-v3 supaya semua browser pengunjung
 // langsung mengambil hiburan.html baru (daftar TV bersih); cache lama dihapus
 // otomatis saat aktivasi. FS TV MODE 22 Nov 2026: fs-v3 -> fs-v4 (tv.js baru).
-var FS_CACHE = 'fs-v4';
+// FS NETFLIX CURSOR 22 Nov 2026: fs-v4 -> fs-v5 (tv.js + style.css baru:
+// kursor Netflix + deteksi TV luas; paksa TV ambil file baru).
+var FS_CACHE = 'fs-v5';
 var FS_SHELL = [
   '/', '/index.html', '/hiburan.html', '/tools.html', '/ibadah.html',
   '/ai.html', '/trading.html', '/lainnya.html', '/garapan.html', '/journal.html',

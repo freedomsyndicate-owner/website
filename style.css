@@ -1454,3 +1454,10 @@
            (jangan di kanan atas — di sana ada tombol Chat Ai di topbar). */
         #fsTvToggle { position: fixed; bottom: 84px; right: 16px; z-index: 1002; background: rgba(30,41,59,0.9); border: 1px solid rgba(232,169,12,0.55); color: #E8A90C; border-radius: 10px; padding: 10px 14px; font-weight: 800; font-size: 0.85rem; font-family: inherit; cursor: pointer; backdrop-filter: blur(8px); }
         html.tv-mode #fsTvToggle { padding: 14px 20px; font-size: 1.05rem; bottom: 96px; right: 24px; background: #E8A90C; color: #020617; }
+        /* Kursor ala Netflix: satu highlight emas mengambang yang meluncur
+           halus mengikuti fokus (tv.js yang menggerakkannya). Kartu yang
+           terfokus ikut membesar sedikit seperti di Netflix. */
+        #fsTvCursor { display: none; position: fixed; z-index: 1001; pointer-events: none; border: 4px solid #E8A90C; border-radius: 14px; box-shadow: 0 0 0 7px rgba(232,169,12,0.25), 0 12px 40px rgba(0,0,0,0.55); transition: left 0.18s ease-out, top 0.18s ease-out, width 0.18s ease-out, height 0.18s ease-out; }
+        html.tv-mode .fs-tv-focus { transform: scale(1.06); z-index: 2; position: relative; }
+        html.tv-mode a[href], html.tv-mode button, html.tv-mode [tabindex] { transition: transform 0.18s ease-out; }
+        html.tv-mode { scroll-behavior: smooth; }

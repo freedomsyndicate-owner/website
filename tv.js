@@ -12,7 +12,29 @@
   function ua() { try { return navigator.userAgent || ''; } catch (e) { return ''; } }
 
   function isTVUA() {
-    return /(android tv|google tv|smart[- ]?tv|aft[A-Z0-9]*|bravia|hbbtv|netcast|webos|tizen|viera|aquos|roku|fire tv|droidlogic|amlogic|opera tv)/i.test(ua());
+    return /(android tv|google tv|smart[- ]?tv|aft[A-Z0-9]*|bravia|hbbtv|netcast|webos|tizen|viera|aquos|roku|fire tv|droidlogic|amlogic|opera tv|mibox|mi box|shield|b860h|s905|rk33|h96|tx3|mecool|ugoos|beelink|tanix|x96|hk1|\batv[0-9])/i.test(ua());
+  }
+
+  // Heuristik box Android TV generik: user-agent-nya sering polos tanpa kata
+  // "TV" (mis. "Linux; Android 11; B860H ... wv"). Yang membedakan TV dari
+  // HP/tablet Android: layar lebar + tidak ada sentuhan + tidak ada hover.
+  // HP/tablet selalu punya sentuhan -> tidak kena. Laptop bukan Android.
+  function isLikelyTV() {
+    if (!/android/i.test(ua())) return false;
+    var w = 0;
+    try {
+      w = Math.max(window.screen ? window.screen.width : 0, window.innerWidth || 0);
+    } catch (e) {}
+    if (w < 1280) return false;
+    var touch = false;
+    try { touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window; } catch (e) {}
+    if (touch) return false;
+    try {
+      if (window.matchMedia) {
+        return window.matchMedia('(hover: none)').matches || window.matchMedia('(pointer: none)').matches;
+      }
+    } catch (e) {}
+    return true;
   }
 
   function param(name) {
@@ -33,7 +55,7 @@
     var s = stored();
     if (s === '1') return true;
     if (s === '0') return false;
-    return isTVUA();
+    return isTVUA() || isLikelyTV();
   }
 
   // --- tombol toggle "📺 TV" (selalu ada, di semua halaman) ---
@@ -56,6 +78,59 @@
     var on = root.classList.contains('tv-mode');
     b.textContent = on ? '📺 TV: ON' : '📺 TV';
     b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  // --- kursor ala Netflix: highlight mengambang yang meluncur halus ---
+  // Bukan outline bawaan (yang loncat instan), tapi satu kotak emas yang
+  // mengikuti elemen terfokus dengan transisi CSS + kartu ikut membesar.
+  var cursorEl = null;
+  var cursorTarget = null;
+  var cursorRecheck = null;
+
+  function ensureCursor() {
+    var c = document.getElementById('fsTvCursor');
+    if (c) { cursorEl = c; return c; }
+    c = document.createElement('div');
+    c.id = 'fsTvCursor';
+    c.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(c);
+    cursorEl = c;
+    return c;
+  }
+
+  function positionCursor() {
+    if (!root.classList.contains('tv-mode')) return;
+    var c = ensureCursor();
+    var el = document.activeElement;
+    if (!el || el === document.body || !el.getBoundingClientRect) { c.style.display = 'none'; return; }
+    var r = el.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) { c.style.display = 'none'; return; }
+    var pad = 7;
+    c.style.display = 'block';
+    c.style.left = (r.left - pad) + 'px';
+    c.style.top = (r.top - pad) + 'px';
+    c.style.width = (r.width + pad * 2) + 'px';
+    c.style.height = (r.height + pad * 2) + 'px';
+    if (cursorTarget && cursorTarget !== el) cursorTarget.classList.remove('fs-tv-focus');
+    var isNew = cursorTarget !== el;
+    cursorTarget = el;
+    var tag = (el.tagName || '').toUpperCase();
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && !el.isContentEditable) {
+      el.classList.add('fs-tv-focus');
+    }
+    // Kartu membesar pakai transisi 0.18s; baca ulang rect sekali setelah
+    // selesai supaya kursor membungkus ukuran akhirnya, bukan sebelum scale.
+    // Hanya dijadwalkan saat target baru (bukan tiap pemanggilan) supaya
+    // tidak jadi timer berulang.
+    if (isNew) {
+      if (cursorRecheck) clearTimeout(cursorRecheck);
+      cursorRecheck = setTimeout(function () { cursorRecheck = null; if (document.activeElement === el) positionCursor(); }, 200);
+    }
+  }
+
+  function hideCursor() {
+    if (cursorTarget) { cursorTarget.classList.remove('fs-tv-focus'); cursorTarget = null; }
+    if (cursorEl) cursorEl.style.display = 'none';
   }
 
   // --- kartu <div onclick> dijadikan bisa difokus remote ---
@@ -114,7 +189,8 @@
     if (!els.length) return;
     if (!cur || cur === document.body || els.indexOf(cur) === -1) {
       els[0].focus();
-      els[0].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      try { els[0].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); } catch (e) {}
+      positionCursor();
       return;
     }
     var r = cur.getBoundingClientRect();
@@ -138,7 +214,8 @@
     }
     if (best) {
       best.focus();
-      try { best.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
+      try { best.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); } catch (e) {}
+      positionCursor();
     }
   }
 
@@ -204,7 +281,8 @@
     var strip = document.querySelector('.fs-tabstrip button');
     var target = strip || els[0];
     if (target) {
-      try { target.focus(); target.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
+      try { target.focus(); target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); } catch (e) {}
+      positionCursor();
     }
   }
 
@@ -216,8 +294,10 @@
       if (save) { try { localStorage.setItem(KEY, '1'); } catch (e) {} }
       syncToggle();
       setTimeout(focusFirst, 350);
+      setTimeout(positionCursor, 500);
     } else {
       root.classList.remove('tv-mode');
+      hideCursor();
       if (save) { try { localStorage.setItem(KEY, '0'); } catch (e) {} }
       syncToggle();
     }
@@ -227,6 +307,16 @@
     ensureToggle();
     if (shouldBeTV()) setTV(true, false);
     document.addEventListener('keydown', onKey, true);
+    // Kursor ikut setiap perpindahan fokus (termasuk fokus native WebView).
+    document.addEventListener('focusin', function () { positionCursor(); });
+    // Saat halaman bergeser (scroll halus), kursor ikut bergeser.
+    var scrollT = null;
+    window.addEventListener('scroll', function () {
+      if (!root.classList.contains('tv-mode')) return;
+      if (scrollT) return;
+      scrollT = setTimeout(function () { scrollT = null; positionCursor(); }, 60);
+    }, true);
+    window.addEventListener('resize', function () { positionCursor(); });
     window.FS_TV = { setTV: setTV, isTV: function () { return root.classList.contains('tv-mode'); } };
   }
 
