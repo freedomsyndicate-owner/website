@@ -134,17 +134,30 @@
   }
 
   // --- kartu <div onclick> dijadikan bisa difokus remote ---
-  function enhance(el) {
-    if (!el || el.nodeType !== 1) return;
-    if (el.hasAttribute('onclick') && !el.hasAttribute('tabindex')) {
+  // PENTING (bug TV Mode v2, 23 Nov 2026): semua kartu film/musik/anime/TV
+  // di hiburan.html dibuat lewat JS dengan `card.onclick = function(){...}`
+  // (29x) — itu TIDAK membuat atribut onclick, jadi cek hasAttribute saja
+  // tidak pernah kena dan kartu tidak pernah dapat tabindex: kursor remote
+  // tidak bisa diarahkan ke kartu sama sekali. Cek juga properti .onclick.
+  function isClickable(el) {
+    if (!el || el.nodeType !== 1) return false;
+    try { if (typeof el.onclick === 'function') return true; } catch (e) {}
+    try { if (el.hasAttribute && el.hasAttribute('onclick')) return true; } catch (e) {}
+    return false;
+  }
+  function makeFocusable(el) {
+    if (!el.hasAttribute('tabindex')) {
       el.setAttribute('tabindex', '0');
       el.setAttribute('role', 'button');
     }
+  }
+  function enhance(el) {
+    if (!el || el.nodeType !== 1) return;
+    if (isClickable(el)) makeFocusable(el);
     if (el.querySelectorAll) {
-      var list = el.querySelectorAll('div[onclick]:not([tabindex])');
+      var list = el.querySelectorAll('*');
       for (var i = 0; i < list.length; i++) {
-        list[i].setAttribute('tabindex', '0');
-        list[i].setAttribute('role', 'button');
+        if (isClickable(list[i])) makeFocusable(list[i]);
       }
     }
   }
@@ -211,6 +224,25 @@
       if (secondary > primary * 1.5 + 80) continue;
       var score = primary + secondary * 2.5;
       if (score < bestScore) { bestScore = score; best = el; }
+    }
+    // Kalau tidak ada yang lolos kerucut (mis. baris berikutnya agak miring),
+    // jangan biarkan panah mati: ambil yang terdekat di arah itu apa pun.
+    if (!best) {
+      bestScore = Infinity;
+      for (var j = 0; j < els.length; j++) {
+        var el2 = els[j];
+        if (el2 === cur) continue;
+        var b2 = el2.getBoundingClientRect();
+        var ex2 = b2.left + b2.width / 2, ey2 = b2.top + b2.height / 2;
+        var dx2 = ex2 - cx, dy2 = ey2 - cy;
+        var p2, s2;
+        if (dir === 'left') { if (dx2 > -4) continue; p2 = -dx2; s2 = Math.abs(dy2); }
+        else if (dir === 'right') { if (dx2 < 4) continue; p2 = dx2; s2 = Math.abs(dy2); }
+        else if (dir === 'up') { if (dy2 > -4) continue; p2 = -dy2; s2 = Math.abs(dx2); }
+        else { if (dy2 < 4) continue; p2 = dy2; s2 = Math.abs(dx2); }
+        var score2 = p2 + s2 * 2.5;
+        if (score2 < bestScore) { bestScore = score2; best = el2; }
+      }
     }
     if (best) {
       best.focus();
