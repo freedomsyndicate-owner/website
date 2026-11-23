@@ -3819,7 +3819,7 @@
              tetap embed YouTube di dalam halaman (verifikasi live 19:37 WIB:
              video Vernalta jalan, gambar + suara). -->
         <div id="fstube" class="tab-content" style="padding:14px 14px 24px;">
-            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>FSTUBE</h3><p>Cari video YouTube lalu putar sendiri di sini, tanpa login.</p></div>
+            <div class="tab-head"><div class="tab-kicker">Freedom Syndicate</div><h3>FSTUBE</h3><p>Trending, genre, dan cari video YouTube — putar sendiri di sini, tanpa login.</p></div>
 
             <!-- Area putar 16:9 -->
             <div id="fsTubePlayerWrap" style="display:none;margin-top:4px;">
@@ -3841,10 +3841,19 @@
                     <button onclick="fsTubeSearch()" style="background:#E8A90C;color:#0D0C0A;border:none;border-radius:8px;padding:10px 18px;font-weight:900;font-size:0.85rem;cursor:pointer;white-space:nowrap;min-height:48px;">CARI</button>
                 </div>
             </div>
-            <div id="fsTubeStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Ketik judul video atau nama channel di atas, lalu tekan Cari.</div>
+            <!-- Beranda ala YouTube (23 Nov 2026, perintah San): chip genre +
+                 daftar trending Indonesia + tombol Acak. Genre memakai
+                 /api/v1/trending?type= (music/gaming/news/movies) region ID
+                 dari mirror Invidious yang sama. -->
+            <div id="fsTubeChips" style="display:flex;gap:6px;overflow-x:auto;padding:10px 2px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;"></div>
+            <div id="fsTubeFeedHead" style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+                <div id="fsTubeFeedTitle" style="font-size:0.8rem;font-weight:800;color:#fff;">🔥 Trending di Indonesia</div>
+                <button type="button" onclick="fsTubeShuffle()" style="margin-left:auto;background:rgba(232,169,12,0.12);border:1px solid rgba(232,169,12,0.4);color:#FDE68A;font-size:0.68rem;font-weight:800;padding:6px 12px;border-radius:16px;cursor:pointer;font-family:inherit;white-space:nowrap;">🔀 Acak</button>
+            </div>
+            <div id="fsTubeStatus" style="font-size:0.7rem;color:#94A3B8;text-align:center;padding:8px 0 6px;">Memuat trending...</div>
             <div id="fsTubeList" class="fs-track-grid" style="margin-top:6px;"></div>
             <button id="fsTubeMoreBtn" onclick="fsTubeLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(232,169,12,0.12);border:1px solid rgba(232,169,12,0.4);color:#FDE68A;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">Muat lebih banyak video</button>
-            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;">Pencarian memakai mesin Invidious yang sama dengan tab Musik. Video diputar langsung di situs ini, tanpa login dan tanpa pindah ke aplikasi lain; kualitas bisa dipilih di pemutar. Kalau satu server gagal, otomatis pindah ke server lain.</div>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;line-height:1.6;">Beranda memakai daftar trending Invidious (Indonesia) dan pencarian memakai mesin Invidious yang sama dengan tab Musik. Video diputar langsung di situs ini, tanpa login dan tanpa pindah ke aplikasi lain; kualitas bisa dipilih di pemutar. Kalau satu server gagal, otomatis pindah ke server lain.</div>
         </div>
 
         <script>
@@ -3864,10 +3873,124 @@
         var _fsTubeEmbedIdx = 0;
         var _fsTubeEmbedVideoId = '';
 
-        // Durasi diambil dari sub hasil fsRadioYtToItems ("3:45" di depan).
-        function fsTubeDurFromSub(sub) {
-            var first = String(sub || '').split('·')[0] || '';
-            return first.replace(/[^\d:]/g, '');
+        // ===== FSTUBE FEED (23 Nov 2026): beranda ala YouTube =====
+        // Chip genre + daftar trending Indonesia + tombol Acak. Trending dari
+        // /api/v1/trending?region=ID (&type=music|gaming|news|movies) lewat
+        // mirror Invidious yang sama (rotasi otomatis di _fsInvTryMirror).
+        // CATATAN DATA (dicek 23 Nov 2026 via curl): mirror utama
+        // yt.chocolatemoo53.com mengembalikan trending dengan viewCount=0,
+        // lengthSeconds=0, publishedText='0 seconds ago' untuk SEMUA item —
+        // jadi angka-angka itu hanya ditampilkan kalau ada isinya (mirror
+        // lain bisa mengisi dengan benar). Judul + channel selalu ada.
+        var FS_TUBE_TREND_TYPES = [
+            { id: '', label: 'Semua' },
+            { id: 'music', label: '🎵 Musik' },
+            { id: 'gaming', label: '🎮 Gaming' },
+            { id: 'news', label: '📰 Berita' },
+            { id: 'movies', label: '🎬 Film' }
+        ];
+        var _fsTubeFeedInit = false;
+        var _fsTubeFeedBusy = false;
+        var _fsTubeTrendType = '';
+        var _fsTubeMode = 'feed'; // 'feed' (trending/genre) | 'search'
+        function fsTubeFmtViews(n) {
+            n = Number(n) || 0;
+            if (n >= 1000000000) return (n / 1000000000).toFixed(1).replace('.', ',').replace(',0', '') + ' M';
+            if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.', ',').replace(',0', '') + ' jt';
+            if (n >= 1000) return Math.round(n / 1000) + ' rb';
+            return String(n);
+        }
+        function fsTubeTrendingToItems(d) {
+            var out = [];
+            (d || []).forEach(function(v){
+                if (!v || v.type !== 'video' || !v.videoId || !v.title) return;
+                var thumbs = v.videoThumbnails || [];
+                var art = '';
+                thumbs.forEach(function(t){ if (t && t.quality === 'medium' && t.url) art = t.url; });
+                if (!art) thumbs.forEach(function(t){ if (t && t.quality === 'high' && t.url) art = t.url; });
+                if (!art && thumbs.length) art = thumbs[thumbs.length - 1].url || '';
+                var parts = [];
+                if (v.lengthSeconds > 0) parts.push('⏱ ' + fsRadioFmtDur(v.lengthSeconds));
+                if (v.viewCount > 0) parts.push('👁 ' + fsTubeFmtViews(v.viewCount));
+                if (v.publishedText && v.publishedText !== '0 seconds ago') parts.push(v.publishedText);
+                if (!parts.length) parts.push('▶ YouTube • Trending');
+                out.push({
+                    url: '', videoId: v.videoId,
+                    title: v.title, artist: v.author || 'YouTube',
+                    genre: '', source: 'youtube', art: art,
+                    sub: parts.join(' · ')
+                });
+            });
+            return out;
+        }
+        function fsTubeRenderChips() {
+            var bar = document.getElementById('fsTubeChips');
+            if (!bar) return;
+            bar.innerHTML = '';
+            FS_TUBE_TREND_TYPES.forEach(function(g){
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.textContent = g.label;
+                var active = (_fsTubeMode === 'feed' && _fsTubeTrendType === g.id);
+                b.style.cssText = 'flex:0 0 auto;background:' + (active ? '#E8A90C' : 'rgba(255,255,255,0.07)') + ';border:1px solid ' + (active ? '#E8A90C' : 'rgba(232,169,12,0.35)') + ';color:' + (active ? '#0D0C0A' : '#FDE68A') + ';font-size:0.72rem;font-weight:800;padding:7px 14px;border-radius:16px;cursor:pointer;font-family:inherit;white-space:nowrap;';
+                b.onclick = function(){ fsTubeLoadTrending(g.id); };
+                bar.appendChild(b);
+            });
+        }
+        function fsTubeFeedTitle(type) {
+            var g = null;
+            FS_TUBE_TREND_TYPES.forEach(function(t){ if (t.id === type) g = t; });
+            return '🔥 Trending ' + (g && g.id ? g.label.replace(/[^\w\s]/g, '').trim() : 'di Indonesia');
+        }
+        function fsTubeLoadTrending(type) {
+            if (_fsTubeFeedBusy) return;
+            _fsTubeFeedBusy = true;
+            _fsTubeMode = 'feed';
+            _fsTubeTrendType = type || '';
+            _fsTubeQuery = '';
+            var statusEl = document.getElementById('fsTubeStatus');
+            var list = document.getElementById('fsTubeList');
+            var btn = document.getElementById('fsTubeMoreBtn');
+            var head = document.getElementById('fsTubeFeedHead');
+            var titleEl = document.getElementById('fsTubeFeedTitle');
+            if (titleEl) titleEl.textContent = fsTubeFeedTitle(_fsTubeTrendType);
+            if (head) head.style.display = 'flex';
+            fsTubeRenderChips();
+            if (statusEl) statusEl.textContent = 'Memuat trending...';
+            if (list) list.innerHTML = '';
+            if (btn) btn.style.display = 'none';
+            var path = '/api/v1/trending?region=ID' + (_fsTubeTrendType ? '&type=' + _fsTubeTrendType : '');
+            _fsInvTryMirror(0, path).then(function(d){
+                _fsTubeFeedBusy = false;
+                var items = fsTubeTrendingToItems(d);
+                if (!items.length) {
+                    if (statusEl) statusEl.textContent = 'Trending kosong. Coba cari video di atas.';
+                    return;
+                }
+                fsTubeRenderItems(items);
+                if (statusEl) statusEl.textContent = items.length + ' video trending. Ketuk satu untuk memutar, atau ketuk Acak.';
+            }).catch(function(){
+                _fsTubeFeedBusy = false;
+                if (statusEl) statusEl.textContent = 'Trending YouTube sedang mati, coba cari video di atas.';
+            });
+        }
+        function fsTubeFeedInit() {
+            if (_fsTubeFeedInit) return;
+            _fsTubeFeedInit = true;
+            fsTubeRenderChips();
+            fsTubeLoadTrending('');
+        }
+        // Acak urutan daftar yang sedang tampil (trending, genre, atau hasil cari).
+        function fsTubeShuffle() {
+            if (!_fsTubeItems.length) return;
+            var a = _fsTubeItems.slice();
+            for (var i = a.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+            }
+            fsTubeRenderItems(a);
+            var statusEl = document.getElementById('fsTubeStatus');
+            if (statusEl) statusEl.textContent = a.length + ' video diacak. Ketuk satu untuk memutar.';
         }
         function fsTubeRenderItems(items) {
             var list = document.getElementById('fsTubeList');
@@ -3877,12 +4000,11 @@
             items.forEach(function(t){
                 var card = document.createElement('div');
                 card.className = 'fs-track-card';
-                var dur = fsTubeDurFromSub(t.sub);
                 card.innerHTML =
                     (t.art ? '<img src="' + esc(t.art) + '" alt="" loading="lazy" style="aspect-ratio:16/9;">' : '') +
                     '<div class="fs-tc-title">' + esc(t.title) + '</div>' +
                     '<div class="fs-tc-artist">' + esc(t.artist) + '</div>' +
-                    (dur ? '<div style="font-size:0.6rem;color:#94a3b8;margin-top:2px;">' + esc(dur) + '</div>' : '');
+                    (t.sub ? '<div style="font-size:0.6rem;color:#94a3b8;margin-top:2px;">' + esc(t.sub) + '</div>' : '');
                 card.onclick = function(){ fsTubePlay(t.videoId, t.title, t.artist); };
                 list.appendChild(card);
             });
@@ -3899,7 +4021,11 @@
             }
             if (_fsTubeBusy) return;
             _fsTubeBusy = true;
+            _fsTubeMode = 'search';
             _fsTubeQuery = q;
+            var _fh = document.getElementById('fsTubeFeedHead');
+            if (_fh) _fh.style.display = 'none';
+            fsTubeRenderChips();
             _fsTubePage = 3;
             _fsTubeDatePage = 2;
             _fsTubeDone = false;
@@ -5920,6 +6046,7 @@ function fsSchedRender(matches) {
             if (tabId === 'quran' && typeof fsQuranInit === 'function') { fsQuranInit(); }
             if (tabId === 'movie' && typeof fsCinemaHomeInit === 'function') { fsCinemaHomeInit(); }
             if (tabId === 'anime' && typeof fsAnimeInit === 'function') { fsAnimeInit(); }
+            if (tabId === 'fstube' && typeof fsTubeFeedInit === 'function') { fsTubeFeedInit(); }
 
             // Tutup sidebar setelah memilih (khusus mobile friendly),
             // hanya kalau sidebar memang sedang terbuka, supaya panggilan
