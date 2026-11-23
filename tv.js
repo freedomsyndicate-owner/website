@@ -384,6 +384,12 @@
 // TIDAK tampil di Mode TV (remote tidak bisa menutup popup dengan nyaman).
 // window.fsDonasiShow() = tampilkan lagi manual (untuk tes / tautan Donasi
 // di menu nanti).
+// REVISI 24 Nov 2026 04:54 WIB (perintah San, "setelah burung keluar
+// saja"): di beranda (index.html) ada intro splash elang ("layar burung",
+// #introSplash) — popup JANGAN tampil menutupi elang. Kalau splash masih
+// tampil saat halaman siap, popup menunggu sampai splash disembunyikan
+// (klik masuk / auto-hide 12 dtk), baru muncul 1,2 dtk setelahnya.
+// Halaman lain tidak punya splash, jadi langsung tampil seperti biasa.
 (function () {
   'use strict';
   var KEY = 'fsDonasiShown';
@@ -408,7 +414,7 @@
     if (e.key === 'Escape') hidePop();
   }
   function showPop() {
-    if (shown() || isTV() || document.getElementById('fsDonasiPop') || !document.body) return;
+    if (shown() || isTV() || splashVisible() || document.getElementById('fsDonasiPop') || !document.body) return;
     markShown();
     var pop = document.createElement('div');
     pop.id = 'fsDonasiPop';
@@ -435,9 +441,50 @@
     try { sessionStorage.removeItem(KEY); } catch (e) {}
     showPop();
   };
+  // --- intro splash elang ("layar burung", hanya di index.html) ---
+  // #introSplash disembunyikan dengan menambah kelas 'hidden' (klik masuk
+  // atau auto-hide 12 dtk); 1,1 dtk kemudian display:none. Popup donasi
+  // menunggu kelas 'hidden' itu muncul, baru tampil 1,2 dtk setelahnya.
+  function splashEl() {
+    try { return document.getElementById('introSplash'); } catch (e) { return null; }
+  }
+  function splashVisible() {
+    var sp = splashEl();
+    if (!sp) return false;
+    try {
+      if (sp.classList.contains('hidden')) return false;
+      if (sp.style.display === 'none') return false;
+      return true;
+    } catch (e) { return false; }
+  }
+  var splashObserver = null;
+  function scheduleShow() { setTimeout(showPop, 1200); }
+  function waitSplashThenShow() {
+    var sp = splashEl();
+    if (!sp || !splashVisible()) { scheduleShow(); return; }
+    try {
+      splashObserver = new MutationObserver(function () {
+        if (!splashVisible()) {
+          try { splashObserver.disconnect(); } catch (e) {}
+          splashObserver = null;
+          setTimeout(showPop, 1200);
+        }
+      });
+      splashObserver.observe(sp, { attributes: true, attributeFilter: ['class', 'style'] });
+    } catch (e) { scheduleShow(); return; }
+    // Pengaman: kalau observer tidak pernah terpicu, tampilkan paling
+    // lambat 15 dtk setelah halaman siap (asal splash sudah tidak terlihat).
+    setTimeout(function () {
+      if (splashObserver) {
+        try { splashObserver.disconnect(); } catch (e2) {}
+        splashObserver = null;
+        if (!splashVisible()) showPop();
+      }
+    }, 15000);
+  }
   function init() {
     if (shown() || isTV()) return;
-    setTimeout(showPop, 1200);
+    waitSplashThenShow();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
