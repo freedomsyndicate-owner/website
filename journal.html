@@ -1044,6 +1044,34 @@
         .sidebar .sb-footer a { padding: 13px 14px !important; min-height: 48px !important; font-size: 12.5px !important; }
         .sidebar .ngh-title { white-space: normal !important; line-height: 1.35; }
         button:focus-visible, a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+    <style id="fs-layout-20261125">
+    /* FS LAYOUT FIX 25 Nov 2026 — rapikan tata letak, anti meluber HP 390px. Isi/fungsi tidak diubah. */
+    html, body { overflow-x: hidden; }
+    body { max-width: 100%; }
+    .tab-content { overflow-x: hidden; }
+    .inner-padding { box-sizing: border-box; }
+    img, canvas, iframe, video, svg { max-width: 100%; }
+    .tab-content table, .inner-padding table, .fsx-card table, .fx-table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-content pre, .tab-content code, .fsx-card pre, .fsx-card code { max-width: 100%; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+    .fsx-code { white-space: pre; word-break: normal; }
+    .tab-content input, .tab-content select, .tab-content textarea, .tab-content button { max-width: 100%; box-sizing: border-box; }
+    .tab-content .fsx-card, .tab-content .widget-box, .tab-content .bx { box-sizing: border-box; min-width: 0; }
+    .sidebar .nav-group { margin-bottom: 10px; }
+    .sidebar .nav-group-head { min-height: 48px; }
+    .sidebar .ngh-count { margin-left: auto; flex: none; }
+    .sidebar .ngh-chev { flex: none; }
+    .sidebar .sb-scroll { padding-bottom: 10px; }
+    .sidebar .sb-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+    .sidebar .sb-footer a { min-height: 48px; }
+    #fsc-bar .row { flex-wrap: wrap; }
+    #tv_v60 { max-width: 100%; }
+    @media (max-width: 768px) {
+        .inner-padding { padding: 14px 12px 180px !important; }
+        #tv_v60 { height: 380px !important; }
+        .tab-content h2 { font-size: 13px; }
+        .fsx-card, .widget-box { padding-left: 10px; padding-right: 10px; }
+    }
     </style>
 </head>
 <body>
@@ -1086,10 +1114,9 @@
             </div></div>
         </div>
         <div class="nav-group" data-group="analisis">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">7</span><span class="ngh-chev">›</span></button>
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🎯</span><span class="ngh-title">Analisis & Sinyal</span><span class="ngh-count">6</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
             <a href="#" class="nav-link" onclick="openTab('signal-tab', this); toggleNav()"><span class="nav-ico">📡</span><span class="nav-txt">Signal <span id="badge-signal" class="nav-badge" style="display:none;"></span></span></a>
-            <a href="#" class="nav-link" onclick="openTab('intraday-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚡</span><span class="nav-txt">Intraday</span></a>
             <a href="#" class="nav-link" onclick="openTab('war-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">⚔️</span><span class="nav-txt">WAR</span></a>
             <a href="#" class="nav-link" onclick="openTab('fundamental-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🏦</span><span class="nav-txt">Fundamental</span></a>
             <a href="#" class="nav-link" onclick="openTab('insider-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🕵️</span><span class="nav-txt">US Insider</span></a>
@@ -1110,12 +1137,10 @@
             <a href="#" class="nav-link" onclick="openTab('meme-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🐸</span><span class="nav-txt">Meme Terminal</span></a>
             </div></div>
         </div>
-        <div class="nav-group" data-group="orderflow">
-            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🔥</span><span class="ngh-title">Order Flow &amp; Terminal</span><span class="ngh-count">3</span><span class="ngh-chev">›</span></button>
+        <div class="nav-group" data-group="pasar-live">
+            <button type="button" class="nav-group-head" onclick="sbToggleGroup(this.parentNode)" aria-expanded="false"><span class="ngh-ico">🌍</span><span class="ngh-title">Pasar Live</span><span class="ngh-count">1</span><span class="ngh-chev">›</span></button>
             <div class="nav-group-body"><div class="nav-group-inner">
-            <a href="#" class="nav-link" onclick="openTab('orderflow-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🔥</span><span class="nav-txt">Order Flow</span></a>
             <a href="#" class="nav-link" onclick="openTab('markets-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🌍</span><span class="nav-txt">Pasar Live</span></a>
-            <a href="#" class="nav-link" onclick="openTab('weize-tab', this); if(window.toggleNav)toggleNav()"><span class="nav-ico">🧬</span><span class="nav-txt">Terminal Saham</span></a>
             </div></div>
         </div>
         <div class="nav-group" data-group="portofolio">
@@ -1292,17 +1317,14 @@
         </div></div>
 
         <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
-            <div style="background:#0d1117; padding:10px; display:flex; gap:10px; border-bottom:1px solid #1f2937;">
+            <div style="background:#0d1117; padding:10px; display:flex; gap:10px; flex-wrap:wrap; border-bottom:1px solid #1f2937;">
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
                 <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
             <div id="tv_v60" style="height:450px; width:100%;"></div>
             
+            <div style="padding:8px 12px;font-size:10px;color:#d4af37;background:#0d1117;border-bottom:1px solid #1f2937;line-height:1.5">⚠️ FS ViewChart — XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
             <div class="inner-padding" style="padding-top:0;">
-                <div class="widget-box">
-                    <div class="widget-title">📊 TECHNICAL ANALYSIS</div>
-                    <div id="sentiment-widget-container" style="height: 400px;"></div>
-                </div>
                 <!-- Widget dari Terminal (Clock, Sentiment, Backtest, Heat Map) -->
                 <div class="tm-grid" id="chart-widgets" style="margin-top:15px;"></div>
             </div>
@@ -2232,15 +2254,6 @@
             <div class="hm-sec"><b>Belajar Fundamental</b></div><div id="fd-lessons"></div>
         </div></div>
 
-        <!-- INTRADAY -->
-        <div id="intraday-tab" class="tab-content"><div class="inner-padding">
-            <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>⚡ INTRADAY</h2></div>
-            <div class="fsx-pills" id="id-pills"></div>
-            <div class="fsx-pills" id="id-tf"></div>
-            <div class="fsx-card" style="padding:4px;height:480px"><div id="id-embed" style="height:100%"></div></div>
-            <div class="fsx-card"><h3>CHECKLIST INTRADAY</h3><div class="fsx-note" style="margin:0">① Tentukan bias HTF (H4/D1) · ② Tandai PDH/PDL & liquidity · ③ Tunggu killzone (London 14:00–17:00 WIB / NY 19:30–22:00 WIB) · ④ Entry di POI + konfirmasi (MSS/CISD) · ⑤ SL di balik swing · TP ke liquidity berikut · risiko ≤1%.</div></div>
-        </div></div>
-
         <!-- US INSIDER -->
         <div id="insider-tab" class="tab-content"><div class="inner-padding">
             <div class="fsx-sub"><button class="fsx-back" onclick="FSX.go('home-tab')">‹</button><h2>🕵️ US INSIDER<small>Transaksi insider AS (SEC Form 4)</small></h2><button class="fsx-btn" onclick="FSX.insider.load()">↻</button></div>
@@ -2280,23 +2293,6 @@
 .xm .ft{font-size:9px;color:#6b7280;margin-top:6px;line-height:1.5}.xm .fp td{padding:1px 3px;font-size:10px}
 </style>
 
-<div id="orderflow-tab" class="tab-content"><div class="xm">
-<h2>🔥 ORDER FLOW <span class="m" style="font-family:Poppins;font-size:9px">Level 2 + Level 3 · live Binance Futures</span></h2>
-<div class="chips" style="margin-bottom:6px"><span class="chip on">All 30+ markets (stocks · crypto · gold)</span><span class="chip on">Complete indicator suite</span><span class="chip on">Multi-timeframe &amp; extended history</span></div>
-<div style="display:flex;gap:6px"><input id="of-sym" list="of-list" value="BTCUSDT" style="flex:1"><datalist id="of-list"></datalist><button class="sb on" onclick="OF.go(document.getElementById('of-sym').value)">GO</button></div>
-<div class="chips" style="margin-top:6px" id="of-quick"></div>
-<div class="bx"><div style="display:flex;justify-content:space-between;align-items:baseline"><span id="of-name" class="b" style="font-family:Orbitron">BTCUSDT</span><span id="of-px" class="big">,</span></div>
-<div class="chips" id="of-tfs" style="margin:6px 0"></div>
-<canvas id="of-cv" style="height:340px"></canvas>
-<div class="ft">Seret chart ke kanan = riwayat lebih lama (otomatis memuat sampai 1000 candle per halaman). Panel bawah: Delta &amp; CVD.</div></div>
-<div class="gr2"><div class="bx"><div class="bt">ORDERFLOW (CANDLE LIVE)</div><div id="of-stat"></div></div><div class="bx"><div class="bt">LIQUIDATION</div><div id="of-liqs"></div></div></div>
-<div class="bx"><div class="bt">FOOTPRINT · BID × ASK (CANDLE AKTIF)</div><div id="of-fp"></div></div>
-<div class="bx"><div class="bt">SURFACE · LIQUIDITY HEATMAP ORDER BOOK</div><canvas id="of-hm" style="height:150px"></canvas><div id="of-imb" class="ft"></div></div>
-<div class="bx"><div class="bt">LARGE TRADES (BUBBLE)</div><div id="of-big"></div></div>
-<div class="bx"><div class="bt">MULTI-TIMEFRAME ANALYSIS</div><table id="of-mtf"></table></div>
-<div class="ft">Data: Binance Futures publik (kline, aggTrade, depth, forceOrder). Footprint dibangun live sejak tab dibuka. Bukan saran investasi.</div>
-</div></div>
-
 <div id="markets-tab" class="tab-content"><div class="xm">
 <h2>🌍 PASAR LIVE <span class="m" style="font-family:Poppins;font-size:9px">Crypto · Forex · Emas · Saham</span></h2>
 <div class="chips" id="mk-cats"></div>
@@ -2305,10 +2301,6 @@
 <div class="ft" id="mk-st">Crypto &amp; PAXG (emas) &amp; EUR/GBP/AUD: WebSocket Binance (tick live). Forex, saham US, saham IDX (.JK), emas berjangka (GC=F): Yahoo Finance via proxy, refresh tiap 10 detik. Semua pair forex tersedia dengan format XXXYYY=X.</div>
 </div></div>
 
-<div id="weize-tab" class="tab-content"><div class="xm">
-<h2>🧬 TERMINAL SAHAM <span class="m" style="font-family:Poppins;font-size:9px">Screener · Makro · Bandar · Alarm · data live</span></h2>
-<div class="chips" id="wz-tabs"></div><div id="wz-body"></div>
-</div></div>
 
 <script>
 (function(){
@@ -2317,81 +2309,6 @@ const act=id=>{const e=$(id);return e&&e.classList.contains('active')};
 const fP=p=>p>=1000?p.toLocaleString('en',{maximumFractionDigits:2}):p>=1?p.toFixed(3):p.toPrecision(4);
 const fM=n=>{n=Math.abs(n);return '$'+(n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':n.toFixed(0))};
 const sg=n=>(n>=0?'+':'−')+fM(n).slice(0);
-/* ================= ORDER FLOW ================= */
-const TFS=['1m','5m','15m','30m','1h','4h','1d','1w'];
-const S={sym:'BTCUSDT',tf:'30m',c:[],cvd:[],off:0,ws:null,fp:{},liq:[],lq:[0,0],big:[],heat:[],imb:50,avg:0,busy:0,t:0};
-const ema=(a,n)=>{const k=2/(n+1);let e=a[0];for(const v of a)e=v*k+e*(1-k);return e};
-const rsi=a=>{let g=0,l=0;for(let i=a.length-14;i<a.length;i++){const d=a[i]-a[i-1];d>0?g+=d:l-=d}return l?100-100/(1+g/l):100};
-const dl=c=>2*c.bv-c.v;
-function calcCvd(){let s=0;S.cvd=S.c.map(c=>s+=dl(c))}
-const mk=r=>({t:r[0],o:+r[1],h:+r[2],l:+r[3],c:+r[4],v:+r[5],bv:+r[9]});
-async function kl(sym,tf,lim,end){const u=`https://fapi.binance.com/fapi/v1/klines?symbol=${sym}&interval=${tf}&limit=${lim}`+(end?`&endTime=${end}`:'');return (await (await fetch(u)).json()).map(mk)}
-async function load(){
-  S.c=[];S.off=0;S.fp={};S.liq=[];S.lq=[0,0];S.big=[];S.heat=[];
-  try{S.c=await kl(S.sym,S.tf,500);calcCvd()}catch(e){}
-  conn();mtf()}
-async function more(){if(S.busy||!S.c.length)return;S.busy=1;try{const o=await kl(S.sym,S.tf,1000,S.c[0].t-1);if(o.length){S.c=o.concat(S.c);S.off+=0;calcCvd()}}catch(e){}S.busy=0}
-function conn(){
-  if(S.ws){S.ws.onclose=null;S.ws.close()}
-  const s=S.sym.toLowerCase();
-  const w=S.ws=new WebSocket(`wss://fstream.binance.com/stream?streams=${s}@kline_${S.tf}/${s}@aggTrade/${s}@depth20@500ms/${s}@forceOrder`);
-  w.onmessage=m=>{const d=JSON.parse(m.data),p=d.data;if(!p)return;const e=p.e;
-    if(e==='kline'){const k=p.k,c={t:k.t,o:+k.o,h:+k.h,l:+k.l,c:+k.c,v:+k.v,bv:+k.V},L=S.c[S.c.length-1];
-      if(L&&L.t===c.t){S.c[S.c.length-1]=c;S.cvd[S.cvd.length-1]=(S.cvd[S.cvd.length-2]||0)+dl(c)}
-      else{S.c.push(c);S.cvd.push((S.cvd[S.cvd.length-1]||0)+dl(c));S.fp={}}}
-    else if(e==='aggTrade'){const pr=+p.p,u=pr*+p.q,st=pr*0.0004,b=Math.round(pr/st)*st;
-      const f=S.fp[b]||(S.fp[b]=[0,0]);p.m?f[0]+=+p.q:f[1]+=+p.q;
-      S.avg=S.avg?S.avg*.998+u*.002:u;
-      if(u>S.avg*30&&u>5000){S.big.unshift([p.T,p.m?'S':'B',u,pr]);S.big.length=Math.min(S.big.length,12)}}
-    else if(e==='forceOrder'){const o=p.o,u=+o.q*+o.ap,lg=o.S==='SELL';S.lq[lg?0:1]+=u;S.liq.unshift([o.T,lg,u,+o.ap]);S.liq.length=Math.min(S.liq.length,10)}
-    else if(p.b&&p.a){const t=Date.now();if(t-S.t>1000){S.t=t;S.heat.push({b:p.b,a:p.a});if(S.heat.length>160)S.heat.shift();
-      const sb=p.b.reduce((x,y)=>x+y[1]*y[0],0),sa=p.a.reduce((x,y)=>x+y[1]*y[0],0);S.imb=100*sb/(sb+sa)}}};
-  w.onclose=()=>{if(act('orderflow-tab'))setTimeout(conn,2000)}}
-function chart(){
-  const cv=$('of-cv');if(!cv||!S.c.length)return;
-  const W=cv.width=cv.clientWidth*2,H=cv.height=cv.clientHeight*2,x=cv.getContext('2d'),AX=110,sl=14;
-  const n=Math.floor((W-AX)/sl),end=Math.max(n>S.c.length?S.c.length:n,S.c.length-S.off),st=Math.max(0,end-n),d=S.c.slice(st,end);
-  if(st===0&&S.off>0)more();
-  let hi=Math.max(...d.map(c=>c.h)),lo=Math.min(...d.map(c=>c.l));const pH=H*.62,y=p=>10+(hi-p)/(hi-lo||1)*(pH-20);
-  x.font='20px sans-serif';x.fillStyle='#6b7280';x.strokeStyle='#111827';
-  for(let i=0;i<=5;i++){const p=lo+(hi-lo)*i/5,yy=y(p);x.beginPath();x.moveTo(0,yy);x.lineTo(W-AX,yy);x.stroke();x.fillText(fP(p),W-AX+6,yy+6)}
-  d.forEach((c,i)=>{const X=i*sl+sl/2,up=c.c>=c.o;x.strokeStyle=x.fillStyle=up?'#22c55e':'#ef4444';x.beginPath();x.moveTo(X,y(c.h));x.lineTo(X,y(c.l));x.stroke();x.fillRect(X-5,Math.min(y(c.o),y(c.c)),10,Math.max(2,Math.abs(y(c.o)-y(c.c))))});
-  const ds=d.map(dl),mx=Math.max(...ds.map(Math.abs))||1,dY=H*.68,dH=H*.14;
-  ds.forEach((v,i)=>{x.fillStyle=v>=0?'#22c55e99':'#ef444499';const h=Math.abs(v)/mx*dH/2;x.fillRect(i*sl+3,v>=0?dY+dH/2-h:dY+dH/2,sl-6,h)});
-  x.fillStyle='#6b7280';x.fillText('DELTA',4,dY+14);
-  const cs=S.cvd.slice(st,end),cl=Math.min(...cs),ch=Math.max(...cs),cY=H*.85,cH=H*.13;
-  x.strokeStyle='#38bdf8';x.beginPath();cs.forEach((v,i)=>{const yy=cY+cH-(v-cl)/(ch-cl||1)*cH;i?x.lineTo(i*sl+sl/2,yy):x.moveTo(i*sl+sl/2,yy)});x.stroke();x.fillStyle='#6b7280';x.fillText('CVD',4,cY+14);
-  const L=S.c[S.c.length-1];if(L.c<=hi&&L.c>=lo){x.strokeStyle=L.c>=L.o?'#22c55e':'#ef4444';x.setLineDash([6,6]);x.beginPath();x.moveTo(0,y(L.c));x.lineTo(W-AX,y(L.c));x.stroke();x.setLineDash([]);x.fillStyle=x.strokeStyle;x.fillRect(W-AX,y(L.c)-14,AX,28);x.fillStyle='#000';x.fillText(fP(L.c),W-AX+6,y(L.c)+7)}}
-function heat(){
-  const cv=$('of-hm');if(!cv||!S.heat.length)return;const W=cv.width=cv.clientWidth*2,H=cv.height=cv.clientHeight*2,x=cv.getContext('2d');
-  const mid=(+S.heat[S.heat.length-1].b[0][0]+ +S.heat[S.heat.length-1].a[0][0])/2,r=mid*0.0015,y=p=>H/2-(p-mid)/r*H/2,cw=W/160;let mx=0;
-  S.heat.forEach(h=>h.b.concat(h.a).forEach(l=>{mx=Math.max(mx,l[1])}));
-  S.heat.forEach((h,i)=>{h.b.forEach(l=>{x.fillStyle=`rgba(34,197,94,${Math.min(1,l[1]/mx*1.6)})`;x.fillRect(i*cw,y(+l[0]),cw+1,H/40)});h.a.forEach(l=>{x.fillStyle=`rgba(239,68,68,${Math.min(1,l[1]/mx*1.6)})`;x.fillRect(i*cw,y(+l[0]),cw+1,H/40)})});
-  $('of-imb').innerHTML=`Bid <b class="g">${S.imb.toFixed(0)}%</b> vs Ask <b class="r">${(100-S.imb).toFixed(0)}%</b> (20 level). Terang = likuiditas besar.`}
-function panels(){
-  const L=S.c[S.c.length-1];if(!L)return;
-  $('of-px').textContent=fP(L.c);$('of-px').className='big '+(L.c>=L.o?'g':'r');
-  const sell=L.v-L.bv;$('of-stat').innerHTML=`<div class="row"><span>Buy vol</span><b class="g">${L.bv.toFixed(2)}</b></div><div class="row"><span>Sell vol</span><b class="r">${sell.toFixed(2)}</b></div><div class="row"><span>Delta</span><b class="${dl(L)>=0?'g':'r'}">${dl(L).toFixed(2)}</b></div><div class="row"><span>CVD</span><b class="b">${(S.cvd[S.cvd.length-1]||0).toFixed(1)}</b></div><div class="row"><span>Net ($)</span><b class="${dl(L)>=0?'g':'r'}">${sg(dl(L)*L.c)}</b></div>`;
-  const tm=t=>new Date(t).toLocaleTimeString('id',{hour12:false,timeZone:'Asia/Jakarta'});
-  $('of-liqs').innerHTML=`<div class="row"><span class="r">Long liq ${fM(S.lq[0])}</span><span class="g">Short liq ${fM(S.lq[1])}</span></div>`+(S.liq.map(l=>`<div class="row"><span class="m">${tm(l[0])}</span><span class="${l[1]?'r':'g'}">${l[1]?'LONG':'SHORT'} 💀 ${fM(l[2])}</span></div>`).join('')||'<div class="m">Menunggu likuidasi…</div>');
-  $('of-big').innerHTML=S.big.map(l=>`<div class="row"><span class="m">${tm(l[0])}</span><span class="${l[1]==='B'?'g':'r'}">${l[1]==='B'?'BUY':'SELL'} ${fM(l[2])}</span><span>@ ${fP(l[3])}</span></div>`).join('')||'<div class="m">Menunggu transaksi besar…</div>';
-  const ks=Object.keys(S.fp).map(Number).sort((a,b)=>b-a),i=ks.reduce((a,k,j)=>Math.abs(k-L.c)<Math.abs(ks[a]-L.c)?j:a,0),v=ks.slice(Math.max(0,i-8),i+9),mx=Math.max(...v.map(k=>Math.max(...S.fp[k])),1e-9);
-  $('of-fp').innerHTML='<table class="fp">'+v.map(k=>{const [b,a]=S.fp[k];const ib=a>b*3?'g':b>a*3?'r':'';return `<tr><td>${fP(k)}</td><td class="r" style="background:linear-gradient(270deg,#ef444455 ${b/mx*100}%,transparent 0)">${b.toFixed(2)}</td><td class="g" style="background:linear-gradient(90deg,#22c55e55 ${a/mx*100}%,transparent 0)">${a.toFixed(2)}</td><td class="${ib}">${ib?'◆':''}</td></tr>`}).join('')+'</table>'||'';
-  chart();heat()}
-async function mtf(){
-  const rows=[];for(const tf of ['5m','15m','1h','4h','1d']){try{const k=await kl(S.sym,tf,120),cl=k.map(c=>c.c),e20=ema(cl,20),e50=ema(cl,50),r=rsi(cl),dd=k.slice(-10).reduce((a,c)=>a+dl(c),0),sc=(e20>e50)+(cl[cl.length-1]>e20)+(r>50)+(dd>0);
-    rows.push(`<tr><td>${tf}</td><td class="${e20>e50?'g':'r'}">${e20>e50?'EMA ▲':'EMA ▼'}</td><td>${r.toFixed(0)}</td><td class="${dd>0?'g':'r'}">${dd>0?'Δ+':'Δ−'}</td><td class="${sc>=3?'g':sc<=1?'r':'y'}">${sc>=3?'BULL':sc<=1?'BEAR':'NETRAL'}</td></tr>`)}catch(e){}}
-  $('of-mtf').innerHTML='<tr class="m"><th>TF</th><th>Trend</th><th>RSI</th><th>Flow</th><th>Bias</th></tr>'+rows.join('')}
-window.OF={go(s){S.sym=(s||'BTCUSDT').toUpperCase().trim();$('of-name').textContent=S.sym;load()},
-  start(){if(!S.ws||S.ws.readyState>1)load();if(!S.iv)S.iv=setInterval(()=>act('orderflow-tab')?panels():OF.stop(),700);if(!S.mi)S.mi=setInterval(()=>act('orderflow-tab')&&mtf(),60000)},
-  stop(){if(S.ws){S.ws.onclose=null;S.ws.close();S.ws=null}clearInterval(S.iv);clearInterval(S.mi);S.iv=S.mi=0}};
-function ofInit(){
-  $('of-tfs').innerHTML=TFS.map(t=>`<button class="sb ${t===S.tf?'on':''}" onclick="OF.tf('${t}',this)">${t}</button>`).join('');
-  OF.tf=(t,b)=>{S.tf=t;document.querySelectorAll('#of-tfs .sb').forEach(e=>e.classList.toggle('on',e===b));load()};
-  $('of-quick').innerHTML=['BTCUSDT','ETHUSDT','SOLUSDT','XAUUSDT','PAXGUSDT','XAGUSDT','TSLAUSDT','NVDAUSDT'].map(s=>`<button class="chip" onclick="document.getElementById('of-sym').value='${s}';OF.go('${s}')">${s.replace('USDT','')}</button>`).join('');
-  fetch('https://fapi.binance.com/fapi/v1/exchangeInfo').then(r=>r.json()).then(j=>{$('of-list').innerHTML=j.symbols.filter(s=>s.status==='TRADING').map(s=>`<option value="${s.symbol}">`).join('')}).catch(()=>{});
-  const cv=$('of-cv');let X0=null;cv.addEventListener('pointerdown',e=>{X0=e.clientX});cv.addEventListener('pointermove',e=>{if(X0===null)return;const dx=e.clientX-X0;if(Math.abs(dx)>7){S.off=Math.max(0,Math.min(S.c.length,S.off+Math.round(dx/7)));X0=e.clientX;chart()}});['pointerup','pointercancel','pointerleave'].forEach(v=>cv.addEventListener(v,()=>X0=null))}
-
 /* ================= PASAR LIVE ================= */
 const CATS={crypto:'🪙 Crypto',forex:'💱 Forex',emas:'🥇 Emas',saham:'📈 Saham'};
 const DEF={forex:['EURUSD=X','GBPUSD=X','USDJPY=X','USDCHF=X','AUDUSD=X','USDCAD=X','NZDUSD=X','EURGBP=X','EURJPY=X','GBPJPY=X','AUDJPY=X','USDIDR=X','USDSGD=X','USDCNH=X','EURCHF=X'],emas:['GC=F','SI=F','XAUUSD=X','XAGUSD=X','PL=F','HG=F'],
@@ -2416,86 +2333,10 @@ window.MK={draw(){
  start(){bws();poll();if(!M.iv){M.iv=setInterval(()=>{if(!act('markets-tab')){clearInterval(M.iv);clearInterval(M.pv);M.iv=0;if(M.ws){M.ws.onclose=null;M.ws.close()}return}MK.draw()},1000);M.pv=setInterval(poll,10000)}}};
 function mkInit(){$('mk-cats').innerHTML=Object.entries(CATS).map(([k,v],i)=>`<button class="sb ${i?'':'on'}" onclick="MK.cat('${k}',this)">${v}</button>`).join('')}
 
-/* ================= TERMINAL SAHAM (LIVE · data publik) ================= */
-const card=(a,b,c,cl)=>`<div class="bx"><div class="bt">${a}</div><div class="${cl||''}" style="font-weight:600">${b}</div><div class="m" style="font-size:10px">${c||''}</div></div>`;
-const W={D:{},tab:'Screener',sel:null,pre:{},mac:null,earn:null,fg:null,run:0,pt:0,mt:0};
-async function yh(s,q){const u=encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${s}?${q||'interval=1d&range=1y'}`);
-  for(const p of PX){try{return (await (await fetch(p+u)).json()).chart.result[0]}catch(e){}}}
-function an(s,r){
-  const Q=r.indicators.quote[0],C=[],V=[],H=[],L=[];
-  r.timestamp.forEach((_,i)=>{if(Q.close[i]!=null&&Q.high[i]!=null){C.push(Q.close[i]);V.push(Q.volume[i]||0);H.push(Q.high[i]);L.push(Q.low[i])}});
-  const n=C.length;if(n<60)return null;
-  const px=r.meta.regularMarketPrice||C[n-1],hi=Math.max(...H),lo=Math.min(...L.slice(-20)),e20=ema(C.slice(-120),20),e50=ema(C.slice(-150),50),rs=rsi(C),
-    av=V.slice(-21,-1).reduce((a,b)=>a+b,0)/20,vr=av?V[n-1]/av:0;
-  let mf=0,vs=0;for(let i=n-20;i<n;i++){mf+=(H[i]-L[i]?((C[i]-L[i])-(H[i]-C[i]))/(H[i]-L[i]):0)*V[i];vs+=V[i]}
-  const cmf=vs?mf/vs:0;let ll=0;for(let i=n-5;i<n;i++)if(L[i]<L[i-1])ll++;
-  const disc=(px/hi-1)*100,risk=Math.max(px-lo,px*0.01),rr=(hi-px)/risk,chg=(px/C[n-2]-1)*100;
-  let sc=Math.min(30,Math.max(0,-disc)*.75)+(rs<30?10:rs<55?20:rs<70?12:4)+(px>e20?15:0)+(e20>e50?5:0)+Math.min(15,vr*7.5)+(cmf>.1?15:cmf>0?8:0)+(ll<=1?10:ll>=4?-10:0);
-  sc=Math.max(0,Math.min(100,Math.round(sc)));
-  const st=cmf>.2?['Akumulasi Masif','g']:cmf>.05?['Akumulasi Normal','g']:cmf>-.05?['Netral','m']:cmf>-.2?['Distribusi Normal','y']:['Distribusi Masif','r'];
-  const ab=vr>=1.5&&px<=lo*1.05&&(px-L[n-1])/((H[n-1]-L[n-1])||1)>.6;
-  return {px,hi,lo,e20,e50,rs,vr,cmf,ll,disc,rr,chg,sc,st,ab,dv:av*px,cur:r.meta.currency||''}}
-const rows=()=>Object.entries(W.D).filter(([s,v])=>v.a).map(([s,v])=>Object.assign({s},v.a));
-async function scan(force){
-  const id=++W.run,q=list('saham').filter(s=>force||!W.D[s]||Date.now()-W.D[s].t>3e5);let k=0;
-  const wk=async()=>{while(q.length&&id===W.run){const s=q.shift(),r=await yh(s);W.D[s]={t:Date.now(),a:r?an(s,r):null};if(++k%3===0)draw()}};
-  await Promise.all([wk(),wk(),wk(),wk(),wk()]);draw()}
-const IDXG={Barito:['BRPT.JK','TPIA.JK','BREN.JK'],Salim:['INDF.JK','ICBP.JK','IMAS.JK'],'Sinar Mas':['SMMA.JK','INKP.JK','TKIM.JK'],Astra:['ASII.JK','AUTO.JK','UNTR.JK'],Bakrie:['BUMI.JK','BRMS.JK'],Lippo:['LPKR.JK','LPPF.JK'],MNC:['MNCN.JK','BMTR.JK'],Adaro:['ADRO.JK','AADI.JK']};
-const SEC={XLK:'Tech',XLF:'Finansial',XLV:'Kesehatan',XLY:'Konsumer Siklikal',XLP:'Konsumer Pokok',XLI:'Industri',XLE:'Energi',XLB:'Material',XLU:'Utilitas',XLRE:'Properti',XLC:'Komunikasi'};
-const IDXI=['^GSPC','^IXIC','^DJI','^JKSE','^VIX','^TNX'];
-const chg=s=>{const v=M.Y[s];return v&&v.p&&v.pc?(v.p/v.pc-1)*100:null};
-const pc=c=>c===null?'<span class="m">…</span>':`<b class="${c>=0?'g':'r'}">${c>=0?'+':''}${c.toFixed(2)}%</b>`;
-async function macro(){
-  W.mt=Date.now();const all=IDXI.concat(Object.keys(SEC),...Object.values(IDXG));
-  fetch('https://api.alternative.me/fng/').then(r=>r.json()).then(j=>{W.fg=j.data[0];draw()}).catch(()=>{});
-  const day=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
-  if(!W.earn)W.earn={};
-  [0,1,2].forEach(async n=>{const u=encodeURIComponent('https://api.nasdaq.com/api/calendar/earnings?date='+day(n));
-    for(const p of PX){try{const j=await (await fetch(p+u)).json();W.earn[day(n)]=(j.data.rows||[]).slice(0,8);draw();return}catch(e){}}});
-  await Promise.all(all.map(yq));draw()}
-async function premkt(){W.pt=Date.now();const us=list('saham').filter(s=>!s.includes('.'));
-  const q=us.slice(),wk=async()=>{while(q.length){const s=q.shift(),r=await yh(s,'interval=1m&range=1d&includePrePost=true');
-    try{const c=r.indicators.quote[0].close.filter(x=>x!=null);W.pre[s]={p:c[c.length-1],pc:r.meta.chartPreviousClose}}catch(e){}draw()}};
-  await Promise.all([wk(),wk(),wk()])}
-const tblS=(A)=>'<table><tr class="m"><th>Saham</th><th>Harga</th><th>Hari ini</th><th>Skor</th><th>Disc</th><th>RSI</th></tr>'+A.map(a=>`<tr onclick="WZ_sel('${a.s}')" style="cursor:pointer"><td>${a.s}</td><td>${fP(a.px)}</td><td>${pc(a.chg)}</td><td><b class="${a.sc>=70?'g':a.sc>=45?'y':'m'}">${a.sc}</b></td><td class="${a.disc<-20?'r':'m'}">${a.disc.toFixed(0)}%</td><td>${a.rs.toFixed(0)}</td></tr>`).join('')+'</table>';
-const WZ={
- Screener:()=>{const A=rows().sort((a,b)=>b.sc-a.sc),n=list('saham').length,a=A.find(x=>x.s===W.sel)||A[0];
-  const d=a?`<div class="bx" style="border-color:#bef26455"><span class="tag">${a.disc<-25&&a.rs<55?'Deep Value Support Rebound':a.px>a.e20&&a.e20>a.e50?'Trend Continuation':'Watchlist'}</span> <b>${a.s}</b> <span class="m">${fP(a.px)} ${a.cur}</span>
-  <div class="row" style="margin-top:8px"><span>Opportunity Score</span><b style="color:#bef264">${a.sc} / 100</b></div><div class="bar"><i style="width:${a.sc}%"></i></div>
-  <div class="gr2">${[['MOMENTUM',`RSI ${a.rs.toFixed(0)}`,a.px>a.e20?'Di atas EMA20':'Di bawah EMA20','b'],['VALUATION',`${a.disc.toFixed(1)}% dari High 52W`,'High '+fP(a.hi),'r'],['LIKUIDITAS',fM(a.dv)+'/hari',`Volume ${a.vr.toFixed(1)}× rata-rata 20h`,''],['STRUKTUR',a.e20>a.e50?'EMA20 > EMA50':'EMA20 < EMA50','Support 20h: '+fP(a.lo),'g']].map(c=>card(c[0],c[1],c[2],c[3])).join('')}</div>
-  <div class="row"><span>🛡 Proteksi</span><b>${a.ll<=1?'PROTECTED':'WASPADA'} (${a.ll}/5 Lower Lows)</b></div><div class="row"><span>📊 Risk/Reward</span><b>1 : ${Math.max(0,a.rr).toFixed(1)}</b></div>
-  <div class="ft">Analisis: ${a.s} ${a.px>a.e20?'bertahan di atas':'masih di bawah'} EMA20, ${Math.abs(a.disc).toFixed(0)}% di bawah puncak 52 minggu, CMF20 ${a.cmf.toFixed(2)} (${a.st[0]}). Target R/R memakai High 52W, stop di low 20 hari.</div></div>`:'';
-  return `<div class="ft">Dipindai ${A.length}/${n} saham (data harian 1 tahun, Yahoo). Skor heuristik 0–100 = diskon dari high, RSI, tren EMA, volume, CMF, anti-falling-knife. Tambah saham via Pasar Live → Saham. <button class="sb" onclick="WZ_scan()">↻ Scan ulang</button></div>${d}<div class="bx"><div class="bt">PERINGKAT SKOR (tap untuk detail)</div>${tblS(A)}</div>`},
- Makro:()=>{const s=Object.keys(SEC).map(k=>[k,chg(k)]).filter(x=>x[1]!==null),up=s.filter(x=>x[1]>0).length,br=s.length?up/s.length*100:0,
-  bias=br>=65?['Hijau','g']:br<=35?['Merah','r']:['Sideways','y'],vx=M.Y['^VIX'],fg=W.fg;
-  const gr=Object.entries(IDXG).map(([k,t])=>{const v=t.map(chg).filter(x=>x!==null);return [k,v.length?v.reduce((a,b)=>a+b,0)/v.length:null]});
-  const ea=W.earn?Object.entries(W.earn).map(([d,r])=>`<div class="m" style="margin-top:6px">${d}${d===new Date().toISOString().slice(0,10)?' · TODAY':''} (${r.length}+)</div><div class="chips">${r.map(x=>`<span class="chip">${x.symbol}${x.time==='time-pre-market'?' ☀':x.time==='time-after-hours'?' 🌙':''}</span>`).join('')||'<span class="m">,</span>'}</div>`).join(''):'<div class="m">Memuat…</div>';
-  return `<div class="bx"><div class="bt">INDEKS (LIVE)</div><div class="chips">${IDXI.map(k=>`<span class="chip">${k.replace('^','')} ${M.Y[k]?fP(M.Y[k].p):'…'} ${pc(chg(k))}</span>`).join('')}</div></div>
-  <div class="bx"><div class="row"><b>Breadth Sektor AS</b><span class="${bias[1]}">Bias: ${bias[0]}</span></div><div class="bar"><i style="width:${br}%"></i></div><div class="ft">${up} dari ${s.length} sektor SPDR naik (${br.toFixed(0)}%). Heuristik breadth, bukan prediksi pasti.</div></div>
-  <div class="bx"><div class="bt">MARKET MOOD</div><div class="row"><span>Crypto Fear &amp; Greed</span><b>${fg?fg.value+' · '+fg.value_classification:'…'}</b></div>${fg?`<div class="bar"><i style="width:${fg.value}%;background:linear-gradient(90deg,#ef4444,#eab308,#22c55e)"></i></div>`:''}<div class="row"><span>VIX</span><b class="${vx&&vx.p>25?'r':vx&&vx.p<16?'g':'y'}">${vx?vx.p.toFixed(2)+(vx.p>30?' · Takut':vx.p>20?' · Waspada':vx.p<15?' · Tenang':' · Normal'):'…'}</b></div></div>
-  <div class="bx"><div class="bt">EARNINGS CALENDAR (NASDAQ)</div>${ea}<div class="ft">☀ pre-market · 🌙 after-hours</div></div>
-  <div class="bx"><div class="bt">11 SEKTOR WALL STREET</div><div class="chips">${Object.entries(SEC).map(([k,v])=>`<span class="chip">${k} ${v} ${pc(chg(k))}</span>`).join('')}</div></div>
-  <div class="bx"><div class="bt">KONGLOMERASI BEI (RATA-RATA ANGGOTA)</div><div class="chips">${gr.map(x=>`<span class="chip">${x[0]} ${pc(x[1])}</span>`).join('')}</div></div>`},
- Bandar:()=>{const A=rows().sort((a,b)=>b.cmf-a.cmf),t=a=>`<table><tr class="m"><th>Saham</th><th>Status</th><th>CMF20</th><th>Vol×</th></tr>${a.map(x=>`<tr><td>${x.s}</td><td class="${x.st[1]}">${x.st[0]}</td><td>${x.cmf.toFixed(2)}</td><td>${x.vr.toFixed(1)}</td></tr>`).join('')}</table>`;
-  return `<div class="bx"><div class="bt b">DETEKSI AKUMULASI VS DISTRIBUSI</div><div class="ft">5 status dari Chaikin Money Flow 20 hari + volume harian: <span class="g">Akumulasi Masif</span>, <span class="g">Normal</span>, Netral, <span class="y">Distribusi Normal</span>, <span class="r">Masif</span>. Ini proksi dari harga &amp; volume. Data broker summary (kode YP/CC/PD) dan foreign flow BEI tidak tersedia gratis.</div></div>
-  <div class="bx"><div class="bt g">TOP AKUMULASI</div>${t(A.slice(0,8))}</div><div class="bx"><div class="bt r">TOP DISTRIBUSI</div>${t(A.slice(-8).reverse())}</div>`},
- Alarm:()=>{const A=rows(),fd=A.filter(a=>a.chg<=-5).sort((a,b)=>a.chg-b.chg),cr=Object.entries(M.B).filter(([s,v])=>s.endsWith('USDT')&&v.q>2e7&&v.p/v.pc-1<=-.05).map(([s,v])=>[s,(v.p/v.pc-1)*100]),
-  ab=A.filter(a=>a.ab),pr=Object.entries(W.pre).filter(([s,v])=>v.p&&v.pc&&Math.abs(v.p/v.pc-1)>=.02).sort((a,b)=>Math.abs(b[1].p/b[1].pc)-Math.abs(a[1].p/a[1].pc));
-  const lv=c=>c<=-10?'<b class="r">−10%</b>':c<=-7?'<b class="r">−7%</b>':'<b class="y">−5%</b>';
-  return `<div class="bx"><span class="tag">Pre-Market Gap</span><div class="ft">Saham AS dengan gap ≥2% vs close kemarin (harga pre/post-market). Pre-market AS ≈ 16:00–21:30 WIB (waktu musim dingin; 15:00–20:30 saat DST).</div>${pr.length?`<table>${pr.map(([s,v])=>`<tr><td>${s}</td><td>${fP(v.p)}</td><td>${pc((v.p/v.pc-1)*100)}</td></tr>`).join('')}</table>`:'<div class="m">Tidak ada gap ≥2% / memuat…</div>'}</div>
-  <div class="bx"><span class="tag" style="color:#f87171">Flash Dump Alarm (−5% · −7% · −10%)</span>${fd.length||cr.length?`<table>${fd.map(a=>`<tr><td>${a.s}</td><td>${fP(a.px)}</td><td>${pc(a.chg)}</td><td>${lv(a.chg)}</td></tr>`).join('')}${cr.map(c=>`<tr><td>${c[0]} (24j)</td><td></td><td>${pc(c[1])}</td><td>${lv(c[1])}</td></tr>`).join('')}</table>`:'<div class="m" style="margin-top:6px">Tidak ada saham watchlist turun ≥5% hari ini.</div>'}</div>
-  <div class="bx"><span class="tag" style="color:#bef264">Smart Absorption (Buy-Wall)</span><div class="ft">Volume ≥1.5× rata-rata, harga dekat low 20 hari, close di 40% atas range harian.</div>${ab.length?`<table>${ab.map(a=>`<tr><td>${a.s}</td><td>${fP(a.px)}</td><td>${a.vr.toFixed(1)}×</td><td class="g">SERAPAN</td></tr>`).join('')}</table>`:'<div class="m">Belum ada sinyal.</div>'}</div>`}};
-function draw(){if(!act('weize-tab'))return;const b=$('wz-body');b.innerHTML=WZ[W.tab]();}
-window.WZ_sel=s=>{W.sel=s;draw()};window.WZ_scan=()=>{scan(true)};
-window.WZS=(n,b)=>{W.tab=n;document.querySelectorAll('#wz-tabs .sb').forEach(e=>e.classList.toggle('on',e===b));draw();WZ.go()};
-WZ.go=()=>{scan();if(W.tab==='Makro'&&Date.now()-W.mt>3e4)macro();if(W.tab==='Alarm'&&Date.now()-W.pt>6e4){premkt();bws()}};
-window.WZT={start(){draw();WZ.go();if(!W.iv)W.iv=setInterval(()=>{if(!act('weize-tab')){clearInterval(W.iv);W.iv=0;return}WZ.go();draw()},20000)}};
-function wzInit(){$('wz-tabs').innerHTML=Object.keys(WZ).filter(k=>typeof WZ[k]==='function'&&k!=='go').map((n,i)=>`<button class="sb ${i?'':'on'}" onclick="WZS('${n}',this)">${n}</button>`).join('')}
-
 /* ===== init & hook openTab ===== */
-ofInit();mkInit();wzInit();
+mkInit();
 const _o=window.openTab;
-window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('orderflow-tab'))OF.start();if(act('markets-tab'))MK.start();if(act('weize-tab'))WZT.start()},300)};
+window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('markets-tab'))MK.start()},300)};
 })();
 </script>
 
@@ -3642,27 +3483,15 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const inp = document.getElementById('chart-pair');
             const p = (inp.value || 'XAUUSD').toUpperCase().trim();
             const FC = window.FSChart;
-            const prefs = FC ? FC.prefs() : { mode: 'tv', tf: '15' };
-            const key = prefs.mode + '|' + p + '|' + prefs.tf;
+            const prefs = FC ? FC.prefs() : { tf: '15' };
+            const key = 'mine|' + p + '|' + prefs.tf;
             const box = document.getElementById('tv_v60');
-            // Jangan bangun ulang chart setiap kali tab dibuka (kecuali SWITCH / ganti TF / ganti mode)
+            // Jangan bangun ulang chart setiap kali tab dibuka (kecuali SWITCH / ganti TF / ganti pair)
             if (!force && window.__chartKey === key && box.firstChild) return;
             window.__chartKey = key;
             if (FC) FC.savePrefs({ pair: p });
-            if (FC && prefs.mode === 'mine') { FC.open(box, p, prefs.tf); }
-            else {
-                box.style.minHeight = '';
-                if (FC) FC.close();
-                box.style.height = '450px';
-                const iv = FC ? FC.tvInterval(prefs.tf) : '15';
-                const sym = encodeURIComponent(FC ? FC.tvSymbol(p) : p);
-                // sandbox tanpa allow-popups/top-navigation: klik di dalam chart tidak bisa melempar ke aplikasi/tab TradingView
-                box.innerHTML = `<iframe sandbox="allow-scripts allow-same-origin allow-forms" style="width:100%; height:100%; border:none;" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_762ae&symbol=${sym}&interval=${iv}&hidesidetoolbar=0&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Asia%2FJakarta&locale=id&utm_source=freedomsyndicate-owner.github.io&utm_medium=widget&utm_campaign=chart"></iframe>`;
-            }
-            const sContainer = document.getElementById('sentiment-widget-container');
-            const script = document.createElement('script'); script.type = 'text/javascript'; script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js'; script.async = true;
-            script.innerHTML = JSON.stringify({ "interval": "1h", "width": "100%", "isTransparent": true, "height": 400, "symbol": FC ? FC.tvSymbol(p) : (p === "XAUUSD" ? "OANDA:XAUUSD" : `FX_IDC:${p}`), "showIntervalTabs": true, "displayMode": "single", "locale": "en", "colorTheme": "dark" });
-            sContainer.innerHTML = ""; sContainer.appendChild(script);
+            // FS ViewChart total: tidak ada lagi mode TradingView di tab Chart.
+            if (FC) FC.open(box, p, prefs.tf);
         }
 
         function openZoom(s) { document.getElementById('zoom-target').src = s; document.getElementById('modal-zoom').style.display = 'flex'; }
@@ -4967,14 +4796,19 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         const tfOf = k => TF.find(t => t[0] === k) || TF[2];
         const HOSTS = ['https://api.binance.com', 'https://data-api.binance.vision'];
         const FIB = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
+        // FS ViewChart v1: watchlist 12 simbol Binance (PAXG = proxy emas XAUUSD)
+        const WL = [['BTCUSDT', 'BTC'], ['ETHUSDT', 'ETH'], ['SOLUSDT', 'SOL'], ['BNBUSDT', 'BNB'], ['XRPUSDT', 'XRP'], ['DOGEUSDT', 'DOGE'], ['ADAUSDT', 'ADA'], ['LINKUSDT', 'LINK'], ['AVAXUSDT', 'AVAX'], ['LTCUSDT', 'LTC'], ['PAXGUSDT', 'PAXG·Emas'], ['TRXUSDT', 'TRX']];
 
         const PK = 'fs_chart_prefs_v1';
-        const prefs = Object.assign({ mode: 'mine', tf: '15', pair: 'XAUUSD' }, lsGet(PK, {}));
-        if (prefs.mode !== 'tv') prefs.mode = 'mine';
+        const prefs = Object.assign({ mode: 'mine', tf: '15', pair: 'XAUUSD', chartType: 'candle', ind: { ma: true, ema: false, rsi: false, vol: true } }, lsGet(PK, {}));
+        prefs.mode = 'mine';
+        if (!prefs.ind) prefs.ind = { ma: true, ema: false, rsi: false, vol: true };
+        if (['candle', 'line', 'area'].indexOf(prefs.chartType) < 0) prefs.chartType = 'candle';
         const me = () => { try { return auth.currentUser; } catch (e) { return null; } };
         const clean = x => String(x).replace(/[^A-Za-z0-9]/g, '');
         function savePrefs(o) {
-            Object.assign(prefs, o); lsSet(PK, prefs);
+            if (o) o.mode = 'mine';
+            Object.assign(prefs, o); prefs.mode = 'mine'; lsSet(PK, prefs);
             const u = me(); if (u) { try { rtdb.ref('users/' + u.uid + '/chartPrefs').set(prefs).catch(() => {}); } catch (e) {} }
         }
 
@@ -5014,7 +4848,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 try {
                     const r = await fetch(`${h}/api/v3/klines?symbol=${sym}&interval=${iv}${extra || ''}`);
                     if (!r.ok) throw new Error(r.status === 400 ? 'Pair "' + sym + '" tidak tersedia di data Binance' : 'HTTP ' + r.status);
-                    return (await r.json()).map(k => ({ time: Math.floor(k[0] / 1000), open: +k[1], high: +k[2], low: +k[3], close: +k[4] }));
+                    return (await r.json()).map(k => ({ time: Math.floor(k[0] / 1000), open: +k[1], high: +k[2], low: +k[3], close: +k[4], volume: +k[5] }));
                 } catch (e) { err = e; if (/tidak tersedia/.test(e.message)) throw e; }
             }
             throw err || new Error('Data pasar tidak bisa diakses');
@@ -5022,7 +4856,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function loadScript(src) { return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.async = true; s.onload = ok; s.onerror = () => no(new Error('x')); document.head.appendChild(s); }); }
         async function ensureLWC() { if (window.LightweightCharts) return true; for (const u of LWC_URLS) { try { await loadScript(u); if (window.LightweightCharts) return true; } catch (e) {} } return false; }
 
-        const S = { id: 0, alive: false, tool: 'hand', dr: [], D: [], first: null, prev: null, fresh: false, down: null, color: '#38bdf8', sig: '', saveT: null };
+        const S = { id: 0, alive: false, tool: 'hand', dr: [], D: [], first: null, prev: null, fresh: false, down: null, color: '#38bdf8', sig: '', saveT: null, maS: null, emaS: null, volS: null, rsiChart: null, rsiS: null, rsiEl: null, head: null, tick: null };
         const dkey = sym => 'fs_draw_' + (me() ? me().uid : 'anon') + '_' + sym;
         const rpath = sym => { const u = me(); return u ? 'users/' + u.uid + '/chartDrawings/' + clean(sym) : null; };
         const status = (t, c) => { const e = $('#fsc-status'); if (e) { e.textContent = t; e.style.color = c || '#6b7280'; } };
@@ -5117,6 +4951,73 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             requestAnimationFrame(loop);
         }
 
+        // ---- FS ViewChart: indikator (dihitung dari candle yang sudah dimuat) ----
+        function smaData(p) { const out = []; let s = 0; for (let i = 0; i < S.D.length; i++) { s += S.D[i].close; if (i >= p) s -= S.D[i - p].close; if (i >= p - 1) out.push({ time: S.D[i].time, value: s / p }); } return out; }
+        function emaData(p) { const k = 2 / (p + 1); let e = null; const out = []; S.D.forEach((c, i) => { e = e === null ? c.close : c.close * k + e * (1 - k); if (i >= p - 1) out.push({ time: c.time, value: e }); }); return out; }
+        function rsiData(p) {
+            const out = []; if (S.D.length <= p) return out;
+            let g = 0, l = 0; for (let i = 1; i <= p; i++) { const d = S.D[i].close - S.D[i - 1].close; if (d >= 0) g += d; else l -= d; } g /= p; l /= p;
+            out.push({ time: S.D[p].time, value: l === 0 ? 100 : 100 - 100 / (1 + g / l) });
+            for (let i = p + 1; i < S.D.length; i++) { const d = S.D[i].close - S.D[i - 1].close; g = (g * (p - 1) + Math.max(d, 0)) / p; l = (l * (p - 1) + Math.max(-d, 0)) / p; out.push({ time: S.D[i].time, value: l === 0 ? 100 : 100 - 100 / (1 + g / l) }); }
+            return out;
+        }
+        function makeMainSeries() {
+            if (S.series) { try { S.chart.removeSeries(S.series); } catch (e) {} S.series = null; }
+            const t = prefs.chartType;
+            if (t === 'line') S.series = S.chart.addLineSeries({ color: '#d4af37', lineWidth: 2, priceLineColor: '#d4af37', priceLineStyle: 2 });
+            else if (t === 'area') S.series = S.chart.addAreaSeries({ topColor: 'rgba(212,175,55,0.35)', bottomColor: 'rgba(212,175,55,0.02)', lineColor: '#d4af37', lineWidth: 2, priceLineColor: '#d4af37' });
+            else S.series = S.chart.addCandlestickSeries({ upColor: '#26a69a', downColor: '#ef5350', wickUpColor: '#26a69a', wickDownColor: '#ef5350', borderVisible: false });
+            S.series.setData(t === 'candle' ? S.D : S.D.map(c => ({ time: c.time, value: c.close })));
+            return S.series;
+        }
+        function updateHeader() {
+            if (!S.head || !S.D.length) return;
+            const L = S.D[S.D.length - 1];
+            let chg = null; if (S.tick && S.tick.pc) chg = (S.tick.p / S.tick.pc - 1) * 100;
+            const chgHtml = chg === null ? '' : ' <span style="color:' + (chg >= 0 ? '#22c55e' : '#ef4444') + '">' + (chg >= 0 ? '+' : '') + chg.toFixed(2) + '% 24j</span>';
+            S.head.innerHTML = '<b style="color:#f5c542">' + S.sym + '</b> <b>' + fmtP(L.close) + '</b>' + chgHtml + ' <span style="color:#9ca3af">O ' + fmtP(L.open) + ' · H ' + fmtP(L.high) + ' · L ' + fmtP(L.low) + ' · C ' + fmtP(L.close) + '</span>';
+        }
+        async function tick24(sym) {
+            for (const h of HOSTS) { try { const r = await fetch(h + '/api/v3/ticker/24hr?symbol=' + sym); if (!r.ok) continue; const j = await r.json(); return { p: +j.lastPrice, pc: +j.prevClosePrice }; } catch (e) {} }
+            return null;
+        }
+        function applyIndicators() {
+            if (!S.chart || !S.D.length) return;
+            const rm = s2 => { if (s2) { try { S.chart.removeSeries(s2); } catch (e) {} } };
+            if (prefs.ind.ma) { if (!S.maS) S.maS = S.chart.addLineSeries({ color: '#f5c542', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); S.maS.setData(smaData(20)); } else { rm(S.maS); S.maS = null; }
+            if (prefs.ind.ema) { if (!S.emaS) S.emaS = S.chart.addLineSeries({ color: '#38bdf8', lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false }); S.emaS.setData(emaData(50)); } else { rm(S.emaS); S.emaS = null; }
+            if (prefs.ind.vol) {
+                if (!S.volS) S.volS = S.chart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'vol' });
+                S.volS.setData(S.D.map(c => ({ time: c.time, value: c.volume || 0, color: c.close >= c.open ? 'rgba(38,166,154,0.5)' : 'rgba(239,83,80,0.5)' })));
+                try { S.chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } }); S.chart.priceScale('right').applyOptions({ scaleMargins: { top: 0.08, bottom: 0.22 } }); } catch (e) {}
+            } else { rm(S.volS); S.volS = null; try { S.chart.priceScale('right').applyOptions({ scaleMargins: { top: 0.08, bottom: 0.05 } }); } catch (e) {} }
+            if (prefs.ind.rsi && S.rsiEl) {
+                S.rsiEl.style.display = 'block';
+                if (!S.rsiChart) {
+                    S.rsiChart = LightweightCharts.createChart(S.rsiEl, { width: S.rsiEl.clientWidth, height: 96, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: false } });
+                    S.rsiS = S.rsiChart.addLineSeries({ color: '#d4af37', lineWidth: 1, priceLineVisible: false, lastValueVisible: true, crosshairMarkerVisible: false });
+                    try { S.rsiS.createPriceLine({ price: 70, color: '#ef5350', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: '70' }); S.rsiS.createPriceLine({ price: 30, color: '#22c55e', lineWidth: 1, lineStyle: 2, axisLabelVisible: true, title: '30' }); } catch (e) {}
+                    try { S.chart.timeScale().subscribeVisibleLogicalRangeChange(r => { try { if (r) S.rsiChart.timeScale().setVisibleLogicalRange(r); } catch (e) {} }); } catch (e) {}
+                }
+                S.rsiS.setData(rsiData(14));
+                try { const r = S.chart.timeScale().getVisibleLogicalRange(); if (r) S.rsiChart.timeScale().setVisibleLogicalRange(r); } catch (e) {}
+            } else if (S.rsiEl) {
+                S.rsiEl.style.display = 'none';
+                if (S.rsiChart) { try { S.rsiChart.remove(); } catch (e) {} S.rsiChart = null; S.rsiS = null; }
+            }
+            updateHeader();
+        }
+        function setChartType(t) {
+            if (['candle', 'line', 'area'].indexOf(t) < 0) return;
+            prefs.chartType = t; savePrefs({}); sync();
+            if (S.alive && S.chart && S.D.length) { makeMainSeries(); applyIndicators(); S.sig = ''; draw(); }
+        }
+        function toggleInd(k) {
+            if (!prefs.ind || !(k in prefs.ind)) return;
+            prefs.ind[k] = !prefs.ind[k]; savePrefs({}); sync();
+            if (S.alive) applyIndicators();
+        }
+
         // ---- interaksi menggambar ----
         const uid8 = () => Math.random().toString(36).slice(2, 9);
         const mk = (a, b) => ({ id: uid8(), t: S.tool, a, b: S.tool === 'hl' ? null : b, c: S.color });
@@ -5173,31 +5074,34 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function close() {
             S.alive = false; S.id++; clearInterval(S.poll);
             if (S.chart) { try { S.chart.remove(); } catch (e) {} S.chart = null; }
+            if (S.rsiChart) { try { S.rsiChart.remove(); } catch (e) {} S.rsiChart = null; }
+            S.maS = S.emaS = S.volS = S.rsiS = null; S.rsiEl = null; S.head = null; S.tick = null;
             const bar = $('#fsc-bar'); if (bar) bar.classList.remove('mine');
         }
         async function open(box, pair, tfKey) {
             close(); const id = S.id; const sym = toBin(pair); const T = tfOf(tfKey);
-            box.style.height = '480px'; box.style.minHeight = ''; S.sym = sym; S.tool = 'hand';
-            box.innerHTML = '<div style="position:relative;width:100%;height:100%"><div class="fsc-chart" style="position:absolute;inset:0"></div><canvas class="fsc-cv" style="position:absolute;left:0;top:0;pointer-events:none;touch-action:none"></canvas><div class="fsc-msg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9ca3af;font-size:12px;pointer-events:none">Memuat chart…</div></div>';
+            box.style.height = (window.innerWidth <= 768 ? '380px' : '480px'); box.style.minHeight = ''; S.sym = sym; S.tool = 'hand';
+            box.innerHTML = '<div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column"><div class="fsc-head" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 10px;background:#0d1117;border-bottom:1px solid #1f2937;font-size:12px;color:#e5e7eb"></div><div class="fsc-wrap" style="position:relative;flex:1;min-height:0"><div class="fsc-chart" style="position:absolute;inset:0"></div><canvas class="fsc-cv" style="position:absolute;left:0;top:0;pointer-events:none;touch-action:none"></canvas><div class="fsc-msg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9ca3af;font-size:12px;pointer-events:none">Memuat chart…</div></div><div class="fsc-rsi" style="height:96px;flex:none;display:none;border-top:1px solid #1f2937"></div></div>';
             const bar = $('#fsc-bar'); if (bar) bar.classList.add('mine');
             const msg = $('.fsc-msg', box);
-            const fail = t => { msg.style.pointerEvents = 'auto'; msg.innerHTML = '<div>⚠️ ' + t + '<br><br><button class="fsc-b on" onclick="FSChart.setMode(\'tv\')">Buka mode TradingView</button></div>'; };
+            const fail = t => { msg.style.pointerEvents = 'auto'; msg.innerHTML = '<div>⚠️ ' + t + '<br><br><button class="fsc-b on" onclick="updateChart(true)">Coba lagi</button></div>'; };
             try {
                 if (!(await ensureLWC())) return fail('Library chart gagal dimuat (diblokir jaringan/VPN).');
-                const [data, dr] = await Promise.all([kl(sym, T[1], '&limit=1000'), loadDrawings(sym)]);
+                const [data, dr, tk] = await Promise.all([kl(sym, T[1], '&limit=1000'), loadDrawings(sym), tick24(sym)]);
                 if (id !== S.id) return;
                 if (!data.length) return fail('Tidak ada data untuk ' + sym);
-                S.D = data; S.dr = dr; S.el = $('.fsc-chart', box); S.cv = $('.fsc-cv', box);
+                S.D = data; S.dr = dr; S.tick = tk; S.el = $('.fsc-chart', box); S.cv = $('.fsc-cv', box); S.head = $('.fsc-head', box); S.rsiEl = $('.fsc-rsi', box);
                 S.chart = LightweightCharts.createChart(S.el, { width: S.el.clientWidth, height: S.el.clientHeight, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true, rightOffset: 10 }, crosshair: { mode: 0 } });
-                S.series = S.chart.addCandlestickSeries({ upColor: '#26a69a', downColor: '#ef5350', wickUpColor: '#26a69a', wickDownColor: '#ef5350', borderVisible: false });
-                S.series.setData(data); S.chart.timeScale().setVisibleLogicalRange({ from: data.length - 90, to: data.length + 10 });
+                makeMainSeries(); applyIndicators();
+                S.chart.timeScale().setVisibleLogicalRange({ from: data.length - 90, to: data.length + 10 });
+                try { const r = S.chart.timeScale().getVisibleLogicalRange(); if (r && S.rsiChart) S.rsiChart.timeScale().setVisibleLogicalRange(r); } catch (e) {}
                 msg.remove(); bindCanvas(); S.alive = true; S.sig = '';
-                if (window.ResizeObserver) new ResizeObserver(() => { if (S.chart && S.el.isConnected) { S.chart.applyOptions({ width: S.el.clientWidth, height: S.el.clientHeight }); S.sig = ''; } }).observe(S.el);
+                if (window.ResizeObserver) new ResizeObserver(() => { if (S.chart && S.el.isConnected) { S.chart.applyOptions({ width: S.el.clientWidth, height: S.el.clientHeight }); if (S.rsiChart && S.rsiEl && S.rsiEl.isConnected) S.rsiChart.applyOptions({ width: S.rsiEl.clientWidth, height: 96 }); S.sig = ''; } }).observe(S.el);
                 setTool('hand'); requestAnimationFrame(loop);
                 clearInterval(S.poll);
                 S.poll = setInterval(async () => {
                     if (id !== S.id || !S.el.isConnected) return clearInterval(S.poll);
-                    try { (await kl(sym, T[1], '&limit=2')).forEach(c => { const L = S.D[S.D.length - 1]; if (L && L.time === c.time) S.D[S.D.length - 1] = c; else if (!L || c.time > L.time) S.D.push(c); S.series.update(c); }); } catch (e) {}
+                    try { (await kl(sym, T[1], '&limit=2')).forEach(c => { const L = S.D[S.D.length - 1]; if (L && L.time === c.time) S.D[S.D.length - 1] = c; else if (!L || c.time > L.time) S.D.push(c); const u = prefs.chartType === 'candle' ? c : { time: c.time, value: c.close }; S.series.update(u); }); applyIndicators(); } catch (e) {}
                 }, 5000);
             } catch (e) { if (id === S.id) fail(e.message || 'Gagal memuat data'); }
         }
@@ -5206,17 +5110,20 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function buildBar() {
             const tv = document.getElementById('tv_v60'); if (!tv || $('#fsc-bar')) return;
             const st = document.createElement('style');
-            st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:8px 10px;display:flex;flex-direction:column;gap:8px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:7px 10px;font-size:11px;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}';
+            st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:8px 10px;display:flex;flex-direction:column;gap:8px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:7px 10px;font-size:11px;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-b.gold.on{background:rgba(212,175,55,.18);border-color:#d4af37;color:#f5c542}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}';
             document.head.appendChild(st);
             const bar = document.createElement('div'); bar.id = 'fsc-bar';
-            bar.innerHTML = '<div class="row"><button class="fsc-b" data-mode="mine">✏️ Chart Pribadi (mapping tersimpan)</button><button class="fsc-b" data-mode="tv">📈 TradingView</button></div>' +
+            bar.innerHTML = '<div class="row">' + WL.map(w => `<button class="fsc-b gold" data-wl="${w[0]}">${w[1]}</button>`).join('') + '</div>' +
+                '<div class="row"><button class="fsc-b gold" data-ctype="candle">🕯 Candle</button><button class="fsc-b gold" data-ctype="line">╱ Line</button><button class="fsc-b gold" data-ctype="area">⛰ Area</button><button class="fsc-b gold" data-ind="ma">MA20</button><button class="fsc-b gold" data-ind="ema">EMA50</button><button class="fsc-b gold" data-ind="rsi">RSI14</button><button class="fsc-b gold" data-ind="vol">Volume</button></div>' +
                 '<div class="row">' + TF.map(t => `<button class="fsc-b" data-tf="${t[0]}">${t[2]}</button>`).join('') + '</div>' +
                 '<div class="row tools"><button class="fsc-b" data-tool="hand">✋ Geser</button><button class="fsc-b" data-tool="tl">╱ Garis</button><button class="fsc-b" data-tool="hl">─ Horizontal</button><button class="fsc-b" data-tool="rc">▭ Kotak</button><button class="fsc-b" data-tool="fb">Fib</button><button class="fsc-b" data-tool="erase">🧽 Hapus</button><button class="fsc-b" data-act="undo">↶</button><button class="fsc-b" data-act="clear">🗑 Semua</button><input type="color" id="fsc-color" value="#38bdf8"></div>' +
                 '<div class="row"><span id="fsc-status"></span><span id="fsc-hint"></span></div>';
             tv.parentNode.insertBefore(bar, tv);
             bar.addEventListener('click', e => {
                 const b = e.target.closest('button'); if (!b) return;
-                if (b.dataset.mode) return setMode(b.dataset.mode);
+                if (b.dataset.wl) { const inp = $('#chart-pair'); if (inp) inp.value = b.dataset.wl === 'PAXGUSDT' ? 'XAUUSD' : b.dataset.wl; savePrefs({ pair: inp ? inp.value : b.dataset.wl }); sync(); return updateChart(true); }
+                if (b.dataset.ctype) return setChartType(b.dataset.ctype);
+                if (b.dataset.ind) return toggleInd(b.dataset.ind);
                 if (b.dataset.tf) { savePrefs({ tf: b.dataset.tf }); sync(); return updateChart(true); }
                 if (b.dataset.tool) return setTool(S.tool === b.dataset.tool && b.dataset.tool !== 'hand' ? 'hand' : b.dataset.tool);
                 if (b.dataset.act === 'undo') { if (S.dr.length) { S.dr.pop(); persist(); S.sig = ''; draw(); } }
@@ -5226,15 +5133,15 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             sync();
         }
         function sync() {
-            document.querySelectorAll('#fsc-bar [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === prefs.mode));
+            document.querySelectorAll('#fsc-bar [data-ctype]').forEach(b => b.classList.toggle('on', b.dataset.ctype === prefs.chartType));
+            document.querySelectorAll('#fsc-bar [data-ind]').forEach(b => b.classList.toggle('on', !!prefs.ind[b.dataset.ind]));
             document.querySelectorAll('#fsc-bar [data-tf]').forEach(b => b.classList.toggle('on', b.dataset.tf === prefs.tf));
+            document.querySelectorAll('#fsc-bar [data-wl]').forEach(b => b.classList.toggle('on', b.dataset.wl === toBin(prefs.pair || 'XAUUSD')));
             const inp = $('#chart-pair'); if (inp && prefs.pair) inp.value = prefs.pair;
-            const bar = $('#fsc-bar'); if (bar) bar.classList.toggle('mine', prefs.mode === 'mine');
-            if (prefs.mode !== 'mine') { const hn = $('#fsc-hint'); if (hn) hn.textContent = ''; }
-            if (prefs.mode === 'tv') status('Mode TradingView: gambar di mode ini TIDAK bisa disimpan (batasan TradingView). Pakai Chart Pribadi.', '#eab308');
-            else status('', '');
+            const bar = $('#fsc-bar'); if (bar) bar.classList.toggle('mine', true);
+            status('', '');
         }
-        function setMode(m) { savePrefs({ mode: m }); sync(); updateChart(true); }
+        function setMode(m) { prefs.mode = 'mine'; savePrefs({}); sync(); updateChart(true); }
 
         window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0], tvSymbol };
 
@@ -5245,7 +5152,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                     if (!u) return;
                     rtdb.ref('users/' + u.uid + '/chartPrefs').once('value').then(sn => {
                         const v = sn.val(); if (!v) return;
-                        Object.assign(prefs, v); if (prefs.mode !== 'tv') prefs.mode = 'mine'; lsSet(PK, prefs); sync();
+                        Object.assign(prefs, v); prefs.mode = 'mine'; if (!prefs.ind) prefs.ind = { ma: true, ema: false, rsi: false, vol: true }; lsSet(PK, prefs); sync();
                         const tab = document.getElementById('chart-tab');
                         if (tab && tab.classList.contains('active')) updateChart(true);
                     }).catch(() => {});
@@ -5321,7 +5228,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         const CATS = [
             { k: 'sig', n: 'Sinyal & Analisa', ic: '📡', th: 'th-sig', items: [['Terminal', '🖥', 'terminal-tab'], ['Signal', '📶', 'signal-tab', 'vip'], ['Chart', '📈', 'chart-tab'], ['Riwayat', '🕘', 'riwayat-tab'], ['WAR', '⚔️', 'war-tab']] },
             { k: 'mkt', n: 'Pasar', ic: '🌐', th: 'th-mkt', items: [['Kalender Ekonomi', '📅', 'economic-tab'], ['Berita', '📰', 'news-tab'], ['Sesi', '🌍', 'sesi-tab'], ['Saham Global', '📈', 'saham-tab'], ['Crypto', '₿', 'crypto-tab'], ['Micin Radar', '🎯', 'micin-tab'], ['Meme Terminal', '🚀', 'meme-tab'], ['Radar Dunia', '🛰️', 'radar-tab']] },
-            { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['Intraday', '⚡', 'intraday-tab'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
+            { k: 'edu', n: 'Edukasi & Alat', ic: '🎓', th: 'th-edu', isNew: true, items: [['Fundamental', '🎓', 'fundamental-tab', 'new'], ['US Insider', '🕵️', 'insider-tab'], ['Jurnal', '📓', 'journal-tab'], ['Indikator', '〽️', 'indikator-tab'], ['Video Edukasi', '▶️', 'video-tab'], ['Materi', '📖', 'materi-tab']] },
             { k: 'com', n: 'Broker & Funded', ic: '💬', th: 'th-com', isNew: true, items: [['Broker & Funded', '🏦', 'broker-tab']] }
         ];
         function buildHub() {
@@ -5651,7 +5558,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         FSX.riwayat.f = FSX.riwayat.f.bind(FSX.riwayat);
 
         /* ---------- AI & ANALISIS ---------- */
-        const ANS = [['XAUUSD', 'XAUUSD'], ['BTCUSD', 'BTC'], ['EURUSD', 'EURUSD'], ['GBPUSD', 'GBPUSD'], ['USDJPY', 'USDJPY'], ['NAS100', 'NAS100'], ['US30', 'US30'], ['ETHUSD', 'ETH']];
 
         /* ---------- WAR ROOM ---------- */
         const WQ = [['all', 'SEMUA', '(war OR conflict OR missile OR airstrike OR ceasefire)'], ['me', 'TIMUR TENGAH', '(Israel OR Iran OR Gaza OR Houthi OR Lebanon OR Syria)'], ['ua', 'UKRAINA–RUSIA', '(Ukraine OR Russia OR Kremlin OR NATO)'], ['as', 'ASIA', '(Taiwan OR "South China Sea" OR "North Korea" OR Myanmar)'], ['en', 'ENERGI & SANKSI', '(sanctions OR OPEC OR "oil supply" OR blockade OR embargo)']];
@@ -5691,13 +5597,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             async load() { const box = $('#fd-body'); box.innerHTML = '<div class="fsx-empty">Memuat…</div>'; try { const j = await jget(`https://api.worldbank.org/v2/country/USA;IDN;CHN;JPN;GBR;DEU;AUS/indicator/${this.cur}?format=json&mrnev=1&per_page=20`); const L = (j[1] || []).filter(x => x.value != null); box.innerHTML = '<table class="fx-table"><tr><th>Negara</th><th>Nilai</th><th>Tahun</th></tr>' + L.map(x => `<tr><td>${esc(x.country.value)}</td><td><b class="b">${(+x.value).toFixed(2)}</b></td><td class="m">${esc(x.date)}</td></tr>`).join('') + '</table><div class="fsx-note">Sumber: World Bank (data tahunan terbaru yang tersedia). Untuk rilis bulanan real-time, gunakan Kalender.</div>'; } catch (e) { box.innerHTML = '<div class="fsx-empty">Gagal memuat data World Bank.</div>'; } }
         };
         FSX.fund.load = FSX.fund.load.bind(FSX.fund);
-
-        /* ---------- INTRADAY ---------- */
-        FSX.intraday = {
-            sym: lsG('fsx_id_s', 'XAUUSD'), tf: lsG('fsx_id_t', '15'),
-            open() { $('#id-pills').innerHTML = pillsHtml(ANS, this.sym); $('#id-tf').innerHTML = pillsHtml([['1', '1M'], ['5', '5M'], ['15', '15M'], ['60', '1H'], ['240', '4H']], this.tf); bindPills('id-pills', k => { this.sym = k; lsS('fsx_id_s', k); this.draw(); }); bindPills('id-tf', k => { this.tf = k; lsS('fsx_id_t', k); this.draw(); }); this.draw(); },
-            draw() { tvEmbed($('#id-embed'), 'embed-widget-advanced-chart.js', { autosize: true, symbol: tvSym(this.sym), interval: this.tf, timezone: 'Asia/Jakarta', theme: 'dark', style: '1', locale: 'id', allow_symbol_change: true, hide_side_toolbar: false, support_host: 'https://www.tradingview.com' }); }
-        };
 
         /* ---------- US INSIDER ---------- */
         FSX.insider = {
@@ -5831,7 +5730,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             'home-tab': () => FSX.renderHome(), 'account2-tab': () => FSX.renderHome(), 'news-tab': () => FSX.news.load(), 'sesi-tab': () => FSX.sesi.open(),
             'saham-tab': () => FSX.saham.open(), 'crypto-tab': () => FSX.crypto.load(), 'micin-tab': () => FSX.micin.load(), 'meme-tab': () => FSX.meme.load(), 'radar-tab': () => FSX.radar.init(),
             'riwayat-tab': () => FSX.riwayat.open(), 'war-tab': () => FSX.war.load(), 'fundamental-tab': () => FSX.fund.open(),
-            'intraday-tab': () => FSX.intraday.open(), 'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open()
+            'insider-tab': () => FSX.insider.load(), 'indikator-tab': () => FSX.indikator.open(), 'video-tab': () => FSX.video.open(), 'materi-tab': () => FSX.materi.open()
         };
         const _openTab = window.openTab;
         window.openTab = function (id, el) {
@@ -6038,7 +5937,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boo
 <script>
 (function(){
 var css=document.createElement('style');css.textContent='.fs-lk{margin-left:6px;font-size:11px;filter:drop-shadow(0 0 4px rgba(234,179,8,.6))}.nav-link.vip-locked{opacity:.78}.fsx-bnav button .fs-lk{position:absolute;top:0;right:calc(50% - 22px);margin:0;font-size:9px}#vip-popup{position:fixed;inset:0;z-index:20000;background:rgba(3,7,14,.88);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px}#vip-popup.show{display:flex}#vip-popup .vip-lock-card{position:relative;max-height:92vh;overflow:auto}';document.head.appendChild(css);
-var NAMES={'signal-tab':'Live Signal ICT','intraday-tab':'Intraday','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
+var NAMES={'signal-tab':'Live Signal ICT','war-tab':'WAR','fundamental-tab':'Fundamental','insider-tab':'US Insider','indikator-tab':'Indikator','monitor-tab':'Monitor & Equity','micin-tab':'Micin Radar','meme-tab':'Meme Terminal','radar-tab':'Radar Dunia'};
 window.__trialEnded=function(){return typeof trialEndTime!=='undefined'&&!!trialEndTime&&!trialActive};
 window.showVipPopup=function(id){
  var p=document.getElementById('vip-popup');if(!p){p=document.createElement('div');p.id='vip-popup';p.onclick=function(e){if(e.target===p)p.classList.remove('show')};document.body.appendChild(p)}
