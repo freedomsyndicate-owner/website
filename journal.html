@@ -1064,7 +1064,7 @@
     .sidebar .sb-scroll { padding-bottom: 10px; }
     .sidebar .sb-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
     .sidebar .sb-footer a { min-height: 48px; }
-    #fsc-bar .row { flex-wrap: wrap; }
+    #fsc-bar .row { flex-wrap: nowrap; }
     #tv_v60 { max-width: 100%; }
     @media (max-width: 768px) {
         .inner-padding { padding: 14px 12px 180px !important; }
@@ -1318,10 +1318,11 @@
 
         <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
             <div style="padding:8px 10px 6px;background:#050a14;border-bottom:1px solid #1f2937;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;min-width:0;font-family:Orbitron,sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:#f5c542;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&#128200; FS CHARTVIEW</div>
-                    <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:6px 8px; border-radius:8px; width:84px; flex:none; font-size:11px;" value="XAUUSD">
-                    <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:6px 10px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer; flex:none;">SWITCH</button>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="flex:1;min-width:0;font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;color:#f5c542;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&#128200; FS CHARTVIEW</div>
+                    <button type="button" onclick="window.FSChart && window.FSChart.openWatchlist()" style="background:#111827;border:1px solid #1f2937;color:#e5e7eb;padding:5px 7px;border-radius:8px;font-size:10px;flex:none;cursor:pointer;white-space:nowrap;">☰ Pantau</button>
+                    <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:5px 6px; border-radius:8px; width:60px; flex:none; font-size:11px;" value="XAUUSD">
+                    <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:5px 8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer; flex:none;">SWITCH</button>
                 </div>
                 <div id="fsc-srcnote" style="font-size:9px;color:#d4af37;line-height:1.4;margin-top:4px;">&#9888;&#65038; XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
             </div>
@@ -4845,9 +4846,6 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             else el.textContent = '⚠️ Data crypto live dari Binance.';
         }
         const FIB = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
-        // FS ViewChart v1: watchlist 12 simbol Binance (XAUUSD/forex live via Twelve Data, crypto via Binance)
-        const WL = [['BTCUSDT', 'BTC'], ['ETHUSDT', 'ETH'], ['SOLUSDT', 'SOL'], ['BNBUSDT', 'BNB'], ['XRPUSDT', 'XRP'], ['DOGEUSDT', 'DOGE'], ['ADAUSDT', 'ADA'], ['LINKUSDT', 'LINK'], ['AVAXUSDT', 'AVAX'], ['LTCUSDT', 'LTC'], ['PAXGUSDT', 'PAXG·Emas'], ['TRXUSDT', 'TRX']];
-
         const PK = 'fs_chart_prefs_v1';
         const prefs = Object.assign({ mode: 'mine', tf: '15', pair: 'XAUUSD', chartType: 'candle', ind: { ma: true, ema: false, rsi: false, vol: true } }, lsGet(PK, {}));
         prefs.mode = 'mine';
@@ -5191,39 +5189,93 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
 
         // ---- menu indikator + panel gambar (ditempel ke body, bukan ke bar) ----
         function closeIndMenu() { const p = $('#fsc-indpop'); if (p) p.classList.remove('open'); }
-        function closeDrawSheet() { const s = $('#fsc-sheet'), d = $('#fsc-backdrop'); if (s) s.classList.remove('open'); if (d) d.classList.remove('open'); }
-        function openDrawSheet() { const s = $('#fsc-sheet'), d = $('#fsc-backdrop'); if (!s) return; closeIndMenu(); s.classList.add('open'); if (d) d.classList.add('open'); }
+        function closeSheets() { document.querySelectorAll('.fsc-sheet').forEach(s => s.classList.remove('open')); const d = $('#fsc-backdrop'); if (d) d.classList.remove('open'); }
+        function closeDrawSheet() { closeSheets(); }
+        function openSheet(id) { const s = document.getElementById(id); if (!s) return; closeIndMenu(); closeSheets(); s.classList.add('open'); const d = $('#fsc-backdrop'); if (d) d.classList.add('open'); }
+        function openDrawSheet() { openSheet('fsc-sheet'); }
         function toggleIndMenu() {
             const pop = $('#fsc-indpop'); if (!pop) return;
             const willOpen = !pop.classList.contains('open');
             closeDrawSheet(); pop.classList.toggle('open', willOpen);
-            if (willOpen) { const b = $('#fsc-indbtn'); if (b) { const r = b.getBoundingClientRect(); pop.style.top = (r.bottom + 6) + 'px'; pop.style.left = Math.max(8, Math.min(window.innerWidth - pop.offsetWidth - 8, r.right - pop.offsetWidth)) + 'px'; } }
+            if (willOpen) { const b = $('#fsc-indbtn'); if (b) { const r = b.getBoundingClientRect(); let top = r.bottom + 6; if (top + pop.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - pop.offsetHeight - 6); pop.style.top = top + 'px'; pop.style.left = Math.max(8, Math.min(window.innerWidth - pop.offsetWidth - 8, r.right - pop.offsetWidth)) + 'px'; } }
         }
         // Satu handler untuk semua tombol kontrol chart, dipakai toolbar, menu indikator, dan panel gambar.
         function handleCtl(b) {
-            if (b.dataset.wl) { const inp = $('#chart-pair'); if (inp) inp.value = b.dataset.wl === 'PAXGUSDT' ? 'XAUUSD' : b.dataset.wl; savePrefs({ pair: inp ? inp.value : b.dataset.wl }); sync(); updateChart(true); return true; }
-            if (b.dataset.ctype) { setChartType(b.dataset.ctype); return true; }
+            if (b.dataset.ctype) { setChartType(b.dataset.ctype); closeSheets(); return true; }
             if (b.dataset.ind) { toggleInd(b.dataset.ind); return true; }
-            if (b.dataset.tf) { savePrefs({ tf: b.dataset.tf }); sync(); updateChart(true); return true; }
+            if (b.dataset.tf) { savePrefs({ tf: b.dataset.tf }); sync(); updateChart(true); closeSheets(); return true; }
             if (b.dataset.tool) { setTool(S.tool === b.dataset.tool && b.dataset.tool !== 'hand' ? 'hand' : b.dataset.tool); closeDrawSheet(); return true; }
             if (b.dataset.act === 'undo') { if (S.dr.length) { S.dr.pop(); persist(); S.sig = ''; draw(); } closeDrawSheet(); return true; }
             if (b.dataset.act === 'clear') { if (S.dr.length && confirm('Hapus SEMUA gambar di ' + S.sym + '?')) { S.dr = []; persist(); S.sig = ''; draw(); } closeDrawSheet(); return true; }
             return false;
         }
 
+        // ---- Daftar Pantau (list bersih ala aplikasi TradingView) ----
+        const WL_GROUPS = [
+            { g: 'EMAS', items: [['XAUUSD', 'XAU/USD', 'Emas / Dollar A.S.', '🥇'], ['XAGUSD', 'XAG/USD', 'Perak / Dollar A.S.', '🥈']] },
+            { g: 'FOREX', items: [['EURUSD', 'EUR/USD', 'Euro / Dollar A.S.', '€'], ['GBPUSD', 'GBP/USD', 'Pound / Dollar A.S.', '£'], ['USDJPY', 'USD/JPY', 'Dollar A.S. / Yen Jepang', '¥'], ['AUDUSD', 'AUD/USD', 'Dolar Australia / Dollar A.S.', '$'], ['USDCAD', 'USD/CAD', 'Dollar A.S. / Dolar Kanada', '$'], ['USDCHF', 'USD/CHF', 'Dollar A.S. / Franc Swiss', '₣'], ['NZDUSD', 'NZD/USD', 'Dolar NZ / Dollar A.S.', '$'], ['EURJPY', 'EUR/JPY', 'Euro / Yen Jepang', '€'], ['GBPJPY', 'GBP/JPY', 'Pound / Yen Jepang', '£']] },
+            { g: 'CRYPTO', items: [['BTC', 'BTC', 'Bitcoin', '₿'], ['ETH', 'ETH', 'Ethereum', 'Ξ'], ['SOL', 'SOL', 'Solana', '◎'], ['BNB', 'BNB', 'BNB', '◆'], ['XRP', 'XRP', 'XRP', '✕'], ['DOGE', 'DOGE', 'Dogecoin', 'Ð'], ['ADA', 'ADA', 'Cardano', '₳'], ['LINK', 'LINK', 'Chainlink', '⬡'], ['AVAX', 'AVAX', 'Avalanche', '▲'], ['LTC', 'LTC', 'Litecoin', 'Ł'], ['PAXG', 'PAXG', 'PAX Gold', '🥇'], ['TRX', 'TRX', 'TRON', '◈']] }
+        ];
+        async function wlPrice(key) {
+            const td = tdSym(key);
+            if (td) { try { const q = await tdQuote(td); if (q) return q; } catch (e) {} }
+            try { const t = await tick24(toBin(key)); if (t) return t; } catch (e) {}
+            return null;
+        }
+        function wlRowHtml(key, disp, name, ic) {
+            const on = toBin(prefs.pair || 'XAUUSD') === toBin(key);
+            return '<button type="button" class="fsc-wl' + (on ? ' on' : '') + '" data-pair="' + key + '"><span class="ic">' + ic + '</span><span class="nm"><b>' + disp + '</b><span>' + name + '</span></span><span class="pr"><b data-wlp>…</b><span data-wlc></span></span></button>';
+        }
+        function renderWatchlist() {
+            const list = $('#fsc-wl-list'); if (!list) return;
+            const q = ($('#fsc-wl-search').value || '').toLowerCase();
+            list.innerHTML = WL_GROUPS.map(gr => {
+                const items = gr.items.filter(it => !q || it[0].toLowerCase().includes(q) || it[1].toLowerCase().includes(q) || it[2].toLowerCase().includes(q));
+                if (!items.length) return '';
+                return '<div class="fsc-grp"><h4>' + gr.g + '</h4>' + items.map(it => wlRowHtml(it[0], it[1], it[2], it[3])).join('') + '</div>';
+            }).join('') || '<div class="fsc-note" style="text-align:center;padding:14px 0">Tidak ada pair yang cocok.</div>';
+            // Harga live tiap baris: forex/emas dari /td/quote, crypto dari Binance.
+            list.querySelectorAll('.fsc-wl').forEach(async btn => {
+                const t = await wlPrice(btn.dataset.pair); if (!btn.isConnected) return;
+                const pEl = btn.querySelector('[data-wlp]'), cEl = btn.querySelector('[data-wlc]');
+                if (!t || !t.p) { pEl.textContent = '—'; return; }
+                pEl.textContent = fmtP(t.p);
+                if (t.pc) { const c = (t.p / t.pc - 1) * 100; cEl.textContent = (c >= 0 ? '+' : '') + c.toFixed(2) + '%'; cEl.style.color = c >= 0 ? '#22c55e' : '#ef4444'; }
+            });
+        }
+        function openWatchlist() { renderWatchlist(); openSheet('fsc-wlsheet'); }
+        function openIntervalSheet() { openSheet('fsc-intsheet'); }
+        function openAnalysisSheet() { renderAnaDetail(); openSheet('fsc-anasheet'); }
+        function renderAnaDetail() {
+            const el = $('#fsc-ana-detail'); if (!el) return;
+            if (!S.alive || !S.D.length) { el.innerHTML = '<div class="fsc-note">Buka chart dulu untuk melihat detail simbol.</div>'; return; }
+            const L = S.D[S.D.length - 1];
+            let chg = null; if (S.tick && S.tick.pc) chg = (S.tick.p / S.tick.pc - 1) * 100;
+            el.innerHTML = '<div class="fsc-note">Pair: <b style="color:#f5c542">' + (S.disp || S.sym) + '</b><br>Sumber data: ' + (S.td ? 'Twelve Data (live, via Worker)' : 'Binance') + '<br>Harga: <b>' + fmtP(L.close) + '</b>' + (chg === null ? '' : ' · <span style="color:' + (chg >= 0 ? '#22c55e' : '#ef4444') + '">' + (chg >= 0 ? '+' : '') + chg.toFixed(2) + '% 24j</span>') + '<br>Interval: ' + tfOf(prefs.tf)[2] + ' · Tipe: ' + prefs.chartType + '</div>';
+        }
+        function filterDraw() {
+            const q = ($('#fsc-draw-search') ? $('#fsc-draw-search').value : '').toLowerCase();
+            const tab = document.querySelector('#fsc-draw-tabs .fsc-tab.on');
+            const cat = tab ? tab.dataset.dtab : 'all';
+            let any = false;
+            document.querySelectorAll('#fsc-sheet .fsc-grp').forEach(g => {
+                let gAny = false;
+                g.querySelectorAll('.fsc-b').forEach(b => { const ok = (!q || b.textContent.toLowerCase().includes(q)) && (cat === 'all' || g.dataset.dgrp === cat); b.style.display = ok ? '' : 'none'; if (ok) gAny = true; });
+                g.style.display = gAny ? '' : 'none'; if (gAny) any = true;
+            });
+            const em = $('#fsc-draw-empty'); if (em) em.style.display = any ? 'none' : 'block';
+        }
+
         // ---- toolbar ----
         function buildBar() {
             const tv = document.getElementById('tv_v60'); if (!tv || $('#fsc-bar')) return;
             const st = document.createElement('style');
-            st.textContent = '#fsc-bar{position:relative;background:#0d1117;border-bottom:1px solid #1f2937;padding:6px 8px;display:flex;flex-direction:column;gap:6px}#fsc-bar .row{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,#000 90%,transparent 100%);mask-image:linear-gradient(to right,#000 90%,transparent 100%);padding-right:16px}#fsc-bar .row::-webkit-scrollbar{display:none}#fsc-bar .row:last-child{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none;padding-right:0}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:4px 8px;font-size:11px;min-height:30px;flex:none;box-sizing:border-box;white-space:nowrap;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-b.gold.on{background:rgba(212,175,55,.18);border-color:#d4af37;color:#f5c542}.fsc-b.ico{padding:4px 7px;font-size:13px;line-height:1}#fsc-bar .sep{flex:none;width:1px;height:20px;background:#1f2937}#fsc-bar .wlrow{max-height:34px}.fsc-pop{position:fixed;top:0;left:0;z-index:95;display:none;min-width:160px;background:#111827;border:1px solid #1f2937;border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.5)}.fsc-pop.open{display:block}.fsc-pop .fsc-b{display:flex;width:100%;justify-content:space-between;align-items:center;margin:2px 0}.fsc-pop .fsc-b .ck{visibility:hidden;color:#38bdf8}.fsc-pop .fsc-b.on .ck{visibility:visible}.fsc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:96;display:none}.fsc-backdrop.open{display:block}.fsc-sheet{position:fixed;left:0;right:0;bottom:0;z-index:97;background:#0d1117;border-top:1px solid #1f2937;border-radius:14px 14px 0 0;padding:8px 12px calc(14px + env(safe-area-inset-bottom,0px));max-height:72vh;overflow-y:auto;transform:translateY(105%);transition:transform .22s ease;box-shadow:0 -8px 30px rgba(0,0,0,.5);box-sizing:border-box}.fsc-sheet.open{transform:none}.fsc-sheet .grab{width:40px;height:4px;border-radius:2px;background:#1f2937;margin:2px auto 8px}.fsc-sheet h3{margin:0;font-size:13px;color:#e5e7eb;font-family:Poppins,sans-serif;display:flex;justify-content:space-between;align-items:center}.fsc-sheet h3 button{background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:4px 8px}.fsc-grp{margin-top:12px}.fsc-grp h4{margin:0 0 6px;font-size:10px;letter-spacing:1px;color:#6b7280;font-weight:600;font-family:Poppins,sans-serif}.fsc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.fsc-grid .fsc-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;padding:6px 4px;font-size:10px;line-height:1.25;text-align:center;white-space:normal}.fsc-grid .fsc-b .ti{font-size:17px;line-height:1}.fsc-grid input[type=color]{width:100%;min-height:52px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:4px;box-sizing:border-box}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}@media (max-width:768px){#fsc-bar{padding:6px 8px;gap:5px}}';
+            st.textContent = '#fsc-bar{position:relative;background:#0d1117;border-bottom:1px solid #1f2937;padding:6px 8px;display:flex;flex-direction:column;gap:6px}#fsc-bar .row{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,#000 90%,transparent 100%);mask-image:linear-gradient(to right,#000 90%,transparent 100%);padding-right:16px}#fsc-bar .row::-webkit-scrollbar{display:none}#fsc-bar .row:last-child{flex-wrap:wrap;overflow:visible;-webkit-mask-image:none;mask-image:none;padding-right:0}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:4px 8px;font-size:11px;min-height:30px;flex:none;box-sizing:border-box;white-space:nowrap;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-b.gold.on{background:rgba(212,175,55,.18);border-color:#d4af37;color:#f5c542}.fsc-b.ico{padding:4px 7px;font-size:13px;line-height:1}#fsc-bar .sep{flex:none;width:1px;height:20px;background:#1f2937}.fsc-pop{position:fixed;top:0;left:0;z-index:95;display:none;min-width:160px;background:#111827;border:1px solid #1f2937;border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.5)}.fsc-pop.open{display:block}.fsc-pop .fsc-b{display:flex;width:100%;justify-content:space-between;align-items:center;margin:2px 0}.fsc-pop .fsc-b .ck{visibility:hidden;color:#38bdf8}.fsc-pop .fsc-b.on .ck{visibility:visible}.fsc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:96;display:none}.fsc-backdrop.open{display:block}.fsc-sheet{position:fixed;left:0;right:0;bottom:0;z-index:97;background:#0d1117;border-top:1px solid #1f2937;border-radius:14px 14px 0 0;padding:8px 12px calc(14px + env(safe-area-inset-bottom,0px));max-height:72vh;overflow-y:auto;transform:translateY(105%);transition:transform .22s ease;box-shadow:0 -8px 30px rgba(0,0,0,.5);box-sizing:border-box}.fsc-sheet.open{transform:none}.fsc-sheet .grab{width:40px;height:4px;border-radius:2px;background:#1f2937;margin:2px auto 8px}.fsc-sheet h3{margin:0;font-size:13px;color:#e5e7eb;font-family:Poppins,sans-serif;display:flex;justify-content:space-between;align-items:center}.fsc-sheet h3 button{background:none;border:none;color:#9ca3af;font-size:16px;cursor:pointer;padding:4px 8px}.fsc-grp{margin-top:12px}.fsc-grp h4{margin:0 0 6px;font-size:10px;letter-spacing:1px;color:#6b7280;font-weight:600;font-family:Poppins,sans-serif}.fsc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.fsc-grid .fsc-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;padding:6px 4px;font-size:10px;line-height:1.25;text-align:center;white-space:normal}.fsc-grid .fsc-b .ti{font-size:17px;line-height:1}.fsc-grid input[type=color]{width:100%;min-height:52px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:4px;box-sizing:border-box}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}@media (max-width:768px){#fsc-bar{padding:6px 8px;gap:5px}}.fsc-icbtn{min-height:36px;font-size:14px;padding:4px 12px}#fsc-bar .icrow{overflow-x:visible;-webkit-mask-image:none;mask-image:none;padding-right:0}.fsc-search{width:100%;box-sizing:border-box;background:#0a0e14;border:1px solid #30363d;color:#e5e7eb;border-radius:8px;padding:8px 10px;font-size:12px;margin:8px 0 4px;font-family:Poppins,sans-serif}.fsc-tabs{display:flex;gap:6px;margin:6px 0;overflow-x:auto;scrollbar-width:none}.fsc-tabs::-webkit-scrollbar{display:none}.fsc-tab{flex:none;background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:16px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:Poppins,sans-serif;white-space:nowrap}.fsc-tab.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-wl{display:flex;align-items:center;gap:10px;width:100%;padding:10px 2px;background:none;border:none;border-bottom:1px solid #1f2937;color:#e5e7eb;cursor:pointer;text-align:left;font-family:Poppins,sans-serif}.fsc-wl .ic{flex:none;width:34px;height:34px;border-radius:50%;background:#111827;border:1px solid #1f2937;display:flex;align-items:center;justify-content:center;font-size:16px}.fsc-wl .nm{flex:1;min-width:0}.fsc-wl .nm b{display:block;font-size:12px;color:#f5c542}.fsc-wl .nm span{font-size:10px;color:#9ca3af}.fsc-wl .pr{text-align:right;flex:none}.fsc-wl .pr b{display:block;font-size:12px}.fsc-wl .pr span{font-size:10px}.fsc-wl.on .nm b{color:#38bdf8}.fsc-arow{display:flex;justify-content:space-between;align-items:center;width:100%;background:#111827;border:1px solid #1f2937;color:#e5e7eb;border-radius:8px;padding:10px 12px;font-size:12px;cursor:pointer;margin:4px 0;font-family:Poppins,sans-serif}.fsc-arow span{color:#6b7280;font-size:10px}.fsc-aint{display:flex;gap:6px;margin:4px 0}.fsc-aint .fsc-b{flex:1;justify-content:center}.fsc-note{font-size:11px;color:#9ca3af;line-height:1.5}';
             document.head.appendChild(st);
             const bar = document.createElement('div'); bar.id = 'fsc-bar';
-            bar.innerHTML = '<div class="row tfrow">' + TF.map(t => `<button class="fsc-b" data-tf="${t[0]}">${t[2]}</button>`).join('') +
-                '<span class="sep"></span><button class="fsc-b gold ico" data-ctype="candle" title="Candle">🕯</button><button class="fsc-b gold ico" data-ctype="line" title="Line">╱</button><button class="fsc-b gold ico" data-ctype="area" title="Area">⛰</button>' +
-                '<span class="sep"></span><button class="fsc-b" id="fsc-indbtn" type="button">📊 Indikator</button><button class="fsc-b" id="fsc-drawbtn" type="button">✏️ Gambar</button></div>' +
-                '<div class="row wlrow">' + WL.map(w => `<button class="fsc-b gold" data-wl="${w[0]}">${w[1]}</button>`).join('') + '</div>' +
+            bar.innerHTML = '<div class="row icrow"><button class="fsc-b fsc-icbtn" id="fsc-intbtn" type="button" title="Interval">15m</button><button class="fsc-b fsc-icbtn" id="fsc-drawbtn" type="button" title="Gambar">✏️</button><button class="fsc-b fsc-icbtn" id="fsc-indbtn" type="button" title="Indikator">📊</button><button class="fsc-b fsc-icbtn" id="fsc-anabtn" type="button" title="Pusat analisis">⋯</button></div>' +
                 '<div class="row"><span id="fsc-status"></span><span id="fsc-hint"></span></div>';
-            tv.parentNode.insertBefore(bar, tv);
+            tv.parentNode.insertBefore(bar, tv.nextSibling);
             // Menu indikator + panel gambar ditempel ke body (bukan ke bar) supaya tidak terpotong
             // animasi tab dan tidak ikut scroll isi tab; tombol-tombolnya tetap ditangani handleCtl().
             const pop = document.createElement('div'); pop.className = 'fsc-pop'; pop.id = 'fsc-indpop';
@@ -5232,48 +5284,76 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const bd = document.createElement('div'); bd.className = 'fsc-backdrop'; bd.id = 'fsc-backdrop'; document.body.appendChild(bd);
             const sh = document.createElement('div'); sh.className = 'fsc-sheet'; sh.id = 'fsc-sheet';
             sh.innerHTML = '<div class="grab"></div><h3>✏️ Gambar <button type="button" id="fsc-sheet-close" aria-label="Tutup">✕</button></h3>' +
-                '<div class="fsc-grp"><h4>TREN</h4><div class="fsc-grid">' +
+                '<input class="fsc-search" id="fsc-draw-search" placeholder="Cari alat gambar…" autocomplete="off">' +
+                '<div class="fsc-tabs" id="fsc-draw-tabs"><button class="fsc-tab on" data-dtab="all">Semua</button><button class="fsc-tab" data-dtab="tren">Tren</button><button class="fsc-tab" data-dtab="fib">Gann dan Fibonacci</button><button class="fsc-tab" data-dtab="motif">Motif</button><button class="fsc-tab" data-dtab="proyeksi">Proyeksi</button><button class="fsc-tab" data-dtab="aksi">Aksi</button></div>' +
+                '<div id="fsc-draw-empty" style="display:none;color:#9ca3af;font-size:11px;text-align:center;padding:14px 0">Belum ada alat di kategori ini.</div>' +
+                '<div class="fsc-grp" data-dgrp="tren"><h4>TREN</h4><div class="fsc-grid">' +
                 '<button class="fsc-b" data-tool="hand"><span class="ti">✋</span>Geser</button>' +
                 '<button class="fsc-b" data-tool="tl"><span class="ti">╱</span>Garis Tren</button>' +
                 '<button class="fsc-b" data-tool="hl"><span class="ti">─</span>Garis Horizontal</button>' +
                 '<button class="fsc-b" data-tool="rc"><span class="ti">▭</span>Kotak</button>' +
                 '</div></div>' +
-                '<div class="fsc-grp"><h4>GANN DAN FIBONACCI</h4><div class="fsc-grid">' +
+                '<div class="fsc-grp" data-dgrp="fib"><h4>GANN DAN FIBONACCI</h4><div class="fsc-grid">' +
                 '<button class="fsc-b" data-tool="fb"><span class="ti">📈</span>Fib Retracement</button>' +
                 '</div></div>' +
-                '<div class="fsc-grp"><h4>AKSI</h4><div class="fsc-grid">' +
+                '<div class="fsc-grp" data-dgrp="aksi"><h4>AKSI</h4><div class="fsc-grid">' +
                 '<button class="fsc-b" data-tool="erase"><span class="ti">🧽</span>Hapus</button>' +
                 '<button class="fsc-b" data-act="undo"><span class="ti">↶</span>Undo</button>' +
                 '<button class="fsc-b" data-act="clear"><span class="ti">🗑</span>Hapus Semua</button>' +
                 '<input type="color" id="fsc-color" value="#38bdf8" title="Warna gambar">' +
                 '</div></div>';
             document.body.appendChild(sh);
+            // Sheet Daftar Pantau (list bersih), sheet Interval, sheet Pusat Analisis.
+            const wl = document.createElement('div'); wl.className = 'fsc-sheet'; wl.id = 'fsc-wlsheet';
+            wl.innerHTML = '<div class="grab"></div><h3>☰ Daftar Pantau <button type="button" id="fsc-wl-close" aria-label="Tutup">✕</button></h3><input class="fsc-search" id="fsc-wl-search" placeholder="Cari pair…" autocomplete="off"><div id="fsc-wl-list"></div>';
+            document.body.appendChild(wl);
+            const it = document.createElement('div'); it.className = 'fsc-sheet'; it.id = 'fsc-intsheet';
+            it.innerHTML = '<div class="grab"></div><h3>Interval <button type="button" id="fsc-int-close" aria-label="Tutup">✕</button></h3><div class="fsc-grp"><h4>FAVORIT</h4><div class="fsc-grid">' + TF.map(t => `<button class="fsc-b" data-tf="${t[0]}">${t[2]}</button>`).join('') + '</div></div>';
+            document.body.appendChild(it);
+            const an = document.createElement('div'); an.className = 'fsc-sheet'; an.id = 'fsc-anasheet';
+            an.innerHTML = '<div class="grab"></div><h3>⋯ Pusat Analisis <button type="button" id="fsc-ana-close" aria-label="Tutup">✕</button></h3>' +
+                '<div class="fsc-grp"><h4>INDIKATOR</h4><button type="button" class="fsc-arow" id="fsc-ana-ind">Indikator <span>MA20 · EMA50 · RSI14 · Volume ›</span></button></div>' +
+                '<div class="fsc-grp"><h4>TIPE CHART</h4><div class="fsc-aint"><button class="fsc-b gold" data-ctype="candle">Candle</button><button class="fsc-b gold" data-ctype="line">Line</button><button class="fsc-b gold" data-ctype="area">Area</button></div></div>' +
+                '<div class="fsc-grp"><h4>DETAIL SIMBOL</h4><div id="fsc-ana-detail"></div></div>';
+            document.body.appendChild(an);
+            wl.querySelector('#fsc-wl-close').addEventListener('click', closeSheets);
+            wl.querySelector('#fsc-wl-search').addEventListener('input', renderWatchlist);
+            wl.querySelector('#fsc-wl-list').addEventListener('click', e => { const b = e.target.closest('.fsc-wl'); if (!b) return; savePrefs({ pair: b.dataset.pair }); sync(); updateChart(true); closeSheets(); });
+            it.querySelector('#fsc-int-close').addEventListener('click', closeSheets);
+            it.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.id === 'fsc-int-close') return; handleCtl(b); });
+            an.querySelector('#fsc-ana-close').addEventListener('click', closeSheets);
+            an.querySelector('#fsc-ana-ind').addEventListener('click', () => { closeSheets(); toggleIndMenu(); });
+            an.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.id === 'fsc-ana-close' || b.id === 'fsc-ana-ind') return; handleCtl(b); });
+            const ds = $('#fsc-draw-search'); if (ds) ds.addEventListener('input', filterDraw);
+            const dt = $('#fsc-draw-tabs'); if (dt) dt.addEventListener('click', e => { const b = e.target.closest('.fsc-tab'); if (!b) return; dt.querySelectorAll('.fsc-tab').forEach(x => x.classList.toggle('on', x === b)); filterDraw(); });
             bar.addEventListener('click', e => {
                 const b = e.target.closest('button'); if (!b) return;
                 if (b.id === 'fsc-indbtn') { toggleIndMenu(); return; }
                 if (b.id === 'fsc-drawbtn') { openDrawSheet(); return; }
+                if (b.id === 'fsc-intbtn') { openIntervalSheet(); return; }
+                if (b.id === 'fsc-anabtn') { openAnalysisSheet(); return; }
                 handleCtl(b);
             });
             const ctl = e => { const b = e.target.closest('button'); if (!b) return; if (b.id === 'fsc-sheet-close') { closeDrawSheet(); return; } handleCtl(b); };
             pop.addEventListener('click', ctl);
             sh.addEventListener('click', ctl);
             bd.addEventListener('click', closeDrawSheet);
-            document.addEventListener('click', e => { if (!e.target.closest('#fsc-indbtn') && !e.target.closest('#fsc-indpop')) closeIndMenu(); });
+            document.addEventListener('click', e => { if (!e.target.closest('#fsc-indbtn') && !e.target.closest('#fsc-indpop') && !e.target.closest('#fsc-ana-ind')) closeIndMenu(); });
             $('#fsc-color').addEventListener('input', e => { S.color = e.target.value; });
             sync();
         }
         function sync() {
-            document.querySelectorAll('#fsc-bar [data-ctype]').forEach(b => b.classList.toggle('on', b.dataset.ctype === prefs.chartType));
+            document.querySelectorAll('[data-ctype]').forEach(b => b.classList.toggle('on', b.dataset.ctype === prefs.chartType));
             document.querySelectorAll('[data-ind]').forEach(b => b.classList.toggle('on', !!prefs.ind[b.dataset.ind]));
-            document.querySelectorAll('#fsc-bar [data-tf]').forEach(b => b.classList.toggle('on', b.dataset.tf === prefs.tf));
-            document.querySelectorAll('#fsc-bar [data-wl]').forEach(b => b.classList.toggle('on', b.dataset.wl === toBin(prefs.pair || 'XAUUSD')));
+            document.querySelectorAll('[data-tf]').forEach(b => b.classList.toggle('on', b.dataset.tf === prefs.tf));
+            const ib = $('#fsc-intbtn'); if (ib) ib.textContent = tfOf(prefs.tf)[2];
             const inp = $('#chart-pair'); if (inp && prefs.pair) inp.value = prefs.pair;
             const bar = $('#fsc-bar'); if (bar) bar.classList.toggle('mine', true);
             status('', '');
         }
         function setMode(m) { prefs.mode = 'mine'; savePrefs({}); sync(); updateChart(true); }
 
-        window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0], tvSymbol };
+        window.FSChart = { prefs: () => prefs, savePrefs, open, close, setMode, tvInterval: k => tfOf(k)[0], tvSymbol, openWatchlist, openInterval: openIntervalSheet, openAnalysis: openAnalysisSheet };
 
         function init() {
             buildBar();
