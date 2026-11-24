@@ -1323,7 +1323,7 @@
                     <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:6px 8px; border-radius:8px; width:84px; flex:none; font-size:11px;" value="XAUUSD">
                     <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:6px 10px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer; flex:none;">SWITCH</button>
                 </div>
-                <div style="font-size:9px;color:#d4af37;line-height:1.4;margin-top:4px;">&#9888;&#65038; XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
+                <div id="fsc-srcnote" style="font-size:9px;color:#d4af37;line-height:1.4;margin-top:4px;">&#9888;&#65038; XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
             </div>
             <div id="tv_v60" style="height:500px; width:100%;"></div>
             
@@ -4810,8 +4810,42 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         const TF = [['1', '1m', '1m', 60], ['5', '5m', '5m', 300], ['15', '15m', '15m', 900], ['30', '30m', '30m', 1800], ['60', '1h', '1H', 3600], ['240', '4h', '4H', 14400], ['D', '1d', '1D', 86400]];
         const tfOf = k => TF.find(t => t[0] === k) || TF[2];
         const HOSTS = ['https://api.binance.com', 'https://data-api.binance.vision'];
+        // ---- Twelve Data via Worker fs-ai (XAUUSD + forex live, bukan proxy PAXG) ----
+        // Key disimpan sebagai secret di Worker — TIDAK PERNAH keluar ke
+        // browser. Chart hanya memanggil /td/* di Worker ini; kalau Worker
+        // gagal, chart jatuh kembali ke PAXG Binance (lihat open()).
+        const FS_AI = 'https://fs-ai.sanlana1903.workers.dev';
+        const TD_FX = { 'XAUUSD': 'XAU/USD', 'XAGUSD': 'XAG/USD', 'EURUSD': 'EUR/USD', 'GBPUSD': 'GBP/USD', 'USDJPY': 'USD/JPY', 'AUDUSD': 'AUD/USD', 'USDCAD': 'USD/CAD', 'USDCHF': 'USD/CHF', 'NZDUSD': 'NZD/USD', 'EURJPY': 'EUR/JPY', 'GBPJPY': 'GBP/JPY' };
+        const TD_IV = { '1': '1min', '5': '5min', '15': '15min', '30': '30min', '60': '1h', '240': '4h', 'D': '1day' };
+        const tdSym = p => { const k = String(p || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); return TD_FX[k] || null; };
+        // Twelve Data: datetime "2026-11-25 04:30:00" (UTC untuk forex/emas),
+        // atau "2026-11-25" untuk interval 1day.
+        const tdTime = d => { const s = String(d || ''); const iso = s.length === 10 ? s + 'T00:00:00Z' : s.replace(' ', 'T') + 'Z'; return Math.floor(new Date(iso).getTime() / 1000); };
+        async function tdKlines(tdSymbol, tfKey) {
+            const iv = TD_IV[tfKey] || '15min';
+            const r = await fetch(FS_AI + '/td/time_series?symbol=' + encodeURIComponent(tdSymbol) + '&interval=' + iv + '&outputsize=500');
+            if (!r.ok) throw new Error('Twelve Data HTTP ' + r.status);
+            const j = await r.json();
+            if (!j || !Array.isArray(j.values) || !j.values.length) throw new Error('Twelve Data: data kosong');
+            // values urutan terbaru dulu — balik jadi terlama dulu sebelum digambar.
+            return j.values.slice().reverse().map(v => ({ time: tdTime(v.datetime), open: +v.open, high: +v.high, low: +v.low, close: +v.close, volume: +v.volume || 0 }));
+        }
+        async function tdQuote(tdSymbol) {
+            const r = await fetch(FS_AI + '/td/quote?symbol=' + encodeURIComponent(tdSymbol));
+            if (!r.ok) return null;
+            const j = await r.json();
+            if (!j || j.close == null) return null;
+            return { p: +j.close, pc: +j.previous_close || +j.close };
+        }
+        // Label jujur di bawah judul FS CHARTVIEW, sesuai sumber data yang dipakai.
+        function setSrcNote(mode, pair) {
+            const el = document.getElementById('fsc-srcnote'); if (!el) return;
+            if (mode === 'td') el.textContent = '⚠️ ' + pair + ' live via Twelve Data (gratis, 800 req/hari, data di-cache).';
+            else if (mode === 'td-fallback') el.textContent = pair === 'XAUUSD' ? '⚠️ XAUUSD via PAXG (proxy emas Binance) — data Twelve Data sedang tidak tersedia.' : '⚠️ ' + pair + ' via Binance — data Twelve Data sedang tidak tersedia.';
+            else el.textContent = '⚠️ Data crypto live dari Binance.';
+        }
         const FIB = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1];
-        // FS ViewChart v1: watchlist 12 simbol Binance (PAXG = proxy emas XAUUSD)
+        // FS ViewChart v1: watchlist 12 simbol Binance (XAUUSD/forex live via Twelve Data, crypto via Binance)
         const WL = [['BTCUSDT', 'BTC'], ['ETHUSDT', 'ETH'], ['SOLUSDT', 'SOL'], ['BNBUSDT', 'BNB'], ['XRPUSDT', 'XRP'], ['DOGEUSDT', 'DOGE'], ['ADAUSDT', 'ADA'], ['LINKUSDT', 'LINK'], ['AVAXUSDT', 'AVAX'], ['LTCUSDT', 'LTC'], ['PAXGUSDT', 'PAXG·Emas'], ['TRXUSDT', 'TRX']];
 
         const PK = 'fs_chart_prefs_v1';
@@ -4990,7 +5024,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const L = S.D[S.D.length - 1];
             let chg = null; if (S.tick && S.tick.pc) chg = (S.tick.p / S.tick.pc - 1) * 100;
             const chgHtml = chg === null ? '' : ' <span style="color:' + (chg >= 0 ? '#22c55e' : '#ef4444') + '">' + (chg >= 0 ? '+' : '') + chg.toFixed(2) + '% 24j</span>';
-            S.head.innerHTML = '<b style="color:#f5c542">' + S.sym + '</b> <b>' + fmtP(L.close) + '</b>' + chgHtml + ' <span style="color:#9ca3af">O ' + fmtP(L.open) + ' · H ' + fmtP(L.high) + ' · L ' + fmtP(L.low) + ' · C ' + fmtP(L.close) + '</span>';
+            S.head.innerHTML = '<b style="color:#f5c542">' + (S.disp || S.sym) + '</b> <b>' + fmtP(L.close) + '</b>' + chgHtml + ' <span style="color:#9ca3af">O ' + fmtP(L.open) + ' · H ' + fmtP(L.high) + ' · L ' + fmtP(L.low) + ' · C ' + fmtP(L.close) + '</span>';
         }
         async function tick24(sym) {
             for (const h of HOSTS) { try { const r = await fetch(h + '/api/v3/ticker/24hr?symbol=' + sym); if (!r.ok) continue; const j = await r.json(); return { p: +j.lastPrice, pc: +j.prevClosePrice }; } catch (e) {} }
@@ -5091,7 +5125,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             S.alive = false; S.id++; clearInterval(S.poll);
             if (S.chart) { try { S.chart.remove(); } catch (e) {} S.chart = null; }
             if (S.rsiChart) { try { S.rsiChart.remove(); } catch (e) {} S.rsiChart = null; }
-            S.maS = S.emaS = S.volS = S.rsiS = null; S.rsiEl = null; S.head = null; S.tick = null;
+            S.maS = S.emaS = S.volS = S.rsiS = null; S.rsiEl = null; S.head = null; S.tick = null; S.td = null; S.disp = null;
             const bar = $('#fsc-bar'); if (bar) bar.classList.remove('mine');
             closeDrawSheet(); closeIndMenu();
         }
@@ -5104,10 +5138,26 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
             const fail = t => { msg.style.pointerEvents = 'auto'; msg.innerHTML = '<div>⚠️ ' + t + '<br><br><button class="fsc-b on" onclick="updateChart(true)">Coba lagi</button></div>'; };
             try {
                 if (!(await ensureLWC())) return fail('Library chart gagal dimuat (diblokir jaringan/VPN).');
-                const [data, dr, tk] = await Promise.all([kl(sym, T[1], '&limit=1000'), loadDrawings(sym), tick24(sym)]);
+                // XAUUSD/forex: coba Twelve Data dulu lewat Worker; kalau gagal
+                // (error/429/Worker mati), jatuh kembali ke Binance (PAXG untuk
+                // emas) supaya chart tidak pernah kosong.
+                const td = tdSym(pair);
+                let data, tk, tdOk = false;
+                if (td) {
+                    try {
+                        const r = await Promise.all([tdKlines(td, tfKey), tdQuote(td)]);
+                        data = r[0]; tk = r[1]; tdOk = true; setSrcNote('td', pair);
+                    } catch (e) { tdOk = false; }
+                }
+                if (!tdOk) {
+                    const r = await Promise.all([kl(sym, T[1], '&limit=1000'), tick24(sym)]);
+                    data = r[0]; tk = r[1];
+                    if (td) setSrcNote('td-fallback', pair); else setSrcNote('bin', pair);
+                }
+                const dr = await loadDrawings(sym);
                 if (id !== S.id) return;
                 if (!data.length) return fail('Tidak ada data untuk ' + sym);
-                S.D = data; S.dr = dr; S.tick = tk; S.el = $('.fsc-chart', box); S.cv = $('.fsc-cv', box); S.head = $('.fsc-head', box); S.rsiEl = $('.fsc-rsi', box);
+                S.D = data; S.dr = dr; S.tick = tk; S.td = tdOk ? td : null; S.disp = tdOk ? td : sym; S.el = $('.fsc-chart', box); S.cv = $('.fsc-cv', box); S.head = $('.fsc-head', box); S.rsiEl = $('.fsc-rsi', box);
                 S.chart = LightweightCharts.createChart(S.el, { width: S.el.clientWidth, height: S.el.clientHeight, layout: { background: { color: '#0d1117' }, textColor: '#9ca3af' }, grid: { vertLines: { color: '#161e2e' }, horzLines: { color: '#161e2e' } }, rightPriceScale: { borderColor: '#1f2937' }, timeScale: { borderColor: '#1f2937', timeVisible: true, rightOffset: 10 }, crosshair: { mode: 0 } });
                 makeMainSeries(); applyIndicators();
                 S.chart.timeScale().setVisibleLogicalRange({ from: data.length - 90, to: data.length + 10 });
@@ -5118,7 +5168,23 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
                 clearInterval(S.poll);
                 S.poll = setInterval(async () => {
                     if (id !== S.id || !S.el.isConnected) return clearInterval(S.poll);
-                    try { (await kl(sym, T[1], '&limit=2')).forEach(c => { const L = S.D[S.D.length - 1]; if (L && L.time === c.time) S.D[S.D.length - 1] = c; else if (!L || c.time > L.time) S.D.push(c); const u = prefs.chartType === 'candle' ? c : { time: c.time, value: c.close }; S.series.update(u); }); applyIndicators(); } catch (e) {}
+                    try {
+                        if (S.td) {
+                            // Pair Twelve Data: harga live dari /td/quote (di-cache
+                            // Worker 30 detik), candle terakhir diperbarui/digulir.
+                            const q = await tdQuote(S.td); if (!q) return;
+                            const L = S.D[S.D.length - 1]; if (!L) return;
+                            const cur = Math.floor(Date.now() / 1000 / iv()) * iv();
+                            let c;
+                            if (cur > L.time) { c = { time: cur, open: q.p, high: q.p, low: q.p, close: q.p, volume: 0 }; S.D.push(c); }
+                            else { L.close = q.p; if (q.p > L.high) L.high = q.p; if (q.p < L.low) L.low = q.p; c = L; }
+                            S.tick = q;
+                            const u = prefs.chartType === 'candle' ? c : { time: c.time, value: c.close };
+                            S.series.update(u); applyIndicators();
+                        } else {
+                            (await kl(sym, T[1], '&limit=2')).forEach(c => { const L = S.D[S.D.length - 1]; if (L && L.time === c.time) S.D[S.D.length - 1] = c; else if (!L || c.time > L.time) S.D.push(c); const u = prefs.chartType === 'candle' ? c : { time: c.time, value: c.close }; S.series.update(u); }); applyIndicators();
+                        }
+                    } catch (e) {}
                 }, 5000);
             } catch (e) { if (id === S.id) fail(e.message || 'Gagal memuat data'); }
         }
