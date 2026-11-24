@@ -1068,7 +1068,7 @@
     #tv_v60 { max-width: 100%; }
     @media (max-width: 768px) {
         .inner-padding { padding: 14px 12px 180px !important; }
-        #tv_v60 { height: 380px !important; }
+        #tv_v60 { height: 440px !important; }
         .tab-content h2 { font-size: 13px; }
         .fsx-card, .widget-box { padding-left: 10px; padding-right: 10px; }
     }
@@ -1317,13 +1317,16 @@
         </div></div>
 
         <div id="chart-tab" class="tab-content" style="background:#050a14; overflow-y:auto;">
+            <div style="padding:10px 12px 8px;background:#050a14;border-bottom:1px solid #1f2937;">
+                <div style="font-family:Orbitron,sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;color:#f5c542;">&#128200; FS CHARTVIEW</div>
+                <div style="font-size:10px;color:#d4af37;line-height:1.5;margin-top:3px;">&#9888;&#65038; XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
+            </div>
             <div style="background:#0d1117; padding:10px; display:flex; gap:10px; flex-wrap:wrap; border-bottom:1px solid #1f2937;">
                 <input type="text" id="chart-pair" style="background:#0a0e14; border:1px solid #30363d; color:var(--blue); padding:8px; border-radius:8px; width:120px; font-size:11px;" value="XAUUSD">
                 <button onclick="updateChart(true)" style="background:var(--blue); border:none; padding:8px; border-radius:8px; font-size:10px; font-weight:bold; color:black; cursor:pointer;">SWITCH</button>
             </div>
             <div id="tv_v60" style="height:450px; width:100%;"></div>
             
-            <div style="padding:8px 12px;font-size:10px;color:#d4af37;background:#0d1117;border-bottom:1px solid #1f2937;line-height:1.5">⚠️ FS ViewChart — XAUUSD via PAXG (proxy emas Binance), bukan harga OANDA live, bisa beda beberapa dolar. Data crypto live dari Binance.</div>
             <div class="inner-padding" style="padding-top:0;">
                 <!-- Widget dari Terminal (Clock, Sentiment, Backtest, Heat Map) -->
                 <div class="tm-grid" id="chart-widgets" style="margin-top:15px;"></div>
@@ -2385,42 +2388,54 @@ window.openTab=function(id,el){_o.apply(this,arguments);setTimeout(()=>{if(act('
         });
 
         async function login() {
-            // Di dalam APK: popup Google native lewat plugin Capacitor,
-            // tanpa keluar ke Chrome. Kalau plugin tidak ada / gagal,
-            // jatuh kembali ke redirect (tetap di dalam APK, tidak buka Chrome).
-            try {
-                if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication) {
+            const p = new firebase.auth.GoogleAuthProvider();
+            p.addScope('email');
+            p.addScope('profile');
+            p.setCustomParameters({ prompt: 'select_account' });
+            // Hanya di dalam APK (Capacitor ada) plugin login dicek.
+            // Di browser biasa plugin tidak ada dan tidak dicari, jadi
+            // tidak ada lagi peringatan plugin yang menyesatkan.
+            const inApp = !!(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication);
+            if (inApp) {
+                // Di dalam APK: popup Google native lewat plugin Capacitor,
+                // tanpa keluar ke Chrome. Kalau plugin gagal, jatuh ke
+                // redirect (tetap di dalam APK, tidak buka Chrome).
+                try {
                     const r = await window.Capacitor.Plugins.FirebaseAuthentication.signInWithGoogle();
                     if (r && r.credential && r.credential.idToken) {
                         const cred = firebase.auth.GoogleAuthProvider.credential(r.credential.idToken);
                         await auth.signInWithCredential(cred);
                         return; // onAuthStateChanged akan handle
                     }
-                    // Plugin ada tapi tidak mengembalikan credential, laporkan
-                    // alasannya supaya bisa diperbaiki, lalu jatuh ke redirect.
+                    // Plugin ada tapi tidak mengembalikan credential.
                     alert('Login native gagal (tidak ada credential). Coba lagi atau login lewat browser.');
-                } else {
-                    // Plugin tidak ditemukan di APK ini, laporkan sekali.
-                    alert('Plugin login native tidak ditemukan di APK ini. Pastikan APK versi terbaru terpasang. Login dialihkan ke halaman Google.');
-                }
-            } catch (e) { alert('Login native gagal: ' + (e && e.message ? e.message : e) + '. Dialihkan ke halaman Google.'); }
-            const p = new firebase.auth.GoogleAuthProvider();
-            p.addScope('email');
-            p.addScope('profile');
-            p.setCustomParameters({ prompt: 'select_account' });
-            // Redirect (bukan popup): popup diblokir di WebView/APK Android
-            // dengan error auth/popup-blocked, sedangkan redirect bekerja
-            // di browser maupun di APK. onAuthStateChanged akan handle
-            // setelah kembali dari Google.
-            auth.signInWithRedirect(p);
+                } catch (e) { alert('Login native gagal: ' + (e && e.message ? e.message : e) + '. Dialihkan ke halaman Google.'); }
+                // Redirect (bukan popup): popup diblokir di WebView/APK
+                // Android dengan error auth/popup-blocked.
+                // onAuthStateChanged akan handle setelah kembali dari Google.
+                auth.signInWithRedirect(p);
+                return;
+            }
+            // Di browser biasa: popup Google. Tidak tergantung alamat
+            // balik seperti redirect, jadi login tidak hilang di tengah jalan.
+            try {
+                await auth.signInWithPopup(p);
+                // onAuthStateChanged akan handle
+            } catch (e) {
+                if (!e || e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return; // dibatalkan, diam saja
+                if (e.code === 'auth/popup-blocked') { alert('Popup login diblokir browser. Izinkan popup untuk situs ini, lalu tekan LOGIN WITH GOOGLE lagi.'); return; }
+                if (e.code === 'auth/unauthorized-domain') { alert('Login gagal: alamat situs ini belum didaftarkan di Firebase. Beri tahu owner untuk mendaftarkannya di Firebase Console (Authentication, Settings, Authorized domains).'); return; }
+                if (e.code === 'auth/operation-not-allowed') { alert('Login Google belum diaktifkan di Firebase. Beri tahu owner untuk mengaktifkannya di Firebase Console (Authentication, Sign-in method, Google).'); return; }
+                alert('Login gagal: ' + (e.message || e));
+            }
         }
-        // Tangani hasil kembali dari Google setelah redirect login.
+        // Tangani hasil kembali dari Google setelah redirect login (jalur APK).
         auth.getRedirectResult()
             .then(result => { /* onAuthStateChanged akan handle */ })
             .catch(e => {
-                if (e.code !== 'auth/popup-closed-by-user') {
-                    alert('Login gagal: ' + e.message);
-                }
+                if (!e || e.code === 'auth/popup-closed-by-user') return;
+                if (e.code === 'auth/unauthorized-domain') { alert('Login gagal: alamat situs ini belum didaftarkan di Firebase. Beri tahu owner untuk mendaftarkannya di Firebase Console (Authentication, Settings, Authorized domains).'); return; }
+                alert('Login gagal: ' + (e.message || e));
             });
         function logout() { if(confirm("Yakin ingin keluar?")) { auth.signOut().then(() => { location.reload(); }).catch(e => alert("Logout Gagal: " + e.message)); } }
 
@@ -5080,7 +5095,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         }
         async function open(box, pair, tfKey) {
             close(); const id = S.id; const sym = toBin(pair); const T = tfOf(tfKey);
-            box.style.height = (window.innerWidth <= 768 ? '380px' : '480px'); box.style.minHeight = ''; S.sym = sym; S.tool = 'hand';
+            box.style.height = (window.innerWidth <= 768 ? '440px' : '480px'); box.style.minHeight = ''; S.sym = sym; S.tool = 'hand';
             box.innerHTML = '<div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column"><div class="fsc-head" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 10px;background:#0d1117;border-bottom:1px solid #1f2937;font-size:12px;color:#e5e7eb"></div><div class="fsc-wrap" style="position:relative;flex:1;min-height:0"><div class="fsc-chart" style="position:absolute;inset:0"></div><canvas class="fsc-cv" style="position:absolute;left:0;top:0;pointer-events:none;touch-action:none"></canvas><div class="fsc-msg" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#9ca3af;font-size:12px;pointer-events:none">Memuat chart…</div></div><div class="fsc-rsi" style="height:96px;flex:none;display:none;border-top:1px solid #1f2937"></div></div>';
             const bar = $('#fsc-bar'); if (bar) bar.classList.add('mine');
             const msg = $('.fsc-msg', box);
@@ -5110,7 +5125,7 @@ const FREE_TABS=['home-tab','account2-tab','vip-tab','donasi-tab','community-tab
         function buildBar() {
             const tv = document.getElementById('tv_v60'); if (!tv || $('#fsc-bar')) return;
             const st = document.createElement('style');
-            st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:8px 10px;display:flex;flex-direction:column;gap:8px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:7px 10px;font-size:11px;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-b.gold.on{background:rgba(212,175,55,.18);border-color:#d4af37;color:#f5c542}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}';
+            st.textContent = '#fsc-bar{background:#0d1117;border-bottom:1px solid #1f2937;padding:6px 8px;display:flex;flex-direction:column;gap:6px}#fsc-bar .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fsc-b{background:#111827;border:1px solid #1f2937;color:#9ca3af;border-radius:8px;padding:6px 9px;font-size:11px;min-height:36px;box-sizing:border-box;white-space:nowrap;font-family:Poppins,sans-serif;cursor:pointer}.fsc-b.on{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.6);color:#38bdf8}.fsc-b.gold.on{background:rgba(212,175,55,.18);border-color:#d4af37;color:#f5c542}#fsc-bar .tools{display:none}#fsc-bar.mine .tools{display:flex}#fsc-bar input[type=color]{width:34px;height:30px;flex:none;border:1px solid #1f2937;background:#111827;border-radius:8px;padding:2px}#fsc-status{font-size:10px}#fsc-hint{font-size:10px;color:#38bdf8}@media (max-width:768px){#fsc-bar{padding:6px 8px;gap:5px}#fsc-bar .row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}#fsc-bar .row::-webkit-scrollbar{display:none}#fsc-bar .row:last-child{flex-wrap:wrap;overflow:visible}#fsc-bar .fsc-b{flex:none;min-height:40px;padding:6px 10px;font-size:11px}}';
             document.head.appendChild(st);
             const bar = document.createElement('div'); bar.id = 'fsc-bar';
             bar.innerHTML = '<div class="row">' + WL.map(w => `<button class="fsc-b gold" data-wl="${w[0]}">${w[1]}</button>`).join('') + '</div>' +
