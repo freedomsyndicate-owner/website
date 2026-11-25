@@ -2730,20 +2730,34 @@
             }
             // Race paralel: semua mirror ditembak sekaligus, jawaban pertama menang.
             // Gagal hanya kalau SEMUA mirror gagal — bukan karena 1 mirror lambat.
+            // 26 Nov 2026 — audit "cek semua musik": 2 dari 16 cek gagal sesaat
+            // ("semua mirror gagal") lalu normal lagi saat dicek ulang — mirror
+            // kadang tersendak sesaat / rate-limit burst. Jadi kalau semua
+            // mirror gagal, coba SEKALI LAGI setelah 1,5 dtk sebelum menyerah.
             function _fsInvRace(mirrors, path, ms) {
-                return new Promise(function(resolve, reject){
-                    var done = false, pending = mirrors.length;
-                    if (!pending) { reject(new Error('tidak ada mirror')); return; }
-                    mirrors.forEach(function(base){
-                        _fsInvFetchJson(base + path, ms || 15000).then(function(d){
-                            if (done) return;
-                            done = true; FS_INVIDIOUS = base; resolve(d);
-                        }).catch(function(){
-                            pending--;
-                            if (pending <= 0 && !done) { done = true; reject(new Error('semua mirror gagal')); }
+                var attempt = function(triesLeft){
+                    return new Promise(function(resolve, reject){
+                        var done = false, pending = mirrors.length;
+                        if (!pending) { reject(new Error('tidak ada mirror')); return; }
+                        mirrors.forEach(function(base){
+                            _fsInvFetchJson(base + path, ms || 15000).then(function(d){
+                                if (done) return;
+                                done = true; FS_INVIDIOUS = base; resolve(d);
+                            }).catch(function(){
+                                pending--;
+                                if (pending <= 0 && !done) {
+                                    done = true;
+                                    if (triesLeft > 0) {
+                                        setTimeout(function(){ attempt(triesLeft - 1).then(resolve, reject); }, 1500);
+                                    } else {
+                                        reject(new Error('semua mirror gagal'));
+                                    }
+                                }
+                            });
                         });
                     });
-                });
+                };
+                return attempt(1);
             }
             function _fsInvTryMirror(i, path) {
                 var isVideo = path.indexOf('/api/v1/videos/') === 0;
