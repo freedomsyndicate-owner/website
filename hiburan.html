@@ -2217,7 +2217,7 @@
             <div id="fsRadioList" class="fs-track-lane" style="margin-top:6px;"></div>
             <button id="fsRadioMoreBtn" onclick="fsRadioLoadMore()" style="display:none;width:100%;margin-top:14px;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#bae6fd;font-size:0.75rem;font-weight:800;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;">⬇ Muat lebih banyak lagu</button>
             <div id="fsRadioMoreNote" style="display:none;font-size:0.58rem;color:#94A3B8;margin-top:6px;text-align:center;">Tidak ada batas jumlah lagu, terus tekan sampai ketemu lagunya. Semua lagu di YouTube dicari halaman demi halaman, terbaru sampai terlama.</div>
-            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog) sekaligus, lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Baris 🎤 Artis Indonesia: ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama, artis lain ketik saja namanya di kolom cari · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja, tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci, dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
+            <div style="font-size:0.58rem;color:#94A3B8;margin-top:12px;text-align:center;">Musik: setiap kata kunci dicari di YouTube (lagu penuh, multi-mirror) + Audius (lagu penuh) + iTunes (katalog saja, preview 30 dtk-nya TIDAK PERNAH diputar) sekaligus, lagu Jawa / dangdut / koplo seperti Sadewok Dahlia ada di YouTube · Baris 🎤 Artis Indonesia: ketuk nama artis untuk melihat semua lagunya, terbaru sampai terlama, artis lain ketik saja namanya di kolom cari · Tanpa batas jumlah: tekan "Muat lebih banyak lagu" untuk halaman berikutnya, sampai ketemu · Lagu diputar PENUH TANPA IKLAN, musik saja, tidak ada video · Lirik: LRCLIB (gratis, tanpa kunci, dipakai juga oleh BitChord) · Musik tetap jalan saat pindah tab selama halaman ini terbuka · MP3 Saya: file diputar lokal dari HP, tersimpan di perangkat (ala Beatfy).</div>
             </div><!-- /fsRadioStreamPane -->
 
             <!-- ===== MP3 SAYA (ala Beatfy: pustaka lokal + cadangan) ===== -->
@@ -2334,7 +2334,8 @@
             }
 
             // Render dari daftar ternormalisasi {url,title,artist,genre,art,sub}
-            // supaya Audius (lagu penuh) dan iTunes (preview 30 dtk) tampil sama,
+            // supaya Audius (lagu penuh) dan YouTube (lagu penuh) tampil sama;
+            // iTunes hanya katalog — preview 30 dtk-nya TIDAK PERNAH diputar,
             // dan antrean Sebelumnya/Berikutnya jalan untuk keduanya.
             function fsRadioRenderItems(items, statusEl, list, statusText, layout) {
                 if (!items.length) {
@@ -2402,8 +2403,13 @@
             }
 
             // iTunes Search API (publik, gratis, tanpa kunci, country ID, limit 50):
-            // katalog mainstream, Ajeng Febria, Denny Caknan, Coldplay, dll.
-            // Hasilnya preview 30 detik, bukan lagu penuh, ditulis jelas di daftar.
+            // KATALOG mainstream saja (Ajeng Febria, Denny Caknan, Coldplay, dll).
+            // 25 Nov 2026 — PERBAIKAN "musik cuma 30 detik": previewUrl iTunes HANYA
+            // 30 detik, dan dulu URL itu yang disimpan sebagai url lagu, jadi ketuk
+            // lagu katalog -> gagal cari YouTube -> preview 30 dtk yang bunyi.
+            // Sekarang url DIKOSONGKAN: lagu katalog TIDAK BISA diputar dari preview,
+            // ketuk lagu -> fsRadioPlayYoutube() mencarikan versi PENUH di YouTube,
+            // kalau tidak ketemu tampilkan error, jangan pernah putar preview.
             // Deezer dicek 17 Nov 2026: ada hasilnya, tapi API-nya tidak mengizinkan
             // CORS dari browser, jadi tidak dipakai.
             function fsRadioItunesToItems(d) {
@@ -2413,13 +2419,14 @@
                     if (!r.previewUrl || !r.trackName) return;
                     var art = r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb.jpg', '600x600bb.jpg') : '';
                     items.push({
-                        url: r.previewUrl,
+                        url: '',
+                        previewUrl: r.previewUrl,
                         title: r.trackName,
                         artist: r.artistName || 'Artis tidak dikenal',
-                        genre: 'Tanpa iklan',
+                        genre: '',
                         source: 'itunes',
                         art: art,
-                        sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎧 Lagu penuh, tanpa iklan'
+                        sub: '⏱ ' + fsRadioFmtDur((r.trackTimeMillis || 0) / 1000) + ' · 🎧 Katalog — ketuk untuk cari versi penuh'
                     });
                 });
                 return items;
@@ -2432,15 +2439,28 @@
                     return r.json();
                 }).then(function(d){ return fsRadioItunesToItems(d); });
             }
-            // Gabung dua sumber, buang duplikat judul+artis yang sama (Audius dulu).
+            // Gabung sumber, buang duplikat judul+artis yang sama.
+            // 25 Nov 2026 — PERBAIKAN "musik cuma 30 detik": dulu urutan gabung
+            // Audius -> iTunes -> YouTube, jadi lagu yang sama ada di iTunes
+            // (preview 30 dtk) DAN di YouTube (penuh), yang tampil duluan dan
+            // yang diketuk adalah versi iTunes. Sekarang lagu PENUH (youtube /
+            // audius) selalu menang atas katalog (itunes), dan hasil diurutkan
+            // lagu penuh dulu, katalog belakangan.
             function fsRadioMergeItems(a, b) {
-                var seen = {}, out = [];
+                var prio = function(t){ return (t && t.source === 'itunes') ? 0 : 1; };
+                var norm = function(x){ return String(x || '').toLowerCase()
+                    .replace(/\([^)]*\)|\[[^\]]*\]/g, ' ')
+                    .replace(/official\s+(music\s+)?video|official\s+audio|lyrics?|lirik|audio|video|mv|hd|4k/g, ' ')
+                    .replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim(); };
+                var byKey = {}, order = [];
                 (a || []).concat(b || []).forEach(function(t){
-                    var k = (t.title + '|' + t.artist).toLowerCase();
-                    if (seen[k]) return;
-                    seen[k] = 1;
-                    out.push(t);
+                    if (!t) return;
+                    var k = norm(t.title) + '|' + norm(t.artist);
+                    if (!byKey[k]) { byKey[k] = t; order.push(k); }
+                    else if (prio(t) > prio(byKey[k])) { byKey[k] = t; }
                 });
+                var out = order.map(function(k){ return byKey[k]; });
+                out.sort(function(x, y){ return prio(y) - prio(x); });
                 return out;
             }
 
@@ -2501,7 +2521,7 @@
                                 merged.length + ' lagu ditemukan, tanpa batas'
                                 + (nFull ? ' • ' + nFull + ' lagu penuh' : '')
                                 + (nYt ? ' • ' + nYt + ' dari YouTube' : '')
-                                + (nPrev > 0 ? ' + ' + nPrev + ' via YouTube' : ''), 'grid');
+                                + (nPrev > 0 ? ' • ' + nPrev + ' katalog (ketuk untuk cari versi penuh)' : ''), 'grid');
                         });
                     }).catch(function(){
                         // iTunes gagal -> tampilkan hasil Audius saja, jangan kosong.
@@ -2677,34 +2697,58 @@
             // untuk menarik stream audio-nya, tidak bisa dicopy ke website
             // statis. Yang dipakai di sini: Invidious (API publik gratis,
             // tanpa kunci, CORS terbuka) yang mengembalikan URL stream audio
-            // siap putar (itag 251 opus / 140 m4a), diambil dari HP user
+            // siap putar (itag 140 m4a / 251 opus) — diambil dari HP user
             // sendiri, jadi tidak perlu server. Jujur: cara ini tidak resmi,
             // melawan aturan YouTube soal iklan, dan bisa mati sewaktu-waktu
-            // kalau mirror-nya mati, kalau gagal, jatuh ke preview iTunes
-            // 30 dtk, TIDAK PERNAH ke video.
+            // kalau mirror-nya mati — kalau gagal, tampilkan ERROR, jangan
+            // pernah jatuh ke preview iTunes 30 dtk, TIDAK PERNAH ke video.
             var _fsYtToken = 0;
             var _fsYtAudioVideoId = '';
             var _fsRadioRows = [];
             var FS_INVIDIOUS = 'https://yt.chocolatemoo53.com';
-            // 17 Nov 2026: 1 mirror saja = 1 titik mati. Daftar mirror dicoba
-            // berurutan (6 dtk/mirror) sampai ada yang menjawab; mirror yang
-            // berhasil dipakai duluan di pencarian berikutnya. Dicek 17 Nov:
-            // yt.chocolatemoo53.com HIDUP dan mengembalikan 20 hasil untuk
-            // "Sadewok Dahlia" (judul pertama: "Dahlia - Sadewok ft Wanadwika").
-            var FS_INVIDIOUS_MIRRORS = ['https://yt.chocolatemoo53.com', 'https://inv.nadeko.net', 'https://iv.datura.network', 'https://invidious.privacyredirect.com', 'https://vid.priv.au', 'https://invidious.0011.lt'];
+            // 25 Nov 2026 — PERBAIKAN "musik cuma 30 detik", dicek LIVE satu per satu:
+            //   HIDUP search+video: yt.chocolatemoo53.com (tapi LAMBAT: 3-7 dtk,
+            //     sementara timeout lama cuma 6 dtk, jadi sering keburu timeout
+            //     lalu jatuh ke preview 30 dtk).
+            //   HIDUP search saja: invidious.materialio.us (video-nya HTTP 500).
+            //   MATI: inv.nadeko.net + invidious.nerdvpn.de (403), iv.datura.network,
+            //     vid.priv.au, invidious.0011.lt, invidious.tiekoetter.com (403),
+            //     invidious.f5.si (530), yewtu.be (API mati, cuma HTML),
+            //     semua Piped (pipedapi.* 502/timeout) dan Cobalt (403/timeout).
+            //   Daftar resmi Invidious Nov 2026 tinggal ~4 instance, jadi jangan
+            //   tambah mirror tebak-tebakan. Yang diubah: (1) timeout 6 -> 15 dtk,
+            //   (2) mirror dicoba PARALEL (race, yang jawab duluan menang), bukan
+            //   berurutan — dulu 1 mirror lambat = seluruh pencarian gagal.
+            var FS_INVIDIOUS_MIRRORS = ['https://yt.chocolatemoo53.com', 'https://invidious.materialio.us'];
+            var FS_INVIDIOUS_VIDEO_MIRRORS = ['https://yt.chocolatemoo53.com'];
             function _fsInvFetchJson(url, ms) {
                 return new Promise(function(resolve, reject) {
                     var done = false;
-                    var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 6000);
+                    var t = setTimeout(function(){ if (!done) { done = true; reject(new Error('timeout')); } }, ms || 15000);
                     fetch(url).then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(function(d){ if (!done) { done = true; clearTimeout(t); resolve(d); } }).catch(function(e){ if (!done) { done = true; clearTimeout(t); reject(e); } });
                 });
             }
+            // Race paralel: semua mirror ditembak sekaligus, jawaban pertama menang.
+            // Gagal hanya kalau SEMUA mirror gagal — bukan karena 1 mirror lambat.
+            function _fsInvRace(mirrors, path, ms) {
+                return new Promise(function(resolve, reject){
+                    var done = false, pending = mirrors.length;
+                    if (!pending) { reject(new Error('tidak ada mirror')); return; }
+                    mirrors.forEach(function(base){
+                        _fsInvFetchJson(base + path, ms || 15000).then(function(d){
+                            if (done) return;
+                            done = true; FS_INVIDIOUS = base; resolve(d);
+                        }).catch(function(){
+                            pending--;
+                            if (pending <= 0 && !done) { done = true; reject(new Error('semua mirror gagal')); }
+                        });
+                    });
+                });
+            }
             function _fsInvTryMirror(i, path) {
-                if (i >= FS_INVIDIOUS_MIRRORS.length) return Promise.reject(new Error('semua mirror mati'));
-                return _fsInvFetchJson(FS_INVIDIOUS_MIRRORS[i] + path, 6000).then(function(d){
-                    if (i > 0) { var m = FS_INVIDIOUS_MIRRORS.splice(i, 1)[0]; FS_INVIDIOUS_MIRRORS.unshift(m); FS_INVIDIOUS = FS_INVIDIOUS_MIRRORS[0]; }
-                    return d;
-                }).catch(function(){ return _fsInvTryMirror(i + 1, path); });
+                var isVideo = path.indexOf('/api/v1/videos/') === 0;
+                var list = isVideo ? FS_INVIDIOUS_VIDEO_MIRRORS : FS_INVIDIOUS_MIRRORS;
+                return _fsInvRace(list, path, 15000);
             }
             // Cari video YouTube -> daftar item lagu (source 'youtube', diputar penuh via audio).
             // DALAM (17 Nov 2026, perintah San: lagu Jawa/DJ terbaru s.d. terlama harus ada):
@@ -2804,21 +2848,33 @@
             function fsRadioInvVideo(videoId) {
                 return _fsInvTryMirror(0, '/api/v1/videos/' + encodeURIComponent(videoId));
             }
-            // Pilih stream audio-only terbaik (bitrate berupa string di JSON!).
-            function fsRadioPickAudioFormat(d) {
+            // Pilih stream audio-only (bitrate berupa string di JSON!).
+            // 25 Nov 2026 — PERBAIKAN "musik cuma 30 detik": dulu 251 (opus)
+            // diutamakan, padahal opus/webm gagal diputar di sebagian HP/browser
+            // (mis. Safari/iOS) -> audio.play() ditolak -> jatuh ke preview
+            // 30 dtk. Sekarang 140 (m4a/AAC) DULUAN karena jalan di mana-mana,
+            // 251 jadi cadangan, lalu sisanya urut bitrate. Kembalikan DAFTAR
+            // urut supaya pemutar bisa coba format berikut kalau yang pertama
+            // ditolak browser, bukan langsung menyerah ke preview.
+            function fsRadioPickAudioFormats(d) {
                 var fmts = (d && d.adaptiveFormats) || [];
                 var aud = [];
                 fmts.forEach(function(f){
                     if (f && f.url && (f.type || '').indexOf('audio/') === 0) aud.push(f);
                 });
-                if (!aud.length) return null;
+                if (!aud.length) return [];
                 var byItag = {};
                 aud.forEach(function(f){ byItag[String(f.itag)] = f; });
-                if (byItag['251']) return byItag['251'];
-                if (byItag['140']) return byItag['140'];
-                var best = aud[0];
-                aud.forEach(function(f){ if (Number(f.bitrate || 0) > Number(best.bitrate || 0)) best = f; });
-                return best;
+                var out = [];
+                if (byItag['140']) out.push(byItag['140']);
+                if (byItag['251']) out.push(byItag['251']);
+                aud.slice().sort(function(x, y){ return Number(y.bitrate || 0) - Number(x.bitrate || 0); })
+                    .forEach(function(f){ if (out.indexOf(f) < 0) out.push(f); });
+                return out;
+            }
+            function fsRadioPickAudioFormat(d) {
+                var a = fsRadioPickAudioFormats(d);
+                return a.length ? a[0] : null;
             }
             function fsRadioStopYt() {
                 _fsYtToken++;
@@ -2854,21 +2910,28 @@
                     .catch(function(){});
             }
             // Putar URL audio YouTube yang sudah didapat (dari prefetch / cari),
-            // lalu siapkan lagu berikutnya.
+            // lalu siapkan lagu berikutnya. `url` boleh string (1 format) atau
+            // array format urut (dari fsRadioPickAudioFormats): kalau format
+            // pertama ditolak browser, coba format berikut — JANGAN PERNAH
+            // jatuh ke preview iTunes 30 dtk (itu sumber keluhan 25 Nov 2026).
             function fsRadioPlayAudioUrl(url, title, artist, token) {
+                var urls = (Object.prototype.toString.call(url) === '[object Array]') ? url.slice() : [url];
                 var audio = document.getElementById('fsRadioAudio');
+                var errEl = document.getElementById('fsRadioError');
                 document.getElementById('fsRadioMeta').textContent = artist + ' • Tanpa iklan • Audio YouTube';
-                audio.src = url;
-                var p = audio.play();
-                if (p && p.catch) p.catch(function(){
+                var tryNext = function(){
                     if (token !== _fsYtToken) return;
-                    var t = _fsRadioTracks[_fsRadioIndex];
-                    if (t && t.url) {
-                        document.getElementById('fsRadioNow').textContent = title + ' (preview 30 dtk)';
-                        fsRadioPlay(t.url, t.title, t.artist, t.genre);
-                        document.getElementById('fsRadioMeta').textContent = artist + ' • Preview 30 dtk';
+                    var u = urls.shift();
+                    if (!u) {
+                        if (errEl) errEl.style.display = 'block';
+                        document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Audio YouTube gagal, coba lagu lain';
+                        return;
                     }
-                });
+                    audio.src = u;
+                    var p = audio.play();
+                    if (p && p.catch) p.catch(function(){ tryNext(); });
+                };
+                tryNext();
                 fsRadioPrefetchNext();
                 fsRadioSyncMini(); fsRadioSyncNp();
             }
@@ -2892,9 +2955,9 @@
                 }
                 fsRadioInvVideo(videoId).then(function(vd){
                         if (token !== _fsYtToken) return;
-                        var fmt = fsRadioPickAudioFormat(vd);
-                        if (!fmt) throw new Error('no audio format');
-                        fsRadioPlayAudioUrl(fmt.url, title, artist, token);
+                        var fmts = fsRadioPickAudioFormats(vd);
+                        if (!fmts.length) throw new Error('no audio format');
+                        fsRadioPlayAudioUrl(fmts.map(function(f){ return f.url; }), title, artist, token);
                     })
                     .catch(function(){
                         if (token !== _fsYtToken) return;
@@ -2930,20 +2993,18 @@
                     })
                     .then(function(res){
                         if (!res || token !== _fsYtToken) return;
-                        var fmt = fsRadioPickAudioFormat(res.data);
-                        if (!fmt) throw new Error('no audio format');
+                        var fmts = fsRadioPickAudioFormats(res.data);
+                        if (!fmts.length) throw new Error('no audio format');
                         _fsYtAudioVideoId = res.videoId;
-                        fsRadioPlayAudioUrl(fmt.url, title, artist, token);
+                        fsRadioPlayAudioUrl(fmts.map(function(f){ return f.url; }), title, artist, token);
                     })
                     .catch(function(){
                         if (token !== _fsYtToken) return;
-                        // Audio langsung gagal -> preview iTunes 30 dtk, TIDAK PERNAH video.
-                        var t = _fsRadioTracks[_fsRadioIndex];
-                        if (t && t.url) {
-                            document.getElementById('fsRadioNow').textContent = title + ' (preview 30 dtk)';
-                            fsRadioPlay(t.url, t.title, t.artist, t.genre);
-                            document.getElementById('fsRadioMeta').textContent = artist + ' • Preview 30 dtk';
-                        }
+                        // 25 Nov 2026: audio YouTube gagal -> TAMPILKAN ERROR saja.
+                        // Preview iTunes 30 dtk TIDAK PERNAH lagi diputar diam-diam.
+                        var err2 = document.getElementById('fsRadioError');
+                        if (err2) err2.style.display = 'block';
+                        document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Versi penuh tidak ditemukan, coba lagu lain';
                     });
             }
             // Satu pintu putar antrean: Audius -> audio penuh, katalog iTunes -> audio YouTube penuh tanpa iklan.
