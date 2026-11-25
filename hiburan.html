@@ -5303,11 +5303,15 @@
         // itu channel gratis beIN (liga tier bawah: Ligue 2, Süper Lig,
         // Libertadores), BUKAN beIN Sports 1 premium (UCL/EPL). beIN 1
         // premium (MENA/Indonesia) TIDAK ADA stream gratis terverifikasi:
-        // MENA 403, USA 404, Turk cuma HTTP (mixed content, tidak bisa
-        // diputar di situs HTTPS). Cek ulang berkala — restream bisa mati.
+        // MENA 403, Turk cuma HTTP (mixed content, tidak bisa
+        // diputar di situs HTTPS). UPDATE 26 Nov 2026: beIN Sports USA KINI
+        // ADA via iptv-org (tvsen6.aynaott.com, master 200 + segmen .ts 200
+        // video/MP2T 1,25 MB, live) — ditambahkan di bawah sebagai
+        // "beIN Sports USA". Cek ulang berkala — restream bisa mati.
         const TV1_SPORT_FREE = [
             {"name": "beIN SPORTS XTRA", "url": "https://bein-xtra-bein.amagi.tv/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "beIN SPORTS XTRA Español", "url": "https://dc1644a9jazgj.cloudfront.net/beIN_Sports_Xtra_Espanol.m3u8", "group": "⚽ Bola Live Gratis"},
+            {"name": "beIN Sports USA", "url": "https://tvsen6.aynaott.com/beinsports/index.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "FIFA+", "url": "https://95cedebd.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/Vml6aW9fRklGQVBsdXNFbmdsaXNoX0hMUw/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "CBS Sports Golazo Network", "url": "https://dai.google.com/linear/hls/event/7f3Wv6f7QEKfQna22jHqLQ/master.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "Premier Sports 1", "url": "https://amg19223-amg19223c3-amgplt0351.playout.now3.amagi.tv/playlist/amg19223-amg19223c3-amgplt0351/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
@@ -5321,6 +5325,32 @@
             {"name": "Eurosport 2", "url": "https://r.eu.cdn-redge.media/livehls/oeu/mt/live/eurosport_2/live.livx/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "NBC Sports NOW", "url": "https://d4whmvwm0rdvi.cloudfront.net/10007/99993008/hls/master.m3u8?ads.xumo_channelId=99993008", "group": "⚽ Bola Live Gratis"},
             {"name": "Eurovision Sport", "url": "https://amg26268-amg26268c34-amgplt0018.playout.now3.amagi.tv/ts-us-e2-n1/playlist/amg26268-amg26268c34-amgplt0018/playlist.m3u8", "group": "⚽ Bola Live Gratis"}
+        ];
+
+        // FS-TV-SPORT-SITES 26 Nov 2026 (perintah San: cari akses beinmatch123,
+        // koragoal, dan situs lain — yang TANPA iklan pop-up). FAKTA riset:
+        // beinmatch123 SUDAH MATI (beinmatch123.com mati, beinmatch.tv/.com
+        // cuma halaman parkir domain); koragoal SUDAH TIDAK ADA (koooragoal.com
+        // kini blog berita WordPress, produknya tinggal aplikasi skor Android).
+        // Yang masih jalan dan DIVERIFIKASI 26 Nov ~03:00 WIB (HTTP 200 + tanpa
+        // X-Frame-Options/CSP sehingga boleh di-iframe):
+        //   - beintmatch.com (pengganti Bein Match, jadwal hari ini, iklan ringan)
+        //   - koraylive.co (Kora Live, jadwal hari ini, ada 5 onclick = risiko
+        //     pop-under saat klik, wajib tes klik di HP)
+        //   - yallalivefootball.com (Yalla Live, JS-rendered, ada script Monetag,
+        //     situsnya sendiri membuka stream di popup — jadi tombol tab baru saja)
+        // Ditolak karena iklan/mati/disita: live-kora-tv.com (pop-up berat),
+        // vipleague (PopUnder), beinmatchtv.tv (redirect survey scam), footybite
+        // (domain dijual), totalsportek/viprow/stream2watch/soccerstreams/score808
+        // (mati/disita HSI Juni 2026, razia 627 domain). Iklan di dalam iframe
+        // DIBLOKIR sandbox tvIframe (tanpa allow-popups / allow-top-navigation),
+        // jadi pop-under situs embed tidak bisa membuka tab baru dari situs ini.
+        // Kalau di HP ternyata tetap muncul pop-up saat ketuk pertandingan,
+        // turunkan situs itu jadi type 'page' atau hapus dari daftar ini.
+        const TV1_SPORT_SITES = [
+            {"name": "Bein Match — Jadwal & Stream Bola", "url": "https://beintmatch.com", "group": "⚽ Situs Bola Live", "type": "iframe"},
+            {"name": "Kora Live — Jadwal & Stream Bola", "url": "https://koraylive.co", "group": "⚽ Situs Bola Live", "type": "iframe"},
+            {"name": "Yalla Live — Jadwal Bola", "url": "https://www.yallalivefootball.com", "group": "⚽ Situs Bola Live", "type": "page"}
         ];
 
         const TV2_PLAYLISTS = {
@@ -5444,6 +5474,9 @@
             if (genre === 'sport') {
                 TV1_SPORT_FREE.forEach(function(ch){
                     tv1AllChannels.push({ name: ch.name, url: ch.url, group: ch.group, type: 'hls' });
+                });
+                TV1_SPORT_SITES.forEach(function(ch){
+                    tv1AllChannels.push({ name: ch.name, url: ch.url, group: ch.group, type: ch.type });
                 });
             }
 
