@@ -5306,12 +5306,13 @@
         // MENA 403, Turk cuma HTTP (mixed content, tidak bisa
         // diputar di situs HTTPS). UPDATE 26 Nov 2026: beIN Sports USA KINI
         // ADA via iptv-org (tvsen6.aynaott.com, master 200 + segmen .ts 200
-        // video/MP2T 1,25 MB, live) — ditambahkan di bawah sebagai
-        // "beIN Sports USA". Cek ulang berkala — restream bisa mati.
+        // video/MP2T 1,25 MB, live) — sempat ditambahkan 26 Nov 03:0x WIB,
+        // TAPI MATI lagi 26 Nov ~17:42 WIB (HTTP 404, dicek 2x) — dihapus
+        // dari daftar. Bukti restream gratis bisa mati dalam hitungan jam.
+        // Cek ulang berkala — restream bisa mati.
         const TV1_SPORT_FREE = [
             {"name": "beIN SPORTS XTRA", "url": "https://bein-xtra-bein.amagi.tv/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "beIN SPORTS XTRA Español", "url": "https://dc1644a9jazgj.cloudfront.net/beIN_Sports_Xtra_Espanol.m3u8", "group": "⚽ Bola Live Gratis"},
-            {"name": "beIN Sports USA", "url": "https://tvsen6.aynaott.com/beinsports/index.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "FIFA+", "url": "https://95cedebd.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/Vml6aW9fRklGQVBsdXNFbmdsaXNoX0hMUw/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "CBS Sports Golazo Network", "url": "https://dai.google.com/linear/hls/event/7f3Wv6f7QEKfQna22jHqLQ/master.m3u8", "group": "⚽ Bola Live Gratis"},
             {"name": "Premier Sports 1", "url": "https://amg19223-amg19223c3-amgplt0351.playout.now3.amagi.tv/playlist/amg19223-amg19223c3-amgplt0351/playlist.m3u8", "group": "⚽ Bola Live Gratis"},
