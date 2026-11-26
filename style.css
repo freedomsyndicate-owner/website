@@ -157,8 +157,7 @@
             /* Matikan animasi glow/pulse tak berujung di HP: ini sumber lag.
                Tampilan tetap sama, cuma tidak berdenyut terus. */
             .journal-btn, .mod-btn-app, .mod-btn-game,
-            .btn-join-tg, .btn-join-dc, .btn-join-wa,
-            .adult-fire, .adult-title, h1 { animation: none !important; }
+            h1 { animation: none !important; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -314,116 +313,6 @@
             animation: arrowBounce 1.5s infinite ease-in-out;
         }
 
-        /* --- KONTEN 18+ REDESIGN --- */
-
-        .adult-fire {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .adult-title {
-            font-size: 1.4rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #f87171;
-            margin: 0 0 14px;
-        }
-        .adult-tagline {
-            color: #94a3b8;
-            font-size: 0.92rem;
-            line-height: 1.7;
-            margin-bottom: 16px;
-        }
-        .adult-hot {
-            color: #f87171;
-            font-weight: 700;
-        }
-        .adult-divider {
-            font-size: 0.7rem;
-            letter-spacing: 4px;
-            color: #f87171;
-            opacity: 0.6;
-            margin: 14px 0;
-        }
-        .adult-desc {
-            color: #94a3b8;
-            font-size: 0.88rem;
-            line-height: 1.75;
-            margin-bottom: 10px;
-        }
-        .adult-cta {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin: 20px 0 10px;
-            font-weight: 600;
-        }
-        .adult-join-btn {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            border-radius: 10px;
-            padding: 18px 20px;
-            margin: 12px 0;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
-        }
-        .adult-join-btn:hover {
-            transform: scale(1.04) translateY(-3px);
-            filter: brightness(1.15);
-        }
-        .adult-join-btn:active { transform: scale(0.97); }
-
-        .btn-join-tg {
-            background: #0A3A55;
-            border: 1px solid rgba(0,136,204,0.5);
-        }
-        .btn-join-dc {
-            background: #323796;
-            border: 1px solid rgba(88,101,242,0.5);
-        }
-        .btn-join-wa {
-            background: #0F5038;
-            border: 1px solid rgba(37,211,102,0.5);
-        }
-        .ajb-icon {
-            width: 42px; height: 42px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .ajb-text {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-            flex: 1;
-        }
-        .ajb-title {
-            font-size: 1rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .ajb-sub {
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.55);
-            margin-top: 2px;
-        }
-        .ajb-arrow {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.35);
-            animation: arrowBounce 1.5s infinite ease-in-out;
-            flex-shrink: 0;
-        }
-        .adult-note {
-            font-size: 0.72rem;
-            color: #94A3B8;
-            margin-top: 20px;
-            line-height: 1.5;
-        }
-
         /* --- SOSIAL MEDIA GRID --- */
         .social-grid {
             display: grid;
@@ -473,14 +362,6 @@
         .btn-submit:hover { background: #fff; box-shadow: 0 0 15px var(--primary-glow); }
         .alert-msg { font-size: 0.85rem; color: #f87171; display: none; margin-top: 5px; }
 
-        /* --- KONTEN 18+ (BLUR & LOGIN) --- */
-        .adult-container { position: relative; overflow: hidden; border-radius: 10px; }
-        .adult-content { filter: blur(15px); pointer-events: none; user-select: none; transition: filter 0.5s; padding: 20px; background: rgba(0,0,0,0.5); }
-        .adult-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(2, 6, 23, 0.8); z-index: 10; text-align: center;
-        }
         .btn-google {
             background: #fff; color: #333; border: none; padding: 12px 24px;
             border-radius: 10px; font-weight: bold; cursor: pointer; display: flex;
