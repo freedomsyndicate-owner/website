@@ -641,6 +641,7 @@
                 if (badge) badge.style.display = 'block';
                 if (badgeName) badgeName.textContent = ch.name;
                 _tvLiveCurrent = ch;
+                if (typeof fsSetMediaSession === 'function') fsSetMediaSession(ch.name, 'TV Live · FREEDOM SYNDICATE', null, 'video', video);
                 try { tvLiveRecentSave(ch); } catch(e) {}
                 // FS-HARDEN: stream http:// -> coba https:// dulu (mixed content memblokir
                 // http di halaman https). Kalau https gagal, fallback ke http:// aslinya.
@@ -1342,6 +1343,7 @@
                     }
                     _fsDirectQualities = data.qualities;
                     var pick = _fsDirectPick(data.qualities);
+                    if (typeof fsSetMediaSession === 'function') fsSetMediaSession(title, 'Film · FREEDOM SYNDICATE', null, 'video', v);
                     // Subtitle: utamakan Indonesia, lalu English.
                     if (v && data.captions && data.captions.length) {
                         var cap = null;
@@ -2084,7 +2086,7 @@
                     <button id="fsRadioRepeatBtn" onclick="fsRadioToggleRepeat()" title="Ulangi" style="min-width:44px;min-height:44px;background:transparent;border:1px solid rgba(255,255,255,0.2);color:#94a3b8;border-radius:50%;font-size:0.95rem;cursor:pointer;font-family:inherit;">🔁</button>
                 </div>
                 <div style="font-size:0.6rem;color:#94A3B8;margin-top:8px;">Lagu habis → lanjut otomatis · Ketuk bar di atas untuk lompat ke bagian lagu.</div>
-                <div style="font-size:0.58rem;color:#64748B;margin-top:4px;">Pemutar v9 · 28 Nov 2026 · kalau lagu gagal, kabari judulnya</div>
+                <div style="font-size:0.58rem;color:#64748B;margin-top:4px;">Pemutar v10 · 28 Nov 2026 · musik & film tetap jalan saat buka aplikasi lain</div>
                 <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
                 <button onclick="fsRadioToggleLyrics()" style="margin-top:10px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:inherit;">📝 Lirik</button>
                 <div id="fsRadioLyrics" style="display:none;margin-top:10px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 12px;font-size:0.72rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;max-height:220px;overflow-y:auto;">Lirik akan muncul di sini saat lagu diputar.</div>
@@ -3223,6 +3225,58 @@
                     });
             }
             // Satu pintu putar antrean: Audius -> audio penuh, katalog iTunes -> audio YouTube penuh tanpa iklan.
+            // BACKGROUND PLAYBACK 28 Nov 2026 — Media Session API: supaya
+            // musik/film tetap jalan saat HP buka aplikasi lain, dan bisa
+            // dikontrol dari layar kunci / notifikasi. Di Chrome Android ini
+            // yang bikin audio lanjut di latar; di APK Capacitor, WebView
+            // juga butuh layanan latar (foreground service) — itu langkah
+            // APK terpisah, bukan website.
+            var _fsMsKind = 'music';
+            var _fsMsVideo = null;
+            function fsSetMediaSession(title, artist, artwork, kind, videoEl) {
+                try {
+                    _fsMsKind = kind || 'music';
+                    _fsMsVideo = videoEl || null;
+                    if (videoEl && !videoEl._fsMsBound) {
+                        videoEl._fsMsBound = true;
+                        videoEl.addEventListener('play', function(){ try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing'; } catch(e){} });
+                        videoEl.addEventListener('pause', function(){ try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused'; } catch(e){} });
+                    }
+                    if (!('mediaSession' in navigator)) return;
+                    var art = [];
+                    if (artwork) art.push({ src: artwork, sizes: '512x512', type: 'image/jpeg' });
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: title || 'FREEDOM SYNDICATE',
+                        artist: artist || 'FREEDOM SYNDICATE',
+                        album: 'FREEDOM SYNDICATE',
+                        artwork: art
+                    });
+                    navigator.mediaSession.playbackState = 'playing';
+                } catch(e) {}
+            }
+            function fsMsTarget() {
+                if (_fsMsKind === 'video' && _fsMsVideo) return _fsMsVideo;
+                return document.getElementById('fsRadioAudio');
+            }
+            function fsInitMediaSession() {
+                try {
+                    if (!('mediaSession' in navigator) || !navigator.mediaSession.setActionHandler) return;
+                    navigator.mediaSession.setActionHandler('play', function(){ var t = fsMsTarget(); if (t) t.play(); });
+                    navigator.mediaSession.setActionHandler('pause', function(){ var t = fsMsTarget(); if (t) t.pause(); });
+                    navigator.mediaSession.setActionHandler('previoustrack', function(){
+                        if (_fsMsKind === 'video' && _fsMsVideo) { try { _fsMsVideo.currentTime = Math.max(0, _fsMsVideo.currentTime - 10); } catch(e){} }
+                        else fsRadioStep(-1);
+                    });
+                    navigator.mediaSession.setActionHandler('nexttrack', function(){
+                        if (_fsMsKind === 'video' && _fsMsVideo) { try { _fsMsVideo.currentTime = Math.min(_fsMsVideo.duration || 0, _fsMsVideo.currentTime + 10); } catch(e){} }
+                        else fsRadioStep(1);
+                    });
+                    navigator.mediaSession.setActionHandler('seekto', function(d){
+                        var t = fsMsTarget();
+                        if (t && d && typeof d.seekTime === 'number') { try { t.currentTime = d.seekTime; } catch(e){} }
+                    });
+                } catch(e) {}
+            }
             function fsRadioPlayTrack(i) {
                 if (i < 0 || i >= _fsRadioTracks.length) return;
                 _fsRadioQueue = 'stream';
@@ -3237,6 +3291,7 @@
                 } catch(e) {}
                 if (typeof fsRadioRecRender === 'function') fsRadioRecRender();
                 fsRadioSetArt(t.art);
+                if (typeof fsSetMediaSession === 'function') fsSetMediaSession(t.title, t.artist, t.art, 'music');
                 fsRadioMarkPlaying();
                 // Reset seek bar langsung, jangan tampilkan waktu lagu lama
                 // selagi lagu baru dicari.
@@ -3448,6 +3503,7 @@
                 _fsRadioIndex = -1;
                 _fsLocalIndex = -1;
                 fsRadioSetArt('');
+                try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none'; } catch(e){}
                 fsRadioMarkPlaying();
                 var _fill = document.getElementById('fsRadioSeekFill');
                 if (_fill) _fill.style.width = '0%';
@@ -3474,9 +3530,12 @@
                 if (errEl && this.src) errEl.style.display = 'block';
             });
             // Seek bar + tombol play/pause mengikuti audio.
+            // Media Session: tombol layar kunci/notifikasi mengontrol pemutar ini.
+            if (typeof fsInitMediaSession === 'function') fsInitMediaSession();
             document.getElementById('fsRadioAudio').addEventListener('timeupdate', fsRadioSeekUpdate);
             document.getElementById('fsRadioAudio').addEventListener('loadedmetadata', fsRadioSeekUpdate);
             document.getElementById('fsRadioAudio').addEventListener('play', function(){
+                try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing'; } catch(e){}
                 var pp = document.getElementById('fsRadioPlayPause');
                 if (pp) pp.textContent = '⏸';
                 var mp = document.getElementById('fsMpPlayPause');
@@ -3485,6 +3544,7 @@
                 if (np) np.textContent = '⏸';
             });
             document.getElementById('fsRadioAudio').addEventListener('pause', function(){
+                try { if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused'; } catch(e){}
                 var pp = document.getElementById('fsRadioPlayPause');
                 if (pp) pp.textContent = '▶';
                 var mp = document.getElementById('fsMpPlayPause');
@@ -5259,6 +5319,7 @@
                 });
                 var note = document.getElementById('fsDPlayNote');
                 if (note) note.textContent = '▶ ' + ep.name + (ep.duration ? ' · ' + Math.floor(ep.duration / 60) + ':' + ('0' + (ep.duration % 60)).slice(-2) : '') + ' · ' + _fsDDetail.item.title;
+                if (typeof fsSetMediaSession === 'function') fsSetMediaSession(_fsDDetail.item.title + ' — ' + ep.name, 'Drama · FREEDOM SYNDICATE', null, 'video', v);
                 var qb = document.getElementById('fsDQualityBar');
                 if (qb) {
                     qb.innerHTML = '';
@@ -5421,6 +5482,7 @@
                     video.load();
                     var p = video.play();
                     if (p && p.catch) p.catch(function(){});
+                    if (typeof fsSetMediaSession === 'function') fsSetMediaSession(title + ' (' + year + ')', 'Film Klasik · FREEDOM SYNDICATE', null, 'video', video);
                     if (meta) meta.innerHTML = 'Sumber: <a href="https://archive.org/details/' + encodeURIComponent(id) + '" target="_blank" rel="noopener noreferrer" style="color:var(--primary);">archive.org/details/' + esc(id) + '</a> · File: ' + esc(best.name);
                 }).catch(function(){
                     if (meta) meta.textContent = '⚠️ Gagal memuat video. Cek koneksi lalu coba lagi.';
@@ -5792,6 +5854,7 @@
             overlay.classList.add('hidden');
             if (badge) badge.style.display = 'block';
             if (badgeName) badgeName.textContent = ch.name;
+            if (typeof fsSetMediaSession === 'function') fsSetMediaSession(ch.name, 'TV Sport · FREEDOM SYNDICATE', null, 'video', video);
 
             var nowBar = document.getElementById('tvNowBar');
             if (nowBar) { nowBar.style.display = 'block'; nowBar.innerHTML = '🔴 LIVE &nbsp;·&nbsp; ' + esc(ch.name) + (ch.group ? ' &nbsp;·&nbsp; ' + esc(ch.group) : ''); }

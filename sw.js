@@ -7,11 +7,10 @@
 // FS TV MODE v2.1 23 Nov 2026: fs-v5 -> fs-v6 (perbaiki tv.js: kartu
 // film/musik yang dibuat lewat `card.onclick = ...` kini bisa difokus remote;
 // tanpa bump ini TV tetap pakai tv.js lama dari cache).
-// MUSIK #5 28 Nov 2026: fs-v8 -> fs-v9 (pencarian terbaru selalu menang:
-// nomor urut pencarian, hasil lama yang telat diabaikan, "Muat lebih
-// banyak" yang basi dibuang; tanpa bump ini HP bisa tetap memegang
-// hiburan.html lama dari cache).
-var FS_CACHE = 'fs-v9';
+// MUSIK #6 28 Nov 2026: fs-v9 -> fs-v10 (Media Session API: musik & film
+// tetap jalan saat HP buka aplikasi lain + kontrol layar kunci; tanpa bump
+// ini HP bisa tetap memegang hiburan.html lama dari cache).
+var FS_CACHE = 'fs-v10';
 var FS_SHELL = [
   '/', '/index.html', '/hiburan.html', '/tools.html', '/ibadah.html',
   '/ai.html', '/trading.html', '/lainnya.html', '/garapan.html', '/journal.html',
