@@ -2084,6 +2084,7 @@
                     <button id="fsRadioRepeatBtn" onclick="fsRadioToggleRepeat()" title="Ulangi" style="min-width:44px;min-height:44px;background:transparent;border:1px solid rgba(255,255,255,0.2);color:#94a3b8;border-radius:50%;font-size:0.95rem;cursor:pointer;font-family:inherit;">🔁</button>
                 </div>
                 <div style="font-size:0.6rem;color:#94A3B8;margin-top:8px;">Lagu habis → lanjut otomatis · Ketuk bar di atas untuk lompat ke bagian lagu.</div>
+                <div style="font-size:0.58rem;color:#64748B;margin-top:4px;">Pemutar v8 · 28 Nov 2026 · kalau lagu gagal, kabari judulnya</div>
                 <div id="fsRadioError" style="display:none;font-size:0.7rem;color:#fca5a5;margin-top:8px;">⚠️ Lagu tidak bisa diputar, coba lagu lain.</div>
                 <button onclick="fsRadioToggleLyrics()" style="margin-top:10px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#94a3b8;border-radius:16px;padding:6px 14px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:inherit;">📝 Lirik</button>
                 <div id="fsRadioLyrics" style="display:none;margin-top:10px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 12px;font-size:0.72rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;max-height:220px;overflow-y:auto;">Lirik akan muncul di sini saat lagu diputar.</div>
@@ -2734,13 +2735,17 @@
             // ("semua mirror gagal") lalu normal lagi saat dicek ulang — mirror
             // kadang tersendak sesaat / rate-limit burst. Jadi kalau semua
             // mirror gagal, coba SEKALI LAGI setelah 1,5 dtk sebelum menyerah.
-            function _fsInvRace(mirrors, path, ms) {
+            // 28 Nov 2026 — `ok` (opsional) = penyaring jawaban: jawaban yang
+            // lolos HTTP tapi isinya kosong (mis. video tanpa stream audio)
+            // TIDAK dihitung menang — mirror lain tetap dicoba.
+            function _fsInvRace(mirrors, path, ms, ok) {
                 var attempt = function(triesLeft){
                     return new Promise(function(resolve, reject){
                         var done = false, pending = mirrors.length;
                         if (!pending) { reject(new Error('tidak ada mirror')); return; }
                         mirrors.forEach(function(base){
                             _fsInvFetchJson(base + path, ms || 15000).then(function(d){
+                                if (ok && !ok(d)) throw new Error('jawaban kosong');
                                 if (done) return;
                                 done = true; FS_INVIDIOUS = base; resolve(d);
                             }).catch(function(){
@@ -2780,7 +2785,17 @@
             function _fsInvTryMirror(i, path) {
                 var isVideo = path.indexOf('/api/v1/videos/') === 0;
                 var list = isVideo ? FS_INVIDIOUS_VIDEO_MIRRORS : FS_INVIDIOUS_MIRRORS;
-                return _fsInvRace(list, path, 15000);
+                if (!isVideo) return _fsInvRace(list, path, 15000);
+                // 28 Nov 2026 — jawaban video tanpa stream audio JANGAN dihitung
+                // menang: mirror yang menjawab cepat tapi kosong tidak boleh
+                // mengalahkan mirror lambat yang datanya lengkap.
+                return _fsInvRace(list, path, 15000, function(d){
+                    var f = (d && d.adaptiveFormats) || [];
+                    for (var k = 0; k < f.length; k++) {
+                        if (f[k] && f[k].url && (f[k].type || '').indexOf('audio/') === 0) return true;
+                    }
+                    return false;
+                });
             }
             // Cari video YouTube -> daftar item lagu (source 'youtube', diputar penuh via audio).
             // DALAM (17 Nov 2026, perintah San: lagu Jawa/DJ terbaru s.d. terlama harus ada):
@@ -2911,6 +2926,65 @@
                 var a = fsRadioPickAudioFormats(d);
                 return a.length ? a[0] : null;
             }
+            // 28 Nov 2026 — PERBAIKAN #4 "banyak lagu tidak bisa diputar":
+            // YouTube kadang gagal total di HP padahal dari server semua tes
+            // lolos (mirror lambat/timeout atau stream googlevideo tidak bisa
+            // dimuat dari jaringan HP). Jalur cadangan: Audius — sumber
+            // INDEPENDEN (CDN lain, tanpa Invidious/googlevideo). Kalau
+            // YouTube gagal total, cari lagu yang sama di Audius dan putar
+            // stream-nya; baru kalau itu pun tidak ada/gagal, tampilkan
+            // error. Jujur: Audius tidak punya semua lagu (mis. Avenged
+            // Sevenfold Gunslinger tidak ada di sana), jadi ini cadangan
+            // untuk lagu yang ada di Audius, bukan pengganti YouTube.
+            function fsRadioAudiusStreamFor(title, artist) {
+                var q = ((artist || '') + ' ' + (title || '')).trim();
+                return _fsInvFetchJson(FS_AUDIUS + '/tracks/search?query=' + encodeURIComponent(q) + '&' + FS_AUDIUS_APP + '&limit=5', 15000)
+                    .then(function(d){
+                        var tr = (d && d.data) || [];
+                        for (var k = 0; k < tr.length; k++) {
+                            if (tr[k] && tr[k].id) return FS_AUDIUS + '/tracks/' + encodeURIComponent(tr[k].id) + '/stream?' + FS_AUDIUS_APP;
+                        }
+                        return null;
+                    }).catch(function(){ return null; });
+            }
+            function fsRadioPlayAudiusUrl(url, title, artist, token, showErr) {
+                var audio = document.getElementById('fsRadioAudio');
+                document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Memutar dari Audius...';
+                var onAudErr = function(){
+                    if (token !== _fsYtToken) return;
+                    audio.removeEventListener('error', onAudErr);
+                    audio.removeEventListener('playing', onAudPlay);
+                    showErr();
+                };
+                var onAudPlay = function(){
+                    audio.removeEventListener('error', onAudErr);
+                    audio.removeEventListener('playing', onAudPlay);
+                    _fsYtRetrying = false;
+                };
+                audio.removeEventListener('error', onAudErr);
+                audio.addEventListener('error', onAudErr);
+                audio.removeEventListener('playing', onAudPlay);
+                audio.addEventListener('playing', onAudPlay);
+                audio.src = url;
+                var p = audio.play();
+                if (p && p.catch) p.catch(function(){
+                    if (token !== _fsYtToken) return;
+                    audio.removeEventListener('error', onAudErr);
+                    audio.removeEventListener('playing', onAudPlay);
+                    showErr();
+                });
+                fsRadioPrefetchNext();
+                fsRadioSyncMini(); fsRadioSyncNp();
+            }
+            function fsRadioTryAudiusThenErr(title, artist, token, showErr) {
+                // Dipanggil saat jalur YouTube sudah habis: coba Audius sekali.
+                document.getElementById('fsRadioMeta').textContent = artist + ' • ⏳ Mencoba Audius...';
+                fsRadioAudiusStreamFor(title, artist).then(function(u){
+                    if (token !== _fsYtToken) return;
+                    if (u) fsRadioPlayAudiusUrl(u, title, artist, token, showErr);
+                    else showErr();
+                });
+            }
             function fsRadioStopYt() {
                 _fsYtToken++;
                 _fsYtAudioVideoId = '';
@@ -2963,6 +3037,7 @@
                 var errEl = document.getElementById('fsRadioError');
                 document.getElementById('fsRadioMeta').textContent = artist + ' • Tanpa iklan • Audio YouTube';
                 var retried = false;
+                var triedAudius = false;
                 var curAttempt = 0;
                 var onErr = function(){
                     if (token !== _fsYtToken) return;
@@ -2977,6 +3052,16 @@
                     _fsYtRetrying = false;
                     audio.removeEventListener('error', onErr);
                     audio.removeEventListener('playing', onPlaying);
+                    // 28 Nov 2026 — sebelum menyerah, coba Audius sekali
+                    // (sumber independen, tanpa Invidious/googlevideo).
+                    if (!triedAudius) {
+                        triedAudius = true;
+                        fsRadioTryAudiusThenErr(title, artist, token, function(){
+                            if (errEl) errEl.style.display = 'block';
+                            document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Audio YouTube gagal, coba lagu lain';
+                        });
+                        return;
+                    }
                     if (errEl) errEl.style.display = 'block';
                     document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Audio YouTube gagal, coba lagu lain';
                 };
@@ -3047,9 +3132,11 @@
                     })
                     .catch(function(){
                         if (token !== _fsYtToken) return;
-                        var err2 = document.getElementById('fsRadioError');
-                        if (err2) err2.style.display = 'block';
-                        document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Audio YouTube gagal, coba lagu lain';
+                        fsRadioTryAudiusThenErr(title, artist, token, function(){
+                            var err2 = document.getElementById('fsRadioError');
+                            if (err2) err2.style.display = 'block';
+                            document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Audio YouTube gagal, coba lagu lain';
+                        });
                     });
             }
             function fsRadioPlayYoutube(title, artist) {
@@ -3107,9 +3194,12 @@
                         if (token !== _fsYtToken) return;
                         // 25 Nov 2026: audio YouTube gagal -> TAMPILKAN ERROR saja.
                         // Preview iTunes 30 dtk TIDAK PERNAH lagi diputar diam-diam.
-                        var err2 = document.getElementById('fsRadioError');
-                        if (err2) err2.style.display = 'block';
-                        document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Versi penuh tidak ditemukan, coba lagu lain';
+                        // 28 Nov 2026: sebelum error, coba Audius sekali.
+                        fsRadioTryAudiusThenErr(title, artist, token, function(){
+                            var err2 = document.getElementById('fsRadioError');
+                            if (err2) err2.style.display = 'block';
+                            document.getElementById('fsRadioMeta').textContent = artist + ' • ⚠️ Versi penuh tidak ditemukan, coba lagu lain';
+                        });
                     });
             }
             // Satu pintu putar antrean: Audius -> audio penuh, katalog iTunes -> audio YouTube penuh tanpa iklan.
